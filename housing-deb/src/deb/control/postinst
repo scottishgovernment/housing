@@ -1,0 +1,19 @@
+#!/bin/sh
+
+adduser \
+  --quiet \
+  --system \
+  --home /opt/housing \
+  --no-create-home \
+  --shell /bin/bash \
+  --group \
+  --gecos "housing" \
+  housing
+
+mkdir -p /var/log/housing
+chmod 755 /var/log/housing
+chown housing:nogroup /var/log/housing
+
+systemctl daemon-reload
+systemctl enable housing
+systemctl start housing

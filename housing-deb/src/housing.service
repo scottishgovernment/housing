@@ -1,0 +1,12 @@
+[Unit]
+Description=Housing
+After=network.target
+
+[Service]
+User=housing
+WorkingDirectory=/opt/housing
+ExecStart=/opt/housing/run
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
