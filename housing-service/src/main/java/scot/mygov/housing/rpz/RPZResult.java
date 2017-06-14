@@ -39,7 +39,7 @@ public class RPZResult {
         return maxIncrease;
     }
 
-    static class Builder {
+    public static class Builder {
         private boolean validPostcode;
         private boolean scottishPostcode;
         private boolean inRentPressureZone;
