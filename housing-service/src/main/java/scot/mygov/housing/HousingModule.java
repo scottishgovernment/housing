@@ -20,7 +20,7 @@ import java.util.Collections;
 @Module(injects = Housing.class)
 public class HousingModule {
 
-    private static final Logger LOGGER =
+    private static final Logger LOG =
             LoggerFactory.getLogger(HousingConfiguration.class);
 
     private static final String APP_NAME = "housing";
@@ -31,7 +31,7 @@ public class HousingModule {
         Configuration<HousingConfiguration> configuration = Configuration
                 .load(new HousingConfiguration(), APP_NAME)
                 .validate();
-        LOGGER.info("{}", configuration);
+        LOG.info("{}", configuration);
         return configuration.getConfiguration();
     }
 
@@ -51,7 +51,6 @@ public class HousingModule {
     PostcodeSource postcodeSource(WebTarget target) {
         return new PostcodeSource(target);
     }
-
 
     @Provides
     RPZService rpzService(PostcodeSource postcodeSource) {

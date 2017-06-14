@@ -49,7 +49,7 @@ public class HousingResource {
     @GET
     @Path("rpz")
     @Produces("application/json")
-    public Response searchGet(@Context UriInfo uriInfo) {
+    public Response rpz(@Context UriInfo uriInfo) {
 
         ValidationResult validationResult = validateParams(uriInfo.getQueryParameters());
         if (!validationResult.getErrors().isEmpty()) {

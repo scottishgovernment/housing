@@ -32,7 +32,7 @@ public class HousingResourceTest {
         UriInfo uriInfo = new ResteasyUriInfo(uri);
 
         // ACT
-        Response response = sut.searchGet(uriInfo);
+        Response response = sut.rpz(uriInfo);
 
         // ASSERT
         Assert.assertEquals(HousingResource.ValidationResult.class, response.getEntity().getClass());
@@ -53,7 +53,7 @@ public class HousingResourceTest {
         UriInfo uriInfo = new ResteasyUriInfo(uri);
 
         // ACT
-        Response response = sut.searchGet(uriInfo);
+        Response response = sut.rpz(uriInfo);
 
         // ASSERT
         Assert.assertEquals(HousingResource.ValidationResult.class, response.getEntity().getClass());
@@ -76,7 +76,7 @@ public class HousingResourceTest {
         UriInfo uriInfo = new ResteasyUriInfo(uri);
 
         // ACT
-        Response response = sut.searchGet(uriInfo);
+        Response response = sut.rpz(uriInfo);
 
         // ASSERT
         Assert.assertEquals(HousingResource.ValidationResult.class, response.getEntity().getClass());
@@ -102,7 +102,7 @@ public class HousingResourceTest {
         UriInfo uriInfo = new ResteasyUriInfo(uri);
 
         // ACT
-        Response response = sut.searchGet(uriInfo);
+        Response response = sut.rpz(uriInfo);
 
         // ASSERT
         Assert.assertEquals(RPZResult.class, response.getEntity().getClass());
