@@ -9,7 +9,6 @@
   </appender>
 
   <logger name="scot.mygov.housing" level="INFO"/>
-  <logger name="org.hibernate.validator.internal.util.Version" level="WARN"/>
   <logger name="io" level="INFO"/>
   <logger name="org" level="INFO"/>
 
