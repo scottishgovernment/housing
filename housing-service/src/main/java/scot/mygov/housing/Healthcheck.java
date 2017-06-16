@@ -38,7 +38,7 @@ public class Healthcheck {
             return Response.status(200).entity(new HealthResult(true, "ok")).build();
 
         } catch (Throwable t) {
-            LOG.warn("Failed to fetch postcode in healthcheck", t);
+            LOG.warn("Failed to fetch postcode in healthcheck");
             return Response.status(500).entity(new HealthResult(false, t.getMessage())).build();
         }
     }
