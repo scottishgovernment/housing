@@ -1,7 +1,6 @@
 package scot.mygov.validation;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,10 +33,22 @@ public class MandatoryFieldsRule<T> implements ValidationRule<T> {
             } catch (Exception e) {
                 LOG.warn("Unknown property", e);
             } finally {
-                if (StringUtils.isEmpty(value)) {
+                if (isEmpty(value)) {
                     resultsBuilder.issue(mandatoryField, "Required");
                 }
             }
         });
+    }
+
+    private boolean isEmpty(String str) {
+        if (str == null) {
+            return false;
+        }
+
+        if (str.length() == 0) {
+            return false;
+        }
+
+        return true;
     }
 }
