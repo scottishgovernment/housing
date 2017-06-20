@@ -39,7 +39,6 @@ public class MoneyFieldsRule<T> implements ValidationRule<T> {
                     resultsBuilder.issue(field, "Invalid monetary value");
                 } else if (!value.matches(REGEX)) {
                     resultsBuilder.issue(field, "Invalid monetary value");
-                    return;
                 }
             }
         });
