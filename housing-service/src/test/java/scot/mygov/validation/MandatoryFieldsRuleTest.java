@@ -19,8 +19,8 @@ public class MandatoryFieldsRuleTest {
     public void validatesAsExpected() {
 
         // ARRANGE
-        Value value = new Value("value", "", null);
-        MandatoryFieldsRule<Value> rule = new MandatoryFieldsRule<>(null, "", "foo", "field1", "field2", "field3");
+        Value value = new Value(null, "", "valid");
+        MandatoryFieldsRule<Value> rule = new MandatoryFieldsRule<>("foo", "nullField", "emptyField", "validField");
         ValidationResultsBuilder b = new ValidationResultsBuilder();
 
         // ACT
@@ -28,36 +28,33 @@ public class MandatoryFieldsRuleTest {
         ValidationResults res = b.build();
 
         // ASSERT
-        Assert.assertEquals(res.getIssues().get("foo"), null);
-        Assert.assertEquals(res.getIssues().get("field1"), null);
-        Assert.assertEquals(res.getIssues().get("field2"), Collections.singletonList("Required"));
-        Assert.assertEquals(res.getIssues().get("field3"), Collections.singletonList("Required"));
+        Assert.assertEquals(res.getIssues().get("foo"), Collections.singletonList("Required"));
+        Assert.assertEquals(res.getIssues().get("nullField"), Collections.singletonList("Required"));
+        Assert.assertEquals(res.getIssues().get("emptyField"), Collections.singletonList("Required"));
+        Assert.assertEquals(res.getIssues().get("validField"), null);
     }
 
     public static class Value {
-        private final String field1;
-        private final String field2;
-        private final String field3;
+        private final String nullField;
+        private final String emptyField;
+        private final String validField;
 
-        public Value(String field1, String field2, String field3) {
-            this.field1 = field1;
-            this.field2 = field2;
-            this.field3 = field3;
+        public Value(String nullField, String emptyField, String validField) {
+            this.nullField = nullField;
+            this.emptyField = emptyField;
+            this.validField = validField;
         }
 
-        public String getFoo() {
-            return "foo";
-        }
-        public String getField1() {
-            return field1;
+        public String getNullField() {
+            return nullField;
         }
 
-        public String getField2() {
-            return field2;
+        public String getEmptyField() {
+            return emptyField;
         }
 
-        public String getField3() {
-            return field3;
+        public String getValidField() {
+            return validField;
         }
     }
 }
