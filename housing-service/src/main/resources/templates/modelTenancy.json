@@ -1,0 +1,38 @@
+{
+  "lettingAgent": {
+    "name": "Mr Letting Agent",
+    "address": "111 Agent street",
+    "telephone": "111",
+    "registrationNumber": "111111/111/22222"
+
+  },
+
+  "landlords": [{
+    "name": "Landlord1 Name",
+    "address": "landlord address 1",
+    "email": "ll1@landlord.org",
+    "registrationNumber": "111111/222/22222"
+  }, {
+    "name": "Landlord1 Name",
+    "address": "landlord address 1",
+    "telephone": "ll1111",
+    "registrationNumber": "111111/333/22222"
+  }],
+  "communicationsAgreement": "HARDCOPY",
+  "tenants": [{
+    "name": "David Sinclair",
+    "address": "111 mmm",
+    "email": "davis.sinclait@gov.scot"
+  },
+    {
+      "name": "Elizabeth Bernstein",
+      "address": "111 mmm",
+      "email": "liz@gov.scot"
+    }],
+  "propertyAddress": "167 Morningside Road",
+  "propertyType": "FLAT",
+  "includedAreasOrFacilities" : ["onefac", "twofac", "threefac"],
+  "sharedFacilities": ["onesharedfac", "twosharedfa", "threesharedfa"],
+  "excludedAreasFacilities": ["oneex", "twoex", "threeex"],
+  "furnishingType": "UNFURNISHED"
+}

@@ -7,6 +7,7 @@ import org.junit.Test;
 import scot.mygov.housing.rpz.RPZ;
 import scot.mygov.housing.rpz.RPZResult;
 import scot.mygov.housing.rpz.RPZService;
+import scot.mygov.validation.ValidationResults;
 
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
@@ -35,10 +36,10 @@ public class HousingResourceTest {
         Response response = sut.rpz(uriInfo);
 
         // ASSERT
-        Assert.assertEquals(HousingResource.ValidationResult.class, response.getEntity().getClass());
+        Assert.assertEquals(ValidationResults.class, response.getEntity().getClass());
         Assert.assertEquals(response.getStatus(), 400);
-        HousingResource.ValidationResult validationResult = (HousingResource.ValidationResult) response.getEntity();
-        Assert.assertTrue(validationResult.getErrors().containsKey("postcode"));
+        ValidationResults validationResult = (ValidationResults) response.getEntity();
+        Assert.assertTrue(validationResult.getIssues().containsKey("postcode"));
     }
 
 
@@ -56,10 +57,10 @@ public class HousingResourceTest {
         Response response = sut.rpz(uriInfo);
 
         // ASSERT
-        Assert.assertEquals(HousingResource.ValidationResult.class, response.getEntity().getClass());
+        Assert.assertEquals(ValidationResults.class, response.getEntity().getClass());
         Assert.assertEquals(response.getStatus(), 400);
-        HousingResource.ValidationResult validationResult = (HousingResource.ValidationResult) response.getEntity();
-        Assert.assertTrue(validationResult.getErrors().containsKey("date"));
+        ValidationResults validationResult = (ValidationResults) response.getEntity();
+        Assert.assertTrue(validationResult.getIssues().containsKey("date"));
     }
 
     // invalid date
@@ -79,10 +80,10 @@ public class HousingResourceTest {
         Response response = sut.rpz(uriInfo);
 
         // ASSERT
-        Assert.assertEquals(HousingResource.ValidationResult.class, response.getEntity().getClass());
+        Assert.assertEquals(ValidationResults.class, response.getEntity().getClass());
         Assert.assertEquals(response.getStatus(), 400);
-        HousingResource.ValidationResult validationResult = (HousingResource.ValidationResult) response.getEntity();
-        Assert.assertTrue(validationResult.getErrors().containsKey("date"));
+        ValidationResults validationResult = (ValidationResults) response.getEntity();
+        Assert.assertTrue(validationResult.getIssues().containsKey("date"));
     }
 
     // returns result from service

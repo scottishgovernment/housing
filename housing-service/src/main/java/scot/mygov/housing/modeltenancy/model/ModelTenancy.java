@@ -1,56 +1,73 @@
 package scot.mygov.housing.modeltenancy.model;
 
-import scot.mygov.housing.modeltenancy.Tenant;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * POJO for model tenancy data
  */
 public class ModelTenancy {
-
-    private List<Tenant> tenants;
+    private List<Person> tenants = new ArrayList<>();
+    private List<Guarantor> guarantors = new ArrayList<>();
     private AgentOrLandLord lettingAgent;
-    private List<AgentOrLandLord> landlords;
+    private List<AgentOrLandLord> landlords = new ArrayList<>();
     private String communicationsAgreement;
     private String propertyAddress;
-    private String typeOfProperty;
-    private List<String> includedAreasOrFacilities;
-    private List<String> sharedFacilities;
-    private List<String> excludedAreasFacilities;
-    private List<String> landlordStructureList;
-
-    private String furnishing;
+    private String propertyType;
+    private List<String> includedAreasOrFacilities = new ArrayList<>();
+    private List<String> sharedFacilities = new ArrayList<>();
+    private List<String> excludedAreasFacilities = new ArrayList<>();
+    private List<String> landlordStructureList = new ArrayList<>();
+    private String furnishingType;
     private boolean inRentPressureZone;
     private boolean hmoProperty;
     private String hmo24ContactNumber;
-    private LocalDate hmoRegistrationExiryDate;
+    @JsonDeserialize(using= LocalDateDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate hmoRegistrationExpiryDate;
+    @JsonDeserialize(using= LocalDateDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate tenancyStartDate;
     private String rentAmount;
     private String rentPaymentFrequency;
-    private String rentPayableInAdvance;
+    private boolean rentPayableInAdvance;
+    @JsonDeserialize(using= LocalDateDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate firstPaymentDate;
     private String firstPaymentAmount;
-    private LocalDate firstPaymentPerionStart;
-    private LocalDate firstPaymentPerionEnd;
+    @JsonDeserialize(using= LocalDateDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate firstPaymentPeriodStart;
+    @JsonDeserialize(using= LocalDateDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate firstPaymentPeriodEnd;
     private String rentPaymentDay;
     private String rentPaymentMethod;
-
     private String servicesIncludedInRent;
     private String depositAmount;
     private String tenancyDepositSchemeAdministrator;
     private String tenancyDepositSchemeContactDetails;
-    private String tenantUtilitiesResponsibility;
-    private String guarantorName;
-    private String guarantorAddress;
+    private List<String> tenantUtilitiesResponsibilities = new ArrayList<>();
 
-    public List<Tenant> getTenants() {
+    public List<Person> getTenants() {
         return tenants;
     }
 
-    public void setTenants(List<Tenant> tenants) {
+    public void setTenants(List<Person> tenants) {
         this.tenants = tenants;
+    }
+
+    public List<Guarantor> getGuarantors() {
+        return guarantors;
+    }
+
+    public void setGuarantors(List<Guarantor> guarantors) {
+        this.guarantors = guarantors;
     }
 
     public AgentOrLandLord getLettingAgent() {
@@ -85,12 +102,12 @@ public class ModelTenancy {
         this.propertyAddress = propertyAddress;
     }
 
-    public String getTypeOfProperty() {
-        return typeOfProperty;
+    public String getPropertyType() {
+        return propertyType;
     }
 
-    public void setTypeOfProperty(String typeOfProperty) {
-        this.typeOfProperty = typeOfProperty;
+    public void setPropertyType(String propertyType) {
+        this.propertyType = propertyType;
     }
 
     public List<String> getIncludedAreasOrFacilities() {
@@ -125,12 +142,12 @@ public class ModelTenancy {
         this.landlordStructureList = landlordStructureList;
     }
 
-    public String getFurnishing() {
-        return furnishing;
+    public String getFurnishingType() {
+        return furnishingType;
     }
 
-    public void setFurnishing(String furnishing) {
-        this.furnishing = furnishing;
+    public void setFurnishingType(String furnishingType) {
+        this.furnishingType = furnishingType;
     }
 
     public boolean isInRentPressureZone() {
@@ -157,12 +174,12 @@ public class ModelTenancy {
         this.hmo24ContactNumber = hmo24ContactNumber;
     }
 
-    public LocalDate getHmoRegistrationExiryDate() {
-        return hmoRegistrationExiryDate;
+    public LocalDate getHmoRegistrationExpiryDate() {
+        return hmoRegistrationExpiryDate;
     }
 
-    public void setHmoRegistrationExiryDate(LocalDate hmoRegistrationExiryDate) {
-        this.hmoRegistrationExiryDate = hmoRegistrationExiryDate;
+    public void setHmoRegistrationExpiryDate(LocalDate hmoRegistrationExpiryDate) {
+        this.hmoRegistrationExpiryDate = hmoRegistrationExpiryDate;
     }
 
     public LocalDate getTenancyStartDate() {
@@ -189,11 +206,11 @@ public class ModelTenancy {
         this.rentPaymentFrequency = rentPaymentFrequency;
     }
 
-    public String getRentPayableInAdvance() {
+    public boolean isRentPayableInAdvance() {
         return rentPayableInAdvance;
     }
 
-    public void setRentPayableInAdvance(String rentPayableInAdvance) {
+    public void setRentPayableInAdvance(boolean rentPayableInAdvance) {
         this.rentPayableInAdvance = rentPayableInAdvance;
     }
 
@@ -213,20 +230,20 @@ public class ModelTenancy {
         this.firstPaymentAmount = firstPaymentAmount;
     }
 
-    public LocalDate getFirstPaymentPerionStart() {
-        return firstPaymentPerionStart;
+    public LocalDate getFirstPaymentPeriodStart() {
+        return firstPaymentPeriodStart;
     }
 
-    public void setFirstPaymentPerionStart(LocalDate firstPaymentPerionStart) {
-        this.firstPaymentPerionStart = firstPaymentPerionStart;
+    public void setFirstPaymentPeriodStart(LocalDate firstPaymentPeriodStart) {
+        this.firstPaymentPeriodStart = firstPaymentPeriodStart;
     }
 
-    public LocalDate getFirstPaymentPerionEnd() {
-        return firstPaymentPerionEnd;
+    public LocalDate getFirstPaymentPeriodEnd() {
+        return firstPaymentPeriodEnd;
     }
 
-    public void setFirstPaymentPerionEnd(LocalDate firstPaymentPerionEnd) {
-        this.firstPaymentPerionEnd = firstPaymentPerionEnd;
+    public void setFirstPaymentPeriodEnd(LocalDate firstPaymentPeriodEnd) {
+        this.firstPaymentPeriodEnd = firstPaymentPeriodEnd;
     }
 
     public String getRentPaymentDay() {
@@ -277,27 +294,11 @@ public class ModelTenancy {
         this.tenancyDepositSchemeContactDetails = tenancyDepositSchemeContactDetails;
     }
 
-    public String getTenantUtilitiesResponsibility() {
-        return tenantUtilitiesResponsibility;
+    public List<String> getTenantUtilitiesResponsibilities() {
+        return tenantUtilitiesResponsibilities;
     }
 
-    public void setTenantUtilitiesResponsibility(String tenantUtilitiesResponsibility) {
-        this.tenantUtilitiesResponsibility = tenantUtilitiesResponsibility;
-    }
-
-    public String getGuarantorName() {
-        return guarantorName;
-    }
-
-    public void setGuarantorName(String guarantorName) {
-        this.guarantorName = guarantorName;
-    }
-
-    public String getGuarantorAddress() {
-        return guarantorAddress;
-    }
-
-    public void setGuarantorAddress(String guarantorAddress) {
-        this.guarantorAddress = guarantorAddress;
+    public void setTenantUtilitiesResponsibilities(List<String> tenantUtilitiesResponsibilities) {
+        this.tenantUtilitiesResponsibilities = tenantUtilitiesResponsibilities;
     }
 }

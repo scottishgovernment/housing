@@ -1,15 +1,21 @@
 package scot.mygov.housing;
 
+import com.aspose.words.License;
 import dagger.Module;
 import dagger.Provides;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scot.mygov.config.Configuration;
+import scot.mygov.housing.modeltenancy.ModelTenancyService;
+import scot.mygov.housing.modeltenancy.model.ModelTenancy;
+import scot.mygov.housing.modeltenancy.ModelTenancyFieldExtractor;
+import scot.mygov.housing.modeltenancy.validation.ModelTenancyValidatorFactory;
 import scot.mygov.housing.rpz.PostcodeSource;
 import scot.mygov.housing.rpz.RPZ;
 import scot.mygov.housing.rpz.RPZService;
 import scot.mygov.housing.rpz.InMemoryRPZService;
+import scot.mygov.validation.Validator;
 
 import javax.inject.Singleton;
 import javax.ws.rs.client.Client;
@@ -20,8 +26,7 @@ import java.util.Collections;
 @Module(injects = Housing.class)
 public class HousingModule {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(HousingConfiguration.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HousingConfiguration.class);
 
     private static final String APP_NAME = "housing";
 
@@ -59,5 +64,22 @@ public class HousingModule {
                 LocalDate.of(2017, 1, 1), 1,
                 Collections.singleton("EH104AX"));
         return new InMemoryRPZService(Collections.singleton(rpz), postcodeSource);
+    }
+
+    @Provides
+    Validator<ModelTenancy> modelTenancyValidator() {
+        return new ModelTenancyValidatorFactory().newInstance();
+    }
+
+    @Provides
+    ModelTenancyService modelTenancyService() {
+        // load the license
+        License license = new License();
+        try {
+            license.setLicense(Housing.class.getResourceAsStream("/Aspose.Words.lic"));
+        } catch (Exception e) {
+            LOG.error("Failed to load aspose license", e);
+        }
+        return new ModelTenancyService(new ModelTenancyFieldExtractor());
     }
 }

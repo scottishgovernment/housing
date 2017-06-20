@@ -24,10 +24,7 @@ public class RequestLogger implements ContainerResponseFilter {
         String method = request.getRequest().getMethod();
         String path = request.getUriInfo().getPath();
         int status = response.getStatus();
-        LOGGER.info("{} {} {}",
-                status,
-                method,
-                path);
+        LOGGER.info("{} {} {}", status, method, path);
     }
 
 }

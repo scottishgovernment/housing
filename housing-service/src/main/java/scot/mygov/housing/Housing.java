@@ -1,5 +1,6 @@
 package scot.mygov.housing;
 
+import com.aspose.words.License;
 import dagger.ObjectGraph;
 import io.undertow.Undertow;
 import org.jboss.resteasy.plugins.server.undertow.UndertowJaxrsServer;
@@ -12,8 +13,7 @@ import java.net.InetSocketAddress;
 
 public class Housing {
 
-    private static final Logger LOGGER =
-            LoggerFactory.getLogger(Housing.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Housing.class);
 
     @Inject
     HousingConfiguration config;
@@ -21,9 +21,19 @@ public class Housing {
     @Inject
     HousingApplication app;
 
-    public static final void main(String[] args) {
+    public static final void main(String[] args) throws Exception{
         SLF4JBridgeHandler.removeHandlersForRootLogger();
         SLF4JBridgeHandler.install();
+
+
+        License license = new License();
+        try {
+            license.setLicense(Housing.class.getResourceAsStream("/Aspose.Words.lic"));
+        } catch (Exception e) {
+            LOG.error("Failed to load aspose licence", e);
+            throw e;
+        }
+
         ObjectGraph graph = ObjectGraph.create(new HousingModule());
         graph.get(Housing.class).run();
     }
@@ -32,7 +42,7 @@ public class Housing {
         Server server = new Server();
         server.deploy(app);
         server.start(Undertow.builder().addHttpListener(config.getPort(), "::"));
-        LOGGER.info("Listening on port {}", server.port());
+        LOG.info("Listening on port {}", server.port());
     }
 
     public static class Server extends UndertowJaxrsServer {
