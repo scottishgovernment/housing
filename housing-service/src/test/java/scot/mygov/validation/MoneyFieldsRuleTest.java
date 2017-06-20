@@ -57,7 +57,7 @@ public class MoneyFieldsRuleTest {
     }
 
     @Test
-    public void rejectsInknownProperty() {
+    public void rejectsUnknownProperty() {
         // ARRANGE
         MoneyFieldsRule<Value> rule = new MoneyFieldsRule<>("invalidPropety");
 
