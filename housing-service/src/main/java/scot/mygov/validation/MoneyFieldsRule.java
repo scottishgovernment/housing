@@ -35,8 +35,14 @@ public class MoneyFieldsRule<T> implements ValidationRule<T> {
             } catch (Exception e) {
                 LOG.warn("Unknown property", e);
             } finally {
-                if (isEmpty(value) || !value.matches(REGEX)) {
+                if (isEmpty(value)) {
                     resultsBuilder.issue(field, "Invalid monetary value");
+                    return;
+                }
+
+                if (!value.matches(REGEX)) {
+                    resultsBuilder.issue(field, "Invalid monetary value");
+                    return;
                 }
             }
         });
