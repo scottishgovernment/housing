@@ -20,7 +20,7 @@ public class MandatoryFieldsRuleTest {
 
         // ARRANGE
         Value value = new Value("value", "", null);
-        MandatoryFieldsRule<Value> rule = new MandatoryFieldsRule<>("null", "", "foo", "field1", "field2", "field3");
+        MandatoryFieldsRule<Value> rule = new MandatoryFieldsRule<>(null, "", "foo", "field1", "field2", "field3");
         ValidationResultsBuilder b = new ValidationResultsBuilder();
 
         // ACT
