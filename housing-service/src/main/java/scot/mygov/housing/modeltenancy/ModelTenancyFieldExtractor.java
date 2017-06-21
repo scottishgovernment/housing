@@ -1,7 +1,6 @@
 package scot.mygov.housing.modeltenancy;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.text.WordUtils;
 import scot.mygov.housing.modeltenancy.model.Address;
 import scot.mygov.housing.modeltenancy.model.AgentOrLandLord;
 import scot.mygov.housing.modeltenancy.model.CommunicationsAgreement;
@@ -67,7 +66,8 @@ public class ModelTenancyFieldExtractor {
         fields.put("firstPaymentAmount", modelTenancy.getFirstPaymentAmount());
         fields.put("firstPaymentPeriodStart", dateFormatter.format(modelTenancy.getFirstPaymentPeriodStart()));
         fields.put("firstPaymentPeriodEnd", dateFormatter.format(modelTenancy.getFirstPaymentPeriodEnd()));
-        fields.put("rentPaymentDay", WordUtils.capitalize(modelTenancy.getRentPaymentDay().toLowerCase()));
+        fields.put("rentPaymentDayOrDate", modelTenancy.getRentPaymentDayOrDate());
+        fields.put("rentPaymentSchedule", modelTenancy.getRentPaymentSchedule());
         fields.put("rentPaymentMethod", modelTenancy.getRentPaymentMethod());
         fields.put("servicesIncludedInRent", naForEmpty(modelTenancy.getServicesIncludedInRent()));
         fields.put("depositAmount", modelTenancy.getDepositAmount());

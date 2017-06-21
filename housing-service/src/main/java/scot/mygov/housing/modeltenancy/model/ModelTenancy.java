@@ -46,7 +46,8 @@ public class ModelTenancy {
     @JsonDeserialize(using= LocalDateDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate firstPaymentPeriodEnd;
-    private String rentPaymentDay;
+    private String rentPaymentDayOrDate;
+    private String rentPaymentSchedule;
     private String rentPaymentMethod;
     private String servicesIncludedInRent;
     private String depositAmount;
@@ -246,12 +247,20 @@ public class ModelTenancy {
         this.firstPaymentPeriodEnd = firstPaymentPeriodEnd;
     }
 
-    public String getRentPaymentDay() {
-        return rentPaymentDay;
+    public String getRentPaymentDayOrDate() {
+        return rentPaymentDayOrDate;
     }
 
-    public void setRentPaymentDay(String rentPaymentDay) {
-        this.rentPaymentDay = rentPaymentDay;
+    public void setRentPaymentDayOrDate(String rentPaymentDayOrDate) {
+        this.rentPaymentDayOrDate = rentPaymentDayOrDate;
+    }
+
+    public String getRentPaymentSchedule() {
+        return rentPaymentSchedule;
+    }
+
+    public void setRentPaymentSchedule(String rentPaymentSchedule) {
+        this.rentPaymentSchedule = rentPaymentSchedule;
     }
 
     public String getRentPaymentMethod() {

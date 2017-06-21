@@ -41,7 +41,8 @@ public class ObjectMother {
         tenancy.setFirstPaymentDate(LocalDate.now());
         tenancy.setFirstPaymentPeriodStart(LocalDate.now());
         tenancy.setFirstPaymentPeriodEnd(LocalDate.now());
-        tenancy.setRentPaymentDay("MONDAY");
+        tenancy.setRentPaymentDayOrDate("Monday");
+        tenancy.setRentPaymentSchedule("Second Monday of each month");
         tenancy.setRentPaymentMethod("CASH");
         tenancy.setDepositAmount("300.00");
         tenancy.setTenancyDepositSchemeAdministrator("Mr Administrator man");

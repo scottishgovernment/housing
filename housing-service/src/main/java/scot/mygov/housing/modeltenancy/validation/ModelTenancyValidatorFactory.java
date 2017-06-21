@@ -22,6 +22,8 @@ public class ModelTenancyValidatorFactory {
         "firstPaymentPeriodStart",
         "firstPaymentPeriodEnd",
         "rentPaymentMethod",
+        "rentPaymentDayOrDate",
+        "rentPaymentSchedule",
         "depositAmount",
         "tenancyDepositSchemeAdministrator",
         "tenancyDepositSchemeContactDetails"

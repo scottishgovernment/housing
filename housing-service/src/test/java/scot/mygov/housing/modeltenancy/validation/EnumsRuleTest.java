@@ -97,24 +97,6 @@ public class EnumsRuleTest {
     }
 
     @Test
-    public void rejectsInvalidRentPaymentDaysValues() {
-        // ARRANGE
-        ModelTenancy modelTenancy = om.anyTenancy();
-        List<String> values = new ArrayList<>();
-        Collections.addAll(values, "blah", null, "");
-
-        // ACT
-        values.stream().forEach(value -> {
-            ValidationResultsBuilder builder = new ValidationResultsBuilder();
-            modelTenancy.setRentPaymentDay(value);
-            rule.validate(modelTenancy, builder);
-
-            // ASSERT
-            Assert.assertEquals(builder.build().getIssues().size(), 1);
-        });
-    }
-
-    @Test
     public void acceptsEmptyTenantResponsibilities() {
         // ARRANGE
         ModelTenancy modelTenancy = om.anyTenancy();
