@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scot.mygov.config.Configuration;
 import scot.mygov.housing.modeltenancy.ModelTenancyService;
+import scot.mygov.housing.modeltenancy.TemplateLoader;
 import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.modeltenancy.ModelTenancyFieldExtractor;
 import scot.mygov.housing.modeltenancy.validation.ModelTenancyValidatorFactory;
@@ -71,6 +72,8 @@ public class HousingModule {
         return new ModelTenancyValidatorFactory().newInstance();
     }
 
+
+
     @Provides
     ModelTenancyService modelTenancyService() {
         // load the license
@@ -80,6 +83,12 @@ public class HousingModule {
         } catch (Exception e) {
             LOG.error("Failed to load aspose license", e);
         }
-        return new ModelTenancyService(new ModelTenancyFieldExtractor());
+
+        return new ModelTenancyService(
+                new TemplateLoader(configuration().getModelTenancyTemplatePath()),
+                new ModelTenancyFieldExtractor()
+        );
     }
+
+
 }
