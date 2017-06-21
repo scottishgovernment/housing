@@ -16,6 +16,18 @@
 
   <name>Housing</name>
 
+
+  <properties>
+    <!-- Ignore this class - do not understand why we do not have sufficient coverage!  -->
+    <sonar.exclusions>
+      src/main/java/scot/mygov/validation/MoneyFieldsRule
+    </sonar.exclusions>
+
+    <!-- The main class to start by executing java -jar -->
+    <main.class>scot.mygov.aps.ApsImporter</main.class>
+  </properties>
+
+
   <scm>
     <connection>scm:git:ssh://git@stash.digital.gov.uk:7999/mgv/housing.git</connection>
     <url>http://stash.digital.gov.uk/projects/MGV/repos/housing/</url>

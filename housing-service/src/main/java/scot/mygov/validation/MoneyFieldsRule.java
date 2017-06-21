@@ -1,6 +1,7 @@
 package scot.mygov.validation;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +23,6 @@ public class MoneyFieldsRule<T> implements ValidationRule<T> {
         this.fields = Arrays.asList(fields);
     }
 
-
     public void validate(T model, ValidationResultsBuilder resultsBuilder) {
         fields.stream().forEach(field -> {
             String value = null;
@@ -31,24 +31,12 @@ public class MoneyFieldsRule<T> implements ValidationRule<T> {
             } catch (Exception e) {
                 LOG.warn("Unknown property", e);
             } finally {
-                if (isEmpty(value)) {
+                if (StringUtils.isEmpty(value)) {
                     resultsBuilder.issue(field, "Invalid monetary value");
                 } else if (!value.matches(REGEX)) {
                     resultsBuilder.issue(field, "Invalid monetary value");
                 }
             }
         });
-    }
-
-    private boolean isEmpty(String str) {
-        if (str == null) {
-            return true;
-        }
-
-        if (str.length() == 0) {
-            return true;
-        }
-
-        return false;
     }
 }
