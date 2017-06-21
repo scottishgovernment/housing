@@ -19,7 +19,7 @@
     <jackson.version>2.6.1</jackson.version>
     <slf4j.version>1.7.25</slf4j.version>
     <logback.version>1.2.2</logback.version>
-    <sonar.exclusions>target/**</sonar.exclusions>
+    <sonar.exclusions>target/**,src/main/java/scot/mygov/validation/MoneyFieldsRule</sonar.exclusions>
   </properties>
 
   <dependencies>
