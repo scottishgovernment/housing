@@ -72,8 +72,6 @@ public class HousingModule {
         return new ModelTenancyValidatorFactory().newInstance();
     }
 
-
-
     @Provides
     ModelTenancyService modelTenancyService() {
         // load the license

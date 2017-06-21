@@ -22,7 +22,7 @@ public class LandlordsRule implements ValidationRule<ModelTenancy> {
             return;
         }
 
-        // cannot have more than 2 landlords
+        // cannot have more than 2 landlords. Is this right?
         if (modelTenancy.getLandlords().size() > 2) {
             resultsBuilder.issue(FIELD, "More than 2 landlords");
             return;
@@ -32,7 +32,8 @@ public class LandlordsRule implements ValidationRule<ModelTenancy> {
         IntStream.range(0, modelTenancy.getLandlords().size()).forEach(i -> {
             AgentOrLandLord landlord = modelTenancy.getLandlords().get(i);
             String field = FIELD + (i + 1);
-            ValidationUtil.nonEmpty(landlord, field, resultsBuilder, "name", "address");
+            AddressValidator.validate(landlord.getAddress(), "landlord", resultsBuilder);
+            ValidationUtil.nonEmpty(landlord, field, resultsBuilder, "name");
             ValidationUtil.validateContactDetails(landlord, field, resultsBuilder);
             ValidationUtil.validateRegistrationNumber(landlord.getRegistrationNumber(),
                     true, FIELD + "-registrationNumber", resultsBuilder);

@@ -5,9 +5,12 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import scot.mygov.housing.modeltenancy.model.Person;
+import scot.mygov.housing.rpz.PostcodeSource;
 import scot.mygov.validation.ValidationResults;
 import scot.mygov.validation.ValidationResultsBuilder;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -175,5 +178,22 @@ public class ValidationUtilTest {
         Assert.assertEquals(results.getIssues().entrySet().size(), 1);
     }
 
+    @Test
+    public void validPostCodes() {
+        PostcodeSource sut = new PostcodeSource(null);
+        List<String> inputs = new ArrayList<>();
+        Collections.addAll(inputs, "EH104AX", "EH10 4AX", "eh104ax", "eh10 4ax", "B1 2HB");
+        List<String> outputs = inputs.stream().filter(in -> ValidationUtil.validPostcode(in)).collect(Collectors.toList());
+        junit.framework.Assert.assertEquals(inputs, outputs);
+    }
+
+    @Test
+    public void invalidPostCodes() {
+        PostcodeSource sut = new PostcodeSource(null);
+        List<String> inputs = new ArrayList<>();
+        Collections.addAll(inputs, "", "aaa", "EH10-$AX");
+        List<String> outputs = inputs.stream().filter(in -> !ValidationUtil.validPostcode(in)).collect(Collectors.toList());
+        junit.framework.Assert.assertEquals(inputs, outputs);
+    }
 
 }

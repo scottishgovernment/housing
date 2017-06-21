@@ -12,6 +12,8 @@ import scot.mygov.validation.Validator;
  */
 public class ModelTenancyValidatorFactoryTest {
 
+    private ObjectMother om = new ObjectMother();
+
     @Test
     public void canBuildValidator() throws ValidationException {
         Validator<ModelTenancy> validator = new ModelTenancyValidatorFactory().newInstance();
@@ -19,7 +21,6 @@ public class ModelTenancyValidatorFactoryTest {
         try {
             validator.validate(model);
         } catch (ValidationException e) {
-            System.out.println(e.getIssues());
             throw e;
         }
     }

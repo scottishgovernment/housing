@@ -16,7 +16,6 @@ import java.util.List;
 public class ModelTenancyValidatorFactory {
 
     private static final String [] MANDATORY_FIELDS = {
-        "propertyAddress",
         "propertyType",
         "tenancyStartDate",
         "firstPaymentDate",
@@ -39,6 +38,7 @@ public class ModelTenancyValidatorFactory {
      */
     public Validator<ModelTenancy> newInstance() {
         List<ValidationRule> rules = new ArrayList<>();
+
         Collections.addAll(rules,
                 new LandlordsRule(),
                 new AtLeastOneTenantRule(),

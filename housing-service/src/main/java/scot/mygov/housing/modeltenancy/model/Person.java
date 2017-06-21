@@ -6,7 +6,7 @@ package scot.mygov.housing.modeltenancy.model;
 public class Person {
 
     private String name;
-    private String address;
+    private Address address;
     private String telephone;
     private String email;
 
@@ -18,11 +18,11 @@ public class Person {
         this.name = name;
     }
 
-    public String getAddress() {
+    public Address getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(Address address) {
         this.address = address;
     }
 

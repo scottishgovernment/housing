@@ -17,7 +17,7 @@ public class ModelTenancy {
     private AgentOrLandLord lettingAgent;
     private List<AgentOrLandLord> landlords = new ArrayList<>();
     private String communicationsAgreement;
-    private String propertyAddress;
+    private Address propertyAddress;
     private String propertyType;
     private List<String> includedAreasOrFacilities = new ArrayList<>();
     private List<String> sharedFacilities = new ArrayList<>();
@@ -94,11 +94,11 @@ public class ModelTenancy {
         this.communicationsAgreement = communicationsAgreement;
     }
 
-    public String getPropertyAddress() {
+    public Address getPropertyAddress() {
         return propertyAddress;
     }
 
-    public void setPropertyAddress(String propertyAddress) {
+    public void setPropertyAddress(Address propertyAddress) {
         this.propertyAddress = propertyAddress;
     }
 

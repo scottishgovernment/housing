@@ -36,7 +36,7 @@ public class InMemoryRPZServiceTest {
         RPZService sut = new InMemoryRPZService(Collections.emptySet(), postcodeSource());
 
         // ACT
-        RPZResult actual = sut.rpz("nonScottish", LocalDate.now());
+        RPZResult actual = sut.rpz("SW1A 1AA", LocalDate.now());
 
         // ASSERT
         Assert.assertEquals(actual.isValidPostcode(), true);
@@ -51,7 +51,7 @@ public class InMemoryRPZServiceTest {
         RPZService sut = new InMemoryRPZService(Collections.emptySet(), postcodeSource());
 
         // ACT
-        RPZResult actual = sut.rpz("validScottishPostcode", LocalDate.now());
+        RPZResult actual = sut.rpz(validScottishPostCode(), LocalDate.now());
 
         // ASSERT
         Assert.assertEquals(actual.isValidPostcode(), true);
@@ -64,11 +64,11 @@ public class InMemoryRPZServiceTest {
     public void scottishPostcodeInRPZ() {
 
         // ARRANGE
-        RPZ rpz = new RPZ("title", LocalDate.MIN, LocalDate.MAX, 10, Collections.singleton("validScottishPostcode"));
+        RPZ rpz = new RPZ("title", LocalDate.MIN, LocalDate.MAX, 10, Collections.singleton(validScottishPostCode()));
         RPZService sut = new InMemoryRPZService(Collections.singleton(rpz), postcodeSource());
 
         // ACT
-        RPZResult actual = sut.rpz("validScottishPostcode", LocalDate.now());
+        RPZResult actual = sut.rpz(validScottishPostCode(), LocalDate.now());
 
         // ASSERT
         Assert.assertEquals(actual.isValidPostcode(), true);
@@ -82,11 +82,11 @@ public class InMemoryRPZServiceTest {
     public void scottishPostcodeInRPZButOutsideDateRange() {
 
         // ARRANGE
-        RPZ rpz = new RPZ("title", LocalDate.MIN, LocalDate.MIN, 10, Collections.singleton("validScottishPostcode"));
+        RPZ rpz = new RPZ("title", LocalDate.MIN, LocalDate.MIN, 10, Collections.singleton(validScottishPostCode()));
         RPZService sut = new InMemoryRPZService(Collections.singleton(rpz), postcodeSource());
 
         // ACT
-        RPZResult actual = sut.rpz("validScottishPostcode", LocalDate.now());
+        RPZResult actual = sut.rpz(validScottishPostCode(), LocalDate.now());
 
         // ASSERT
         Assert.assertEquals(actual.isValidPostcode(), true);
@@ -94,16 +94,19 @@ public class InMemoryRPZServiceTest {
         Assert.assertEquals(actual.isInRentPressureZone(), false);
     }
 
+    private String validScottishPostCode() {
+        return "EH104AX";
+    }
+
     private PostcodeSource postcodeSource() {
         PostcodeSource postcodeSource = Mockito.mock(PostcodeSource.class);
-        Mockito.when(postcodeSource.postcode(ArgumentMatchers.eq("validScottishPostcode"))).thenReturn(validPostcode());
-        Mockito.when(postcodeSource.validPostcode(ArgumentMatchers.any())).thenReturn(true);
+        Mockito.when(postcodeSource.postcode(ArgumentMatchers.eq(validScottishPostCode()))).thenReturn(validPostcode());
         return postcodeSource;
     }
 
     private Postcode validPostcode() {
         Postcode postocde = new Postcode();
-        postocde.setPostcode("validScottishPostcode");
+        postocde.setPostcode(validScottishPostCode());
         postocde.setDistrict("district");
         return postocde;
     }

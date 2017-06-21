@@ -26,12 +26,12 @@ public class ModelTenancyFieldExtractorTest {
 
         // ARRANGE
         ModelTenancy modelTenancy = om.anyTenancy();
-
+        String expected = om.validAdressFormatted();
         // ACT
         Map<String, Object> actual = sut.extractFields(modelTenancy);
 
         // ASSERT
-        Assert.assertEquals("(1) name, \taddress", actual.get("tenantNameAndAddresses"));
+        Assert.assertEquals(expected, actual.get("tenantNameAndAddresses"));
         Assert.assertTrue(!StringUtils.isEmpty(actual.get("tenantEmails").toString()));
     }
 
@@ -56,12 +56,13 @@ public class ModelTenancyFieldExtractorTest {
 
         // ARRANGE
         ModelTenancy modelTenancy = om.tenancyWithGuarentors();
+        String expected = "(1) name, 	21 Some random street, Randomtown, Midlothian, EH104AX";
 
         // ACT
         Map<String, Object> actual = sut.extractFields(modelTenancy);
 
         // ASSERT
-        Assert.assertEquals("(1) name, \taddress", actual.get("tenantNameAndAddresses"));
+        Assert.assertEquals(expected, actual.get("tenantNameAndAddresses"));
     }
 
 

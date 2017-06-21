@@ -9,7 +9,7 @@ import java.util.List;
 public class Guarantor {
 
     private String name;
-    private String address;
+    private Address address;
     private List<String> tenantNames = new ArrayList<>();
 
     public String getName() {
@@ -20,11 +20,11 @@ public class Guarantor {
         this.name = name;
     }
 
-    public String getAddress() {
+    public Address getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(Address address) {
         this.address = address;
     }
 

@@ -12,8 +12,7 @@ import scot.mygov.validation.ValidationResultsBuilder;
 public class LandlordsRuleTest {
 
     private final ObjectMother om = new ObjectMother();
-    LandlordsRule rule = new LandlordsRule();
-
+    private final LandlordsRule rule = new LandlordsRule();
 
     @Test
     public void rejectZeroLandlords() {

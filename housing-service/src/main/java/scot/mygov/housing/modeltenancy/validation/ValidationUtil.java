@@ -9,6 +9,8 @@ import scot.mygov.housing.modeltenancy.model.Person;
 import scot.mygov.validation.ValidationResultsBuilder;
 
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by z418868 on 16/06/2017.
@@ -21,10 +23,19 @@ public class ValidationUtil {
 
     private static final String LANDLORD_REF_REGEX ="^[0-9]{6}\\/[0-9]{3}\\/[0-9]{5}+$";
 
+    private static final String POSCODE_REGEX = "^[A-Z]{1,2}[0-9R][0-9A-Z]?[0-9][ABD-HJLNP-UW-Z]{2}$";
+    private static final Pattern POSTCODE_PATTERN = Pattern.compile(POSCODE_REGEX);
+
     /**
      * prevent instance creation.
      */
     private ValidationUtil() {
+    }
+
+    public static boolean validPostcode(String postcode) {
+        String noSpaces = postcode.replaceAll(" ", "").toUpperCase();
+        Matcher matcher = POSTCODE_PATTERN.matcher(noSpaces);
+        return matcher.matches();
     }
 
     public static boolean validEmail(String email) {

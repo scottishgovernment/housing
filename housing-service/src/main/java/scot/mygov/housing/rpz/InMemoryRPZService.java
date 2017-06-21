@@ -1,6 +1,8 @@
 package scot.mygov.housing.rpz;
 
 import scot.mygov.geosearch.api.models.Postcode;
+import scot.mygov.housing.modeltenancy.validation.ValidationUtil;
+
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Set;
@@ -19,7 +21,7 @@ public class InMemoryRPZService implements RPZService {
     }
 
     public RPZResult rpz(String postcodeIn, LocalDate date) {
-        if (!postcodeSource.validPostcode(postcodeIn)) {
+        if (!ValidationUtil.validPostcode(postcodeIn)) {
             return new RPZResult.Builder().validPostcode(false).build();
         }
 

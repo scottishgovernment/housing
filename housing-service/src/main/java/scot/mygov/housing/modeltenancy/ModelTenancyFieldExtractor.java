@@ -2,6 +2,7 @@ package scot.mygov.housing.modeltenancy;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
+import scot.mygov.housing.modeltenancy.model.Address;
 import scot.mygov.housing.modeltenancy.model.AgentOrLandLord;
 import scot.mygov.housing.modeltenancy.model.CommunicationsAgreement;
 import scot.mygov.housing.modeltenancy.model.Guarantor;
@@ -39,7 +40,7 @@ public class ModelTenancyFieldExtractor {
         extractLandlords(modelTenancy, fields);
         extractCommunicationAgreement(modelTenancy, fields);
 
-        fields.put("propertyAddress", modelTenancy.getPropertyAddress());
+        fields.put("propertyAddress", addressFieldsMultipleLines(modelTenancy.getPropertyAddress()));
         fields.put("propertyType", modelTenancy.getPropertyType());
         fields.put("propertyIncludedAreasOrFacilities",
                 commaSeparated(modelTenancy.getIncludedAreasOrFacilities()));
@@ -112,7 +113,7 @@ public class ModelTenancyFieldExtractor {
             Collections.addAll(parts,
                 String.format("Tenant %d Signature:", i),
                 String.format("Tenant Full Name:\t %s", tenant.getName()),
-                String.format("Tenant Address Name:\t %s", tenant.getAddress()),
+                String.format("Tenant Address:\n %s", addressFieldsMultipleLines(tenant.getAddress())),
                 "Date: ");
             signatureBlocks.add(parts.stream().collect(joining("\n")));
         });
@@ -130,7 +131,7 @@ public class ModelTenancyFieldExtractor {
                 String.format("Name(s) of Tenant(s) for whom Guarantor 1 will act as Guarantor:\n\t%s", tenantNames),
                 String.format("Guarantor %d Signature:\t", i),
                 String.format("Guarantor Full Name (Block  Capitals):\t%s", guarantor.getName().toUpperCase()),
-                String.format("Guarantor Address:\t%s", guarantor.getAddress()),
+                String.format("Guarantor Address:\n%s", addressFieldsMultipleLines(guarantor.getAddress())),
                 "Date:\t");
             signatureBlocks.add(parts.stream().collect(joining("\n")));
         });
@@ -141,7 +142,7 @@ public class ModelTenancyFieldExtractor {
         IntStream.range(1, modelTenancy.getLandlords().size() + 1).forEach(i -> {
             AgentOrLandLord landlord = modelTenancy.getLandlords().get(i - 1);
             fields.put("landlordName"+i, landlord.getName());
-            fields.put("landlordAddress"+i, landlord.getAddress());
+            fields.put("landlordAddress"+i, addressFieldsMultipleLines(landlord.getAddress()));
             fields.put("landlordEmail"+i, numberedValue(landlord.getEmail(), i));
             fields.put("landlordPhone"+i, numberedValue(landlord.getTelephone(), i));
             fields.put("landlordRegistrationNumber"+i, landlord.getRegistrationNumber());
@@ -157,7 +158,7 @@ public class ModelTenancyFieldExtractor {
 
         AgentOrLandLord agent = modelTenancy.getLettingAgent();
         fields.put("lettingAgentName", agent.getName());
-        fields.put("lettingAgentAddress", agent.getAddress());
+        fields.put("lettingAgentAddress", addressFieldsMultipleLines(agent.getAddress()));
         fields.put("lettingAgentEmail", naForEmpty(agent.getEmail()));
         fields.put("lettingAgentPhone", naForEmpty(agent.getTelephone()));
         fields.put("lettingAgentRegistrationNumber", agent.getRegistrationNumber());
@@ -181,8 +182,28 @@ public class ModelTenancyFieldExtractor {
         }
     }
 
-    private String nameAndAddress(Person tenant, int i) {
-        return numberedValue(String.format("%s, \t%s", tenant.getName(), tenant.getAddress()), i);
+    private List<String> addressParts(Address address) {
+        List<String> parts = new ArrayList<>();
+        Collections.addAll(parts,
+                address.getAddressLine1(),
+                address.getAddressLine2(),
+                address.getAddressLine3(),
+                address.getPostcode());
+        return parts.stream().filter(part -> StringUtils.isNotEmpty(part)).collect(Collectors.toList());
+    }
+
+    private String addressFieldsMultipleLines(Address address) {
+        return addressParts(address).stream().collect(joining(",\n"));
+    }
+
+    private String addressFieldsSingleLine(Address address) {
+        return addressParts(address).stream().collect(joining(", "));
+    }
+
+    private String nameAndAddress(Person person, int i) {
+        String address = addressFieldsSingleLine(person.getAddress());
+        String nameAndAddress = String.format("%s, \t%s", person.getName(), address);
+        return numberedValue(nameAndAddress, i);
     }
 
     private String numberedValue(String val, int i) {

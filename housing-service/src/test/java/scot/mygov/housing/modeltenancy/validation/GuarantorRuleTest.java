@@ -119,7 +119,7 @@ public class GuarantorRuleTest {
     private Person tenantWithNoGuarentor() {
         Person p = new Person();
         p.setName("qqq");
-        p.setAddress("111");
+        p.setAddress(om.validAddress());
         p.setTelephone("111");
         return p;
     }

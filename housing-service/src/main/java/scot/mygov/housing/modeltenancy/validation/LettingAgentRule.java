@@ -21,7 +21,8 @@ public class LettingAgentRule implements ValidationRule<ModelTenancy> {
 
         // if present then must have valid contact details and a valid registration nunber
         AgentOrLandLord agent =  modelTenancy.getLettingAgent();
-        ValidationUtil.nonEmpty(agent, FIELD, resultsBuilder, "name", "address");
+        ValidationUtil.nonEmpty(agent, FIELD, resultsBuilder, "name");
+        AddressValidator.validate(agent.getAddress(), FIELD, resultsBuilder);
         ValidationUtil.validateContactDetails(agent, FIELD, resultsBuilder);
         ValidationUtil.validateRegistrationNumber(agent.getRegistrationNumber(), false, FIELD + "-registrationNumber", resultsBuilder);
     }

@@ -1,8 +1,8 @@
 package scot.mygov.housing.modeltenancy.validation;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mockito;
+import scot.mygov.housing.modeltenancy.model.Address;
 import scot.mygov.housing.modeltenancy.model.AgentOrLandLord;
 import scot.mygov.housing.modeltenancy.model.CommunicationsAgreement;
 import scot.mygov.housing.modeltenancy.model.FurnishingType;
@@ -10,6 +10,7 @@ import scot.mygov.housing.modeltenancy.model.Guarantor;
 import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.modeltenancy.model.Person;
 import scot.mygov.housing.modeltenancy.model.RentPaymentFrequency;
+import scot.mygov.housing.rpz.PostcodeSource;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class ObjectMother {
         tenancy.setLettingAgent(anyAgentOrLandlord());
         tenancy.setLandlords(Collections.singletonList(anyAgentOrLandlord()));
         tenancy.setCommunicationsAgreement(CommunicationsAgreement.HARDCOPY.name());
-        tenancy.setPropertyAddress("111 property address ");
+        tenancy.setPropertyAddress(validAddress());
         tenancy.setPropertyType("FLAT");
         tenancy.setFurnishingType(FurnishingType.FURNISHED.name());
         tenancy.setRentPaymentFrequency(RentPaymentFrequency.CALENDAR_MONTH.name());
@@ -53,7 +54,7 @@ public class ObjectMother {
         List<Guarantor> guarantors = modelTenancy.getTenants().stream().map(tenant -> {
             Guarantor guarantor = new Guarantor();
             guarantor.setName("guarentor name for " + tenant.getName());
-            guarantor.setAddress("guarentor address for " + tenant.getName());
+            guarantor.setAddress(validAddress());
             guarantor.setTenantNames(Collections.singletonList(tenant.getName()));
             return guarantor;
         }).collect(Collectors.toList());
@@ -97,7 +98,7 @@ public class ObjectMother {
         AgentOrLandLord agentOrLandLord = new AgentOrLandLord();
         agentOrLandLord.setName("name");
         agentOrLandLord.setEmail("ddd@ddd.com");
-        agentOrLandLord.setAddress("address");
+        agentOrLandLord.setAddress(validAddress());
         agentOrLandLord.setTelephone("111");
         agentOrLandLord.setRegistrationNumber(validRegNumbers().get(0));
         return agentOrLandLord;
@@ -125,6 +126,76 @@ public class ObjectMother {
         return people;
     }
 
+    public List<Address> validAddresses() {
+        List<Address> addresses = new ArrayList<Address>();
+        Collections.addAll(addresses,
+                oneLineAddress(),
+                twoLineAddress(),
+                threeLineAddress());
+        return addresses;
+    }
+
+    public List<Address> invalidAddresses() {
+        List<Address> addresses = new ArrayList<Address>();
+        Collections.addAll(addresses,
+                null,
+                zeroLineAddress(),
+                invalidPostcodeAddress(),
+                noPostcodeAddress());
+        return addresses;
+    }
+
+    public Address invalidPostcodeAddress() {
+        Address address = validAddress();
+        address.setPostcode("ZZZ");
+        return address;
+    }
+
+    public Address noPostcodeAddress() {
+        Address address = validAddress();
+        address.setPostcode("");
+        return address;
+    }
+
+    public Address zeroLineAddress() {
+        Address address = validAddress();
+        address.setAddressLine1("");
+        address.setAddressLine2("");
+        address.setAddressLine3("");
+        return address;
+    }
+    public Address validAddress() {
+        return threeLineAddress();
+    }
+
+    public String validAdressFormatted() {
+        return "(1) name, 	21 Some random street, Randomtown, Midlothian, EH104AX";
+    }
+
+    public Address oneLineAddress() {
+        Address address = new Address();
+        address.setAddressLine1("21 Some random street");
+        address.setPostcode(validPostcode());
+        return address;
+    }
+
+    public Address twoLineAddress() {
+        Address address = new Address();
+        address.setAddressLine1("21 Some random street");
+        address.setAddressLine2("Randomtown");
+        address.setPostcode(validPostcode());
+        return address;
+    }
+
+    public Address threeLineAddress() {
+        Address address = new Address();
+        address.setAddressLine1("21 Some random street");
+        address.setAddressLine2("Randomtown");
+        address.setAddressLine3("Midlothian");
+        address.setPostcode(validPostcode());
+        return address;
+    }
+
     public Person validPerson() {
         return personWithAllFields();
     }
@@ -133,7 +204,7 @@ public class ObjectMother {
         Person person = new Person();
         person.setName("name");
         person.setEmail("ddd@ddd.com");
-        person.setAddress("address");
+        person.setAddress(validAddress());
         person.setTelephone("111");
         return person;
     }
@@ -202,6 +273,10 @@ public class ObjectMother {
         List<String> registrationNumbers = new ArrayList<>();
         Collections.addAll(registrationNumbers, "666666/333/55555");
         return registrationNumbers;
+    }
+
+    public String validPostcode() {
+        return "EH104AX";
     }
 
 }

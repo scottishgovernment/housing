@@ -17,7 +17,8 @@ public class TenantsRule implements ValidationRule<ModelTenancy> {
             // each tenant shoudl have a non empty addreee and valid contact details
             Person tenant = modelTenancy.getTenants().get(i);
             String field = "tenant" + (i + 1);
-            ValidationUtil.nonEmpty(tenant, field, resultsBuilder, "name", "address");
+            AddressValidator.validate(tenant.getAddress(), field, resultsBuilder);
+            ValidationUtil.nonEmpty(tenant, field, resultsBuilder, "name");
             ValidationUtil.validateContactDetails(tenant, "tenant" + (i + 1), resultsBuilder);
         });
     }

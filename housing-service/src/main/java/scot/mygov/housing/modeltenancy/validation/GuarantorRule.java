@@ -28,7 +28,8 @@ public class GuarantorRule implements ValidationRule<ModelTenancy> {
             String fieldBase = "guarantor" + (i+1);
 
             // each guarantor must have a name and address
-            ValidationUtil.nonEmpty(guarantor, fieldBase, resultsBuilder, "name", "address");
+            ValidationUtil.nonEmpty(guarantor, fieldBase, resultsBuilder, "name");
+            AddressValidator.validate(guarantor.getAddress(), fieldBase, resultsBuilder);
 
             // must refer to at least one tenant
             if (guarantor.getTenantNames().isEmpty()) {
