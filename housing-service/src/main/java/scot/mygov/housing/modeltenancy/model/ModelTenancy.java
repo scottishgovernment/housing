@@ -19,9 +19,9 @@ public class ModelTenancy {
     private String communicationsAgreement;
     private Address propertyAddress;
     private String propertyType;
-    private List<String> includedAreasOrFacilities = new ArrayList<>();
-    private List<String> sharedFacilities = new ArrayList<>();
-    private List<String> excludedAreasFacilities = new ArrayList<>();
+    private String includedAreasOrFacilities;
+    private String sharedFacilities;
+    private String excludedAreasFacilities;
     private List<String> landlordStructureList = new ArrayList<>();
     private String furnishingType;
     private boolean inRentPressureZone;
@@ -110,27 +110,27 @@ public class ModelTenancy {
         this.propertyType = propertyType;
     }
 
-    public List<String> getIncludedAreasOrFacilities() {
+    public String getIncludedAreasOrFacilities() {
         return includedAreasOrFacilities;
     }
 
-    public void setIncludedAreasOrFacilities(List<String> includedAreasOrFacilities) {
+    public void setIncludedAreasOrFacilities(String includedAreasOrFacilities) {
         this.includedAreasOrFacilities = includedAreasOrFacilities;
     }
 
-    public List<String> getSharedFacilities() {
+    public String getSharedFacilities() {
         return sharedFacilities;
     }
 
-    public void setSharedFacilities(List<String> sharedFacilities) {
+    public void setSharedFacilities(String sharedFacilities) {
         this.sharedFacilities = sharedFacilities;
     }
 
-    public List<String> getExcludedAreasFacilities() {
+    public String getExcludedAreasFacilities() {
         return excludedAreasFacilities;
     }
 
-    public void setExcludedAreasFacilities(List<String> excludedAreasFacilities) {
+    public void setExcludedAreasFacilities(String excludedAreasFacilities) {
         this.excludedAreasFacilities = excludedAreasFacilities;
     }
 

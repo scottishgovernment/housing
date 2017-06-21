@@ -42,12 +42,9 @@ public class ModelTenancyFieldExtractor {
 
         fields.put("propertyAddress", addressFieldsMultipleLines(modelTenancy.getPropertyAddress()));
         fields.put("propertyType", modelTenancy.getPropertyType());
-        fields.put("propertyIncludedAreasOrFacilities",
-                commaSeparated(modelTenancy.getIncludedAreasOrFacilities()));
-        fields.put("propertySharedFacilities",
-                commaSeparated(modelTenancy.getSharedFacilities()));
-        fields.put("propertyExcludedAreasFacilities",
-                commaSeparated(modelTenancy.getExcludedAreasFacilities()));
+        fields.put("propertyIncludedAreasOrFacilities", modelTenancy.getIncludedAreasOrFacilities());
+        fields.put("propertySharedFacilities", modelTenancy.getSharedFacilities());
+        fields.put("propertyExcludedAreasFacilities", modelTenancy.getExcludedAreasFacilities());
         fields.put("furnishingType", modelTenancy.getFurnishingType().toLowerCase());
 
         if (modelTenancy.isInRentPressureZone()) {
@@ -83,10 +80,6 @@ public class ModelTenancyFieldExtractor {
                         .collect(joining(" / ")));
 
         return fields;
-    }
-
-    private String commaSeparated(List<String> list) {
-        return list.stream().collect(Collectors.joining(", "));
     }
 
     private void extractTenants(ModelTenancy modelTenancy, Map<String, Object> fields) {
