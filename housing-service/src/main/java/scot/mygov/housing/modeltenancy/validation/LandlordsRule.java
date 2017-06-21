@@ -22,12 +22,6 @@ public class LandlordsRule implements ValidationRule<ModelTenancy> {
             return;
         }
 
-        // cannot have more than 2 landlords. Is this right?
-        if (modelTenancy.getLandlords().size() > 2) {
-            resultsBuilder.issue(FIELD, "More than 2 landlords");
-            return;
-        }
-
         // validate each of the landlords
         IntStream.range(0, modelTenancy.getLandlords().size()).forEach(i -> {
             AgentOrLandLord landlord = modelTenancy.getLandlords().get(i);

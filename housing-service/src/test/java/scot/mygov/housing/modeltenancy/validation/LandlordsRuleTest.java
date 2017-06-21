@@ -57,21 +57,6 @@ public class LandlordsRuleTest {
     }
 
     @Test
-    public void rejectsMoreThan2ValidLandlords() {
-        // ARRANGE
-        ModelTenancy input = om.tenancyWithThreeLandlords();
-        ValidationResultsBuilder builder = new ValidationResultsBuilder();
-
-        // ACT
-        rule.validate(input, builder);
-        ValidationResults results = builder.build();
-
-        // ASSERT
-        Assert.assertEquals(results.getIssues().size(), 1);
-    }
-
-
-    @Test
     public void rejectsMissingName() {
         // ARRANGE
         ModelTenancy input = om.tenancyWithTwoLandlords();
