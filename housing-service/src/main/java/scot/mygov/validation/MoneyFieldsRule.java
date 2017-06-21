@@ -27,11 +27,7 @@ public class MoneyFieldsRule<T> implements ValidationRule<T> {
         fields.stream().forEach(field -> {
             String value = null;
             try {
-
-                Object property = BeanUtils.getProperty(model, field);
-                if (property != null) {
-                    value = property.toString();
-                }
+                value = BeanUtils.getProperty(model, field).toString();
             } catch (Exception e) {
                 LOG.warn("Unknown property", e);
             } finally {
