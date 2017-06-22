@@ -95,36 +95,4 @@ public class EnumsRuleTest {
             Assert.assertEquals(builder.build().getIssues().size(), 1);
         });
     }
-
-    @Test
-    public void acceptsEmptyTenantResponsibilities() {
-        // ARRANGE
-        ModelTenancy modelTenancy = om.anyTenancy();
-        ValidationResultsBuilder builder = new ValidationResultsBuilder();
-
-        // ACT
-        rule.validate(modelTenancy, builder);
-
-        // ASSERT
-        Assert.assertEquals(builder.build().getIssues().size(), 0);
-
-    }
-
-    @Test
-    public void rejectsInvalidTenantResponsibilities() {
-        // ARRANGE
-        ModelTenancy modelTenancy = om.anyTenancy();
-        List<String> values = new ArrayList<>();
-        Collections.addAll(values, "blah", null, "");
-
-        // ACT
-        values.stream().forEach(value -> {
-            ValidationResultsBuilder builder = new ValidationResultsBuilder();
-            modelTenancy.setTenantUtilitiesResponsibilities(Collections.singletonList(value));
-            rule.validate(modelTenancy, builder);
-
-            // ASSERT
-            Assert.assertEquals(builder.build().getIssues().size(), 1);
-        });
-    }
 }

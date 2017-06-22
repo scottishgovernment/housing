@@ -75,6 +75,14 @@ public class HousingResource {
         return Response.status(200).entity(result).build();
     }
 
+    @GET
+    @Path("model/tenancy/template")
+    @Produces("application/json")
+    public Response modelTenancyTmeplate(@Context UriInfo uriInfo) throws ModelTenancyServiceException {
+        ModelTenancy modelTenancyTemplate = modelTenancyService.getModelTenancytemplate();
+        return Response.status(200).entity(modelTenancyTemplate).build();
+    }
+
     @POST
     @Path("modeltenancy/raw")
     @Produces("application/pdf")

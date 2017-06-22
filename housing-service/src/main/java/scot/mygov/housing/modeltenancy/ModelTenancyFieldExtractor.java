@@ -1,11 +1,15 @@
 package scot.mygov.housing.modeltenancy;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import scot.mygov.housing.modeltenancy.model.Address;
 import scot.mygov.housing.modeltenancy.model.AgentOrLandLord;
 import scot.mygov.housing.modeltenancy.model.CommunicationsAgreement;
 import scot.mygov.housing.modeltenancy.model.Guarantor;
 import scot.mygov.housing.modeltenancy.model.ModelTenancy;
+import scot.mygov.housing.modeltenancy.model.OptionalTerms;
 import scot.mygov.housing.modeltenancy.model.Person;
 import scot.mygov.housing.modeltenancy.model.RentPaymentFrequency;
 import scot.mygov.housing.modeltenancy.model.Utility;
@@ -25,6 +29,8 @@ import static java.util.stream.Collectors.joining;
  * Extract fields from a ModelTenancy object for use in a template.
  */
 public class ModelTenancyFieldExtractor {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ModelTenancyFieldExtractor.class);
 
     private static final String NEWLINE = "\n";
     private static final String NOT_APPLICABLE = "n/a";
@@ -78,8 +84,19 @@ public class ModelTenancyFieldExtractor {
                         .stream()
                         .map(utility -> Utility.valueOf(utility).getDescription())
                         .collect(joining(" / ")));
-
+        extractOptionalTerms(modelTenancy.getOptionalTerms(), fields);
         return fields;
+    }
+
+    private void extractOptionalTerms(OptionalTerms optionalTerms, Map<String, Object> fields) {
+        try {
+            BeanUtils.describe(optionalTerms)
+                    .entrySet()
+                    .stream()
+                    .forEach(entry -> fields.put(entry.getKey(), entry.getValue()));
+        } catch (Exception e) {
+            LOG.warn("Failed to extract properties", e);
+        }
     }
 
     private void extractTenants(ModelTenancy modelTenancy, Map<String, Object> fields) {

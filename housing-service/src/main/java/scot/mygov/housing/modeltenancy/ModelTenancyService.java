@@ -4,7 +4,9 @@ import com.aspose.words.Document;
 import com.aspose.words.PdfSaveOptions;
 import com.aspose.words.SaveFormat;
 
+import org.apache.commons.beanutils.BeanUtils;
 import scot.mygov.housing.modeltenancy.model.ModelTenancy;
+import scot.mygov.housing.modeltenancy.model.OptionalTerms;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -21,19 +23,25 @@ import java.util.Set;
 public class ModelTenancyService {
 
     private final ModelTenancyFieldExtractor fieldExtractor;
-    private final TemplateLoader templateLoader;
+    private final ModelTenancyDocumentTemplateLoader templateLoader;
     private final EmptySectionRemovingCallback emptySectionRemovingCallback;
+    private final ModelTenancyJsonTemplateLoader modelTenancyJsonTemplateLoader;
 
-    public ModelTenancyService(TemplateLoader templateLoader, ModelTenancyFieldExtractor fieldExtractor) {
+    public ModelTenancyService(ModelTenancyDocumentTemplateLoader templateLoader,
+                               ModelTenancyFieldExtractor fieldExtractor,
+                               ModelTenancyJsonTemplateLoader modelTenancyJsonTemplateLoader) {
         this.templateLoader = templateLoader;
         this.fieldExtractor = fieldExtractor;
         emptySectionRemovingCallback = new EmptySectionRemovingCallback(deleteEmptySectionFields());
+        this.modelTenancyJsonTemplateLoader = modelTenancyJsonTemplateLoader;
     }
 
-    private final Set<String> deleteEmptySectionFields() {
-        Set<String> deleteWholeSectionFields = new HashSet<>();
-        Collections.addAll(deleteWholeSectionFields, "hmoString", "rentPressureZoneString", "communicationsAgreementType");
-        return deleteWholeSectionFields;
+    public ModelTenancy getModelTenancytemplate() throws ModelTenancyServiceException {
+        try {
+            return modelTenancyJsonTemplateLoader.loadJsonTemplate();
+        } catch (TemplateLoaderException e) {
+            throw new ModelTenancyServiceException("Failed to load model tenancy template", e);
+        }
     }
 
     public byte [] save(ModelTenancy modelTenancy) throws ModelTenancyServiceException {
@@ -47,7 +55,7 @@ public class ModelTenancyService {
     private byte [] executeMailMerge(Map<String, Object> fields) throws ModelTenancyServiceException {
 
         try {
-            Document template = templateLoader.loadTemplate();
+            Document template = templateLoader.loadDocumentTemplate();
             template.getMailMerge().setTrimWhitespaces(true);
             template.getMailMerge().setFieldMergingCallback(emptySectionRemovingCallback);
             template.getMailMerge().execute(getFieldnames(fields), getValues(fields));
@@ -78,5 +86,22 @@ public class ModelTenancyService {
         } catch (Exception e) {
             throw new ModelTenancyServiceException("Failed to save pdf", e);
         }
+    }
+
+    private final Set<String> deleteEmptySectionFields() {
+        Set<String> deleteWholeSectionFields = new HashSet<>();
+        // add al of the optional sections.
+        try {
+            deleteWholeSectionFields.addAll(BeanUtils.describe(new OptionalTerms()).keySet());
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to extract optional section fields", e);
+        }
+
+        // other fields with sections
+        Collections.addAll(deleteWholeSectionFields,
+                "hmoString",
+                "rentPressureZoneString",
+                "communicationsAgreementType");
+        return deleteWholeSectionFields;
     }
 }

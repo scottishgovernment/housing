@@ -11,18 +11,18 @@ import java.io.InputStream;
 /**
  * Created by z418868 on 20/06/2017.
  */
-public class TemplateLoader {
+public class ModelTenancyDocumentTemplateLoader {
 
-    private static final Logger LOG = LoggerFactory.getLogger(TemplateLoader.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ModelTenancyDocumentTemplateLoader.class);
 
     private final String path;
     private Document template;
 
-    public TemplateLoader(String path) {
+    public ModelTenancyDocumentTemplateLoader(String path) {
         this.path = path;
     }
 
-    public Document loadTemplate() throws TemplateLoaderException {
+    public Document loadDocumentTemplate() throws TemplateLoaderException {
 
         // if we have already loaded the tmeplate then return a clone of it.
         if (template != null) {
@@ -46,5 +46,4 @@ public class TemplateLoader {
             throw new TemplateLoaderException("Failed to load template", e);
         }
     }
-
 }

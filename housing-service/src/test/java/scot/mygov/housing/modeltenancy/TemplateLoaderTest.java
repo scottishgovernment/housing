@@ -12,12 +12,12 @@ public class TemplateLoaderTest {
 
     @Test
     public void canLoadTemplate() throws TemplateLoaderException {
-        TemplateLoader loader = new TemplateLoader(new HousingConfiguration().getModelTenancyTemplatePath());
-        Document doc1 = loader.loadTemplate();
+        ModelTenancyDocumentTemplateLoader loader = new ModelTenancyDocumentTemplateLoader(new HousingConfiguration().getModelTenancyTemplatePath());
+        Document doc1 = loader.loadDocumentTemplate();
         Assert.assertNotNull(doc1);
 
         // load again, returns a clone.
-        Document doc2 = loader.loadTemplate();
+        Document doc2 = loader.loadDocumentTemplate();
         Assert.assertNotEquals(doc1, doc2);
     }
 
@@ -25,6 +25,6 @@ public class TemplateLoaderTest {
     // exception throwsn for non existant template
     @Test(expected = TemplateLoaderException.class)
     public void expectedExceptionForNonExsitantPath() throws TemplateLoaderException {
-        new TemplateLoader("nonexistanttemplate").loadTemplate();
+        new ModelTenancyDocumentTemplateLoader("nonexistanttemplate").loadDocumentTemplate();
     }
 }

@@ -1,38 +1,111 @@
 {
-  "lettingAgent": {
-    "name": "Mr Letting Agent",
-    "address": "111 Agent street",
-    "telephone": "111",
-    "registrationNumber": "111111/111/22222"
-
+  "lettingAgent":{
+    "name":"Mr Letting Agent",
+    "address":{
+      "addressLine1":"111 Agent street",
+      "postcode":"eh104ax"
+    },
+    "telephone":"111",
+    "registrationNumber":"111111/111/22222"
   },
-
-  "landlords": [{
-    "name": "Landlord1 Name",
-    "address": "landlord address 1",
-    "email": "ll1@landlord.org",
-    "registrationNumber": "111111/222/22222"
-  }, {
-    "name": "Landlord1 Name",
-    "address": "landlord address 1",
-    "telephone": "ll1111",
-    "registrationNumber": "111111/333/22222"
-  }],
-  "communicationsAgreement": "HARDCOPY",
-  "tenants": [{
-    "name": "David Sinclair",
-    "address": "111 mmm",
-    "email": "davis.sinclait@gov.scot"
-  },
+  "landlords":[
     {
-      "name": "Elizabeth Bernstein",
-      "address": "111 mmm",
-      "email": "liz@gov.scot"
-    }],
-  "propertyAddress": "167 Morningside Road",
-  "propertyType": "FLAT",
-  "includedAreasOrFacilities" : ["onefac", "twofac", "threefac"],
-  "sharedFacilities": ["onesharedfac", "twosharedfa", "threesharedfa"],
-  "excludedAreasFacilities": ["oneex", "twoex", "threeex"],
-  "furnishingType": "UNFURNISHED"
+      "name":"Landlord1 Name",
+      "address":{
+        "addressLine1":"landlord address 1",
+        "postcode":"eh104ax"
+      },
+      "email":"ll1@landlord.org",
+      "registrationNumber":"111111/222/22222"
+    },
+    {
+      "name":"Landlord1 Name",
+      "address":{
+        "addressLine1":"landlord address 2",
+        "postcode":"eh104ax"
+      },
+      "telephone":"ll1111",
+      "registrationNumber":"111111/333/22222"
+    }
+  ],
+  "communicationsAgreement":"EMAIL",
+  "tenants":[
+    {
+      "name":"David Sinclair",
+      "address":{
+        "addressLine1":"111 mmm",
+        "postcode":"eh104ax"
+      },
+      "email":"davis.sinclait@gov.scot"
+    },
+    {
+      "name":"Elizabeth Bernstein",
+      "address":{
+        "addressLine1":"222 mmm",
+        "postcode":"eh104ax"
+      },
+      "email":"liz@gov.scot"
+    }
+  ],
+  "guarantors":[
+    {
+      "name":"Mr Guarentor",
+      "address":{
+        "addressLine1":"Guarentor address",
+        "postcode":"eh104ax"
+      },
+
+      "tenantNames":[
+        "David Sinclair",
+        "Elizabeth Bernstein"
+      ]
+    }
+  ],
+  "propertyAddress":{
+    "addressLine1":"167 Morningside Road",
+    "addressLine2": "Edinburgh",
+    "postcode":"eh104ax"
+  },
+  "propertyType":"FLAT",
+  "includedAreasOrFacilities": "one, two, three",
+  "sharedFacilities":"one, two, three",
+  "excludedAreasFacilities":"one, two, three",
+  "furnishingType":"UNFURNISHED",
+  "inRentPressureZone":true,
+  "hmoProperty":false,
+  "hmo24ContactNumber":"",
+  "hmoRegistrationExpiryDate":"",
+  "tenancyStartDate":"2020-01-10",
+  "rentAmount":"500.00",
+  "rentPaymentFrequency":"WEEKLY",
+  "firstPaymentAmount":"700.00",
+  "firstPaymentDate":"2020-01-01",
+  "firstPaymentPeriodStart":"2020-01-01",
+  "firstPaymentPeriodEnd":"2020-01-01",
+  "rentPaymentDayOrDate":"Monday",
+  "rentPaymentSchedule": "Whenever you like",
+  "rentPaymentMethod":"Cash",
+  "servicesIncludedInRent":"some services",
+  "depositAmount":"600.00",
+  "tenancyDepositSchemeAdministrator":"admin man",
+  "tenancyDepositSchemeContactDetails":"admin contact",
+  "tenantUtilitiesResponsibilities":[
+    "GAS",
+    "ELECTRICITY"
+  ],
+  "optionalTerms" : {
+    "contentAndCondition": "",
+    "localAuthorityTaxesAndCharges": "",
+    "utilities": "",
+    "alterations": "",
+    "privateGarden": "",
+    "roof": "",
+    "bindAndRecycling": "",
+    "storage": "",
+    "dangerousSubstances": "",
+    "pets": "",
+    "smoking": "",
+    "liquidPetroleumGas": "",
+    "additionalTerms": "some extra guff"
+  }
 }

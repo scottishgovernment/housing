@@ -54,6 +54,7 @@ public class ModelTenancy {
     private String tenancyDepositSchemeAdministrator;
     private String tenancyDepositSchemeContactDetails;
     private List<String> tenantUtilitiesResponsibilities = new ArrayList<>();
+    private OptionalTerms optionalTerms = new OptionalTerms();
 
     public List<Person> getTenants() {
         return tenants;
@@ -309,5 +310,13 @@ public class ModelTenancy {
 
     public void setTenantUtilitiesResponsibilities(List<String> tenantUtilitiesResponsibilities) {
         this.tenantUtilitiesResponsibilities = tenantUtilitiesResponsibilities;
+    }
+
+    public OptionalTerms getOptionalTerms() {
+        return optionalTerms;
+    }
+
+    public void setOptionalTerms(OptionalTerms optionalTerms) {
+        this.optionalTerms = optionalTerms;
     }
 }

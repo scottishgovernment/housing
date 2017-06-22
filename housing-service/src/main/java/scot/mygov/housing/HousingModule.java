@@ -7,8 +7,9 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scot.mygov.config.Configuration;
+import scot.mygov.housing.modeltenancy.ModelTenancyJsonTemplateLoader;
 import scot.mygov.housing.modeltenancy.ModelTenancyService;
-import scot.mygov.housing.modeltenancy.TemplateLoader;
+import scot.mygov.housing.modeltenancy.ModelTenancyDocumentTemplateLoader;
 import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.modeltenancy.ModelTenancyFieldExtractor;
 import scot.mygov.housing.modeltenancy.validation.ModelTenancyValidatorFactory;
@@ -83,8 +84,9 @@ public class HousingModule {
         }
 
         return new ModelTenancyService(
-                new TemplateLoader(configuration().getModelTenancyTemplatePath()),
-                new ModelTenancyFieldExtractor()
+                new ModelTenancyDocumentTemplateLoader(configuration().getModelTenancyTemplatePath()),
+                new ModelTenancyFieldExtractor(),
+                new ModelTenancyJsonTemplateLoader()
         );
     }
 

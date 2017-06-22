@@ -4,7 +4,6 @@ import scot.mygov.housing.modeltenancy.model.CommunicationsAgreement;
 import scot.mygov.housing.modeltenancy.model.FurnishingType;
 import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.modeltenancy.model.RentPaymentFrequency;
-import scot.mygov.housing.modeltenancy.model.Utility;
 import scot.mygov.validation.ValidationResultsBuilder;
 import scot.mygov.validation.ValidationRule;
 
@@ -28,12 +27,5 @@ public class EnumsRule implements ValidationRule<ModelTenancy> {
                 "rentPaymentFrequency",
                 RentPaymentFrequency.class,
                 resultsBuilder);
-
-        // Note: this field is optional and so an empty list is considered valid
-        modelTenancy.getTenantUtilitiesResponsibilities().stream().forEach(utility ->
-            ValidationUtil.validateEnum(utility,
-                "tenantUtilitiesResponsibilities",
-                Utility.class,
-                resultsBuilder));
     }
 }
