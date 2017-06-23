@@ -43,12 +43,12 @@ public class HousingResource {
     @Inject
     Validator<ModelTenancy> modelTenancyValidator;
 
-    private enum PARAM {
+    private enum RPZ_PARAM {
         POSTCODE("postcode"), DATE("date");
 
         private final String param;
 
-        PARAM(String param) {
+        RPZ_PARAM(String param) {
             this.param = param;
         }
 
@@ -58,7 +58,7 @@ public class HousingResource {
     }
 
     @GET
-    @Path("model/tenancy/template")
+    @Path("modeltenancy/template")
     @Produces("application/json")
     public Response modelTenancyTmeplate(@Context UriInfo uriInfo) throws ModelTenancyServiceException {
         ModelTenancy modelTenancyTemplate = modelTenancyService.getModelTenancytemplate();
@@ -84,8 +84,8 @@ public class HousingResource {
             return Response.status(400).entity(validationResult).build();
         }
 
-        String postcode =  uriInfo.getQueryParameters().getFirst(PARAM.POSTCODE.getParam());
-        String dateString =  uriInfo.getQueryParameters().getFirst(PARAM.DATE.getParam());
+        String postcode =  uriInfo.getQueryParameters().getFirst(RPZ_PARAM.POSTCODE.getParam());
+        String dateString =  uriInfo.getQueryParameters().getFirst(RPZ_PARAM.DATE.getParam());
         LocalDate date = LocalDate.parse(dateString);
         RPZResult result = rpzService.rpz(postcode, date);
         return Response.status(200).entity(result).build();
@@ -96,18 +96,18 @@ public class HousingResource {
         ValidationResultsBuilder resultBuilder = new ValidationResultsBuilder();
 
         // ensure all params are present
-        Arrays.stream(PARAM.values())
+        Arrays.stream(RPZ_PARAM.values())
                 .filter(param -> !params.containsKey(param.getParam()))
-                .map(PARAM::getParam)
+                .map(RPZ_PARAM::getParam)
                 .forEach(invlaidParam -> resultBuilder.issue(invlaidParam, "Missing required param"));
 
-        if (params.containsKey(PARAM.DATE.getParam())) {
-            String value = params.getFirst(PARAM.DATE.getParam());
+        if (params.containsKey(RPZ_PARAM.DATE.getParam())) {
+            String value = params.getFirst(RPZ_PARAM.DATE.getParam());
             try {
                 LocalDate.parse(value);
             } catch (DateTimeParseException e) {
                 LOG.warn("Invalid date", e);
-                resultBuilder.issue(PARAM.DATE.getParam(), "Invalid date:" + value);
+                resultBuilder.issue(RPZ_PARAM.DATE.getParam(), "Invalid date:" + value);
             }
         }
 
