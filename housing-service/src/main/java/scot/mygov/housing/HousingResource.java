@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scot.mygov.housing.modeltenancy.ModelTenancyService;
 import scot.mygov.housing.modeltenancy.ModelTenancyServiceException;
-import scot.mygov.validation.ValidationException;
 import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.rpz.RPZService;
 import scot.mygov.housing.rpz.RPZResult;
@@ -59,11 +58,28 @@ public class HousingResource {
     }
 
     @GET
+    @Path("model/tenancy/template")
+    @Produces("application/json")
+    public Response modelTenancyTmeplate(@Context UriInfo uriInfo) throws ModelTenancyServiceException {
+        ModelTenancy modelTenancyTemplate = modelTenancyService.getModelTenancytemplate();
+        return Response.status(200).entity(modelTenancyTemplate).build();
+    }
+
+    @POST
+    @Path("modeltenancy")
+    @Produces("application/pdf")
+    public Response modelTenancyRaw(ModelTenancy modelTenancy, StreamingOutput streamingOutput) throws ModelTenancyServiceException {
+        modelTenancyValidator.validate(modelTenancy);
+        byte[] tenancyBytes = modelTenancyService.save(modelTenancy);
+        return Response.ok(tenancyBytes).build();
+    }
+
+    @GET
     @Path("rpz")
     @Produces("application/json")
     public Response rpz(@Context UriInfo uriInfo) {
 
-        ValidationResults validationResult = validateParams(uriInfo.getQueryParameters());
+        ValidationResults validationResult = validateRPZParams(uriInfo.getQueryParameters());
         if (!validationResult.getIssues().isEmpty()) {
             return Response.status(400).entity(validationResult).build();
         }
@@ -75,54 +91,7 @@ public class HousingResource {
         return Response.status(200).entity(result).build();
     }
 
-    @GET
-    @Path("model/tenancy/template")
-    @Produces("application/json")
-    public Response modelTenancyTmeplate(@Context UriInfo uriInfo) throws ModelTenancyServiceException {
-        ModelTenancy modelTenancyTemplate = modelTenancyService.getModelTenancytemplate();
-        return Response.status(200).entity(modelTenancyTemplate).build();
-    }
-
-    @POST
-    @Path("modeltenancy/raw")
-    @Produces("application/pdf")
-    public Response modelTenancyRaw(ModelTenancy modelTenancy, StreamingOutput streamingOutput) throws ModelTenancyServiceException {
-        modelTenancyValidator.validate(modelTenancy);
-        byte[] tenancyBytes = modelTenancyService.save(modelTenancy);
-        return Response.ok(tenancyBytes).build();
-    }
-
-    @POST
-    @Path("modeltenancy")
-    @Produces("application/json")
-    public Response modelTenancy(ModelTenancy modelTenancy, StreamingOutput streamingOutput) {
-
-        try {
-            modelTenancyValidator.validate(modelTenancy);
-            byte [] tenancyBytes = modelTenancyService.save(modelTenancy);
-            return Response.ok(new Result(tenancyBytes)).build();
-        } catch (ValidationException e) {
-            LOG.error("Invalid model tenancy", e);
-            return Response.status(400).entity(e.getIssues()).build();
-        } catch (Exception e) {
-            LOG.error("Failed to produce model tenancy pdf", e);
-            return Response.serverError().build();
-        }
-    }
-
-    private class Result {
-        private byte[] body;
-
-        public Result(byte[] body) {
-            this.body = body;
-        }
-
-        public byte[] getBody() {
-            return body;
-        }
-    }
-
-    private ValidationResults validateParams(MultivaluedMap<String, String> params) {
+    private ValidationResults validateRPZParams(MultivaluedMap<String, String> params) {
 
         ValidationResultsBuilder resultBuilder = new ValidationResultsBuilder();
 
