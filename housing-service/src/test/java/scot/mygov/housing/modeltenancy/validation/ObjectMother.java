@@ -170,7 +170,7 @@ public class ObjectMother {
     }
 
     public String validAdressFormatted() {
-        return "(1) name, 	21 Some random street, Randomtown, Midlothian, EH104AX";
+        return "(1) name, 21 Some random street, Randomtown, Midlothian, EH104AX";
     }
 
     public Address oneLineAddress() {

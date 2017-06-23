@@ -56,7 +56,7 @@ public class ModelTenancyFieldExtractorTest {
 
         // ARRANGE
         ModelTenancy modelTenancy = om.tenancyWithGuarentors();
-        String expected = "(1) name, 	21 Some random street, Randomtown, Midlothian, EH104AX";
+        String expected = "(1) name, 21 Some random street, Randomtown, Midlothian, EH104AX";
 
         // ACT
         Map<String, Object> actual = sut.extractFields(modelTenancy);

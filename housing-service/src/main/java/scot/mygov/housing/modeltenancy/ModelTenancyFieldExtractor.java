@@ -212,7 +212,7 @@ public class ModelTenancyFieldExtractor {
 
     private String nameAndAddress(Person person, int i) {
         String address = addressFieldsSingleLine(person.getAddress());
-        String nameAndAddress = String.format("%s, \t%s", person.getName(), address);
+        String nameAndAddress = String.format("%s, %s", person.getName(), address);
         return numberedValue(nameAndAddress, i);
     }
 
