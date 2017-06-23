@@ -94,18 +94,19 @@
     "ELECTRICITY"
   ],
   "optionalTerms" : {
-    "contentAndCondition": "",
-    "localAuthorityTaxesAndCharges": "",
-    "utilities": "",
-    "alterations": "",
-    "privateGarden": "",
+
+    "contentsAndConditions": "some tricky conditions",
+    "localAuthorityTaxesAndCharges": "some localAuthorityTaxesAndCharges",
+    "commonParts": "some common parts",
+    "alterations": "some alterations",
+    "privateGarden": "some garden",
     "roof": "",
-    "bindAndRecycling": "",
+    "binsAndRecycling": "some bins",
     "storage": "",
-    "dangerousSubstances": "",
-    "pets": "",
-    "smoking": "",
-    "liquidPetroleumGas": "",
+    "dangerousSubstances": "some dangerous substances",
+    "pets": "dogs but no cats. hate cats.",
+    "smoking": "smoke up",
+    "liquidPetroleumGas": "burn!",
     "additionalTerms": "some extra guff"
   }
 }
