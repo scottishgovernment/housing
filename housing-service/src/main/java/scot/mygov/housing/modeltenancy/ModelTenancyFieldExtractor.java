@@ -12,6 +12,7 @@ import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.modeltenancy.model.OptionalTerms;
 import scot.mygov.housing.modeltenancy.model.Person;
 import scot.mygov.housing.modeltenancy.model.RentPaymentFrequency;
+import scot.mygov.housing.modeltenancy.model.Service;
 import scot.mygov.housing.modeltenancy.model.Utility;
 
 import java.time.format.DateTimeFormatter;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Extract fields from a ModelTenancy object for use in a template.
@@ -75,7 +77,7 @@ public class ModelTenancyFieldExtractor {
         fields.put("rentPaymentDayOrDate", modelTenancy.getRentPaymentDayOrDate());
         fields.put("rentPaymentSchedule", modelTenancy.getRentPaymentSchedule());
         fields.put("rentPaymentMethod", modelTenancy.getRentPaymentMethod());
-        fields.put("servicesIncludedInRent", naForEmpty(modelTenancy.getServicesIncludedInRent()));
+        fields.put("servicesIncludedInRent", servicesIncludedInRent(modelTenancy.getServicesIncludedInRent()));
         fields.put("depositAmount", modelTenancy.getDepositAmount());
         fields.put("depositSchemeAdministrator", modelTenancy.getTenancyDepositSchemeAdministrator());
         fields.put("depositSchemeContactDetails", modelTenancy.getTenancyDepositSchemeContactDetails());
@@ -222,6 +224,10 @@ public class ModelTenancyFieldExtractor {
 
     private String naForEmpty(String value) {
         return defaultForEmpty(value, NOT_APPLICABLE);
+    }
+
+    private String servicesIncludedInRent(List<Service> services) {
+        return services.stream().map(service -> service.getName() + " " + service.getValue()).collect(joining("\n"));
     }
 
     private String defaultForEmpty(String value, String defaultValue) {

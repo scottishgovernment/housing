@@ -49,7 +49,7 @@ public class ModelTenancy {
     private String rentPaymentDayOrDate;
     private String rentPaymentSchedule;
     private String rentPaymentMethod;
-    private String servicesIncludedInRent;
+    private List<Service> servicesIncludedInRent;
     private String depositAmount;
     private String tenancyDepositSchemeAdministrator;
     private String tenancyDepositSchemeContactDetails;
@@ -272,11 +272,11 @@ public class ModelTenancy {
         this.rentPaymentMethod = rentPaymentMethod;
     }
 
-    public String getServicesIncludedInRent() {
+    public List<Service> getServicesIncludedInRent() {
         return servicesIncludedInRent;
     }
 
-    public void setServicesIncludedInRent(String servicesIncludedInRent) {
+    public void setServicesIncludedInRent(List<Service> servicesIncludedInRent) {
         this.servicesIncludedInRent = servicesIncludedInRent;
     }
 

@@ -10,6 +10,7 @@ import scot.mygov.housing.modeltenancy.model.Guarantor;
 import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.modeltenancy.model.Person;
 import scot.mygov.housing.modeltenancy.model.RentPaymentFrequency;
+import scot.mygov.housing.modeltenancy.model.Service;
 import scot.mygov.housing.rpz.PostcodeSource;
 
 import java.time.LocalDate;
@@ -47,8 +48,26 @@ public class ObjectMother {
         tenancy.setDepositAmount("300.00");
         tenancy.setTenancyDepositSchemeAdministrator("Mr Administrator man");
         tenancy.setTenancyDepositSchemeContactDetails("contanct details for administrator");
+        tenancy.setServicesIncludedInRent(anyServices());
         return tenancy;
     }
+
+    public List<Service> anyServices() {
+        List<Service> services = new ArrayList<>();
+
+        Service serviceWithMonetaryValue = new Service();
+        serviceWithMonetaryValue.setName("with monetary value");
+        serviceWithMonetaryValue.setValue("100.00");
+        services.add(serviceWithMonetaryValue);
+
+        Service serviceWithMonetaryValuePerYear = new Service();
+        serviceWithMonetaryValuePerYear.setName("with monetary value per year");
+        serviceWithMonetaryValuePerYear.setValue("100.00 per year");
+        services.add(serviceWithMonetaryValuePerYear);
+
+        return services;
+    }
+
 
     public ModelTenancy tenancyWithGuarentors() {
         ModelTenancy modelTenancy = anyTenancy();
