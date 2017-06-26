@@ -43,17 +43,5 @@ public class GuarantorRule implements ValidationRule<ModelTenancy> {
                 }
             });
         });
-
-        // if guarentors are specified then all of the tenants should have been guarenteed
-        if (!modelTenancy.getGuarantors().isEmpty()) {
-            Set<String> tenantNames = modelTenancy.getTenants().stream().map(Person::getName).collect(Collectors.toSet());
-            Set<String> tenantNamesInGuarentors = modelTenancy.getGuarantors()
-                    .stream()
-                    .map(g -> g.getTenantNames())
-                    .flatMap(names -> names.stream()).collect(Collectors.toSet());
-            if (!tenantNames.equals(tenantNamesInGuarentors)) {
-                resultsBuilder.issue("guarantors", "All tenents must have a guarentor");
-            }
-        }
     }
 }

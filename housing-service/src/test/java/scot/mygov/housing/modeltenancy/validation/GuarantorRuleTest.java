@@ -100,22 +100,6 @@ public class GuarantorRuleTest {
         Assert.assertFalse(b.build().getIssues().isEmpty());
     }
 
-    @Test
-    public void rejectsTenantsWithNoGuarentor() {
-        // ARRANGE
-        ModelTenancy modelTenancy = om.tenancyWithGuarentors();
-        List<Person> tenants = new ArrayList<>(modelTenancy.getTenants());
-        tenants.add(tenantWithNoGuarentor());
-        modelTenancy.setTenants(tenants);
-        ValidationResultsBuilder b = new ValidationResultsBuilder();
-
-        // ACT
-        rule.validate(modelTenancy, b);
-
-        // ASSERT
-        Assert.assertFalse(b.build().getIssues().isEmpty());
-    }
-
     private Person tenantWithNoGuarentor() {
         Person p = new Person();
         p.setName("qqq");
