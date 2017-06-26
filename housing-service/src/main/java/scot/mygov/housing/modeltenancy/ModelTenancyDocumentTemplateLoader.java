@@ -24,7 +24,7 @@ public class ModelTenancyDocumentTemplateLoader {
 
     public Document loadDocumentTemplate() throws TemplateLoaderException {
 
-        // if we have already loaded the tmeplate then return a clone of it.
+        // if we have already loaded the template then return a clone of it.
         if (template != null) {
             return template.deepClone();
         }
@@ -35,7 +35,7 @@ public class ModelTenancyDocumentTemplateLoader {
             InputStream in = this.getClass().getResourceAsStream(path);
             template = new Document(in);
 
-            // renove any comments in the template
+            // remove any comments in the template
             NodeCollection comments = template.getChildNodes(NodeType.COMMENT, true);
             comments.clear();
 
