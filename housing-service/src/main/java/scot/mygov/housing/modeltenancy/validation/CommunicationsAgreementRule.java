@@ -13,7 +13,7 @@ public class CommunicationsAgreementRule implements ValidationRule<ModelTenancy>
 
     public void validate(ModelTenancy modelTenancy, ValidationResultsBuilder resultsBuilder) {
         if (modelTenancy.getCommunicationsAgreement().equals(CommunicationsAgreement.EMAIL.name())) {
-            // if they have chsen email then all tenants should have an email address
+            // if they have chosen email then all tenants should have an email address
             long noEmailCount = modelTenancy.getTenants()
                     .stream()
                     .filter(tenant -> StringUtils.isEmpty(tenant.getEmail()))
@@ -21,7 +21,7 @@ public class CommunicationsAgreementRule implements ValidationRule<ModelTenancy>
 
             if (noEmailCount > 0) {
                 resultsBuilder.issue("communicationsAgreement",
-                        "All tenents must have an email address for this communications agreement");
+                        "All tenants must have an email address for this communications agreement");
             }
         }
     }
