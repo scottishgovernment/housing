@@ -13,8 +13,9 @@ import java.util.stream.IntStream;
 public class TenantsRule implements ValidationRule<ModelTenancy> {
 
     public void validate(ModelTenancy modelTenancy, ValidationResultsBuilder resultsBuilder) {
+
         IntStream.range(0, modelTenancy.getTenants().size()).forEach(i -> {
-            // each tenant shoudl have a non empty addreee and valid contact details
+            // each tenant should have a non empty address and valid contact details
             Person tenant = modelTenancy.getTenants().get(i);
             String field = "tenant" + (i + 1);
             AddressValidator.validate(tenant.getAddress(), field, resultsBuilder);
