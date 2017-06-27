@@ -55,10 +55,7 @@ public class HealthcheckTest {
         assertNotNull(res.getMessage());
     }
 
-
-
-    @Ignore
-    @Test
+    @Test(expected = RuntimeException.class)
     public void serverErrorForBadPostcodeSource() {
 
         // ARRANGE
@@ -67,12 +64,7 @@ public class HealthcheckTest {
         // ACT
         Response response = sut.health();
 
-        // ASSERT
-        assertEquals(Healthcheck.HealthResult.class, response.getEntity().getClass());
-        assertEquals(response.getStatus(), 500);
-        Healthcheck.HealthResult res = (Healthcheck.HealthResult) response.getEntity();
-        assertFalse(res.isOk());
-        assertNotNull(res.getMessage());
+        // ASSERT -- see expected exception
     }
 
     PostcodeSource badPostCodeSource() {
