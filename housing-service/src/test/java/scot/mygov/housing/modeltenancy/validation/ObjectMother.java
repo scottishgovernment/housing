@@ -1,7 +1,5 @@
 package scot.mygov.housing.modeltenancy.validation;
 
-import org.mockito.ArgumentMatchers;
-import org.mockito.Mockito;
 import scot.mygov.housing.modeltenancy.model.Address;
 import scot.mygov.housing.modeltenancy.model.AgentOrLandLord;
 import scot.mygov.housing.modeltenancy.model.CommunicationsAgreement;
@@ -11,11 +9,9 @@ import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.modeltenancy.model.Person;
 import scot.mygov.housing.modeltenancy.model.RentPaymentFrequency;
 import scot.mygov.housing.modeltenancy.model.Service;
-import scot.mygov.housing.rpz.PostcodeSource;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;

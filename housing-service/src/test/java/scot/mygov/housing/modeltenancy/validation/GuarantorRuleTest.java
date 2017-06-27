@@ -6,9 +6,7 @@ import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.modeltenancy.model.Person;
 import scot.mygov.validation.ValidationResultsBuilder;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 /**
  * Created by z418868 on 20/06/2017.

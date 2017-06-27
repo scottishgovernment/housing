@@ -7,16 +7,16 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scot.mygov.config.Configuration;
+import scot.mygov.housing.modeltenancy.ModelTenancyDocumentTemplateLoader;
+import scot.mygov.housing.modeltenancy.ModelTenancyFieldExtractor;
 import scot.mygov.housing.modeltenancy.ModelTenancyJsonTemplateLoader;
 import scot.mygov.housing.modeltenancy.ModelTenancyService;
-import scot.mygov.housing.modeltenancy.ModelTenancyDocumentTemplateLoader;
 import scot.mygov.housing.modeltenancy.model.ModelTenancy;
-import scot.mygov.housing.modeltenancy.ModelTenancyFieldExtractor;
 import scot.mygov.housing.modeltenancy.validation.ModelTenancyValidatorFactory;
+import scot.mygov.housing.rpz.InMemoryRPZService;
 import scot.mygov.housing.rpz.PostcodeSource;
 import scot.mygov.housing.rpz.RPZ;
 import scot.mygov.housing.rpz.RPZService;
-import scot.mygov.housing.rpz.InMemoryRPZService;
 import scot.mygov.validation.Validator;
 
 import javax.inject.Singleton;
@@ -44,7 +44,7 @@ public class HousingModule {
 
     @Provides
     WebTarget target(Client client, HousingConfiguration configuration) {
-        return client.target("http://localhost:9092/postcodes/");
+        return client.target(configuration.getPostcodesUrl());
     }
 
     @Provides
@@ -77,6 +77,7 @@ public class HousingModule {
     ModelTenancyService modelTenancyService() {
         // load the license
         License license = new License();
+        // TODO: read from a url
         try {
             license.setLicense(Housing.class.getResourceAsStream("/Aspose.Words.lic"));
         } catch (Exception e) {

@@ -15,35 +15,23 @@ public class ModelTenancyDocumentTemplateLoader {
 
     private static final Logger LOG = LoggerFactory.getLogger(ModelTenancyDocumentTemplateLoader.class);
 
-    private final String path;
-    private Document template;
+    private final Document template;
 
     public ModelTenancyDocumentTemplateLoader(String path) {
-        this.path = path;
-    }
-
-    public Document loadDocumentTemplate() throws TemplateLoaderException {
-
-        // if we have already loaded the template then return a clone of it.
-        if (template != null) {
-            return template.deepClone();
-        }
-
-        // load the template
         try {
             long now = System.currentTimeMillis();
             InputStream in = this.getClass().getResourceAsStream(path);
             template = new Document(in);
-
             // remove any comments in the template
             NodeCollection comments = template.getChildNodes(NodeType.COMMENT, true);
             comments.clear();
-
             LOG.info("Loaded template.  took " + (System.currentTimeMillis() - now) + " millis");
-
-            return template.deepClone();
         } catch (Exception e) {
-            throw new TemplateLoaderException("Failed to load template", e);
+            throw new RuntimeException("Failed to load template", e);
         }
+    }
+
+    public Document loadDocumentTemplate() {
+        return template.deepClone();
     }
 }

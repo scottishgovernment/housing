@@ -3,7 +3,6 @@ package scot.mygov.validation;
 
 import org.junit.Assert;
 import org.junit.Test;
-import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 
 import java.util.ArrayList;
 import java.util.Collections;

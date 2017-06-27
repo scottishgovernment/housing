@@ -2,8 +2,8 @@ package scot.mygov.housing.modeltenancy.validation;
 
 import org.apache.commons.lang3.StringUtils;
 import scot.mygov.housing.modeltenancy.model.ModelTenancy;
-import scot.mygov.validation.ValidationRule;
 import scot.mygov.validation.ValidationResultsBuilder;
+import scot.mygov.validation.ValidationRule;
 
 /**
  * Created by z418868 on 19/06/2017.
@@ -21,11 +21,11 @@ public class HMORule implements ValidationRule<ModelTenancy> {
             }
         } else {
             if (!StringUtils.isEmpty(modelTenancy.getHmo24ContactNumber())) {
-                resultsBuilder.issue("hmoContactNumber", "Not required for non-HMO properties");
+                resultsBuilder.issue("hmoContactNumber", "Not allowed for non-HMO properties");
             }
 
             if (modelTenancy.getHmoRegistrationExpiryDate() != null) {
-                resultsBuilder.issue("hmoExpirationDate", "Not required for non-HMO properties");
+                resultsBuilder.issue("hmoExpirationDate", "Not allowed for non-HMO properties");
             }
         }
     }

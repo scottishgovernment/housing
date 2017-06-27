@@ -2,8 +2,6 @@ package scot.mygov.housing.modeltenancy.validation;
 
 import org.junit.Test;
 import scot.mygov.housing.modeltenancy.model.ModelTenancy;
-import scot.mygov.housing.modeltenancy.validation.ModelTenancyValidatorFactory;
-import scot.mygov.housing.modeltenancy.validation.ObjectMother;
 import scot.mygov.validation.ValidationException;
 import scot.mygov.validation.Validator;
 

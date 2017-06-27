@@ -6,7 +6,6 @@ import scot.mygov.housing.modeltenancy.model.Address;
 import scot.mygov.validation.ValidationResultsBuilder;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 

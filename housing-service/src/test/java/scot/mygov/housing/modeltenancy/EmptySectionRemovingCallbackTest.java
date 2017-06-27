@@ -4,12 +4,8 @@ import com.aspose.words.Field;
 import com.aspose.words.FieldMergingArgs;
 import com.aspose.words.FieldStart;
 import com.aspose.words.Node;
-import com.sun.prism.shader.FillEllipse_ImagePattern_Loader;
-import junit.framework.Assert;
 import org.junit.Test;
-import org.mockito.ArgumentMatcher;
 import org.mockito.ArgumentMatchers;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.util.Collections;

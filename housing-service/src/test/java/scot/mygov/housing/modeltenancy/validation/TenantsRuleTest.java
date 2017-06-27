@@ -5,8 +5,6 @@ import org.junit.Test;
 import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.validation.ValidationResultsBuilder;
 
-import java.util.Collections;
-
 /**
  * Created by z418868 on 19/06/2017.
  */

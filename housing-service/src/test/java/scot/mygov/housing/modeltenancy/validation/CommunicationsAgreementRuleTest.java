@@ -6,10 +6,6 @@ import scot.mygov.housing.modeltenancy.model.CommunicationsAgreement;
 import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.validation.ValidationResultsBuilder;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 /**
  * Created by z418868 on 20/06/2017.
  */

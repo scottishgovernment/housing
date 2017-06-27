@@ -14,18 +14,18 @@ import java.util.Map;
  */
 public class ModelTenancyJsonTemplateLoader {
 
-    private ModelTenancy modelTenancyTemplate = null;
+    private final ModelTenancy modelTenancyTemplate;
 
-    public ModelTenancy loadJsonTemplate() throws TemplateLoaderException {
+    public ModelTenancyJsonTemplateLoader() {
+        modelTenancyTemplate = new ModelTenancy();
+        loadOptionalTerms(modelTenancyTemplate);
+    }
 
-        if (modelTenancyTemplate == null) {
-            modelTenancyTemplate = new ModelTenancy();
-            loadOptionalTerms(modelTenancyTemplate);
-        }
+    public ModelTenancy loadJsonTemplate() {
         return modelTenancyTemplate;
     }
 
-    private void loadOptionalTerms(ModelTenancy modeltenancy) throws TemplateLoaderException {
+    private void loadOptionalTerms(ModelTenancy modeltenancy) {
 
         OptionalTerms terms = modeltenancy.getOptionalTerms();
         try {
@@ -36,10 +36,10 @@ public class ModelTenancyJsonTemplateLoader {
                 }
                 String value = loadResource(key);
 
-                // hack attack, think of a better way if
-                value = value.replace("\n\n", "[NEWLINKE]");
+                // hack attack, think of a better way
+                value = value.replace("\n\n", "[NEWLINE]");
                 value = value.replace("\n", "");
-                value = value.replace("[NEWLINKE]", "\n");
+                value = value.replace("[NEWLINE]", "\n");
                 BeanUtils.setProperty(terms, key, value);
             }
         } catch (Exception e) {

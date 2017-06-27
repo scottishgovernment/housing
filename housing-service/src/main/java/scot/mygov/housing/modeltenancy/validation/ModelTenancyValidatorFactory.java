@@ -3,8 +3,8 @@ package scot.mygov.housing.modeltenancy.validation;
 import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.validation.MandatoryFieldsRule;
 import scot.mygov.validation.MoneyFieldsRule;
-import scot.mygov.validation.Validator;
 import scot.mygov.validation.ValidationRule;
+import scot.mygov.validation.Validator;
 
 import java.util.ArrayList;
 import java.util.Collections;

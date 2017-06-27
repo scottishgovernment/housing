@@ -11,8 +11,6 @@ import scot.mygov.housing.modeltenancy.validation.ObjectMother;
 import java.time.LocalDate;
 import java.util.Map;
 
-import static java.util.stream.Collectors.joining;
-
 /**
  * Created by z418868 on 20/06/2017.
  */

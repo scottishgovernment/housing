@@ -23,7 +23,7 @@ public class TemplateLoaderTest {
 
 
     // exception throwsn for non existant template
-    @Test(expected = TemplateLoaderException.class)
+    @Test(expected = RuntimeException.class)
     public void expectedExceptionForNonExsitantPath() throws TemplateLoaderException {
         new ModelTenancyDocumentTemplateLoader("nonexistanttemplate").loadDocumentTemplate();
     }

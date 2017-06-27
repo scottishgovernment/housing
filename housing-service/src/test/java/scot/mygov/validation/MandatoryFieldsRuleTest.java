@@ -3,9 +3,6 @@ package scot.mygov.validation;
 
 import org.junit.Assert;
 import org.junit.Test;
-import scot.mygov.validation.MandatoryFieldsRule;
-import scot.mygov.validation.ValidationResults;
-import scot.mygov.validation.ValidationResultsBuilder;
 
 import java.util.Collections;
 
@@ -28,7 +25,7 @@ public class MandatoryFieldsRuleTest {
         ValidationResults res = b.build();
 
         // ASSERT
-        Assert.assertEquals(res.getIssues().get("foo"), Collections.singletonList("Required"));
+        Assert.assertEquals(res.getIssues().get("foo"), Collections.singletonList("Invalid field"));
         Assert.assertEquals(res.getIssues().get("nullField"), Collections.singletonList("Required"));
         Assert.assertEquals(res.getIssues().get("emptyField"), Collections.singletonList("Required"));
         Assert.assertEquals(res.getIssues().get("validField"), null);

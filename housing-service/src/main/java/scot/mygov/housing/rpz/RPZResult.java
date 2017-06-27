@@ -11,7 +11,12 @@ public class RPZResult {
     private String rentPressureZoneTitle;
     private double maxIncrease;
 
-    public RPZResult(boolean validPostcode, boolean scottishPostcode, boolean inRentPressureZone, String rentPressureZoneTitle, double maxIncrease) {
+    public RPZResult(
+            boolean validPostcode,
+            boolean scottishPostcode,
+            boolean inRentPressureZone,
+            String rentPressureZoneTitle,
+            double maxIncrease) {
         this.validPostcode = validPostcode;
         this.scottishPostcode = scottishPostcode;
         this.inRentPressureZone = inRentPressureZone;

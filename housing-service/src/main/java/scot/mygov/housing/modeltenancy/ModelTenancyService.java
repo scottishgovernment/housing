@@ -3,23 +3,20 @@ package scot.mygov.housing.modeltenancy;
 import com.aspose.words.Document;
 import com.aspose.words.PdfSaveOptions;
 import com.aspose.words.SaveFormat;
-
 import org.apache.commons.beanutils.BeanUtils;
 import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.modeltenancy.model.OptionalTerms;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Created by z418868 on 15/06/2017.
- */
 public class ModelTenancyService {
 
     private final ModelTenancyFieldExtractor fieldExtractor;
@@ -32,7 +29,7 @@ public class ModelTenancyService {
                                ModelTenancyJsonTemplateLoader modelTenancyJsonTemplateLoader) {
         this.templateLoader = templateLoader;
         this.fieldExtractor = fieldExtractor;
-        emptySectionRemovingCallback = new EmptySectionRemovingCallback(deleteEmptySectionFields());
+        emptySectionRemovingCallback = new EmptySectionRemovingCallback(fieldsToDeleteIfEmpty());
         this.modelTenancyJsonTemplateLoader = modelTenancyJsonTemplateLoader;
     }
 
@@ -44,21 +41,29 @@ public class ModelTenancyService {
         }
     }
 
-    public byte [] save(ModelTenancy modelTenancy) throws ModelTenancyServiceException {
+    public byte[] save(ModelTenancy modelTenancy) throws ModelTenancyServiceException {
         Map<String, Object> fields = fieldExtractor.extractFields(modelTenancy);
-        byte [] bytes = executeMailMerge(fields);
+        byte[] mergedDocument = executeMailMerge(fields);
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-        savePdf(bytes, os);
+        savePdf(mergedDocument, os);
         return os.toByteArray();
     }
 
-    private byte [] executeMailMerge(Map<String, Object> fields) throws ModelTenancyServiceException {
-
+    private byte[] executeMailMerge(Map<String, Object> fields) throws ModelTenancyServiceException {
         try {
             Document template = templateLoader.loadDocumentTemplate();
             template.getMailMerge().setTrimWhitespaces(true);
             template.getMailMerge().setFieldMergingCallback(emptySectionRemovingCallback);
-            template.getMailMerge().execute(getFieldnames(fields), getValues(fields));
+
+            List<String> fieldnames = new ArrayList<>();
+            List<Object> values = new ArrayList<>();
+            fields.entrySet().stream().forEach(entry -> {
+                fieldnames.add(entry.getKey());
+                values.add(entry.getValue());
+            });
+            template.getMailMerge().execute(
+                    fieldnames.toArray(new String[fieldnames.size()]),
+                    values.toArray());
             template.updateFields();
             template.updatePageLayout();
             ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -69,39 +74,31 @@ public class ModelTenancyService {
         }
     }
 
-    private String [] getFieldnames(Map<String, Object> map) {
-        return  map.entrySet().stream().map(Map.Entry::getKey).toArray(String[]::new);
-    }
-
-    private Object [] getValues(Map<String, Object> map) {
-        return  map.entrySet().stream().map(Map.Entry::getValue).toArray();
-    }
-
-    private void savePdf(byte [] bytes, OutputStream outputStream) throws ModelTenancyServiceException {
+    private static void savePdf(byte[] wordDocument, OutputStream outputStream) throws ModelTenancyServiceException {
         try {
             PdfSaveOptions saveOptions = new PdfSaveOptions();
             saveOptions.setUseHighQualityRendering(true);
-            Document doc = new Document(new ByteArrayInputStream(bytes));
+            Document doc = new Document(new ByteArrayInputStream(wordDocument));
             doc.save(outputStream, saveOptions);
         } catch (Exception e) {
-            throw new ModelTenancyServiceException("Failed to save pdf", e);
+            throw new ModelTenancyServiceException("Failed to convert word document to pdf", e);
         }
     }
 
-    private final Set<String> deleteEmptySectionFields() {
-        Set<String> deleteWholeSectionFields = new HashSet<>();
+    private static final Set<String> fieldsToDeleteIfEmpty() {
+        Set<String> fields = new HashSet<>();
         // add al of the optional sections.
         try {
-            deleteWholeSectionFields.addAll(BeanUtils.describe(new OptionalTerms()).keySet());
+            fields.addAll(BeanUtils.describe(new OptionalTerms()).keySet());
         } catch (Exception e) {
-            throw new IllegalStateException("Failed to extract optional section fields", e);
+            throw new RuntimeException("Failed to extract optional section fields", e);
         }
 
         // other fields with sections
-        Collections.addAll(deleteWholeSectionFields,
+        Collections.addAll(fields,
                 "hmoString",
                 "rentPressureZoneString",
                 "communicationsAgreementType");
-        return deleteWholeSectionFields;
+        return fields;
     }
 }

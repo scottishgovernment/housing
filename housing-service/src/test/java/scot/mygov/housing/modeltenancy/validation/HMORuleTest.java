@@ -3,8 +3,8 @@ package scot.mygov.housing.modeltenancy.validation;
 import org.junit.Assert;
 import org.junit.Test;
 import scot.mygov.housing.modeltenancy.model.ModelTenancy;
-import scot.mygov.validation.ValidationRule;
 import scot.mygov.validation.ValidationResultsBuilder;
+import scot.mygov.validation.ValidationRule;
 
 import java.time.LocalDate;
 

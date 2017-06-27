@@ -51,7 +51,7 @@ public class ValidationUtil {
                 value = BeanUtils.getProperty(bean, requiredField);
             } catch (Exception e) {
                 // logg the error
-                LOG.warn("Invalid proerty for bean", e);
+                LOG.warn("Invalid property for bean", e);
             } finally {
                 if (StringUtils.isEmpty(value)) {
                     resultsBuilder.issue(specificFeild, "Required");

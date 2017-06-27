@@ -1,7 +1,5 @@
 package scot.mygov.housing;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import scot.mygov.geosearch.api.models.Postcode;
 import scot.mygov.housing.rpz.PostcodeSource;
 
@@ -14,8 +12,6 @@ import javax.ws.rs.core.Response;
 @Path("/health")
 public class Healthcheck {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Healthcheck.class);
-
     public static final String KNOWN_POSTCODE = "EH66QQ";
     private final PostcodeSource postcodeSource;
 
@@ -27,20 +23,14 @@ public class Healthcheck {
     @GET
     @Produces("application/json")
     public Response health() {
-        try {
-            Postcode postcode = postcodeSource.postcode(KNOWN_POSTCODE);
+        Postcode postcode = postcodeSource.postcode(KNOWN_POSTCODE);
 
-            if (!postcode.getPostcode().equals(KNOWN_POSTCODE)) {
-                return Response.status(500)
-                        .entity(new HealthResult(false, "Unexpected postcode:"+postcode.getPostcode()))
-                        .build();
-            }
-            return Response.status(200).entity(new HealthResult(true, "ok")).build();
-
-        } catch (Throwable t) {
-            LOG.warn("Failed to fetch postcode in healthcheck", t);
-            return Response.status(500).entity(new HealthResult(false, t.getMessage())).build();
+        if (!postcode.getPostcode().equals(KNOWN_POSTCODE)) {
+            return Response.status(500)
+                    .entity(new HealthResult(false, "Unexpected postcode:"+postcode.getPostcode()))
+                    .build();
         }
+        return Response.status(200).entity(new HealthResult(true, "ok")).build();
     }
 
     public static class HealthResult {

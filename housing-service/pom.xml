@@ -19,7 +19,7 @@
     <jackson.version>2.6.1</jackson.version>
     <slf4j.version>1.7.25</slf4j.version>
     <logback.version>1.2.2</logback.version>
-    <sonar.exclusions>target/**,src/main/java/scot/mygov/validation/MoneyFieldsRule</sonar.exclusions>
+    <sonar.exclusions>target/**</sonar.exclusions>
   </properties>
 
   <dependencies>
@@ -133,6 +133,7 @@
       <artifactId>dagger</artifactId>
       <version>1.2.5</version>
     </dependency>
+
     <dependency>
       <groupId>com.squareup.dagger</groupId>
       <artifactId>dagger-compiler</artifactId>
@@ -150,13 +151,7 @@
     <dependency>
       <groupId>com.fasterxml.jackson.datatype</groupId>
       <artifactId>jackson-datatype-jsr310</artifactId>
-      <version>2.8.6</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>2.8.5</version>
+      <version>${jackson.version}</version>
     </dependency>
 
     <!-- Aspose -->
@@ -194,14 +189,6 @@
       <scope>test</scope>
     </dependency>
 
-    <!-- Test dependencies -->
-    <dependency>
-      <groupId>pl.allegro.finance</groupId>
-      <artifactId>tradukisto</artifactId>
-      <version>0.5.1</version>
-      <scope>test</scope>
-    </dependency>
-
   </dependencies>
 
   <build>
@@ -216,6 +203,11 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>asposewobfuscated/*</exclude>
+          </excludes>
+        </configuration>
         <executions>
           <execution>
             <goals>
@@ -225,83 +217,6 @@
           </execution>
         </executions>
       </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <excludes>
-            <exclude>scot/mygov/housing/it/**</exclude>
-          </excludes>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-failsafe-plugin</artifactId>
-        <version>2.20</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>integration-test</goal>
-              <goal>verify</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <encoding>UTF-8</encoding>
-          <argLine>${argLine}</argLine>
-          <includes>
-            <include>scot/mygov/housing/it/**</include>
-          </includes>
-          <additionalClasspathElements>
-            <additionalClasspathElement>${basedir}/target/classes</additionalClasspathElement>
-          </additionalClasspathElements>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>build-helper-maven-plugin</artifactId>
-        <version>3.0.0</version>
-        <configuration>
-          <minPortNumber>9200</minPortNumber>
-          <maxPortNumber>9300</maxPortNumber>
-          <portNames>
-            <portName>elasticsearch.http.port</portName>
-            <portName>elasticsearch.tcp.port</portName>
-          </portNames>
-        </configuration>
-        <executions>
-          <execution>
-            <id>reserve-network-port</id>
-            <phase>pre-integration-test</phase>
-            <goals>
-              <goal>reserve-network-port</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>properties-maven-plugin</artifactId>
-        <version>1.0.0</version>
-        <configuration>
-          <outputFile>target/test-classes/project.properties</outputFile>
-        </configuration>
-        <executions>
-          <execution>
-            <id>write-project-properties</id>
-            <phase>pre-integration-test</phase>
-            <goals>
-              <goal>write-project-properties</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-
 
     </plugins>
   </build>

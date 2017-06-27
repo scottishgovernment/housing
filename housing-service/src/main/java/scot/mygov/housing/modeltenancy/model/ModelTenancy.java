@@ -12,6 +12,7 @@ import java.util.List;
  * POJO for model tenancy data
  */
 public class ModelTenancy {
+
     private List<Person> tenants = new ArrayList<>();
     private List<Guarantor> guarantors = new ArrayList<>();
     private AgentOrLandLord lettingAgent;

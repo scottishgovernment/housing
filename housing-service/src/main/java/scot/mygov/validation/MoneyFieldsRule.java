@@ -19,24 +19,27 @@ public class MoneyFieldsRule<T> implements ValidationRule<T> {
 
     private List<String> fields;
 
-    public MoneyFieldsRule(String ... fields) {
+    public MoneyFieldsRule(String... fields) {
         this.fields = Arrays.asList(fields);
     }
 
     public void validate(T model, ValidationResultsBuilder resultsBuilder) {
-        fields.stream().forEach(field -> {
-            String value = null;
-            try {
-                value = BeanUtils.getProperty(model, field).toString();
-            } catch (Exception e) {
-                LOG.warn("Unknown property", e);
-            } finally {
-                if (StringUtils.isEmpty(value)) {
-                    resultsBuilder.issue(field, "Invalid monetary value");
-                } else if (!value.matches(REGEX)) {
-                    resultsBuilder.issue(field, "Invalid monetary value");
-                }
-            }
-        });
+        for (String field : fields) {
+            validateField(model, field, resultsBuilder);
+        }
     }
+
+    private void validateField(T model, String field, ValidationResultsBuilder builder) {
+        String value = null;
+        try {
+            value = BeanUtils.getProperty(model, field);
+            if (StringUtils.isEmpty(value) || !value.matches(REGEX)) {
+                builder.issue(field, "Invalid monetary value: " + value);
+            }
+        } catch (Exception e) {
+            builder.issue(field, "Invalid field: " + field);
+            LOG.warn("Unknown property", e);
+        }
+    }
+
 }

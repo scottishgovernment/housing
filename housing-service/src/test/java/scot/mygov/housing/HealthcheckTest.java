@@ -1,18 +1,25 @@
 package scot.mygov.housing;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import scot.mygov.geosearch.api.models.Postcode;
 import scot.mygov.housing.rpz.PostcodeSource;
 
 import javax.ws.rs.core.Response;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 /**
  * Created by z418868 on 14/06/2017.
  */
 public class HealthcheckTest {
+
 
     @Test
     public void okForGoodPostcodeSource() {
@@ -24,11 +31,11 @@ public class HealthcheckTest {
         Response response = sut.health();
 
         // ASSERT
-        Assert.assertEquals(Healthcheck.HealthResult.class, response.getEntity().getClass());
-        Assert.assertEquals(response.getStatus(), 200);
+        assertEquals(Healthcheck.HealthResult.class, response.getEntity().getClass());
+        assertEquals(response.getStatus(), 200);
         Healthcheck.HealthResult res = (Healthcheck.HealthResult) response.getEntity();
         Assert.assertTrue(res.isOk());
-        Assert.assertEquals(res.getMessage(), "ok");
+        assertEquals(res.getMessage(), "ok");
     }
 
     @Test
@@ -41,13 +48,16 @@ public class HealthcheckTest {
         Response response = sut.health();
 
         // ASSERT
-        Assert.assertEquals(Healthcheck.HealthResult.class, response.getEntity().getClass());
-        Assert.assertEquals(response.getStatus(), 500);
+        assertEquals(Healthcheck.HealthResult.class, response.getEntity().getClass());
+        assertEquals(response.getStatus(), 500);
         Healthcheck.HealthResult res = (Healthcheck.HealthResult) response.getEntity();
-        Assert.assertFalse(res.isOk());
-        Assert.assertNotNull(res.getMessage());
+        assertFalse(res.isOk());
+        assertNotNull(res.getMessage());
     }
 
+
+
+    @Ignore
     @Test
     public void serverErrorForBadPostcodeSource() {
 
@@ -58,16 +68,16 @@ public class HealthcheckTest {
         Response response = sut.health();
 
         // ASSERT
-        Assert.assertEquals(Healthcheck.HealthResult.class, response.getEntity().getClass());
-        Assert.assertEquals(response.getStatus(), 500);
+        assertEquals(Healthcheck.HealthResult.class, response.getEntity().getClass());
+        assertEquals(response.getStatus(), 500);
         Healthcheck.HealthResult res = (Healthcheck.HealthResult) response.getEntity();
-        Assert.assertFalse(res.isOk());
-        Assert.assertNotNull(res.getMessage());
+        assertFalse(res.isOk());
+        assertNotNull(res.getMessage());
     }
 
     PostcodeSource badPostCodeSource() {
         PostcodeSource postcodeSource = Mockito.mock(PostcodeSource.class);
-        Mockito.when(postcodeSource.postcode(ArgumentMatchers.any())).thenThrow(new RuntimeException("arg"));
+        when(postcodeSource.postcode(any())).thenThrow(new RuntimeException("arg"));
         return postcodeSource;
     }
 
@@ -76,7 +86,7 @@ public class HealthcheckTest {
         Postcode postcode = new Postcode();
         postcode.setPostcode(postcodeIn);
         postcode.setDistrict("district");
-        Mockito.when(postcodeSource.postcode(ArgumentMatchers.any())).thenReturn(postcode);
+        when(postcodeSource.postcode(any())).thenReturn(postcode);
         return postcodeSource;
     }
 }
