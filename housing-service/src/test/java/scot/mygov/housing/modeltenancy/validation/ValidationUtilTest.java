@@ -193,7 +193,7 @@ public class ValidationUtilTest {
         List<String> inputs = new ArrayList<>();
         Collections.addAll(inputs, "", "aaa", "EH10-$AX");
         List<String> outputs = inputs.stream().filter(in -> !ValidationUtil.validPostcode(in)).collect(Collectors.toList());
-        junit.framework.Assert.assertEquals(inputs, outputs);
+        Assert.assertEquals(inputs, outputs);
     }
 
 }
