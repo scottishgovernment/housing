@@ -31,6 +31,22 @@ public class CommunicationsAgreementRuleTest {
     }
 
     @Test
+    public void acceptsHasEmailsForEmailAgreement() {
+
+        // ARRANGE
+        ModelTenancy modelTenancy = om.anyTenancy();
+        modelTenancy.getTenants().stream().forEach(tenant -> tenant.setEmail("ddd@ddd.com"));
+        modelTenancy.setCommunicationsAgreement(CommunicationsAgreement.EMAIL.name());
+        ValidationResultsBuilder builder = new ValidationResultsBuilder();
+
+        // ACT
+        rule.validate(modelTenancy, builder);
+
+        // ASSERT
+        Assert.assertEquals(builder.build().getIssues().size(), 0);
+    }
+
+    @Test
     public void rejectsNoEmailsForEmailAgreement() {
 
         // ARRANGE
