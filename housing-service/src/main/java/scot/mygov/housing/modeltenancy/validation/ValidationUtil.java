@@ -54,6 +54,7 @@ public class ValidationUtil {
                 }
             } catch (Exception e) {
                 // log the error
+                resultsBuilder.issue(specificFeild, "Unvalid property:" + requiredField);
                 LOG.warn("Invalid property for bean", e);
             }
         });
