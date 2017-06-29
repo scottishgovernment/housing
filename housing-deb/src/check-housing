@@ -2,7 +2,7 @@
 set -eu
 progname=$(basename $0)
 host=localhost
-port=8082
+port=8096
 timeout=
 
 usage() {
@@ -50,20 +50,10 @@ format_status() {
       json |
       if .ok then
         "0 OK"
-      elif .index then
-        "1 WARNING"
-      else
-        "2 CRITICAL"
       end +
       " - " +
       .message;
-    def performance_data(json):
-      json |
-      to_entries |
-      map(select(.key as $a | (["ok", "message"] | index($a) == null))) |
-      map(.key + ":" + (.value |tostring)) |
-      join(" ");
-    summary($json) + " | " + performance_data($json)' \
+    summary($json)' \
     <<EOF
 $json
 EOF
@@ -75,7 +65,7 @@ url=http://$host:$port/health
 json="$(get_health "$url")" && ok= || ok=$?
 if [ -n "$ok" ]; then
   printf "CRITICAL Could not fetch health from ${url}\n"
-  exit 3
+  exit 2
 fi
 
 read status message <<EOF
