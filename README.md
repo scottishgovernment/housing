@@ -14,6 +14,11 @@ This application provides endpoints for:
   * Type: integer (0-65535)
   * Default: `8096`
 
+* `asposeLicenseUrl`
+  * url to find the aspose license file
+  * Type Url
+  * Default: ~/.config/Aspose.Words.lic
+
 # Monitoring
 
 The healthcheck endpoint is `GET /health`. The endpoint returns a JSON response

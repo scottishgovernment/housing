@@ -1,6 +1,5 @@
 package scot.mygov.housing;
 
-import com.aspose.words.License;
 import dagger.ObjectGraph;
 import io.undertow.Undertow;
 import org.jboss.resteasy.plugins.server.undertow.UndertowJaxrsServer;
@@ -24,16 +23,6 @@ public class Housing {
     public static final void main(String[] args) throws Exception{
         SLF4JBridgeHandler.removeHandlersForRootLogger();
         SLF4JBridgeHandler.install();
-
-
-        License license = new License();
-        try {
-            license.setLicense(Housing.class.getResourceAsStream("/Aspose.Words.lic"));
-        } catch (Exception e) {
-            LOG.error("Failed to load aspose licence", e);
-            throw e;
-        }
-
         ObjectGraph graph = ObjectGraph.create(new HousingModule());
         graph.get(Housing.class).run();
     }

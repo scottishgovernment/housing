@@ -22,6 +22,7 @@ import scot.mygov.validation.Validator;
 import javax.inject.Singleton;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
+import java.net.URL;
 import java.time.LocalDate;
 import java.util.Collections;
 
@@ -77,9 +78,9 @@ public class HousingModule {
     ModelTenancyService modelTenancyService() {
         // load the license
         License license = new License();
-        // TODO: read from a url
         try {
-            license.setLicense(Housing.class.getResourceAsStream("/Aspose.Words.lic"));
+            URL licenseUrl = new URL(configuration().getAsposeLicenseUrl());
+            license.setLicense(licenseUrl.openStream());
         } catch (Exception e) {
             LOG.error("Failed to load aspose license", e);
         }
