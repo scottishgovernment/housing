@@ -2,6 +2,6 @@
 set -e
 . /etc/profile
 exec /usr/bin/java \
-  -Dlogging.config=/opt/housing/logback.xml \
+  -Dlogback.configurationFile=/opt/housing/logback.xml \
   -jar /opt/housing/housing.jar \
   >> /var/log/housing/housing.log 2>&1
