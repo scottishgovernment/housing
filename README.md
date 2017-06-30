@@ -31,7 +31,10 @@ healthy, and `503` otherwise.
 
 
 # Endpoints
-GET /rpz?postcode=<valid scottish postocde>&date=<date in format 2016-02-02>
+`GET /rpz?postcode=<valid scottish postocde>&date=<date in format 2016-02-02>`
+
+The postcode parameter should be a valid Scottish postcode. The date should be
+in the format yyyy-mm-dd.
 
 Returns the rent pressure zone information for a given postcode.  Example results:
 {
@@ -42,9 +45,11 @@ Returns the rent pressure zone information for a given postcode.  Example result
     "maxIncrease": 1.5
 }
 
-GET /modeltenancy/template
+`GET /modeltenancy/template`
+
 Returns a template model tenancy JSON document.  This will include default values for conditional terms.
 
-POST /modeltenancy
+`POST /modeltenancy`
+
 Ruturns a filled out model tenancy PDF for the model tenancy documents retunred to it, or a list of validations
 errors of the tenancy is not valid.
