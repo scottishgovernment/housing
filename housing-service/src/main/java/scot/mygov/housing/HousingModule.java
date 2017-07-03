@@ -75,18 +75,18 @@ public class HousingModule {
     }
 
     @Provides
-    ModelTenancyService modelTenancyService() {
+    ModelTenancyService modelTenancyService(HousingConfiguration configuration) {
         // load the license
         License license = new License();
         try {
-            URL licenseUrl = new URL(configuration().getAsposeLicenseUrl());
+            URL licenseUrl = new URL(configuration.getAsposeLicenseUrl());
             license.setLicense(licenseUrl.openStream());
         } catch (Exception e) {
             LOG.error("Failed to load aspose license", e);
         }
 
         return new ModelTenancyService(
-                new ModelTenancyDocumentTemplateLoader(configuration().getModelTenancyTemplatePath()),
+                new ModelTenancyDocumentTemplateLoader(configuration.getModelTenancyTemplatePath()),
                 new ModelTenancyFieldExtractor(),
                 new ModelTenancyJsonTemplateLoader()
         );
