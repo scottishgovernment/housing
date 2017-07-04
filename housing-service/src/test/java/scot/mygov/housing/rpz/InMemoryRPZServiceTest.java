@@ -79,7 +79,7 @@ public class InMemoryRPZServiceTest {
     }
 
     @Test
-    public void scottishPostcodeInRPZButOutsideDateRange() {
+    public void scottishPostcodeInRPZButAfterDateRange() {
 
         // ARRANGE
         RPZ rpz = new RPZ("title", LocalDate.MIN, LocalDate.MIN, 10, Collections.singleton(validScottishPostCode()));
@@ -93,6 +93,23 @@ public class InMemoryRPZServiceTest {
         Assert.assertEquals(actual.isScottishPostcode(), true);
         Assert.assertEquals(actual.isInRentPressureZone(), false);
     }
+
+    @Test
+    public void scottishPostcodeInRPZButBeforeDateRange() {
+
+        // ARRANGE
+        RPZ rpz = new RPZ("title", LocalDate.MAX, LocalDate.MAX, 10, Collections.singleton(validScottishPostCode()));
+        RPZService sut = new InMemoryRPZService(Collections.singleton(rpz), postcodeSource());
+
+        // ACT
+        RPZResult actual = sut.rpz(validScottishPostCode(), LocalDate.now());
+
+        // ASSERT
+        Assert.assertEquals(actual.isValidPostcode(), true);
+        Assert.assertEquals(actual.isScottishPostcode(), true);
+        Assert.assertEquals(actual.isInRentPressureZone(), false);
+    }
+
 
     private String validScottishPostCode() {
         return "EH104AX";

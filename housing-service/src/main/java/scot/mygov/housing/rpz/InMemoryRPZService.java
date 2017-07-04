@@ -36,9 +36,8 @@ public class InMemoryRPZService implements RPZService {
         // determine if a rent pressure zone exists for this postcode and date
         Optional<RPZ> rpz = rentPressureZones
                 .stream()
-                .filter(r -> r.getPostcodes().contains(postcode.getPostcode()) &&
-                            date.compareTo(r.getFrom()) >= 0 &&
-                            date.compareTo(r.getTo()) <= 0)
+                .filter(r -> r.getPostcodes().contains(postcode.getPostcode()))
+                .filter(r -> date.compareTo(r.getFrom()) >= 0 && date.compareTo(r.getTo()) <= 0)
                 .findFirst();
 
         if (!rpz.isPresent()) {
@@ -52,8 +51,6 @@ public class InMemoryRPZService implements RPZService {
         return new RPZResult.Builder()
                 .rpz(rpz.get())
                 .build();
-
-
     }
 
 
