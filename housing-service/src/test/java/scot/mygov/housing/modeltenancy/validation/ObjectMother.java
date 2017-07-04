@@ -9,6 +9,7 @@ import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.modeltenancy.model.Person;
 import scot.mygov.housing.modeltenancy.model.RentPaymentFrequency;
 import scot.mygov.housing.modeltenancy.model.Service;
+import scot.mygov.housing.modeltenancy.model.Utility;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -45,6 +46,7 @@ public class ObjectMother {
         tenancy.setTenancyDepositSchemeAdministrator("Mr Administrator man");
         tenancy.setTenancyDepositSchemeContactDetails("contanct details for administrator");
         tenancy.setServicesIncludedInRent(anyServices());
+        tenancy.setTenantUtilitiesResponsibilities(Collections.singletonList(Utility.GAS.name()));
         return tenancy;
     }
 

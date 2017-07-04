@@ -127,4 +127,35 @@ public class ModelTenancyFieldExtractorTest {
         Assert.assertEquals("X", actual.get("communicationsAgreementHardcopy"));
         Assert.assertEquals("", actual.get("communicationsAgreementType"));
     }
+
+    @Test
+    public void canExtractAdvanceOrArearsForArrears() {
+
+        // ARRANGE
+        ModelTenancy modelTenancy = om.anyTenancy();
+        modelTenancy.setRentPayableInAdvance(false);
+
+        // ACT
+        Map<String, Object> actual = sut.extractFields(modelTenancy);
+
+        // ASSERT
+        Assert.assertEquals("arrears", actual.get("advanceOrArrears"));
+
+    }
+
+    @Test
+    public void canExtractAdvanceOrArearsForAdvance() {
+
+        // ARRANGE
+        ModelTenancy modelTenancy = om.anyTenancy();
+        modelTenancy.setRentPayableInAdvance(true);
+
+        // ACT
+        Map<String, Object> actual = sut.extractFields(modelTenancy);
+
+        // ASSERT
+        Assert.assertEquals("advance", actual.get("advanceOrArrears"));
+
+    }
+
 }
