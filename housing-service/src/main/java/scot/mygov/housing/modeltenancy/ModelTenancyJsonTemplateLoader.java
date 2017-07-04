@@ -35,11 +35,8 @@ public class ModelTenancyJsonTemplateLoader {
                     continue;
                 }
                 String value = loadResource(key);
-
-                // hack attack, think of a better way
-                value = value.replace("\n\n", "[NEWLINE]");
-                value = value.replace("\n", "");
-                value = value.replace("[NEWLINE]", "\n");
+                // remove any single \n's but keep doubles.
+                value = value.replaceAll("([^\n])\n(?!\n)", "$1 ");
                 BeanUtils.setProperty(terms, key, value);
             }
         } catch (Exception e) {
