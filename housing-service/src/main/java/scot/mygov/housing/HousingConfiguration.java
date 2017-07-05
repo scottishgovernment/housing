@@ -1,38 +1,38 @@
 package scot.mygov.housing;
 
+import java.io.File;
 import java.net.URI;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class HousingConfiguration {
 
     private int port = 8096;
 
-    private String postcodesUrl = "http://localhost:9092/postcodes/";
+    private URI geosearch = URI.create("http://localhost:9092/");
 
-    private String geoHealthUrl = "http://localhost:9092/health/";
-
-    private URI asposeLicenseUri;
+    private Aspose aspose = new Aspose();
 
     public HousingConfiguration() {
-        // default location for Aspose license
-        Path path = Paths.get(System.getProperty("user.home"), ".config/Aspose.Words.lic");
-        asposeLicenseUri = path.toFile().toURI();
     }
 
     public int getPort() {
         return port;
     }
 
-    public String getPostcodesUrl() {
-        return postcodesUrl;
+    public URI getGeosearch() {
+        return geosearch;
     }
 
-    public String getGeoHealthUrl() {
-        return geoHealthUrl;
+    public Aspose getAspose() {
+        return aspose;
     }
 
-    public URI getAsposeLicenseUri() {
-        return asposeLicenseUri;
+    public static class Aspose {
+
+        private File license;
+
+        public File getLicense() {
+            return license;
+        }
     }
+
 }

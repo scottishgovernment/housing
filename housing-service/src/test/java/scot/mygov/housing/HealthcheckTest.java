@@ -9,6 +9,8 @@ import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
+import java.time.LocalDate;
+
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -18,7 +20,8 @@ public class HealthcheckTest {
     public void okForGreeenpath() {
 
         // ARRANGE
-        Healthcheck sut = new Healthcheck(validLicense(), target(200));
+        LocalDate now = LocalDate.now();
+        Healthcheck sut = new Healthcheck(validLicense(now, 100L), target(200));
 
         // ACT
         Response response = sut.health();
@@ -27,6 +30,8 @@ public class HealthcheckTest {
         ObjectNode health = (ObjectNode) response.getEntity();
         assertEquals("licence not as expected", true, health.get("license").asBoolean());
         assertEquals("geosearch not as expected", true, health.get("geosearch").asBoolean());
+        assertEquals("days until expiry not as expected", 100L, health.get("daysUntilExpiry").asLong());
+        assertEquals("licenseExpires not as expected", now.toString(), health.get("licenseExpires").asText());
     }
 
     @Test
@@ -48,7 +53,7 @@ public class HealthcheckTest {
     public void notOkForExceptionFromGeo() {
 
         // ARRANGE
-        Healthcheck sut = new Healthcheck(validLicense(), exceptionTarget());
+        Healthcheck sut = new Healthcheck(anyValidLicense(), exceptionTarget());
 
         // ACT
         Response response = sut.health();
@@ -63,7 +68,7 @@ public class HealthcheckTest {
     public void notOkForErrorResponseFromGeo() {
 
         // ARRANGE
-        Healthcheck sut = new Healthcheck(validLicense(), target(503));
+        Healthcheck sut = new Healthcheck(anyValidLicense(), target(503));
 
         // ACT
         Response response = sut.health();
@@ -74,9 +79,21 @@ public class HealthcheckTest {
         assertEquals("geosearch not as expected", false, health.get("geosearch").asBoolean());
     }
 
-    private AsposeLicense validLicense() {
+    private AsposeLicense anyValidLicense() {
         AsposeLicense license = Mockito.mock(AsposeLicense.class);
         when(license.isLicensed()).thenReturn(true);
+        when(license.daysUntilExpiry()).thenReturn(100L);
+        when(license.expires()).thenReturn(LocalDate.now());
+        return license;
+    }
+
+
+    private AsposeLicense validLicense(LocalDate expires, long daysUntilExpiry) {
+        AsposeLicense license = Mockito.mock(AsposeLicense.class);
+        when(license.isLicensed()).thenReturn(true);
+        when(license.daysUntilExpiry()).thenReturn(daysUntilExpiry);
+        when(license.expires()).thenReturn(expires);
+
         return license;
     }
 

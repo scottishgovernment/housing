@@ -13,6 +13,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.time.LocalDate;
 
 @Path("health")
 @Produces(MediaType.APPLICATION_JSON)
@@ -35,8 +36,13 @@ public class Healthcheck {
         JsonNodeFactory factory = JsonNodeFactory.instance;
         ObjectNode result = factory.objectNode();
         boolean licensed = asposeLicense.isLicensed();
+        LocalDate expires = asposeLicense.expires();
         boolean geosearchOK = geosearchHealth() == 200;
         result.put("license", licensed);
+        if (expires != null) {
+            result.put("licenseExpires", expires.toString());
+            result.put("daysUntilExpiry", asposeLicense.daysUntilExpiry());
+        }
         result.put("geosearch", geosearchOK);
         boolean ok = licensed && geosearchOK;
         int status = ok ? 200 : 503;

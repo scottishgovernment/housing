@@ -14,10 +14,15 @@ This application provides endpoints for:
   * Type: integer (0-65535)
   * Default: `8096`
 
-* `asposeLicenseUrl`
-  * url to find the aspose license file
-  * Type Url
-  * Default: ~/.config/Aspose.Words.lic
+* `geosearch`
+  * Base URI of Geosearch service
+  * Type: URI
+  * Default: `http://localhost:9092/`
+
+* `aspose_license`
+  * path of aspose license file
+  * Type: File
+  * Default: (none)
 
 # Monitoring
 

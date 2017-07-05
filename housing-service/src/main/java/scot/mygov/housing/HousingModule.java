@@ -17,6 +17,9 @@ import scot.mygov.validation.Validator;
 import javax.inject.Singleton;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Collections;
 
@@ -39,7 +42,7 @@ public class HousingModule {
 
     @Provides
     WebTarget geoHealthTarget(Client client, HousingConfiguration configuration) {
-        return client.target(configuration.getGeoHealthUrl());
+        return client.target(appendPath(configuration.getGeosearch(), "postcodes"));
     }
 
     @Provides
@@ -51,7 +54,7 @@ public class HousingModule {
     @Provides
     @Singleton
     PostcodeSource postcodeSource(Client client, HousingConfiguration configuration) {
-        WebTarget target = client.target(configuration.getPostcodesUrl());
+        WebTarget target = client.target(appendPath(configuration.getGeosearch(), "postcodes/"));
         return new PostcodeSource(target);
     }
 
@@ -72,7 +75,21 @@ public class HousingModule {
     @Provides
     @Singleton
     AsposeLicense asposeLicense(HousingConfiguration configuration) {
-        return new AsposeLicense(configuration.getAsposeLicenseUri());
+        return new AsposeLicense(configuration.getAspose().getLicense());
+    }
+
+    static URI appendPath(URI uri, String path) {
+        try {
+            return new URI(uri.getScheme(),
+                    uri.getUserInfo(),
+                    uri.getHost(),
+                    uri.getPort(),
+                    Paths.get(uri.getPath(), path).toString(),
+                    uri.getQuery(),
+                    uri.getFragment());
+        } catch (URISyntaxException ex) {
+            throw new RuntimeException("Could not append path " + path + " to " + uri, ex);
+        }
     }
 
 }
