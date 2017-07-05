@@ -6,9 +6,6 @@ import org.junit.Test;
 
 import java.util.Collections;
 
-/**
- * Created by z418868 on 19/06/2017.
- */
 public class MandatoryFieldsRuleTest {
 
 

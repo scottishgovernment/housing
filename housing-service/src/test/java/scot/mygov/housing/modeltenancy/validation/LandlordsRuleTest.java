@@ -6,9 +6,6 @@ import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.validation.ValidationResults;
 import scot.mygov.validation.ValidationResultsBuilder;
 
-/**
- * Created by z418868 on 16/06/2017.
- */
 public class LandlordsRuleTest {
 
     private final ObjectMother om = new ObjectMother();

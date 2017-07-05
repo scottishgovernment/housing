@@ -11,9 +11,6 @@ import scot.mygov.housing.modeltenancy.validation.ObjectMother;
 import java.time.LocalDate;
 import java.util.Map;
 
-/**
- * Created by z418868 on 20/06/2017.
- */
 public class ModelTenancyFieldExtractorTest {
 
     private ObjectMother om = new ObjectMother();

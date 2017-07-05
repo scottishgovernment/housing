@@ -1,16 +1,11 @@
 package scot.mygov.housing;
 
-import com.aspose.words.License;
 import dagger.Module;
 import dagger.Provides;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scot.mygov.config.Configuration;
-import scot.mygov.housing.modeltenancy.ModelTenancyDocumentTemplateLoader;
-import scot.mygov.housing.modeltenancy.ModelTenancyFieldExtractor;
-import scot.mygov.housing.modeltenancy.ModelTenancyJsonTemplateLoader;
-import scot.mygov.housing.modeltenancy.ModelTenancyService;
 import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.modeltenancy.validation.ModelTenancyValidatorFactory;
 import scot.mygov.housing.rpz.InMemoryRPZService;
@@ -22,7 +17,6 @@ import scot.mygov.validation.Validator;
 import javax.inject.Singleton;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
-import java.net.URL;
 import java.time.LocalDate;
 import java.util.Collections;
 
@@ -44,8 +38,8 @@ public class HousingModule {
     }
 
     @Provides
-    WebTarget target(Client client, HousingConfiguration configuration) {
-        return client.target(configuration.getPostcodesUrl());
+    WebTarget geoHealthTarget(Client client, HousingConfiguration configuration) {
+        return client.target(configuration.getGeoHealthUrl());
     }
 
     @Provides
@@ -56,7 +50,8 @@ public class HousingModule {
 
     @Provides
     @Singleton
-    PostcodeSource postcodeSource(WebTarget target) {
+    PostcodeSource postcodeSource(Client client, HousingConfiguration configuration) {
+        WebTarget target = client.target(configuration.getPostcodesUrl());
         return new PostcodeSource(target);
     }
 
@@ -75,22 +70,9 @@ public class HousingModule {
     }
 
     @Provides
-    ModelTenancyService modelTenancyService(HousingConfiguration configuration) {
-        // load the license
-        License license = new License();
-        try {
-            URL licenseUrl = new URL(configuration.getAsposeLicenseUrl());
-            license.setLicense(licenseUrl.openStream());
-        } catch (Exception e) {
-            LOG.error("Failed to load aspose license", e);
-        }
-
-        return new ModelTenancyService(
-                new ModelTenancyDocumentTemplateLoader(configuration.getModelTenancyTemplatePath()),
-                new ModelTenancyFieldExtractor(),
-                new ModelTenancyJsonTemplateLoader()
-        );
+    @Singleton
+    AsposeLicense asposeLicense(HousingConfiguration configuration) {
+        return new AsposeLicense(configuration.getAsposeLicenseUri());
     }
-
 
 }

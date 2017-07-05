@@ -3,9 +3,6 @@ package scot.mygov.housing.modeltenancy.model;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by z418868 on 14/06/2017.
- */
 public class AgentOrLandLord extends Person {
 
     private String registrationNumber;

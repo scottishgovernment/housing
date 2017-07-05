@@ -15,6 +15,7 @@ import scot.mygov.housing.modeltenancy.model.RentPaymentFrequency;
 import scot.mygov.housing.modeltenancy.model.Service;
 import scot.mygov.housing.modeltenancy.model.Utility;
 
+import javax.inject.Inject;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,7 +36,13 @@ public class ModelTenancyFieldExtractor {
 
     private static final String NEWLINE = "\n";
     private static final String NOT_APPLICABLE = "n/a";
+
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+
+    @Inject
+    public ModelTenancyFieldExtractor() {
+        // Default constructor
+    }
 
     public Map<String, Object> extractFields(ModelTenancy modelTenancy) {
         Map<String, Object> fields = new HashMap<>();

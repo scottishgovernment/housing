@@ -3,9 +3,6 @@ package scot.mygov.housing.rpz;
 import java.time.LocalDate;
 import java.util.Set;
 
-/**
- * Created by z418868 on 14/06/2017.
- */
 public class RPZ {
     private String title;
     private LocalDate from;

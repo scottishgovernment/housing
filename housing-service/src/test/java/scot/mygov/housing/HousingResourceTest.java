@@ -16,9 +16,6 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.Collections;
 
-/**
- * Created by z418868 on 14/06/2017.
- */
 public class HousingResourceTest {
 
 

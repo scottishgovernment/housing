@@ -7,9 +7,6 @@ import scot.mygov.housing.modeltenancy.model.RentPaymentFrequency;
 import scot.mygov.validation.ValidationResultsBuilder;
 import scot.mygov.validation.ValidationRule;
 
-/**
- * Created by z418868 on 16/06/2017.
- */
 public class EnumsRule implements ValidationRule<ModelTenancy> {
 
     public void validate(ModelTenancy modelTenancy, ValidationResultsBuilder resultsBuilder) {

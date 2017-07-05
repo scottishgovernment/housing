@@ -8,9 +8,6 @@ import org.slf4j.LoggerFactory;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by z418868 on 19/06/2017.
- */
 public class MoneyFieldsRule<T> implements ValidationRule<T> {
 
     private static final Logger LOG = LoggerFactory.getLogger(MoneyFieldsRule.class);

@@ -9,13 +9,7 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 
 import java.util.Collections;
-
-/**
- * Created by z418868 on 21/06/2017.
- */
 public class EmptySectionRemovingCallbackTest {
-
-    // removes empty feilds
 
     @Test
     public void removesSectionWithEmptyField() throws Exception {

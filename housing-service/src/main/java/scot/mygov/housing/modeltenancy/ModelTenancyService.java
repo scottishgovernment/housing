@@ -7,6 +7,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.modeltenancy.model.OptionalTerms;
 
+import javax.inject.Inject;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
@@ -24,6 +25,7 @@ public class ModelTenancyService {
     private final EmptySectionRemovingCallback emptySectionRemovingCallback;
     private final ModelTenancyJsonTemplateLoader modelTenancyJsonTemplateLoader;
 
+    @Inject
     public ModelTenancyService(ModelTenancyDocumentTemplateLoader templateLoader,
                                ModelTenancyFieldExtractor fieldExtractor,
                                ModelTenancyJsonTemplateLoader modelTenancyJsonTemplateLoader) {

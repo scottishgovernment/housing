@@ -5,9 +5,6 @@ import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.validation.ValidationResultsBuilder;
 import scot.mygov.validation.ValidationRule;
 
-/**
- * Created by z418868 on 16/06/2017.
- */
 public class LettingAgentRule implements ValidationRule<ModelTenancy> {
 
     private static final String FIELD = "lettingAgent";

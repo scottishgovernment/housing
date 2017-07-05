@@ -6,9 +6,6 @@ import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.validation.ValidationResultsBuilder;
 import scot.mygov.validation.ValidationRule;
 
-/**
- * Created by z418868 on 20/06/2017.
- */
 public class CommunicationsAgreementRule implements ValidationRule<ModelTenancy> {
 
     public void validate(ModelTenancy modelTenancy, ValidationResultsBuilder resultsBuilder) {

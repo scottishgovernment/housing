@@ -9,9 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Created by z418868 on 21/06/2017.
- */
 public class AddressValidatorTest {
 
     private ObjectMother om = new ObjectMother();

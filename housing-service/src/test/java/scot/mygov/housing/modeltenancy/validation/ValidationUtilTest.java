@@ -14,9 +14,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Created by z418868 on 16/06/2017.
- */
 public class ValidationUtilTest {
 
     private ObjectMother om = new ObjectMother();

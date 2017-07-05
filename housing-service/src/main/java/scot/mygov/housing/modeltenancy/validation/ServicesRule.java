@@ -7,9 +7,6 @@ import scot.mygov.validation.ValidationRule;
 
 import java.util.stream.IntStream;
 
-/**
- * Created by z418868 on 26/06/2017.
- */
 public class ServicesRule implements ValidationRule<ModelTenancy> {
 
     public void validate(ModelTenancy modelTenancy, ValidationResultsBuilder resultsBuilder) {

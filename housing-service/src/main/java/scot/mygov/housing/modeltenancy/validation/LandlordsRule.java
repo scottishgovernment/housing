@@ -7,9 +7,6 @@ import scot.mygov.validation.ValidationRule;
 
 import java.util.stream.IntStream;
 
-/**
- * Created by z418868 on 16/06/2017.
- */
 public class LandlordsRule implements ValidationRule<ModelTenancy> {
 
     private static final String FIELD = "landlords";

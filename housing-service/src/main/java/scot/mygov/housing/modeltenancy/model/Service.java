@@ -1,8 +1,5 @@
 package scot.mygov.housing.modeltenancy.model;
 
-/**
- * Created by z418868 on 26/06/2017.
- */
 public class Service {
     private String name;
     private String value;

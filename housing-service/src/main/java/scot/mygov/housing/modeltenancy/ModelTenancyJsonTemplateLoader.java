@@ -5,17 +5,16 @@ import org.apache.commons.io.IOUtils;
 import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.modeltenancy.model.OptionalTerms;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-/**
- * Created by z418868 on 22/06/2017.
- */
 public class ModelTenancyJsonTemplateLoader {
 
     private final ModelTenancy modelTenancyTemplate;
 
+    @Inject
     public ModelTenancyJsonTemplateLoader() {
         modelTenancyTemplate = new ModelTenancy();
         loadOptionalTerms(modelTenancyTemplate);

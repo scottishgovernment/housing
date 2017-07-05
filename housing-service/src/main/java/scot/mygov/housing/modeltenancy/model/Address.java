@@ -1,8 +1,5 @@
 package scot.mygov.housing.modeltenancy.model;
 
-/**
- * Created by z418868 on 21/06/2017.
- */
 public class Address {
     private String addressLine1;
     private String addressLine2;

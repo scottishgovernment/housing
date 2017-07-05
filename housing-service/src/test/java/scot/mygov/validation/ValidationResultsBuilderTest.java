@@ -7,9 +7,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Created by z418868 on 19/06/2017.
- */
 public class ValidationResultsBuilderTest {
 
     @Test

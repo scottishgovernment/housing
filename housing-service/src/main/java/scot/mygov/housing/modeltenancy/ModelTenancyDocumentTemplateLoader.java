@@ -5,17 +5,23 @@ import com.aspose.words.NodeCollection;
 import com.aspose.words.NodeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import scot.mygov.housing.AsposeLicense;
 
+import javax.inject.Inject;
 import java.io.InputStream;
 
-/**
- * Created by z418868 on 20/06/2017.
- */
 public class ModelTenancyDocumentTemplateLoader {
 
     private static final Logger LOG = LoggerFactory.getLogger(ModelTenancyDocumentTemplateLoader.class);
 
+    private static final String PATH = "/templates/model-tenancy-agreement.docx";
+
     private final Document template;
+
+    @Inject
+    public ModelTenancyDocumentTemplateLoader(AsposeLicense license) {
+        this(PATH);
+    }
 
     public ModelTenancyDocumentTemplateLoader(String path) {
         try {

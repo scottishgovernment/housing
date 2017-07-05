@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by z418868 on 19/06/2017.
- */
 public class ValidationResultsBuilder {
     private final Map<String, List<String>> issues = new HashMap<>();
 

@@ -12,9 +12,6 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by z418868 on 16/06/2017.
- */
 public class ValidationUtil {
 
     private static final Logger LOG = LoggerFactory.getLogger(ValidationUtil.class);

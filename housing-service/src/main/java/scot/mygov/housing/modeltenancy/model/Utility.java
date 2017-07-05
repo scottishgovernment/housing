@@ -1,8 +1,5 @@
 package scot.mygov.housing.modeltenancy.model;
 
-/**
- * Created by z418868 on 20/06/2017.
- */
 public enum Utility {
 
     GAS("Gas"),

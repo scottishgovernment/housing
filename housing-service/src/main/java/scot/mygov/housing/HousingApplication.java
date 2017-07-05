@@ -1,7 +1,5 @@
 package scot.mygov.housing;
 
-import scot.mygov.housing.rpz.RPZService;
-
 import javax.inject.Inject;
 import javax.ws.rs.core.Application;
 import java.util.HashSet;
@@ -13,9 +11,6 @@ public class HousingApplication extends Application {
 
     @Inject
     HousingResource housing;
-
-    @Inject
-    RPZService service;
 
     @Inject
     ErrorHandler errorHandler;
@@ -32,7 +27,6 @@ public class HousingApplication extends Application {
                 housing,
                 errorHandler,
                 healthcheck,
-                service,
                 logger
         ));
     }

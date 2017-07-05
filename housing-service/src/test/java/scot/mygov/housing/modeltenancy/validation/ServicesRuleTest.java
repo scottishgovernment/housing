@@ -5,9 +5,6 @@ import org.junit.Test;
 import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.validation.ValidationResultsBuilder;
 
-/**
- * Created by z418868 on 19/06/2017.
- */
 public class ServicesRuleTest {
 
     private ObjectMother om = new ObjectMother();

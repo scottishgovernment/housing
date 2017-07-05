@@ -5,9 +5,6 @@ import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.validation.ValidationResultsBuilder;
 import scot.mygov.validation.ValidationRule;
 
-/**
- * Created by z418868 on 19/06/2017.
- */
 public class HMORule implements ValidationRule<ModelTenancy> {
 
     public void validate(ModelTenancy modelTenancy, ValidationResultsBuilder resultsBuilder) {

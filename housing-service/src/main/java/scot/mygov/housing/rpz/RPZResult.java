@@ -1,8 +1,5 @@
 package scot.mygov.housing.rpz;
 
-/**
- * Created by z418868 on 14/06/2017.
- */
 public class RPZResult {
 
     private boolean validPostcode;

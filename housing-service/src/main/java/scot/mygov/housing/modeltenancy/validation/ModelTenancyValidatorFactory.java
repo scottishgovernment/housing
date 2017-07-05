@@ -10,9 +10,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Created by z418868 on 16/06/2017.
- */
 public class ModelTenancyValidatorFactory {
 
     private static final String [] MANDATORY_FIELDS = {

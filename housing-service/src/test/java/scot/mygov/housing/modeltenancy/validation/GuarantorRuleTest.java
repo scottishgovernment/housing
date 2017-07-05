@@ -8,9 +8,6 @@ import scot.mygov.validation.ValidationResultsBuilder;
 
 import java.util.Collections;
 
-/**
- * Created by z418868 on 20/06/2017.
- */
 public class GuarantorRuleTest {
     private ObjectMother om = new ObjectMother();
     private GuarantorRule rule = new GuarantorRule();

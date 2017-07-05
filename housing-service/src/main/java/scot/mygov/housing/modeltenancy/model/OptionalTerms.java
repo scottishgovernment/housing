@@ -1,8 +1,5 @@
 package scot.mygov.housing.modeltenancy.model;
 
-/**
- * Created by z418868 on 22/06/2017.
- */
 public class OptionalTerms {
     private String contentsAndConditions;
     private String commonParts;

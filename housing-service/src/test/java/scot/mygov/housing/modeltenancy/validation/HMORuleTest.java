@@ -8,9 +8,6 @@ import scot.mygov.validation.ValidationRule;
 
 import java.time.LocalDate;
 
-/**
- * Created by z418868 on 19/06/2017.
- */
 public class HMORuleTest {
 
     private ValidationRule<ModelTenancy> rule = new HMORule();

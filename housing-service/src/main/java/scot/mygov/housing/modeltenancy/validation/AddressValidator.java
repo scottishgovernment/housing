@@ -4,9 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 import scot.mygov.housing.modeltenancy.model.Address;
 import scot.mygov.validation.ValidationResultsBuilder;
 
-/**
- * Created by z418868 on 21/06/2017.
- */
 public class AddressValidator {
 
     private AddressValidator() {

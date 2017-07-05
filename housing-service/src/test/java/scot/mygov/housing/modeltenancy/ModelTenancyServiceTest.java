@@ -4,24 +4,27 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
+import scot.mygov.housing.AsposeLicense;
 import scot.mygov.housing.HousingConfiguration;
 import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.modeltenancy.validation.ObjectMother;
 
-/**
- * Created by z418868 on 20/06/2017.
- */
+import static org.junit.Assert.assertTrue;
+
 public class ModelTenancyServiceTest {
 
     private final ObjectMother om = new ObjectMother();
+
     private final HousingConfiguration config = new HousingConfiguration();
+
     private final ModelTenancyFieldExtractor fieldExtractor = new ModelTenancyFieldExtractor();
+
     private final ModelTenancyJsonTemplateLoader jsonTemplateLoader = new ModelTenancyJsonTemplateLoader();
 
     @Test
     public void greenpathSave() throws ModelTenancyServiceException {
 
-        ModelTenancyDocumentTemplateLoader templateLoader = new ModelTenancyDocumentTemplateLoader(config.getModelTenancyTemplatePath());
+        ModelTenancyDocumentTemplateLoader templateLoader = templateLoader();
         ModelTenancyService sut = new ModelTenancyService(templateLoader, fieldExtractor, jsonTemplateLoader);
         ModelTenancy modelTenancy = om.anyTenancy();
         sut.save(modelTenancy);
@@ -40,24 +43,24 @@ public class ModelTenancyServiceTest {
     public void canGetModelTenancyTemplate() throws ModelTenancyServiceException {
 
         // ARRANGE
-        ModelTenancyDocumentTemplateLoader templateLoader = new ModelTenancyDocumentTemplateLoader(config.getModelTenancyTemplatePath());
+        ModelTenancyDocumentTemplateLoader templateLoader = templateLoader();
         ModelTenancyService sut = new ModelTenancyService(templateLoader, fieldExtractor, jsonTemplateLoader);
 
         // ACT
         ModelTenancy modelTenancy = sut.getModelTenancytemplate();
 
         // ASSERT
-        Assert.assertTrue(StringUtils.isNotEmpty(modelTenancy.getOptionalTerms().getContentsAndConditions()));
-        Assert.assertTrue(StringUtils.isNotEmpty(modelTenancy.getOptionalTerms().getLocalAuthorityTaxesAndCharges()));
-        Assert.assertTrue(StringUtils.isNotEmpty(modelTenancy.getOptionalTerms().getAlterations()));
-        Assert.assertTrue(StringUtils.isNotEmpty(modelTenancy.getOptionalTerms().getPrivateGarden()));
-        Assert.assertTrue(StringUtils.isNotEmpty(modelTenancy.getOptionalTerms().getRoof()));
-        Assert.assertTrue(StringUtils.isNotEmpty(modelTenancy.getOptionalTerms().getBinsAndRecycling()));
-        Assert.assertTrue(StringUtils.isNotEmpty(modelTenancy.getOptionalTerms().getStorage()));
-        Assert.assertTrue(StringUtils.isNotEmpty(modelTenancy.getOptionalTerms().getDangerousSubstances()));
-        Assert.assertTrue(StringUtils.isNotEmpty(modelTenancy.getOptionalTerms().getPets()));
-        Assert.assertTrue(StringUtils.isNotEmpty(modelTenancy.getOptionalTerms().getSmoking()));
-        Assert.assertTrue(StringUtils.isNotEmpty(modelTenancy.getOptionalTerms().getLiquidPetroleumGas()));
+        assertTrue(StringUtils.isNotEmpty(modelTenancy.getOptionalTerms().getContentsAndConditions()));
+        assertTrue(StringUtils.isNotEmpty(modelTenancy.getOptionalTerms().getLocalAuthorityTaxesAndCharges()));
+        assertTrue(StringUtils.isNotEmpty(modelTenancy.getOptionalTerms().getAlterations()));
+        assertTrue(StringUtils.isNotEmpty(modelTenancy.getOptionalTerms().getPrivateGarden()));
+        assertTrue(StringUtils.isNotEmpty(modelTenancy.getOptionalTerms().getRoof()));
+        assertTrue(StringUtils.isNotEmpty(modelTenancy.getOptionalTerms().getBinsAndRecycling()));
+        assertTrue(StringUtils.isNotEmpty(modelTenancy.getOptionalTerms().getStorage()));
+        assertTrue(StringUtils.isNotEmpty(modelTenancy.getOptionalTerms().getDangerousSubstances()));
+        assertTrue(StringUtils.isNotEmpty(modelTenancy.getOptionalTerms().getPets()));
+        assertTrue(StringUtils.isNotEmpty(modelTenancy.getOptionalTerms().getSmoking()));
+        assertTrue(StringUtils.isNotEmpty(modelTenancy.getOptionalTerms().getLiquidPetroleumGas()));
 
     }
 
@@ -65,7 +68,7 @@ public class ModelTenancyServiceTest {
     public void modelTenancyTemplateException() throws ModelTenancyServiceException, TemplateLoaderException {
 
         // ARRANGE
-        ModelTenancyDocumentTemplateLoader templateLoader = new ModelTenancyDocumentTemplateLoader(config.getModelTenancyTemplatePath());
+        ModelTenancyDocumentTemplateLoader templateLoader = templateLoader();
         ModelTenancyService sut = new ModelTenancyService(templateLoader, fieldExtractor, exceptionThrowingJsonTemplateLoader());
 
         // ACT
@@ -79,6 +82,10 @@ public class ModelTenancyServiceTest {
         ModelTenancyJsonTemplateLoader loader = Mockito.mock(ModelTenancyJsonTemplateLoader.class);
         Mockito.when(loader.loadJsonTemplate()).thenThrow(new TemplateLoaderException("Arg", null));
         return loader;
+    }
+
+    private ModelTenancyDocumentTemplateLoader templateLoader() {
+        return new ModelTenancyDocumentTemplateLoader(new AsposeLicense(null));
     }
 
     private ModelTenancyDocumentTemplateLoader exceptionThrowingTemplateLoader() throws TemplateLoaderException {
