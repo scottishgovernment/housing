@@ -14,6 +14,7 @@ import scot.mygov.housing.rpz.RPZ;
 import scot.mygov.housing.rpz.RPZService;
 import scot.mygov.validation.Validator;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
@@ -25,6 +26,10 @@ import java.util.Collections;
 
 @Module(injects = Housing.class)
 public class HousingModule {
+
+    public static final String GEO_HEALTH = "geosearch-health";
+
+    public static final String GEO_POSTCODES = "geosearch-postcodes";
 
     private static final Logger LOG = LoggerFactory.getLogger(HousingConfiguration.class);
 
@@ -41,21 +46,21 @@ public class HousingModule {
     }
 
     @Provides
-    WebTarget geoHealthTarget(Client client, HousingConfiguration configuration) {
-        return client.target(appendPath(configuration.getGeosearch(), "postcodes"));
+    @Named(GEO_HEALTH)
+    WebTarget geosearchHealth(Client client, HousingConfiguration configuration) {
+        return client.target(appendPath(configuration.getGeosearch(), "health"));
+    }
+
+    @Provides
+    @Named(GEO_POSTCODES)
+    WebTarget geosearchPostcode(Client client, HousingConfiguration configuration) {
+        return client.target(appendPath(configuration.getGeosearch(), "health"));
     }
 
     @Provides
     @Singleton
     Client client() {
         return new ResteasyClientBuilder().connectionPoolSize(10).build();
-    }
-
-    @Provides
-    @Singleton
-    PostcodeSource postcodeSource(Client client, HousingConfiguration configuration) {
-        WebTarget target = client.target(appendPath(configuration.getGeosearch(), "postcodes/"));
-        return new PostcodeSource(target);
     }
 
     @Provides

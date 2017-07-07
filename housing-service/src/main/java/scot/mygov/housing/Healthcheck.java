@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.ProcessingException;
@@ -26,7 +27,9 @@ public class Healthcheck {
     private WebTarget geoHealthTarget;
 
     @Inject
-    public Healthcheck(AsposeLicense asposeLicense, WebTarget geoHealthTarget) {
+    public Healthcheck(
+            AsposeLicense asposeLicense,
+            @Named(HousingModule.GEO_HEALTH) WebTarget geoHealthTarget) {
         this.asposeLicense = asposeLicense;
         this.geoHealthTarget = geoHealthTarget;
     }

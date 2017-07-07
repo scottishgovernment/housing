@@ -1,7 +1,10 @@
 package scot.mygov.housing.rpz;
 
 import scot.mygov.geosearch.api.models.Postcode;
+import scot.mygov.housing.HousingModule;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
@@ -12,7 +15,9 @@ public class PostcodeSource {
 
     private final WebTarget target;
 
-    public PostcodeSource(WebTarget target) {
+    @Inject
+    public PostcodeSource(
+            @Named(HousingModule.GEO_POSTCODES) WebTarget target) {
         this.target = target;
     }
 
