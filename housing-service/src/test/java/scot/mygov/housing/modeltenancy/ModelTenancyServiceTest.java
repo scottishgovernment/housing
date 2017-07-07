@@ -1,7 +1,6 @@
 package scot.mygov.housing.modeltenancy;
 
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import scot.mygov.housing.AsposeLicense;

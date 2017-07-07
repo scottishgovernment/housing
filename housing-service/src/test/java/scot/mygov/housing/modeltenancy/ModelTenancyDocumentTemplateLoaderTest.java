@@ -1,10 +1,8 @@
 package scot.mygov.housing.modeltenancy;
 
 import com.aspose.words.Document;
-import org.junit.Assert;
 import org.junit.Test;
 import scot.mygov.housing.AsposeLicense;
-import scot.mygov.housing.HousingConfiguration;
 
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;

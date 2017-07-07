@@ -1,7 +1,6 @@
 package scot.mygov.housing.modeltenancy;
 
 import com.aspose.words.Document;
-import com.aspose.words.NodeCollection;
 import com.aspose.words.NodeType;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.time.StopWatch;
