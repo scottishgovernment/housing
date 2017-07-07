@@ -1,5 +1,6 @@
 package scot.mygov.housing;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.slf4j.Logger;
@@ -7,14 +8,18 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.LocalDate;
+
+import static java.lang.String.format;
 
 @Path("health")
 @Produces(MediaType.APPLICATION_JSON)
@@ -22,50 +27,83 @@ public class Healthcheck {
 
     private static final Logger LOG = LoggerFactory.getLogger(Healthcheck.class);
 
-    private AsposeLicense asposeLicense;
-
-    private WebTarget geoHealthTarget;
+    @Inject
+    AsposeLicense asposeLicense;
 
     @Inject
-    public Healthcheck(
-            AsposeLicense asposeLicense,
-            @Named(HousingModule.GEO_HEALTH) WebTarget geoHealthTarget) {
-        this.asposeLicense = asposeLicense;
-        this.geoHealthTarget = geoHealthTarget;
-    }
+    @Named(HousingModule.GEO_HEALTH)
+    WebTarget geoHealthTarget;
 
     @GET
-    public Response health() {
+    public Response health(
+            @QueryParam("licenseDays") @DefaultValue("10") int licenseDays
+    ) {
         JsonNodeFactory factory = JsonNodeFactory.instance;
         ObjectNode result = factory.objectNode();
-        boolean licensed = asposeLicense.isLicensed();
-        LocalDate expires = asposeLicense.expires();
-        boolean geosearchOK = geosearchHealth() == 200;
-        result.put("license", licensed);
-        if (expires != null) {
-            result.put("licenseExpires", expires.toString());
-            result.put("daysUntilExpiry", asposeLicense.daysUntilExpiry());
+
+        ArrayNode errors = factory.arrayNode();
+        ArrayNode warnings = factory.arrayNode();
+        ObjectNode data = factory.objectNode();
+
+        addGeosearchInfo(result, errors);
+        addLicenseInfo(result, errors, warnings, data, licenseDays);
+
+        boolean ok = errors.size() == 0;
+        if (!ok) {
+            result.set("errors", errors);
         }
-        result.put("geosearch", geosearchOK);
-        boolean ok = licensed && geosearchOK;
+        if (warnings.size() > 0) {
+            result.set("warnings", warnings);
+        }
+        if (data.size() > 0) {
+            result.set("data", data);
+        }
+
         int status = ok ? 200 : 503;
         return Response.status(status)
                 .entity(result)
                 .build();
     }
 
-    private int geosearchHealth() {
-        Response response = null;
-        int statusCode;
-        try {
-            response = geoHealthTarget.request().get();
-            response.close();
-            statusCode = response.getStatus();
-        } catch (ProcessingException ex) {
-            statusCode = 0;
-            LOG.warn("Failed to fetch geosearch status", ex);
+    private void addGeosearchInfo(ObjectNode result, ArrayNode errors) {
+        boolean geosearchOK = geosearchHealth();
+        result.put("geosearch", geosearchOK);
+        if (!geosearchOK) {
+            errors.add("Geosearch is unavailable");
         }
-        return statusCode;
+    }
+
+    private boolean addLicenseInfo(
+            ObjectNode result,
+            ArrayNode errors,
+            ArrayNode warnings,
+            ObjectNode data,
+            int licenseDays) {
+        boolean licensed = asposeLicense.isLicensed();
+        LocalDate expires = asposeLicense.expires();
+        Long daysRemaining = asposeLicense.daysUntilExpiry();
+        result.put("license", licensed);
+        if (expires != null) {
+            data.put("licenseExpires", expires.toString());
+            data.put("daysUntilExpiry", daysRemaining);
+        }
+        if (!licensed) {
+            errors.add("Aspose Words license is not valid");
+        } else if (daysRemaining < licenseDays) {
+            warnings.add(format("License expires in %d days", daysRemaining));
+        }
+        return licensed;
+    }
+
+    private boolean geosearchHealth() {
+        try {
+            Response response = geoHealthTarget.request().get();
+            response.close();
+            return response.getStatus() == 200;
+        } catch (ProcessingException ex) {
+            LOG.info("Failed to fetch geosearch status", ex);
+            return false;
+        }
     }
 
 }

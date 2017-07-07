@@ -4,14 +4,15 @@ progname=$(basename $0)
 host=localhost
 port=8096
 timeout=
+days=
 
 usage() {
   cat <<EOF
 $progname
 
-Checks the health of the search service.
+Checks the health of the housing service.
 
-Usage:  $progname [ -h <hostname> ] [ -p <port> ] [ -t <timeout> ]
+Usage:  $progname [ -h <hostname> ] [ -p <port> ] [ -t <timeout> ] [ -d <days> ]
    or:  $progname --help
 
 This script is intended for use as a Nagios check, and follows usual
@@ -24,11 +25,12 @@ parse_args() {
     usage
     exit 0
   fi
-  while getopts h:p:t: arg; do
+  while getopts h:p:t:d: arg; do
     case $arg in
       h)      host=$OPTARG;;
       p)      port=$OPTARG;;
       t)      timeout=$OPTARG;;
+      d)      days=$OPTARG;;
     esac
   done
   shift `expr $OPTIND - 1`
@@ -45,15 +47,26 @@ get_health() {
 
 format_status() {
   local json="$1"
-  jq -r '. as $json |
+  jq -r '
     def summary(json):
       json |
-      if .ok then
+      if .errors then
+        "2 CRITICAL - " + (.errors | join("; "))
+      elif .warnings then
+        "1 WARNING - " + (.warnings | join("; "))
+      else
         "0 OK"
-      end +
-      " - " +
-      .message;
-    summary($json)' \
+      end;
+    def performance_data(json):
+      json |
+      if . != null
+      then
+        to_entries |
+        map(.key + ":" + (.value | tostring)) |
+        (" | " + join(" "))
+      else ""
+      end;
+    summary(.) + performance_data(.data)' \
     <<EOF
 $json
 EOF
@@ -61,7 +74,9 @@ EOF
 
 parse_args "$@"
 
-url=http://$host:$port/health
+params=${days:+licenseDays=$days}
+url=http://$host:$port/health${params:+?$params}
+
 json="$(get_health "$url")" && ok= || ok=$?
 if [ -n "$ok" ]; then
   printf "CRITICAL Could not fetch health from ${url}\n"
