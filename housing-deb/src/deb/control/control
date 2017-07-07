@@ -3,6 +3,11 @@ Version: [[version]]
 Section: mygov
 Priority: optional
 Architecture: all
-Description: [[description]]
 Maintainer: martin.ellis@gov.scot
 Depends: java8-runtime-headless
+Description: Housing Service
+ Provides APIs used by the housing forms on the informational site,
+ including:
+ .
+ * Model Tenancy Form
+ * Rent Pressure Zones
