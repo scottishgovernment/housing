@@ -11,9 +11,6 @@ public class HousingConfiguration {
 
     private Aspose aspose = new Aspose();
 
-    public HousingConfiguration() {
-    }
-
     public int getPort() {
         return port;
     }
