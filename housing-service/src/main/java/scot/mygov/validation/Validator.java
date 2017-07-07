@@ -21,8 +21,8 @@ public class Validator<T> {
         ValidationResultsBuilder resultsBuilder = new ValidationResultsBuilder();
         rules.stream().forEach(rule -> rule.validate(model, resultsBuilder));
         ValidationResults results = resultsBuilder.build();
-        if (!results.getIssues().isEmpty()){
-            LOG.error("Failed validation", results.getIssues());
+        if (!results.getIssues().isEmpty() {
+            LOG.error("Failed validation: {}", results.getIssues());
             throw new ValidationException(results.getIssues());
         }
     }
