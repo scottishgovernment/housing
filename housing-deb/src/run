@@ -2,6 +2,11 @@
 set -e
 . /etc/profile
 exec /usr/bin/java \
+  -XX:+UseParallelGC \
+  -XX:MinHeapFreeRatio=20 \
+  -XX:MaxHeapFreeRatio=40 \
+  -XX:GCTimeRatio=10 \
+  -XX:AdaptiveSizePolicyWeight=90 \
   -Djava.awt.headless=true \
   -Dlogback.configurationFile=/opt/housing/logback.xml \
   -jar /opt/housing/housing.jar \
