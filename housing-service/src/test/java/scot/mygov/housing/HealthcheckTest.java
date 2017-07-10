@@ -55,9 +55,6 @@ public class HealthcheckTest {
 
     @Test
     public void okForGreeenpath() throws IOException {
-        LocalDate now = LocalDate.now();
-        this.healthcheck.asposeLicense = validLicense(now, 100L);
-
         dispatcher.invoke(request, response);
 
         assertEquals(200, response.getStatus());
@@ -66,7 +63,17 @@ public class HealthcheckTest {
         assertTrue("geosearch not as expected", health.get("geosearch").asBoolean());
         JsonNode data = health.get("data");
         assertEquals("days until expiry not as expected", 100L, data.get("daysUntilExpiry").asLong());
-        assertEquals("licenseExpires not as expected", now.toString(), data.get("licenseExpires").asText());
+        String expectedExpiry = healthcheck.asposeLicense.expires().toString();
+        assertEquals("licenseExpires not as expected", expectedExpiry, data.get("licenseExpires").asText());
+    }
+
+    @Test
+    public void messagePropertyPresentIfServiceIsHealthy() throws IOException {
+        dispatcher.invoke(request, response);
+
+        assertEquals(200, response.getStatus());
+        JsonNode health = mapper.readTree(response.getContentAsString());
+        assertFalse("message property should be non-empty", health.get("message").asText().isEmpty());
     }
 
     @Test
@@ -139,7 +146,6 @@ public class HealthcheckTest {
         when(license.isLicensed()).thenReturn(true);
         when(license.daysUntilExpiry()).thenReturn(daysUntilExpiry);
         when(license.expires()).thenReturn(expires);
-
         return license;
     }
 

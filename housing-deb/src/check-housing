@@ -55,7 +55,7 @@ format_status() {
       elif .warnings then
         "1 WARNING - " + (.warnings | join("; "))
       else
-        "0 OK"
+        "0 OK - " + .message
       end;
     def performance_data(json):
       json |

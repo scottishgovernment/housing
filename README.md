@@ -30,13 +30,42 @@ The healthcheck endpoint is `GET /health`. The endpoint returns a JSON response
 with the properties listed below. The status code is `200` if the service is
 healthy, and `503` otherwise.
 
-* `ok`
-  * Indicates whether the gep service is contactable.
+* `geosearch`
+  * Indicates whether the Geosearch service is available and reporting healthy.
   * Type: boolean
+* `license`
+  * Indicates whether the Aspose Words license is configured and valid.
+  * Type: boolean
+* `message`
+  * If present, a status message to be shown if the service is healthy.
+  * Type: string
+* `warnings`
+  * If present, indicates issues that may affect service availability.
+  * Type: array of strings
+* `errors`
+  * If present, indicates reasons that the service is unhealthy.
+  * Type: array of strings
+* `data`
+  * Indicates .
+  * Type: object
+  * Properties:
+    * `licenseExpires`
+      * Indicates the date the Aspose Words license expires.
+      * Type: string (yyyy-mm-dd)
+    * `daysUntilExpiry`
+      * Indicates the number of days until the Aspose Words license expires.
+      * Type: number
+
+The `/health` endpoint supports the following optional parameters:
+
+* `licenseDays`
+  * Return a warning if the Aspose Words will expire within this number of days.
+  * Type: integer
 
 
 # Endpoints
-`GET /rpz?postcode=<valid scottish postocde>&date=<date in format 2016-02-02>`
+
+`GET /rpz?postcode=<postcode>&date=<date>`
 
 The postcode parameter should be a valid Scottish postcode. The date should be
 in the format yyyy-mm-dd.
@@ -56,5 +85,5 @@ Returns a template model tenancy JSON document.  This will include default value
 
 `POST /modeltenancy`
 
-Ruturns a filled out model tenancy PDF for the model tenancy documents retunred to it, or a list of validations
-errors of the tenancy is not valid.
+Returns a filled out model tenancy PDF for the model tenancy documents returned
+to it, or a list of validations errors of the tenancy is not valid.

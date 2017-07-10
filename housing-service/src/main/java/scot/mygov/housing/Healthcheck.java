@@ -49,6 +49,7 @@ public class Healthcheck {
         addLicenseInfo(result, errors, warnings, data, licenseDays);
 
         boolean ok = errors.size() == 0;
+        result.put("ok", ok);
         if (!ok) {
             result.set("errors", errors);
         }
@@ -57,6 +58,11 @@ public class Healthcheck {
         }
         if (data.size() > 0) {
             result.set("data", data);
+        }
+
+        if (warnings.size() == 0 && errors.size() == 0) {
+            Long daysUntilExpiry = asposeLicense.daysUntilExpiry();
+            result.put("message", format("Aspose Words license expires in %d days", daysUntilExpiry));
         }
 
         int status = ok ? 200 : 503;
