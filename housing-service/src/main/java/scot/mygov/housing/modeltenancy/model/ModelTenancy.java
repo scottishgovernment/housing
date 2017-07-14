@@ -50,7 +50,7 @@ public class ModelTenancy {
     private String rentPaymentDayOrDate;
     private String rentPaymentSchedule;
     private String rentPaymentMethod;
-    private List<Service> servicesIncludedInRent;
+    private List<Service> servicesIncludedInRent = new ArrayList<>();
     private String depositAmount;
     private String tenancyDepositSchemeAdministrator;
     private String tenancyDepositSchemeContactDetails;
