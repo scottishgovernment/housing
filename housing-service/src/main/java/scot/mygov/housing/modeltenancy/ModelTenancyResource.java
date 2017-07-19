@@ -16,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
+import java.util.Map;
 
 @Path("/")
 public class ModelTenancyResource {
@@ -46,14 +47,26 @@ public class ModelTenancyResource {
     }
 
     @POST
+    @Path("model-tenancy/multipart")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces("application/pdf")
+    public Response modelTenancyMultipart(Map<String, String> params) throws ModelTenancyServiceException {
+        ModelTenancy modelTenancy = parseModel(params.get("data"));
+        return modelTenancyRaw(modelTenancy);
+    }
+
+    @POST
     @Path("model-tenancy/form")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces("application/pdf")
-    public Response modelTenancyForm(@FormParam("data") String data)
-            throws ModelTenancyServiceException {
+    public Response modelTenancyForm(@FormParam("data") String data) throws ModelTenancyServiceException {
+        ModelTenancy modelTenancy = parseModel(data);
+        return modelTenancyRaw(modelTenancy);
+    }
+
+    private ModelTenancy parseModel(String data) throws ModelTenancyServiceException {
         try {
-            ModelTenancy modelTenancy = new ObjectMapper().readValue(data, ModelTenancy.class);
-            return modelTenancyRaw(modelTenancy);
+            return new ObjectMapper().readValue(data, ModelTenancy.class);
         } catch (IOException ex) {
             throw new ModelTenancyServiceException("Could not parse model tenancy data", ex);
         }
