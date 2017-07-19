@@ -2,24 +2,18 @@ package scot.mygov.housing;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import scot.mygov.housing.modeltenancy.ModelTenancyService;
-import scot.mygov.housing.modeltenancy.ModelTenancyServiceException;
-import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.rpz.RPZResult;
 import scot.mygov.housing.rpz.RPZService;
 import scot.mygov.validation.ValidationResults;
 import scot.mygov.validation.ValidationResultsBuilder;
-import scot.mygov.validation.Validator;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -37,12 +31,6 @@ public class HousingResource {
         this.rpzService = rpzService;
     }
 
-    @Inject
-    ModelTenancyService modelTenancyService;
-
-    @Inject
-    Validator<ModelTenancy> modelTenancyValidator;
-
     private enum RPZ_PARAM {
         POSTCODE("postcode"), DATE("date");
 
@@ -55,25 +43,6 @@ public class HousingResource {
         public String getParam() {
             return param;
         }
-    }
-
-    @GET
-    @Path("modeltenancy/template")
-    @Produces("application/json")
-    public Response modelTenancyTmeplate(@Context UriInfo uriInfo) throws ModelTenancyServiceException {
-        ModelTenancy modelTenancyTemplate = modelTenancyService.getModelTenancytemplate();
-        return Response.status(200).entity(modelTenancyTemplate).build();
-    }
-
-    @POST
-    @Path("modeltenancy")
-    @Produces("application/pdf")
-    public Response modelTenancyRaw(ModelTenancy modelTenancy, StreamingOutput streamingOutput) throws ModelTenancyServiceException {
-        modelTenancyValidator.validate(modelTenancy);
-        byte[] tenancyBytes = modelTenancyService.save(modelTenancy);
-        return Response.ok(tenancyBytes)
-                .header("Content-Disposition", "attachment; filename=\"tenancy.pdf\"")
-                .build();
     }
 
     @GET

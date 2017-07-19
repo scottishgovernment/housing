@@ -1,5 +1,7 @@
 package scot.mygov.housing;
 
+import scot.mygov.housing.modeltenancy.ModelTenancyResource;
+
 import javax.inject.Inject;
 import javax.ws.rs.core.Application;
 import java.util.HashSet;
@@ -11,6 +13,9 @@ public class HousingApplication extends Application {
 
     @Inject
     HousingResource housing;
+
+    @Inject
+    ModelTenancyResource modelTenancy;
 
     @Inject
     ErrorHandler errorHandler;
@@ -25,6 +30,7 @@ public class HousingApplication extends Application {
     public Set<Object> getSingletons() {
         return new HashSet<>(asList(
                 housing,
+                modelTenancy,
                 errorHandler,
                 healthcheck,
                 logger
