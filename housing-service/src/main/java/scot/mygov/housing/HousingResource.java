@@ -71,7 +71,9 @@ public class HousingResource {
     public Response modelTenancyRaw(ModelTenancy modelTenancy, StreamingOutput streamingOutput) throws ModelTenancyServiceException {
         modelTenancyValidator.validate(modelTenancy);
         byte[] tenancyBytes = modelTenancyService.save(modelTenancy);
-        return Response.ok(tenancyBytes).build();
+        return Response.ok(tenancyBytes)
+                .header("Content-Disposition", "attachment; filename=tenancy.pdf")
+                .build();
     }
 
     @GET
