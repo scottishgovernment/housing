@@ -72,7 +72,7 @@ public class HousingResource {
         modelTenancyValidator.validate(modelTenancy);
         byte[] tenancyBytes = modelTenancyService.save(modelTenancy);
         return Response.ok(tenancyBytes)
-                .header("Content-Disposition", "attachment; filename=tenancy.pdf")
+                .header("Content-Disposition", "attachment; filename=\"tenancy.pdf\"")
                 .build();
     }
 
