@@ -34,7 +34,7 @@ public class ModelTenancyResource {
     }
 
     @POST
-    @Path("multipart")
+    @Path("form")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces("application/pdf")
     public Response modelTenancyMultipart(Map<String, String> params) throws ModelTenancyServiceException {
