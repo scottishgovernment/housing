@@ -53,7 +53,6 @@ public class ModelTenancy {
     private List<Service> servicesIncludedInRent = new ArrayList<>();
     private String depositAmount;
     private String tenancyDepositSchemeAdministrator;
-    private String tenancyDepositSchemeContactDetails;
     private List<String> tenantUtilitiesResponsibilities = new ArrayList<>();
     private OptionalTerms optionalTerms = new OptionalTerms();
 
@@ -295,14 +294,6 @@ public class ModelTenancy {
 
     public void setTenancyDepositSchemeAdministrator(String tenancyDepositSchemeAdministrator) {
         this.tenancyDepositSchemeAdministrator = tenancyDepositSchemeAdministrator;
-    }
-
-    public String getTenancyDepositSchemeContactDetails() {
-        return tenancyDepositSchemeContactDetails;
-    }
-
-    public void setTenancyDepositSchemeContactDetails(String tenancyDepositSchemeContactDetails) {
-        this.tenancyDepositSchemeContactDetails = tenancyDepositSchemeContactDetails;
     }
 
     public List<String> getTenantUtilitiesResponsibilities() {

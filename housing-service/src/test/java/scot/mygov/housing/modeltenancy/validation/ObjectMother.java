@@ -40,8 +40,7 @@ public class ObjectMother {
         tenancy.setRentPaymentSchedule("Second Monday of each month");
         tenancy.setRentPaymentMethod("CASH");
         tenancy.setDepositAmount("300.00");
-        tenancy.setTenancyDepositSchemeAdministrator("Mr Administrator man");
-        tenancy.setTenancyDepositSchemeContactDetails("contanct details for administrator");
+        tenancy.setTenancyDepositSchemeAdministrator("Letting Protection Service Scotland");
         tenancy.setServicesIncludedInRent(anyServices());
         tenancy.setTenantUtilitiesResponsibilities(Collections.singletonList(Utility.GAS.name()));
         return tenancy;

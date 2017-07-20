@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import scot.mygov.housing.modeltenancy.model.Address;
 import scot.mygov.housing.modeltenancy.model.AgentOrLandLord;
 import scot.mygov.housing.modeltenancy.model.CommunicationsAgreement;
+import scot.mygov.housing.modeltenancy.model.DepositSchemeAdministrator;
 import scot.mygov.housing.modeltenancy.model.Guarantor;
 import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.modeltenancy.model.OptionalTerms;
@@ -38,6 +39,8 @@ public class ModelTenancyFieldExtractor {
     private static final String NOT_APPLICABLE = "n/a";
 
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+
+    private DepositSchemeAdministrators depositScemeAdministrators = new DepositSchemeAdministrators();
 
     @Inject
     public ModelTenancyFieldExtractor() {
@@ -86,7 +89,11 @@ public class ModelTenancyFieldExtractor {
         fields.put("servicesIncludedInRent", servicesIncludedInRent(modelTenancy.getServicesIncludedInRent()));
         fields.put("depositAmount", modelTenancy.getDepositAmount());
         fields.put("depositSchemeAdministrator", modelTenancy.getTenancyDepositSchemeAdministrator());
-        fields.put("depositSchemeContactDetails", modelTenancy.getTenancyDepositSchemeContactDetails());
+        DepositSchemeAdministrator depositSchemeAdministrator =
+                depositScemeAdministrators.forName(modelTenancy.getTenancyDepositSchemeAdministrator());
+        String depositSchemeAdministratorContactDetails = depositSchemeAdministratorContactDetails(depositSchemeAdministrator);
+        fields.put("depositSchemeContactDetails", depositSchemeAdministratorContactDetails);
+
         fields.put("tenantUtilitiesResponsibility",
                 modelTenancy.getTenantUtilitiesResponsibilities()
                         .stream()
@@ -234,6 +241,17 @@ public class ModelTenancyFieldExtractor {
 
     private String servicesIncludedInRent(List<Service> services) {
         return services.stream().map(service -> service.getName() + " " + service.getValue()).collect(joining("\n"));
+    }
+
+    private String depositSchemeAdministratorContactDetails(DepositSchemeAdministrator administrator) {
+        List<String> parts = new ArrayList<>();
+        Collections.addAll(parts,
+                administrator.getWebsite(),
+                administrator.getEmail(),
+                administrator.getTelephone());
+        return parts.stream()
+                .filter(part -> StringUtils.isNotEmpty(part))
+                .collect(Collectors.joining("\n"));
     }
 
     private String defaultForEmpty(String value, String defaultValue) {

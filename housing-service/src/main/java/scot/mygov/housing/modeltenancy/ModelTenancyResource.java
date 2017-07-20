@@ -34,6 +34,13 @@ public class ModelTenancyResource {
     }
 
     @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces("application/pdf")
+    public Response modelTenancyMultipart(ModelTenancy modelTenancy) throws ModelTenancyServiceException {
+        return modelTenancyResponse(modelTenancy);
+    }
+
+    @POST
     @Path("form")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces("application/pdf")

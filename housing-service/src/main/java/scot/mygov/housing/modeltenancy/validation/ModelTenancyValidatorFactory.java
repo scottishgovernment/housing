@@ -22,8 +22,7 @@ public class ModelTenancyValidatorFactory {
         "rentPaymentDayOrDate",
         "rentPaymentSchedule",
         "depositAmount",
-        "tenancyDepositSchemeAdministrator",
-        "tenancyDepositSchemeContactDetails"
+        "tenancyDepositSchemeAdministrator"
     } ;
 
     private static final String [] MONEY_FIELDS = {
@@ -49,7 +48,8 @@ public class ModelTenancyValidatorFactory {
                 new ServicesRule(),
                 new CommunicationsAgreementRule(),
                 new MandatoryFieldsRule(MANDATORY_FIELDS),
-                new MoneyFieldsRule(MONEY_FIELDS));
+                new MoneyFieldsRule(MONEY_FIELDS),
+                new DepositSchemeAdministratorRule());
         return new Validator(rules);
     }
 }
