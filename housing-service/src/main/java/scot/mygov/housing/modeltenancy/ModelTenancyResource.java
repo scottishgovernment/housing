@@ -6,7 +6,6 @@ import scot.mygov.validation.Validator;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -18,7 +17,7 @@ import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.util.Map;
 
-@Path("/")
+@Path("model-tenancy")
 public class ModelTenancyResource {
 
     @Inject
@@ -28,40 +27,27 @@ public class ModelTenancyResource {
     Validator<ModelTenancy> modelTenancyValidator;
 
     @GET
-    @Path("modeltenancy/template")
+    @Path("template")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response modelTenancyTemplate(@Context UriInfo uriInfo) throws ModelTenancyServiceException {
-        ModelTenancy modelTenancyTemplate = modelTenancyService.getModelTenancytemplate();
-        return Response.status(200).entity(modelTenancyTemplate).build();
+    public ModelTenancy modelTenancyTemplate(@Context UriInfo uriInfo) throws ModelTenancyServiceException {
+        return modelTenancyService.getModelTenancyTemplate();
     }
 
     @POST
-    @Path("modeltenancy")
+    @Path("multipart")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces("application/pdf")
-    public Response modelTenancyRaw(ModelTenancy modelTenancy) throws ModelTenancyServiceException {
+    public Response modelTenancyMultipart(Map<String, String> params) throws ModelTenancyServiceException {
+        ModelTenancy modelTenancy = parseModel(params.get("data"));
+        return modelTenancyResponse(modelTenancy);
+    }
+
+    private Response modelTenancyResponse(ModelTenancy modelTenancy) throws ModelTenancyServiceException {
         modelTenancyValidator.validate(modelTenancy);
         byte[] tenancyBytes = modelTenancyService.save(modelTenancy);
         return Response.ok(tenancyBytes)
                 .header("Content-Disposition", "attachment; filename=\"tenancy.pdf\"")
                 .build();
-    }
-
-    @POST
-    @Path("model-tenancy/multipart")
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Produces("application/pdf")
-    public Response modelTenancyMultipart(Map<String, String> params) throws ModelTenancyServiceException {
-        ModelTenancy modelTenancy = parseModel(params.get("data"));
-        return modelTenancyRaw(modelTenancy);
-    }
-
-    @POST
-    @Path("model-tenancy/form")
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Produces("application/pdf")
-    public Response modelTenancyForm(@FormParam("data") String data) throws ModelTenancyServiceException {
-        ModelTenancy modelTenancy = parseModel(data);
-        return modelTenancyRaw(modelTenancy);
     }
 
     private ModelTenancy parseModel(String data) throws ModelTenancyServiceException {

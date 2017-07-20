@@ -46,7 +46,7 @@ public class ModelTenancyServiceTest {
         ModelTenancyService sut = new ModelTenancyService(templateLoader, fieldExtractor, jsonTemplateLoader);
 
         // ACT
-        ModelTenancy modelTenancy = sut.getModelTenancytemplate();
+        ModelTenancy modelTenancy = sut.getModelTenancyTemplate();
 
         // ASSERT
         assertTrue(StringUtils.isNotEmpty(modelTenancy.getOptionalTerms().getContentsAndConditions()));
@@ -71,7 +71,7 @@ public class ModelTenancyServiceTest {
         ModelTenancyService sut = new ModelTenancyService(templateLoader, fieldExtractor, exceptionThrowingJsonTemplateLoader());
 
         // ACT
-        ModelTenancy modelTenancy = sut.getModelTenancytemplate();
+        ModelTenancy modelTenancy = sut.getModelTenancyTemplate();
 
         // ASSERT - see excepted exception
 

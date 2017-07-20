@@ -4,7 +4,9 @@ import org.junit.Test;
 import scot.mygov.validation.Validator;
 
 import javax.ws.rs.core.Response;
+import java.util.Map;
 
+import static java.util.Collections.singletonMap;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -18,7 +20,8 @@ public class ModelTenancyResourceTest {
         resource.modelTenancyService = mock(ModelTenancyService.class);
         resource.modelTenancyValidator = mock(Validator.class);
         when(resource.modelTenancyService.save(any())).thenReturn(new byte[]{1});
-        Response response = resource.modelTenancyForm("{}");
+        Map<String, String> params = singletonMap("data", "{}");
+        Response response = resource.modelTenancyMultipart(params);
         byte[] bytes = (byte[]) response.getEntity();
         assertEquals(1, bytes[0]);
     }
@@ -26,7 +29,9 @@ public class ModelTenancyResourceTest {
     @Test(expected = ModelTenancyServiceException.class)
     public void shouldReturnErrorIfInvalidJSON() throws ModelTenancyServiceException {
         ModelTenancyResource resource = new ModelTenancyResource();
-        resource.modelTenancyForm("");
+        Map<String, String> params = singletonMap("data", "");
+        Response response = resource.modelTenancyMultipart(params);
+        resource.modelTenancyMultipart(params);
     }
 
 }

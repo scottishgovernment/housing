@@ -35,7 +35,7 @@ public class ModelTenancyService {
         this.modelTenancyJsonTemplateLoader = modelTenancyJsonTemplateLoader;
     }
 
-    public ModelTenancy getModelTenancytemplate() throws ModelTenancyServiceException {
+    public ModelTenancy getModelTenancyTemplate() throws ModelTenancyServiceException {
         try {
             return modelTenancyJsonTemplateLoader.loadJsonTemplate();
         } catch (TemplateLoaderException e) {
