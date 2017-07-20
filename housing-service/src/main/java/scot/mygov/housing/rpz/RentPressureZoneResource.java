@@ -1,7 +1,8 @@
-package scot.mygov.housing;
+package scot.mygov.housing.rpz;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import scot.mygov.housing.Healthcheck;
 import scot.mygov.housing.rpz.RPZResult;
 import scot.mygov.housing.rpz.RPZService;
 import scot.mygov.validation.ValidationResults;
@@ -12,6 +13,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -19,15 +21,15 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 
-@Path("/")
-public class HousingResource {
+@Path("rpz")
+public class RentPressureZoneResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(Healthcheck.class);
 
     private final RPZService rpzService;
 
     @Inject
-    HousingResource(RPZService rpzService) {
+    RentPressureZoneResource(RPZService rpzService) {
         this.rpzService = rpzService;
     }
 
@@ -46,8 +48,7 @@ public class HousingResource {
     }
 
     @GET
-    @Path("rpz")
-    @Produces("application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response rpz(@Context UriInfo uriInfo) {
 
         ValidationResults validationResult = validateRPZParams(uriInfo.getQueryParameters());

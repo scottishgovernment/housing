@@ -33,7 +33,7 @@ public class HousingModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(HousingConfiguration.class);
 
-    private static final String APP_NAME = "housing";
+    private static final String APP_NAME = "rentPressureZoneResource";
 
     @Provides
     @Singleton

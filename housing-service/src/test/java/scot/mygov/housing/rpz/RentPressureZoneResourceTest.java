@@ -1,12 +1,9 @@
-package scot.mygov.housing;
+package scot.mygov.housing.rpz;
 
 import org.jboss.resteasy.specimpl.ResteasyUriBuilder;
 import org.jboss.resteasy.spi.ResteasyUriInfo;
 import org.junit.Assert;
 import org.junit.Test;
-import scot.mygov.housing.rpz.RPZ;
-import scot.mygov.housing.rpz.RPZResult;
-import scot.mygov.housing.rpz.RPZService;
 import scot.mygov.validation.ValidationResults;
 
 import javax.ws.rs.core.MultivaluedMap;
@@ -16,7 +13,7 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.Collections;
 
-public class HousingResourceTest {
+public class RentPressureZoneResourceTest {
 
 
     // missing postcode
@@ -24,7 +21,7 @@ public class HousingResourceTest {
     public void missingPostCodeReturnsError() {
 
         // ARRANGE
-        HousingResource sut = new HousingResource(null);
+        RentPressureZoneResource sut = new RentPressureZoneResource(null);
         MultivaluedMap<String, String> params = null;
         URI uri = new ResteasyUriBuilder().queryParam("date", "2010-01-01").build();
         UriInfo uriInfo = new ResteasyUriInfo(uri);
@@ -45,7 +42,7 @@ public class HousingResourceTest {
     public void missingDateReturnsError() {
 
         // ARRANGE
-        HousingResource sut = new HousingResource(null);
+        RentPressureZoneResource sut = new RentPressureZoneResource(null);
         MultivaluedMap<String, String> params = null;
         URI uri = new ResteasyUriBuilder().queryParam("postcode", "EH104AX").build();
         UriInfo uriInfo = new ResteasyUriInfo(uri);
@@ -65,7 +62,7 @@ public class HousingResourceTest {
     public void invalidDateReturnsError() {
 
         // ARRANGE
-        HousingResource sut = new HousingResource(null);
+        RentPressureZoneResource sut = new RentPressureZoneResource(null);
         MultivaluedMap<String, String> params = null;
         URI uri = new ResteasyUriBuilder()
                 .queryParam("postcode", "EH104AX")
@@ -91,7 +88,7 @@ public class HousingResourceTest {
         RPZ rpz = new RPZ("title", LocalDate.MIN, LocalDate.MAX, 100, Collections.emptySet());
         RPZResult result = new RPZResult.Builder().rpz(rpz).build();
         RPZService service = rpzService(result);
-        HousingResource sut = new HousingResource(service);
+        RentPressureZoneResource sut = new RentPressureZoneResource(service);
         MultivaluedMap<String, String> params = null;
         URI uri = new ResteasyUriBuilder()
                 .queryParam("postcode", "EH104AX")

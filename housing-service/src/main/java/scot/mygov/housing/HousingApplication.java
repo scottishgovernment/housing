@@ -1,6 +1,7 @@
 package scot.mygov.housing;
 
 import scot.mygov.housing.modeltenancy.ModelTenancyResource;
+import scot.mygov.housing.rpz.RentPressureZoneResource;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.Application;
@@ -12,7 +13,7 @@ import static java.util.Arrays.asList;
 public class HousingApplication extends Application {
 
     @Inject
-    HousingResource housing;
+    RentPressureZoneResource rentPressureZone;
 
     @Inject
     ModelTenancyResource modelTenancy;
@@ -29,7 +30,7 @@ public class HousingApplication extends Application {
     @Override
     public Set<Object> getSingletons() {
         return new HashSet<>(asList(
-                housing,
+                rentPressureZone,
                 modelTenancy,
                 errorHandler,
                 healthcheck,
