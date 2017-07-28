@@ -6,6 +6,7 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scot.mygov.config.Configuration;
+import scot.mygov.housing.cpi.CPIService;
 import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.modeltenancy.validation.ModelTenancyValidatorFactory;
 import scot.mygov.housing.rpz.InMemoryRPZService;
@@ -18,6 +19,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
@@ -81,6 +83,16 @@ public class HousingModule {
     @Singleton
     AsposeLicense asposeLicense(HousingConfiguration configuration) {
         return new AsposeLicense(configuration.getAspose().getLicense());
+    }
+
+    @Provides
+    @Singleton
+    CPIService cpiService(HousingConfiguration configuration) {
+        try {
+            return new CPIService(configuration.getCpiDataURI().toURL());
+        } catch (MalformedURLException e) {
+            throw new IllegalStateException("Failed to load CPI data from url"+configuration.getCpiDataURI(), e);
+        }
     }
 
     static URI appendPath(URI uri, String path) {

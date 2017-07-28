@@ -24,6 +24,16 @@ This application provides endpoints for:
   * Type: File
   * Default: (none)
 
+* `cpiGracePeriod`
+  * grace period to use when determining of the CPi data has expired.
+  * Type ISO 8601 Duration
+  * Default: `PT12H`
+
+* `cpiDataURI`
+  * URI to use to fetch CPI data
+  * Type: URI
+  * Default: `http://localhost:9200/housing-data/cpi/cpi/_source`
+
 # Monitoring
 
 The healthcheck endpoint is `GET /health`. The endpoint returns a JSON response
@@ -35,6 +45,9 @@ healthy, and `503` otherwise.
   * Type: boolean
 * `license`
   * Indicates whether the Aspose Words license is configured and valid.
+  * Type: boolean
+* `cpi`
+  * Indicates whether up to date CPI data is available.
   * Type: boolean
 * `message`
   * If present, a status message to be shown if the service is healthy.
@@ -55,6 +68,12 @@ healthy, and `503` otherwise.
     * `daysUntilExpiry`
       * Indicates the number of days until the Aspose Words license expires.
       * Type: number
+    * `cpiReleaseDate`
+      * The date that the current cpi data was released
+      * Type string
+    * `cpiNextReleaseDate`
+      * The date that the next scheduled update of cpi data is due.
+      * Type string
 
 The `/health` endpoint supports the following optional parameters:
 

@@ -21,6 +21,10 @@ public class ValidationResultsBuilder {
         return this;
     }
 
+    public boolean hasIssues() {
+        return !issues.isEmpty();
+    }
+
     public ValidationResults build() {
         return new ValidationResults(issues);
     }

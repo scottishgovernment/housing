@@ -11,6 +11,10 @@ public class HousingConfiguration {
 
     private Aspose aspose = new Aspose();
 
+    private URI cpiDataURI = URI.create("http://localhost:9200/housing-data/cpi/cpi/_source");
+
+    private String cpiGracePeriod = "PT12H";
+
     public int getPort() {
         return port;
     }
@@ -23,6 +27,10 @@ public class HousingConfiguration {
         return aspose;
     }
 
+    public String getCpiGracePeriod() {
+        return cpiGracePeriod;
+    }
+
     public static class Aspose {
 
         private File license;
@@ -32,4 +40,7 @@ public class HousingConfiguration {
         }
     }
 
+    public URI getCpiDataURI() {
+        return cpiDataURI;
+    }
 }

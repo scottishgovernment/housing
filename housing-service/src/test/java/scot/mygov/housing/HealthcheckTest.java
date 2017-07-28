@@ -2,8 +2,6 @@ package scot.mygov.housing;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import dagger.ObjectGraph;
 import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
@@ -11,6 +9,9 @@ import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import scot.mygov.housing.cpi.CPIService;
+import scot.mygov.housing.cpi.CPIServiceException;
+import scot.mygov.housing.cpi.model.CPIData;
 
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Invocation;
@@ -25,7 +26,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 public class HealthcheckTest {
@@ -41,11 +41,13 @@ public class HealthcheckTest {
     private MockHttpResponse response;
 
     @Before
-    public void setUp() throws URISyntaxException {
+    public void setUp() throws URISyntaxException, CPIServiceException {
         mapper = new ObjectMapper();
         healthcheck = new Healthcheck();
+        healthcheck.housingConfiguration = new HousingConfiguration();
         healthcheck.asposeLicense = anyValidLicense();
         healthcheck.geoHealthTarget = target(200);
+        healthcheck.cpiService = validCPIService();
         dispatcher = MockDispatcherFactory.createDispatcher();
         dispatcher.getRegistry().addSingletonResource(healthcheck);
         request = MockHttpRequest.get("health");
@@ -132,6 +134,44 @@ public class HealthcheckTest {
         assertEquals("geosearch not as expected", false, health.get("geosearch").asBoolean());
     }
 
+    @Test
+    public void notOkWhenCPIServiceThrowsException() throws CPIServiceException, IOException {
+        this.healthcheck.cpiService = exceptionThrowingCPIService();
+
+        dispatcher.invoke(request, response);
+
+        assertEquals(503, response.getStatus());
+        JsonNode health = mapper.readTree(response.getContentAsString());
+        assertEquals("cpi not as expected", false, health.get("cpi").asBoolean());
+    }
+
+    @Test
+    public void notOkWhenNextReleaseDateHasPassed() throws CPIServiceException, IOException {
+        LocalDate nextRelease = LocalDate.now().minusDays(1);
+        LocalDate release = LocalDate.now().minusDays(10);
+        this.healthcheck.cpiService = cpiServiceWithDates(nextRelease, release);
+
+        dispatcher.invoke(request, response);
+
+        assertEquals(503, response.getStatus());
+        JsonNode health = mapper.readTree(response.getContentAsString());
+        assertEquals("cpi not as expected", false, health.get("cpi").asBoolean());
+    }
+
+
+    @Test
+    public void notOkWhenDataIsMoreThanAMonthOld() throws CPIServiceException, IOException {
+        LocalDate nextRelease = LocalDate.now().plusDays(1);
+        LocalDate release = LocalDate.now().minusMonths(1).minusDays(1);
+        this.healthcheck.cpiService = cpiServiceWithDates(nextRelease, release);
+
+        dispatcher.invoke(request, response);
+
+        assertEquals(503, response.getStatus());
+        JsonNode health = mapper.readTree(response.getContentAsString());
+        assertEquals("cpi not as expected", false, health.get("cpi").asBoolean());
+    }
+
     private AsposeLicense anyValidLicense() {
         AsposeLicense license = mock(AsposeLicense.class);
         when(license.isLicensed()).thenReturn(true);
@@ -139,7 +179,6 @@ public class HealthcheckTest {
         when(license.expires()).thenReturn(LocalDate.now());
         return license;
     }
-
 
     private AsposeLicense validLicense(LocalDate expires, long daysUntilExpiry) {
         AsposeLicense license = mock(AsposeLicense.class);
@@ -172,6 +211,29 @@ public class HealthcheckTest {
         when(builder.get()).thenReturn(response);
         when(target.request()).thenReturn(builder);
         return target;
+    }
+
+    private CPIService cpiServiceWithData(CPIData cpiData) throws CPIServiceException {
+        CPIService service = Mockito.mock(CPIService.class);
+        Mockito.when(service.cpiData()).thenReturn(cpiData);
+        return service;
+    }
+
+    private CPIService cpiServiceWithDates(LocalDate nextRelease, LocalDate releaseDate) throws CPIServiceException {
+        CPIData cpiData = new CPIData();
+        cpiData.setNextRelease(nextRelease);
+        cpiData.setReleaseDate(releaseDate);
+        return cpiServiceWithData(cpiData);
+    }
+
+    private CPIService validCPIService() throws CPIServiceException {
+        return cpiServiceWithDates(LocalDate.now().plusDays(1), LocalDate.now().minusDays(1));
+    }
+
+    private CPIService exceptionThrowingCPIService() throws CPIServiceException {
+        CPIService service = Mockito.mock(CPIService.class);
+        Mockito.when(service.cpiData()).thenThrow(new CPIServiceException("error", new RuntimeException("runtime")));
+        return service;
     }
 
 }
