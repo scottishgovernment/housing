@@ -1,5 +1,6 @@
 package scot.mygov.housing;
 
+import scot.mygov.housing.cpi.CPIResource;
 import scot.mygov.housing.modeltenancy.ModelTenancyResource;
 import scot.mygov.housing.rpz.RentPressureZoneResource;
 
@@ -19,6 +20,9 @@ public class HousingApplication extends Application {
     ModelTenancyResource modelTenancy;
 
     @Inject
+    CPIResource cpiResource;
+
+    @Inject
     ErrorHandler errorHandler;
 
     @Inject
@@ -32,6 +36,7 @@ public class HousingApplication extends Application {
         return new HashSet<>(asList(
                 rentPressureZone,
                 modelTenancy,
+                cpiResource,
                 errorHandler,
                 healthcheck,
                 logger
