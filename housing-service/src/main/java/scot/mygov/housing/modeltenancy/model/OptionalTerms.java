@@ -14,6 +14,7 @@ public class OptionalTerms {
     private String smoking;
     private String liquidPetroleumGas;
     private String additionalTerms;
+    private String utilities;
 
     public String getContentsAndConditions() {
         return contentsAndConditions;
@@ -117,5 +118,13 @@ public class OptionalTerms {
 
     public void setAdditionalTerms(String additionalTerms) {
         this.additionalTerms = additionalTerms;
+    }
+
+    public String getUtilities() {
+        return utilities;
+    }
+
+    public void setUtilities(String utilities) {
+        this.utilities = utilities;
     }
 }

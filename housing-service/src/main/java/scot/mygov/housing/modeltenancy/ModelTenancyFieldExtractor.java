@@ -14,7 +14,6 @@ import scot.mygov.housing.modeltenancy.model.OptionalTerms;
 import scot.mygov.housing.modeltenancy.model.Person;
 import scot.mygov.housing.modeltenancy.model.RentPaymentFrequency;
 import scot.mygov.housing.modeltenancy.model.Service;
-import scot.mygov.housing.modeltenancy.model.Utility;
 
 import javax.inject.Inject;
 import java.time.format.DateTimeFormatter;
@@ -93,12 +92,6 @@ public class ModelTenancyFieldExtractor {
                 depositScemeAdministrators.forName(modelTenancy.getTenancyDepositSchemeAdministrator());
         String depositSchemeAdministratorContactDetails = depositSchemeAdministratorContactDetails(depositSchemeAdministrator);
         fields.put("depositSchemeContactDetails", depositSchemeAdministratorContactDetails);
-
-        fields.put("tenantUtilitiesResponsibility",
-                modelTenancy.getTenantUtilitiesResponsibilities()
-                        .stream()
-                        .map(utility -> Utility.valueOf(utility).getDescription())
-                        .collect(joining(" / ")));
         extractOptionalTerms(modelTenancy.getOptionalTerms(), fields);
         return fields;
     }

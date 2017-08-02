@@ -42,7 +42,6 @@ public class ObjectMother {
         tenancy.setDepositAmount("300.00");
         tenancy.setTenancyDepositSchemeAdministrator("Letting Protection Service Scotland");
         tenancy.setServicesIncludedInRent(anyServices());
-        tenancy.setTenantUtilitiesResponsibilities(Collections.singletonList(Utility.GAS.name()));
         return tenancy;
     }
 
