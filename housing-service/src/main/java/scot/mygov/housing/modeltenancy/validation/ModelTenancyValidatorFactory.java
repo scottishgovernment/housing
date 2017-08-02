@@ -31,25 +31,30 @@ public class ModelTenancyValidatorFactory {
         "depositAmount"
     };
 
+    public boolean validationEnabled = false;
+
     /**
      * Compose the validation rules used to validate ModelTenancy objects.
      */
     public Validator<ModelTenancy> newInstance() {
         List<ValidationRule> rules = new ArrayList<>();
 
-        Collections.addAll(rules,
-                new LandlordsRule(),
-                new AtLeastOneTenantRule(),
-                new TenantsRule(),
-                new GuarantorRule(),
-                new LettingAgentRule(),
-                new EnumsRule(),
-                new HMORule(),
-                new ServicesRule(),
-                new CommunicationsAgreementRule(),
-                new MandatoryFieldsRule(MANDATORY_FIELDS),
-                new MoneyFieldsRule(MONEY_FIELDS),
-                new DepositSchemeAdministratorRule());
+        Collections.addAll(rules, new DepositSchemeAdministratorRule());
+
+        if (validationEnabled) {
+            Collections.addAll(rules,
+                    new LandlordsRule(),
+                    new AtLeastOneTenantRule(),
+                    new TenantsRule(),
+                    new GuarantorRule(),
+                    new LettingAgentRule(),
+                    new EnumsRule(),
+                    new HMORule(),
+                    new ServicesRule(),
+                    new CommunicationsAgreementRule(),
+                    new MandatoryFieldsRule(MANDATORY_FIELDS),
+                    new MoneyFieldsRule(MONEY_FIELDS));
+        }
         return new Validator(rules);
     }
 }
