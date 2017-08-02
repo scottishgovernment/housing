@@ -19,7 +19,7 @@ public class DepositSchemeAdministratorRule implements ValidationRule<ModelTenan
 
         // if they have specifeid one it must be one we recognise
         if (administrators.forName(modelTenancy.getTenancyDepositSchemeAdministrator()) == null) {
-            resultsBuilder.issue("tenancyDepositSchemeAdministrator", "Unrecognised scheme adminsitrator");
+            resultsBuilder.issue("tenancyDepositSchemeAdministrator", "Unrecognised scheme administrator");
         }
     }
 }
