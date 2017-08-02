@@ -33,10 +33,14 @@ public class ModelTenancyValidatorFactory {
 
     public boolean validationEnabled = false;
 
+    public void setValidationEnabled(boolean validationEnabled) {
+        this.validationEnabled = validationEnabled;
+    }
+
     /**
      * Compose the validation rules used to validate ModelTenancy objects.
      */
-    public Validator<ModelTenancy> newInstance() {
+    public Validator<ModelTenancy> validator() {
         List<ValidationRule> rules = new ArrayList<>();
 
         Collections.addAll(rules, new DepositSchemeAdministratorRule());

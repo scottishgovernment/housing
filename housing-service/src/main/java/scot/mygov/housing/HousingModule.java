@@ -76,7 +76,7 @@ public class HousingModule {
 
     @Provides
     Validator<ModelTenancy> modelTenancyValidator() {
-        return new ModelTenancyValidatorFactory().newInstance();
+        return new ModelTenancyValidatorFactory().validator();
     }
 
     @Provides
