@@ -12,8 +12,7 @@ public class ModelTenancyValidatorFactoryTest {
     @Test
     public void validationEnabledCanValidataValidTenancy() throws ValidationException {
         ModelTenancyValidatorFactory sut = new ModelTenancyValidatorFactory();
-        sut.setValidationEnabled(true);
-        Validator<ModelTenancy> validator = sut.validator();
+        Validator<ModelTenancy> validator = sut.validator(true);
 
         ModelTenancy model = new ObjectMother().anyTenancy();
         try {
@@ -26,8 +25,7 @@ public class ModelTenancyValidatorFactoryTest {
     @Test(expected=ValidationException.class)
     public void validationEnabledCannotValidateInvalidTenancy() throws ValidationException {
         ModelTenancyValidatorFactory sut = new ModelTenancyValidatorFactory();
-        sut.setValidationEnabled(true);
-        Validator<ModelTenancy> validator = sut.validator();
+        Validator<ModelTenancy> validator = sut.validator(true);
 
         ModelTenancy model = invalidTenancy();
         try {
@@ -40,7 +38,7 @@ public class ModelTenancyValidatorFactoryTest {
     @Test
     public void validationDisabledCanValidateInvalidTenancy() throws ValidationException {
         ModelTenancyValidatorFactory sut = new ModelTenancyValidatorFactory();
-        Validator<ModelTenancy> validator = sut.validator();
+        Validator<ModelTenancy> validator = sut.validator(false);
 
         ModelTenancy model = invalidTenancy();
         // property

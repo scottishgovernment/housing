@@ -76,7 +76,8 @@ public class HousingModule {
 
     @Provides
     Validator<ModelTenancy> modelTenancyValidator() {
-        return new ModelTenancyValidatorFactory().validator();
+        // validation is currently disabled.
+        return new ModelTenancyValidatorFactory().validator(false);
     }
 
     @Provides
