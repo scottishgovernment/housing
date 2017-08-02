@@ -106,3 +106,11 @@ Returns a template model tenancy JSON document.  This will include default value
 
 Returns a filled out model tenancy PDF for the model tenancy documents returned
 to it, or a list of validations errors of the tenancy is not valid.
+
+`GET /cpi/cpi-delta?from_date=<from_date>&to_date=<to_date>`
+
+Return the the delta in CPI figures that are relevant for the specified dates.
+
+from_date and to date should be in the format yyyy-mm-dd with from_date <= to_date.
+
+This service is available at /service/housing/cpi/cpi-delta from NGNIX.
