@@ -9,6 +9,8 @@ import scot.mygov.config.Configuration;
 import scot.mygov.housing.cpi.CPIService;
 import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.modeltenancy.validation.ModelTenancyValidatorFactory;
+import scot.mygov.housing.postcode.PostcodeService;
+import scot.mygov.housing.postcode.mapcloud.MapcloudPostcodeService;
 import scot.mygov.housing.rpz.InMemoryRPZService;
 import scot.mygov.housing.rpz.PostcodeSource;
 import scot.mygov.housing.rpz.RPZ;
@@ -33,6 +35,8 @@ public class HousingModule {
 
     public static final String GEO_POSTCODES = "geosearch-postcodes";
 
+    public static final String MAPCLOUD = "mapcloud";
+
     private static final Logger LOG = LoggerFactory.getLogger(HousingConfiguration.class);
 
     private static final String APP_NAME = "housing";
@@ -56,7 +60,13 @@ public class HousingModule {
     @Provides
     @Named(GEO_POSTCODES)
     WebTarget geosearchPostcode(Client client, HousingConfiguration configuration) {
-        return client.target(appendPath(configuration.getGeosearch(), "health"));
+        return client.target(appendPath(configuration.getGeosearch(), "postcodes"));
+    }
+
+    @Provides
+    @Named(MAPCLOUD)
+    WebTarget mapcloud(Client client, HousingConfiguration configuration) {
+        return client.target(configuration.getMapcloudURI());
     }
 
     @Provides
@@ -76,7 +86,6 @@ public class HousingModule {
 
     @Provides
     Validator<ModelTenancy> modelTenancyValidator() {
-        // validation is currently disabled.
         return new ModelTenancyValidatorFactory().validator(false);
     }
 
@@ -94,6 +103,18 @@ public class HousingModule {
         } catch (MalformedURLException e) {
             throw new IllegalStateException("Failed to load CPI data from url"+configuration.getCpiDataURI(), e);
         }
+    }
+
+    @Provides
+    PostcodeService postcodeService(
+            HousingConfiguration config,
+            @Named(MAPCLOUD) WebTarget mapcloud,
+            PostcodeSource postcodeSource) {
+        return new MapcloudPostcodeService(
+                postcodeSource,
+                mapcloud,
+                config.getMapcloudUser(),
+                config.getMapcloudPassword());
     }
 
     static URI appendPath(URI uri, String path) {

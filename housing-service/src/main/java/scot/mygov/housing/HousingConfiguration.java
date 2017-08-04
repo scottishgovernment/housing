@@ -13,6 +13,12 @@ public class HousingConfiguration {
 
     private URI cpiDataURI = URI.create("http://localhost:9200/housing-data/cpi/cpi/_source");
 
+    private URI mapcloudURI = URI.create("https://api.themapcloud.com/");
+
+    private String mapcloudUser = "";
+
+    private String mapcloudPassword = "";
+
     private String cpiGracePeriod = "PT12H";
 
     public int getPort() {
@@ -42,5 +48,17 @@ public class HousingConfiguration {
 
     public URI getCpiDataURI() {
         return cpiDataURI;
+    }
+
+    public URI getMapcloudURI() {
+        return mapcloudURI;
+    }
+
+    public String getMapcloudUser() {
+        return mapcloudUser;
+    }
+
+    public String getMapcloudPassword() {
+        return mapcloudPassword;
     }
 }
