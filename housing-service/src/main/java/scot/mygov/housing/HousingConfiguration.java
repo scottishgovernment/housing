@@ -25,6 +25,10 @@ public class HousingConfiguration {
         return port;
     }
 
+    public double getMapcloudResponseTimeThreshold() {
+        return 500;
+    }
+
     public URI getGeosearch() {
         return geosearch;
     }

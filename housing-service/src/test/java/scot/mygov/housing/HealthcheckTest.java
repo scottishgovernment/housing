@@ -216,12 +216,21 @@ public class HealthcheckTest {
         when(errorRate.getFiveMinuteRate()).thenReturn(errorFiveMinRate);
         meters.put(MetricName.ERROR_RATE.name(healthcheck.postcodeService), errorRate);
         when(registry.getMeters()).thenReturn(meters);
+        when(registry.getMeters(Mockito.any())).thenReturn(meters);
 
         SortedMap<String, Timer> timers = new TreeMap<>();
         Timer responseTimes = mock(Timer.class);
         when(responseTimes.getFiveMinuteRate()).thenReturn(responseTimesFiveMinuteRate);
         timers.put(MetricName.RESPONSE_TIMES.name(healthcheck.postcodeService), responseTimes);
         when(registry.getTimers()).thenReturn(timers);
+        when(registry.getTimers(Mockito.any())).thenReturn(timers);
+
+        SortedMap<String, Counter> counters = new TreeMap<>();
+        Counter errorCounter = mock(Counter.class);
+        when(errorCounter.getCount()).thenReturn(0L);
+        counters.put(MetricName.ERRORS.name(healthcheck.postcodeService), errorCounter);
+        when(registry.getCounters()).thenReturn(counters);
+        when(registry.getCounters(Mockito.any())).thenReturn(counters);
 
         return registry;
     }

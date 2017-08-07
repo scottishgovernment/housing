@@ -1,7 +1,6 @@
 package scot.mygov.housing;
 
 import com.codahale.metrics.Counter;
-import com.codahale.metrics.Gauge;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.Metric;
 import com.codahale.metrics.MetricFilter;
@@ -180,7 +179,8 @@ public class Healthcheck {
         Meter errorRate = metricRegistry.getMeters().get(MetricName.ERROR_RATE.name(postcodeService));
         Timer timer = metricRegistry.getTimers().get(MetricName.RESPONSE_TIMES.name(postcodeService));
 
-        boolean ok = errorRate.getFiveMinuteRate() == 0 && timer.getFiveMinuteRate() < 500;
+        double responsetimeThreshold = housingConfiguration.getMapcloudResponseTimeThreshold();
+        boolean ok = errorRate.getFiveMinuteRate() == 0 && timer.getFiveMinuteRate() < responsetimeThreshold;
 
         if (errorRate.getFiveMinuteRate() > 0) {
             errors.add("Postcode errors in the last 5 minutes");
@@ -193,8 +193,8 @@ public class Healthcheck {
         if (!ok) {
             // collect all of the metrics for mapcloud and add them to the data
             MetricFilter filter = forClass(postcodeService.getClass());
-            for (Map.Entry<String, Gauge> entry : metricRegistry.getGauges(filter).entrySet()) {
-                data.put(entry.getKey(), entry.getValue().getValue().toString());
+            for (Map.Entry<String, Timer> entry : metricRegistry.getTimers(filter).entrySet()) {
+                data.put(entry.getKey(), entry.getValue().getFiveMinuteRate());
             }
 
             for (Map.Entry<String, Meter> entry : metricRegistry.getMeters(filter).entrySet()) {
