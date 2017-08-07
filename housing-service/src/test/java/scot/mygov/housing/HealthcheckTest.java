@@ -1,5 +1,9 @@
 package scot.mygov.housing;
 
+import com.codahale.metrics.Counter;
+import com.codahale.metrics.Meter;
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.Timer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jboss.resteasy.core.Dispatcher;
@@ -12,6 +16,9 @@ import org.mockito.Mockito;
 import scot.mygov.housing.cpi.CPIService;
 import scot.mygov.housing.cpi.CPIServiceException;
 import scot.mygov.housing.cpi.model.CPIData;
+import scot.mygov.housing.postcode.PostcodeService;
+import scot.mygov.housing.postcode.PostcodeServiceException;
+import scot.mygov.housing.postcode.PostcodeServiceResults;
 
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Invocation;
@@ -21,6 +28,9 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
+import java.util.SortedMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -44,6 +54,8 @@ public class HealthcheckTest {
     public void setUp() throws URISyntaxException, CPIServiceException {
         mapper = new ObjectMapper();
         healthcheck = new Healthcheck();
+        healthcheck.metricRegistry = new MetricRegistry();
+        healthcheck.postcodeService = new DummyPostcodeService(healthcheck.metricRegistry);
         healthcheck.housingConfiguration = new HousingConfiguration();
         healthcheck.asposeLicense = anyValidLicense();
         healthcheck.geoHealthTarget = target(200);
@@ -158,7 +170,6 @@ public class HealthcheckTest {
         assertEquals("cpi not as expected", false, health.get("cpi").asBoolean());
     }
 
-
     @Test
     public void notOkWhenDataIsMoreThanAMonthOld() throws CPIServiceException, IOException {
         LocalDate nextRelease = LocalDate.now().plusDays(1);
@@ -170,6 +181,49 @@ public class HealthcheckTest {
         assertEquals(503, response.getStatus());
         JsonNode health = mapper.readTree(response.getContentAsString());
         assertEquals("cpi not as expected", false, health.get("cpi").asBoolean());
+    }
+
+    @Test
+    public void notOkPostcodeServiceHasErrors() throws CPIServiceException, IOException, InterruptedException {
+
+        this.healthcheck.metricRegistry = mockMetricsRegistry(10, 0);
+
+        dispatcher.invoke(request, response);
+
+        JsonNode health = mapper.readTree(response.getContentAsString());
+        assertEquals("postcode not as expected", false, health.get("postcode").asBoolean());
+        assertEquals(503, response.getStatus());
+    }
+
+    @Test
+    public void notOkPostcodeServiceResponseTimeIsSlow() throws CPIServiceException, IOException, InterruptedException {
+
+        this.healthcheck.metricRegistry = mockMetricsRegistry(0, 501);
+
+        dispatcher.invoke(request, response);
+
+        JsonNode health = mapper.readTree(response.getContentAsString());
+        assertEquals("postcode not as expected", false, health.get("postcode").asBoolean());
+        assertEquals(503, response.getStatus());
+    }
+
+    private MetricRegistry mockMetricsRegistry(double errorFiveMinRate, double responseTimesFiveMinuteRate) {
+
+        MetricRegistry registry = mock(MetricRegistry.class);
+
+        SortedMap<String, Meter> meters = new TreeMap<>();
+        Meter errorRate = mock(Meter.class);
+        when(errorRate.getFiveMinuteRate()).thenReturn(errorFiveMinRate);
+        meters.put(MetricName.ERROR_RATE.name(healthcheck.postcodeService), errorRate);
+        when(registry.getMeters()).thenReturn(meters);
+
+        SortedMap<String, Timer> timers = new TreeMap<>();
+        Timer responseTimes = mock(Timer.class);
+        when(responseTimes.getFiveMinuteRate()).thenReturn(responseTimesFiveMinuteRate);
+        timers.put(MetricName.RESPONSE_TIMES.name(healthcheck.postcodeService), responseTimes);
+        when(registry.getTimers()).thenReturn(timers);
+
+        return registry;
     }
 
     private AsposeLicense anyValidLicense() {
@@ -236,4 +290,27 @@ public class HealthcheckTest {
         return service;
     }
 
+    private class DummyPostcodeService implements PostcodeService {
+        private final Timer responseTimes;
+
+        private final Counter requestCounter;
+
+        private final Counter errorCounter;
+
+        private final Meter requestMeter;
+
+        private final Meter errorMeter;
+
+        public DummyPostcodeService(MetricRegistry registry) {
+            this.responseTimes = registry.timer(MetricName.RESPONSE_TIMES.name(this));
+            this.requestCounter = registry.counter(MetricName.REQUESTS.name(this));
+            this.errorCounter = registry.counter(MetricName.ERRORS.name(this));
+            this.requestMeter = registry.meter(MetricName.REQUEST_RATE.name(this));
+            this.errorMeter = registry.meter(MetricName.ERROR_RATE.name(this));
+        }
+
+        public PostcodeServiceResults lookup(String postcode) throws PostcodeServiceException {
+            return null;
+        }
+    }
 }

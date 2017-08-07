@@ -1,16 +1,19 @@
 package scot.mygov.housing.postcode.mapcloud;
 
+import com.codahale.metrics.Counter;
+import com.codahale.metrics.Meter;
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.Timer;
 import org.apache.commons.lang3.StringUtils;
-import scot.mygov.geosearch.api.models.Postcode;
-import scot.mygov.housing.modeltenancy.validation.ValidationUtil;
-import scot.mygov.housing.postcode.PostcodeServiceResult;
+import scot.mygov.housing.MetricName;
 import scot.mygov.housing.postcode.PostcodeService;
 import scot.mygov.housing.postcode.PostcodeServiceException;
+import scot.mygov.housing.postcode.PostcodeServiceResult;
 import scot.mygov.housing.postcode.PostcodeServiceResults;
-import scot.mygov.housing.rpz.PostcodeSource;
 
+import javax.ws.rs.ProcessingException;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -19,59 +22,75 @@ import static java.util.stream.Collectors.toList;
 
 public class MapcloudPostcodeService implements PostcodeService {
 
-    private final PostcodeSource postcodeSource;
     private final WebTarget mapcloudTarget;
+
     private final String user;
+
     private final String password;
 
-    public MapcloudPostcodeService(PostcodeSource postcodeSource, WebTarget mapcloudTarget, String user, String password) {
-        this.postcodeSource = postcodeSource;
+    private final Timer responseTimes;
+
+    private final Counter requestCounter;
+
+    private final Counter errorCounter;
+
+    private final Meter requestMeter;
+
+    private final Meter errorMeter;
+
+    public MapcloudPostcodeService(
+            WebTarget mapcloudTarget,
+            String user,
+            String password,
+            MetricRegistry registry) {
         this.mapcloudTarget = mapcloudTarget;
         this.user = user;
         this.password = password;
+        this.responseTimes = registry.timer(MetricName.RESPONSE_TIMES.name(this));
+        this.requestCounter = registry.counter(MetricName.REQUESTS.name(this));
+        this.errorCounter = registry.counter(MetricName.ERRORS.name(this));
+        this.requestMeter = registry.meter(MetricName.REQUEST_RATE.name(this));
+        this.errorMeter = registry.meter(MetricName.ERROR_RATE.name(this));
     }
 
-    public PostcodeServiceResults lookup(String postcodeIn) throws PostcodeServiceException {
+    public PostcodeServiceResults lookup(String postcode) throws PostcodeServiceException {
+        return toResults(performLookup(postcode));
+    }
 
-        // make the following code case insensitive
-        String postcode = postcodeIn.toUpperCase();
-
-        // is this a valid postcode?
-        if (!ValidationUtil.validPostcode(postcode)) {
-            return invalidPostcodeResults();
+    private MapcloudPostcodeResults performLookup(String postcode) throws PostcodeServiceException {
+        Timer.Context timer = responseTimes.time();
+        requestCounter.inc();
+        requestMeter.mark();
+        try {
+            MapcloudPostcodeResults results = mapcloudTarget
+                    .path("address/addressbase/postcode")
+                    .queryParam("pc", postcode)
+                    .queryParam("addrformat", 2)
+                    .request()
+                    .header("Authorization", authHeader())
+                    .get(MapcloudPostcodeResults.class);
+            timer.stop();
+            return results;
+        } catch (ProcessingException | WebApplicationException ex) {
+            errorCounter.inc();
+            errorMeter.mark();
+            throw new PostcodeServiceException("", ex);
         }
-
-        // is this a Scottish postcode?
-        Postcode postcodeObj = postcodeSource.postcode(postcode);
-        if (postcodeObj == null) {
-            return nonScottishPostcodeResult();
-        }
-
-        // call the mapcloud service
-        return resultFromLookup(postcodeObj);
     }
 
-    private PostcodeServiceResults resultFromLookup(Postcode postcode) throws PostcodeServiceException {
-        MapcloudPostcodeResults mapcloudResults = performLookup(postcode.getNormalisedPostcode());
-        List<PostcodeServiceResult> results = mapcloudResults.getResults().stream().map(this::toResult).collect(toList());
-        PostcodeServiceResults res = new PostcodeServiceResults();
-        res.setValidPostcode(true);
-        res.setScottishPostcode(true);
-        res.setResults(results);
-        return res;
+    private String authHeader() {
+        String userAndPassword = user + ":" + password;
+        String encoded = Base64.getEncoder().encodeToString(userAndPassword.getBytes());
+        return "Basic " + encoded;
     }
 
-    private PostcodeServiceResults invalidPostcodeResults() {
+    private PostcodeServiceResults toResults(MapcloudPostcodeResults from) {
+        List<PostcodeServiceResult> to = from.getResults()
+                .stream()
+                .map(this::toResult)
+                .collect(toList());
         PostcodeServiceResults res = new PostcodeServiceResults();
-        res.setValidPostcode(false);
-        res.setScottishPostcode(false);
-        return res;
-    }
-
-    private PostcodeServiceResults nonScottishPostcodeResult() {
-        PostcodeServiceResults res = new PostcodeServiceResults();
-        res.setValidPostcode(true);
-        res.setScottishPostcode(false);
+        res.setResults(to);
         return res;
     }
 
@@ -92,30 +111,5 @@ public class MapcloudPostcodeService implements PostcodeService {
         if (!StringUtils.isEmpty(value)) {
             list.add(value);
         }
-    }
-
-    private MapcloudPostcodeResults performLookup(String postcode) throws PostcodeServiceException {
-
-        Response response = mapcloudTarget
-                .path("address/addressbase/postcode")
-                .queryParam("pc", postcode)
-                .queryParam("addrformat", 2)
-                .request()
-                .header("Authorization", authHeader())
-                .get();
-
-        if (response.getStatus() == 200) {
-            return response.readEntity(MapcloudPostcodeResults.class);
-        }
-
-        // we got an error from mapcloud, throw as an exception
-        String message = "Mapcloud returned error"+response.getStatus() + response.getEntity().toString();
-        throw new PostcodeServiceException(message);
-    }
-
-    private String authHeader() {
-        String userAndPassword = user + ":" + password;
-        String encoded = Base64.getEncoder().encodeToString(userAndPassword.getBytes());
-        return "Basic " + encoded;
     }
 }

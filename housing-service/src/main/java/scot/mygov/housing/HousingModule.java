@@ -1,5 +1,6 @@
 package scot.mygov.housing;
 
+import com.codahale.metrics.MetricRegistry;
 import dagger.Module;
 import dagger.Provides;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
@@ -109,12 +110,19 @@ public class HousingModule {
     PostcodeService postcodeService(
             HousingConfiguration config,
             @Named(MAPCLOUD) WebTarget mapcloud,
-            PostcodeSource postcodeSource) {
+            PostcodeSource postcodeSource,
+            MetricRegistry registry) {
         return new MapcloudPostcodeService(
-                postcodeSource,
                 mapcloud,
                 config.getMapcloudUser(),
-                config.getMapcloudPassword());
+                config.getMapcloudPassword(),
+                registry);
+    }
+
+    @Provides
+    @Singleton
+    MetricRegistry metricsRegistry() {
+        return new MetricRegistry();
     }
 
     static URI appendPath(URI uri, String path) {

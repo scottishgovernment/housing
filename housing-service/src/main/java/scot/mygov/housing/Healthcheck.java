@@ -1,5 +1,12 @@
 package scot.mygov.housing;
 
+import com.codahale.metrics.Counter;
+import com.codahale.metrics.Gauge;
+import com.codahale.metrics.Meter;
+import com.codahale.metrics.Metric;
+import com.codahale.metrics.MetricFilter;
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.Timer;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -8,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import scot.mygov.housing.cpi.CPIService;
 import scot.mygov.housing.cpi.CPIServiceException;
 import scot.mygov.housing.cpi.model.CPIData;
+import scot.mygov.housing.postcode.PostcodeService;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -23,8 +31,10 @@ import javax.ws.rs.core.Response;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 import static java.lang.String.format;
+
 
 @Path("health")
 @Produces(MediaType.APPLICATION_JSON)
@@ -45,6 +55,12 @@ public class Healthcheck {
     @Inject
     CPIService cpiService;
 
+    @Inject
+    PostcodeService postcodeService;
+
+    @Inject
+    MetricRegistry metricRegistry;
+
     @GET
     public Response health(
             @QueryParam("licenseDays") @DefaultValue("10") int licenseDays
@@ -59,6 +75,7 @@ public class Healthcheck {
         addGeosearchInfo(result, errors);
         addLicenseInfo(result, errors, warnings, data, licenseDays);
         addCPIInfo(result, errors, data);
+        addPostcodeInfo(result, errors, data);
 
         boolean ok = errors.size() == 0;
         result.put("ok", ok);
@@ -158,4 +175,45 @@ public class Healthcheck {
         result.put("cpi", ok);
     }
 
+    private void addPostcodeInfo(ObjectNode result, ArrayNode errors, ObjectNode data) {
+
+        Meter errorRate = metricRegistry.getMeters().get(MetricName.ERROR_RATE.name(postcodeService));
+        Timer timer = metricRegistry.getTimers().get(MetricName.RESPONSE_TIMES.name(postcodeService));
+
+        boolean ok = errorRate.getFiveMinuteRate() == 0 && timer.getFiveMinuteRate() < 500;
+
+        if (errorRate.getFiveMinuteRate() > 0) {
+            errors.add("Postcode errors in the last 5 minutes");
+        }
+
+        if (timer.getFiveMinuteRate() > 500) {
+            errors.add("Postcode slow in the last 5 minutes");
+        }
+
+        if (!ok) {
+            // collect all of the metrics for mapcloud and add them to the data
+            MetricFilter filter = forClass(postcodeService.getClass());
+            for (Map.Entry<String, Gauge> entry : metricRegistry.getGauges(filter).entrySet()) {
+                data.put(entry.getKey(), entry.getValue().getValue().toString());
+            }
+
+            for (Map.Entry<String, Meter> entry : metricRegistry.getMeters(filter).entrySet()) {
+                data.put(entry.getKey(), entry.getValue().getFiveMinuteRate());
+            }
+
+            for (Map.Entry<String, Counter> entry : metricRegistry.getCounters(filter).entrySet()) {
+                data.put(entry.getKey(), entry.getValue().getCount());
+            }
+        }
+        result.put("postcode", ok);
+    }
+
+    private MetricFilter forClass(Class clazz) {
+        return new MetricFilter() {
+            @Override
+            public boolean matches(String name, Metric metric) {
+                return name.startsWith(clazz.getName());
+            }
+        };
+    }
 }

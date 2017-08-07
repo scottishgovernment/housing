@@ -1,7 +1,11 @@
 package scot.mygov.housing.postcode;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import scot.mygov.geosearch.api.models.Postcode;
+import scot.mygov.housing.modeltenancy.validation.ValidationUtil;
+import scot.mygov.housing.rpz.PostcodeSource;
 import scot.mygov.validation.ValidationResults;
 import scot.mygov.validation.ValidationResultsBuilder;
 
@@ -24,9 +28,12 @@ public class PostcodeResource {
 
     private final PostcodeService postcodeService;
 
+    private final PostcodeSource postcodeSource;
+
     @Inject
-    public PostcodeResource(PostcodeService postcodeService) {
+    public PostcodeResource(PostcodeService postcodeService, PostcodeSource postcodeSource) {
         this.postcodeService = postcodeService;
+        this.postcodeSource = postcodeSource;
     }
 
     @Path("address-lookup")
@@ -34,25 +41,47 @@ public class PostcodeResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response lookup(@Context UriInfo uriInfo) {
 
-        ValidationResults validationResult = validateParams(uriInfo.getQueryParameters());
+        String postcode = postcodeParam(uriInfo.getQueryParameters());
+        ValidationResults validationResult = validate(postcode);
         if (!validationResult.getIssues().isEmpty()) {
             return Response.status(400).entity(validationResult).build();
         }
 
-        String postcode =  uriInfo.getQueryParameters().getFirst(POSTCODE_PARAM);
         try {
             PostcodeServiceResults results = postcodeService.lookup(postcode);
-            return Response.status(200).entity(results).build();
+            return Response
+                    .status(200)
+                    .entity(results)
+                    .build();
         } catch (PostcodeServiceException e) {
             LOG.error("Failed to get postcode", e);
             return Response.status(503).entity("Postcode data not available").build();
         }
     }
 
-    private ValidationResults validateParams(MultivaluedMap<String, String> params) {
+    private String postcodeParam(MultivaluedMap<String, String> params) {
+        if (params.containsKey(POSTCODE_PARAM)) {
+            // the postcode param is case insensitive
+            return params.getFirst(POSTCODE_PARAM).toUpperCase();
+        } else {
+            return null;
+        }
+    }
+    private ValidationResults validate(String postcode) {
         ValidationResultsBuilder resultBuilder = new ValidationResultsBuilder();
-        if (!params.containsKey(POSTCODE_PARAM)) {
-            resultBuilder.issue(POSTCODE_PARAM, "Missing required postcode param");
+
+        if (StringUtils.isEmpty(postcode)) {
+            return resultBuilder.issue(POSTCODE_PARAM, "Missing required postcode param").build();
+        }
+
+        if (!ValidationUtil.validPostcode(postcode)) {
+            return resultBuilder.issue(POSTCODE_PARAM, "Invalid postcode").build();
+        }
+
+        // is this a scottish postcode?
+        Postcode postcodeObj = postcodeSource.postcode(postcode);
+        if (postcodeObj == null) {
+            return resultBuilder.issue(POSTCODE_PARAM, "Not a Scottish postcode").build();
         }
         return resultBuilder.build();
     }
