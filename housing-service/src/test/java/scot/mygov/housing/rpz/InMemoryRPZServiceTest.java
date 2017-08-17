@@ -1,127 +1,145 @@
 package scot.mygov.housing.rpz;
 
-import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.ArgumentMatchers;
-import org.mockito.Mockito;
-import scot.mygov.geosearch.api.models.Postcode;
+import scot.mygov.housing.mapcloud.Mapcloud;
+import scot.mygov.housing.mapcloud.MapcloudException;
+import scot.mygov.housing.mapcloud.MapcloudResult;
+import scot.mygov.housing.mapcloud.MapcloudResults;
 
 import java.time.LocalDate;
-import java.util.Collections;
+
+import static java.time.LocalDate.now;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptySet;
+import static java.util.Collections.singleton;
+import static java.util.Collections.singletonList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
 
 public class InMemoryRPZServiceTest {
 
     @Test
-    public void invalidPostcode() {
-
+    public void uprnInRpzAndWithinDateRange() throws RPZServiceException, MapcloudException{
         // ARRANGE
-        RPZService sut = new InMemoryRPZService(Collections.emptySet(), new PostcodeSource(null));
+        RPZ rpz = rpZForUprn("uprInRPZ");
+        RPZService sut = new InMemoryRPZService(singleton(rpz), anyMapcloud());
 
         // ACT
-        RPZResult actual = sut.rpz("invalid", LocalDate.now());
+        RPZResult actual = sut.rpz("uprInRPZ", now());
 
         // ASSERT
-        Assert.assertEquals(actual.isValidPostcode(), false);
-        Assert.assertEquals(actual.isScottishPostcode(), false);
-        Assert.assertEquals(actual.isInRentPressureZone(), false);
+        assertTrue(actual.isInRentPressureZone());
+        assertEquals(rpz.getMaxRentIncrease(), actual.getMaxIncrease(), 0);
     }
 
     @Test
-    public void nonScottishPostcode() {
-
+    public void uprnInRpzAndOutwithDateRange() throws RPZServiceException, MapcloudException {
         // ARRANGE
-        RPZService sut = new InMemoryRPZService(Collections.emptySet(), postcodeSource());
+        RPZ rpz = rpZForUprn("uprInRPZ");
+        RPZService sut = new InMemoryRPZService(singleton(rpz), anyMapcloud());
 
         // ACT
-        RPZResult actual = sut.rpz("SW1A 1AA", LocalDate.now());
+        RPZResult actual = sut.rpz("uprInRPZ", now().plusDays(1000));
 
         // ASSERT
-        Assert.assertEquals(actual.isValidPostcode(), true);
-        Assert.assertEquals(actual.isScottishPostcode(), false);
-        Assert.assertEquals(actual.isInRentPressureZone(), false);
+        assertFalse(actual.isInRentPressureZone());
     }
 
     @Test
-    public void scottishPostcodeNotInRPZ() {
-
+    public void postcodeInRpzAndWithinDateRange() throws RPZServiceException, MapcloudException {
         // ARRANGE
-        RPZService sut = new InMemoryRPZService(Collections.emptySet(), postcodeSource());
+        RPZ rpz = rpZForPostcode("EH104AX");
+        Mapcloud mapcloud = mapcloudWithUprnResults("uprn", mapcloudResults("uprn", "EH104AX"));
+        RPZService sut = new InMemoryRPZService(singleton(rpz), mapcloud);
 
         // ACT
-        RPZResult actual = sut.rpz(validScottishPostCode(), LocalDate.now());
+        RPZResult actual = sut.rpz("uprn", now());
 
         // ASSERT
-        Assert.assertEquals(actual.isValidPostcode(), true);
-        Assert.assertEquals(actual.isScottishPostcode(), true);
-        Assert.assertEquals(actual.isInRentPressureZone(), false);
-    }
-
-
-    @Test
-    public void scottishPostcodeInRPZ() {
-
-        // ARRANGE
-        RPZ rpz = new RPZ("title", LocalDate.MIN, LocalDate.MAX, 10, Collections.singleton(validScottishPostCode()));
-        RPZService sut = new InMemoryRPZService(Collections.singleton(rpz), postcodeSource());
-
-        // ACT
-        RPZResult actual = sut.rpz(validScottishPostCode(), LocalDate.now());
-
-        // ASSERT
-        Assert.assertEquals(actual.isValidPostcode(), true);
-        Assert.assertEquals(actual.isScottishPostcode(), true);
-        Assert.assertEquals(actual.isInRentPressureZone(), true);
-        Assert.assertEquals(actual.getMaxIncrease(), 10, 0);
-        Assert.assertEquals(actual.getRentPressureZoneTitle(), "title");
+        assertTrue(actual.isInRentPressureZone());
     }
 
     @Test
-    public void scottishPostcodeInRPZButAfterDateRange() {
-
+    public void postcodeInRpzAndOutwithDateRange() throws RPZServiceException, MapcloudException {
         // ARRANGE
-        RPZ rpz = new RPZ("title", LocalDate.MIN, LocalDate.MIN, 10, Collections.singleton(validScottishPostCode()));
-        RPZService sut = new InMemoryRPZService(Collections.singleton(rpz), postcodeSource());
+        RPZ rpz = rpZForPostcode("EH104AX");
+        Mapcloud mapcloud = mapcloudWithUprnResults("uprn", mapcloudResults("uprn", "EH104AX"));
+        RPZService sut = new InMemoryRPZService(singleton(rpz), mapcloud);
 
         // ACT
-        RPZResult actual = sut.rpz(validScottishPostCode(), LocalDate.now());
+        RPZResult actual = sut.rpz("uprn", now().plusDays(1000));
 
         // ASSERT
-        Assert.assertEquals(actual.isValidPostcode(), true);
-        Assert.assertEquals(actual.isScottishPostcode(), true);
-        Assert.assertEquals(actual.isInRentPressureZone(), false);
+        assertFalse(actual.isInRentPressureZone());
     }
 
-    @Test
-    public void scottishPostcodeInRPZButBeforeDateRange() {
-
+    @Test(expected = RPZServiceException.class)
+    public void mapCloudExceptionWrappedAsExpected() throws RPZServiceException, MapcloudException {
         // ARRANGE
-        RPZ rpz = new RPZ("title", LocalDate.MAX, LocalDate.MAX, 10, Collections.singleton(validScottishPostCode()));
-        RPZService sut = new InMemoryRPZService(Collections.singleton(rpz), postcodeSource());
+        Mapcloud mapcloud = exceptionThrowingMapcloud();
+        RPZService sut = new InMemoryRPZService(emptySet(), mapcloud);
 
         // ACT
-        RPZResult actual = sut.rpz(validScottishPostCode(), LocalDate.now());
+        RPZResult actual = sut.rpz("uprn", now().plusDays(1000));
 
         // ASSERT
-        Assert.assertEquals(actual.isValidPostcode(), true);
-        Assert.assertEquals(actual.isScottishPostcode(), true);
-        Assert.assertEquals(actual.isInRentPressureZone(), false);
+        assertFalse(actual.isInRentPressureZone());
     }
 
 
-    private String validScottishPostCode() {
-        return "EH104AX";
+    private RPZ rpZForUprn(String uprn) {
+        return rpZForUprnAndDataRange(uprn, now().minusDays(100), now().plusDays(100));
     }
 
-    private PostcodeSource postcodeSource() {
-        PostcodeSource postcodeSource = Mockito.mock(PostcodeSource.class);
-        Mockito.when(postcodeSource.postcode(ArgumentMatchers.eq(validScottishPostCode()))).thenReturn(validPostcode());
-        return postcodeSource;
+    private RPZ rpZForUprnAndDataRange(String uprn, LocalDate from, LocalDate to) {
+        return new RPZ("rpz", from, to, 100, emptySet(), singleton(uprn));
     }
 
-    private Postcode validPostcode() {
-        Postcode postocde = new Postcode();
-        postocde.setPostcode(validScottishPostCode());
-        postocde.setDistrict("district");
-        return postocde;
+    private RPZ rpZForPostcode(String postcode) {
+        return rpZForPostcodeAndDataRange(postcode, now().minusDays(100), now().plusDays(100));
+    }
+
+    private RPZ rpZForPostcodeAndDataRange(String postcode, LocalDate from, LocalDate to) {
+        return new RPZ("rpz", from, to, 100, singleton(postcode), emptySet());
+    }
+
+    private Mapcloud anyMapcloud() throws MapcloudException {
+        Mapcloud mapcloud = mock(Mapcloud.class);
+        when(mapcloud.lookupPostcode(any())).thenReturn(emptyResults());
+        when(mapcloud.lookupUprn(any())).thenReturn(mapcloudResults("", ""));
+        return mapcloud;
+    }
+
+    private Mapcloud mapcloudWithUprnResults(String uprn, MapcloudResults res) throws MapcloudException {
+        Mapcloud mapcloud = mock(Mapcloud.class);
+        when(mapcloud.lookupPostcode(any())).thenReturn(emptyResults());
+        when(mapcloud.lookupUprn(eq(uprn))).thenReturn(res);
+        return mapcloud;
+    }
+
+    private MapcloudResults emptyResults() {
+        MapcloudResults results = new MapcloudResults();
+        results.setResults(emptyList());
+        return results;
+    }
+
+    private MapcloudResults mapcloudResults(String uprn, String postcode) {
+        MapcloudResults results = new MapcloudResults();
+        MapcloudResult result = new MapcloudResult();
+        result.setUprn(uprn);
+        result.setPostcode(postcode);
+        results.setResults(singletonList(result));
+        return results;
+    }
+
+    private Mapcloud exceptionThrowingMapcloud() throws MapcloudException {
+        Mapcloud mapcloud = mock(Mapcloud.class);
+        when(mapcloud.lookupUprn(any())).thenThrow(new MapcloudException("", new RuntimeException("")));
+        when(mapcloud.lookupPostcode(any())).thenThrow(new MapcloudException("", new RuntimeException("")));
+        return mapcloud;
     }
 }

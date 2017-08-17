@@ -4,5 +4,5 @@ import java.time.LocalDate;
 
 public interface RPZService {
 
-    RPZResult rpz(String postcode, LocalDate date);
+    RPZResult rpz(String uprn, LocalDate date) throws RPZServiceException;
 }

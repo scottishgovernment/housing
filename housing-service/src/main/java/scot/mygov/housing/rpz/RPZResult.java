@@ -2,31 +2,17 @@ package scot.mygov.housing.rpz;
 
 public class RPZResult {
 
-    private boolean validPostcode;
-    private boolean scottishPostcode;
     private boolean inRentPressureZone;
     private String rentPressureZoneTitle;
     private double maxIncrease;
 
-    public RPZResult(
-            boolean validPostcode,
-            boolean scottishPostcode,
+    private RPZResult(
             boolean inRentPressureZone,
             String rentPressureZoneTitle,
             double maxIncrease) {
-        this.validPostcode = validPostcode;
-        this.scottishPostcode = scottishPostcode;
         this.inRentPressureZone = inRentPressureZone;
         this.rentPressureZoneTitle = rentPressureZoneTitle;
         this.maxIncrease = maxIncrease;
-    }
-
-    public boolean isValidPostcode() {
-        return validPostcode;
-    }
-
-    public boolean isScottishPostcode() {
-        return scottishPostcode;
     }
 
     public boolean isInRentPressureZone() {
@@ -42,21 +28,9 @@ public class RPZResult {
     }
 
     public static class Builder {
-        private boolean validPostcode;
-        private boolean scottishPostcode;
         private boolean inRentPressureZone;
         private String rentPressureZoneTitle;
         private double maxIncrease;
-
-        public Builder validPostcode(boolean valid) {
-            this.validPostcode = valid;
-            return this;
-        }
-
-        public Builder scottishPostcode(boolean scottishPostcode) {
-            this.scottishPostcode = scottishPostcode;
-            return this;
-        }
 
         public Builder inRentPressureZone(boolean inRentPressureZone) {
             this.inRentPressureZone = inRentPressureZone;
@@ -64,8 +38,6 @@ public class RPZResult {
         }
 
         public Builder rpz(RPZ rpz) {
-            this.validPostcode = true;
-            this.scottishPostcode = true;
             this.inRentPressureZone = true;
             this.rentPressureZoneTitle = rpz.getTitle();
             this.maxIncrease = rpz.getMaxRentIncrease();
@@ -73,7 +45,7 @@ public class RPZResult {
         }
 
         public RPZResult build() {
-            return new RPZResult(validPostcode, scottishPostcode, inRentPressureZone, rentPressureZoneTitle, maxIncrease);
+            return new RPZResult(inRentPressureZone, rentPressureZoneTitle, maxIncrease);
         }
     }
 

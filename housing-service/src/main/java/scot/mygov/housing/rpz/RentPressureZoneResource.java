@@ -34,7 +34,7 @@ public class RentPressureZoneResource {
     }
 
     private enum RPZ_PARAM {
-        POSTCODE("postcode"), DATE("date");
+        UPRN("uprn"), DATE("date");
 
         private final String param;
 
@@ -56,11 +56,17 @@ public class RentPressureZoneResource {
             return Response.status(400).entity(validationResult).build();
         }
 
-        String postcode =  uriInfo.getQueryParameters().getFirst(RPZ_PARAM.POSTCODE.getParam());
+        String uprn =  uriInfo.getQueryParameters().getFirst(RPZ_PARAM.UPRN.getParam());
         String dateString =  uriInfo.getQueryParameters().getFirst(RPZ_PARAM.DATE.getParam());
         LocalDate date = LocalDate.parse(dateString);
-        RPZResult result = rpzService.rpz(postcode, date);
-        return Response.status(200).entity(result).build();
+        try {
+            RPZResult result = rpzService.rpz(uprn, date);
+            return Response.status(200).entity(result).build();
+        } catch (RPZServiceException e) {
+            LOG.error("Failed to get rpz", e);
+            return Response.status(503).entity("RPZ data not available").build();
+        }
+
     }
 
     private ValidationResults validateRPZParams(MultivaluedMap<String, String> params) {

@@ -1,10 +1,10 @@
-package scot.mygov.housing.postcode.mapcloud;
+package scot.mygov.housing.mapcloud;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class MapcloudPostcodeResult {
+public class MapcloudResult {
 
     // always present
     private String uprn;

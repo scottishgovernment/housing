@@ -9,13 +9,21 @@ public class RPZ {
     private LocalDate to;
     private double maxRentIncrease;
     private Set<String> postcodes;
+    private Set<String> uprns;
 
-    public RPZ(String title, LocalDate from, LocalDate to, double maxRentIncrease, Set<String> postocdes) {
+    public RPZ(
+            String title,
+            LocalDate from,
+            LocalDate to,
+            double maxRentIncrease,
+            Set<String> postcodes,
+            Set<String> uprns) {
         this.title = title;
         this.from = from;
         this.to = to;
         this.maxRentIncrease = maxRentIncrease;
-        this.postcodes = postocdes;
+        this.postcodes = postcodes;
+        this.uprns = uprns;
     }
 
     public String getTitle() {
@@ -36,5 +44,9 @@ public class RPZ {
 
     public Set<String> getPostcodes() {
         return postcodes;
+    }
+
+    public Set<String> getUprns() {
+        return uprns;
     }
 }

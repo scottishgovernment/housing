@@ -13,12 +13,12 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.Collections;
 
+import static java.util.Collections.emptySet;
+
 public class RentPressureZoneResourceTest {
 
-
-    // missing postcode
     @Test
-    public void missingPostCodeReturnsError() {
+    public void missingUprnReturnsError() {
 
         // ARRANGE
         RentPressureZoneResource sut = new RentPressureZoneResource(null);
@@ -33,18 +33,16 @@ public class RentPressureZoneResourceTest {
         Assert.assertEquals(ValidationResults.class, response.getEntity().getClass());
         Assert.assertEquals(response.getStatus(), 400);
         ValidationResults validationResult = (ValidationResults) response.getEntity();
-        Assert.assertTrue(validationResult.getIssues().containsKey("postcode"));
+        Assert.assertTrue(validationResult.getIssues().containsKey("uprn"));
     }
 
-
-    // missing date
     @Test
     public void missingDateReturnsError() {
 
         // ARRANGE
         RentPressureZoneResource sut = new RentPressureZoneResource(null);
         MultivaluedMap<String, String> params = null;
-        URI uri = new ResteasyUriBuilder().queryParam("postcode", "EH104AX").build();
+        URI uri = new ResteasyUriBuilder().queryParam("uprn", "EH104AX").build();
         UriInfo uriInfo = new ResteasyUriInfo(uri);
 
         // ACT
@@ -57,7 +55,6 @@ public class RentPressureZoneResourceTest {
         Assert.assertTrue(validationResult.getIssues().containsKey("date"));
     }
 
-    // invalid date
     @Test
     public void invalidDateReturnsError() {
 
@@ -65,7 +62,7 @@ public class RentPressureZoneResourceTest {
         RentPressureZoneResource sut = new RentPressureZoneResource(null);
         MultivaluedMap<String, String> params = null;
         URI uri = new ResteasyUriBuilder()
-                .queryParam("postcode", "EH104AX")
+                .queryParam("uprn", "EH104AX")
                 .queryParam("date", "111")
                 .build();
         UriInfo uriInfo = new ResteasyUriInfo(uri);
@@ -80,18 +77,17 @@ public class RentPressureZoneResourceTest {
         Assert.assertTrue(validationResult.getIssues().containsKey("date"));
     }
 
-    // returns result from service
     @Test
     public void returnsResultFromService() {
 
         // ARRANGE
-        RPZ rpz = new RPZ("title", LocalDate.MIN, LocalDate.MAX, 100, Collections.emptySet());
+        RPZ rpz = new RPZ("title", LocalDate.MIN, LocalDate.MAX, 100, emptySet(), emptySet());
         RPZResult result = new RPZResult.Builder().rpz(rpz).build();
         RPZService service = rpzService(result);
         RentPressureZoneResource sut = new RentPressureZoneResource(service);
         MultivaluedMap<String, String> params = null;
         URI uri = new ResteasyUriBuilder()
-                .queryParam("postcode", "EH104AX")
+                .queryParam("uprn", "validuprn")
                 .queryParam("date", "2012-10-10")
                 .build();
         UriInfo uriInfo = new ResteasyUriInfo(uri);
@@ -103,8 +99,6 @@ public class RentPressureZoneResourceTest {
         Assert.assertEquals(RPZResult.class, response.getEntity().getClass());
         Assert.assertEquals(response.getStatus(), 200);
         RPZResult rpzResult = (RPZResult) response.getEntity();
-        Assert.assertTrue(rpzResult.isValidPostcode());
-        Assert.assertTrue(rpzResult.isScottishPostcode());
         Assert.assertTrue(rpzResult.isInRentPressureZone());
         Assert.assertEquals(rpzResult.getRentPressureZoneTitle(), rpz.getTitle());
         Assert.assertEquals(rpzResult.getMaxIncrease(), rpz.getMaxRentIncrease(), 0);
@@ -112,7 +106,7 @@ public class RentPressureZoneResourceTest {
 
     public RPZService rpzService(RPZResult result) {
         return new RPZService() {
-            public RPZResult rpz(String postcode, LocalDate date) {
+            public RPZResult rpz(String uprn, LocalDate date) {
                 return result;
             }
         };

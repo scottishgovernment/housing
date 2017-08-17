@@ -1,8 +1,8 @@
-package scot.mygov.housing.postcode.mapcloud;
+package scot.mygov.housing.mapcloud;
 
 import java.util.List;
 
-public class MapcloudPostcodeResults {
+public class MapcloudResults {
 
     private String query;
     private int totalResults;
@@ -11,7 +11,7 @@ public class MapcloudPostcodeResults {
     private String dataType;
     private String addressType;
     private String errorCode;
-    private List<MapcloudPostcodeResult> results;
+    private List<MapcloudResult> results;
 
     public String getQuery() {
         return query;
@@ -69,11 +69,11 @@ public class MapcloudPostcodeResults {
         this.errorCode = errorCode;
     }
 
-    public List<MapcloudPostcodeResult> getResults() {
+    public List<MapcloudResult> getResults() {
         return results;
     }
 
-    public void setResults(List<MapcloudPostcodeResult> results) {
+    public void setResults(List<MapcloudResult> results) {
         this.results = results;
     }
 }

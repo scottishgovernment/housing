@@ -67,6 +67,7 @@ public class PostcodeResource {
             return null;
         }
     }
+
     private ValidationResults validate(String postcode) {
         ValidationResultsBuilder resultBuilder = new ValidationResultsBuilder();
 

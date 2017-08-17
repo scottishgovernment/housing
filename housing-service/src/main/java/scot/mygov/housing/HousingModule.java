@@ -8,12 +8,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scot.mygov.config.Configuration;
 import scot.mygov.housing.cpi.CPIService;
+import scot.mygov.housing.mapcloud.Mapcloud;
 import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.modeltenancy.validation.ModelTenancyValidatorFactory;
 import scot.mygov.housing.postcode.PostcodeService;
-import scot.mygov.housing.postcode.mapcloud.MapcloudPostcodeService;
+import scot.mygov.housing.postcode.MapcloudPostcodeService;
 import scot.mygov.housing.rpz.InMemoryRPZService;
-import scot.mygov.housing.rpz.PostcodeSource;
 import scot.mygov.housing.rpz.RPZ;
 import scot.mygov.housing.rpz.RPZService;
 import scot.mygov.validation.Validator;
@@ -36,7 +36,7 @@ public class HousingModule {
 
     public static final String GEO_POSTCODES = "geosearch-postcodes";
 
-    public static final String MAPCLOUD = "mapcloud";
+    public static final String MAPCLOUD_TARGET = "mapcloudTarget";
 
     private static final Logger LOG = LoggerFactory.getLogger(HousingConfiguration.class);
 
@@ -65,8 +65,8 @@ public class HousingModule {
     }
 
     @Provides
-    @Named(MAPCLOUD)
-    WebTarget mapcloud(Client client, HousingConfiguration configuration) {
+    @Named(MAPCLOUD_TARGET)
+    WebTarget mapcloudTarget(Client client, HousingConfiguration configuration) {
         return client.target(configuration.getMapcloudURI());
     }
 
@@ -77,12 +77,13 @@ public class HousingModule {
     }
 
     @Provides
-    RPZService rpzService(PostcodeSource postcodeSource) {
+    RPZService rpzService(Mapcloud mapcloud) {
         RPZ rpz = new RPZ("Davids flat",
                 LocalDate.of(2016, 1, 1),
                 LocalDate.of(2017, 1, 1), 1,
-                Collections.singleton("EH104AX"));
-        return new InMemoryRPZService(Collections.singleton(rpz), postcodeSource);
+                Collections.singleton("EH104AX"),
+                Collections.singleton(""));
+        return new InMemoryRPZService(Collections.singleton(rpz), mapcloud);
     }
 
     @Provides
@@ -107,16 +108,19 @@ public class HousingModule {
     }
 
     @Provides
-    PostcodeService postcodeService(
+    Mapcloud mapcloud(
             HousingConfiguration config,
-            @Named(MAPCLOUD) WebTarget mapcloud,
-            PostcodeSource postcodeSource,
-            MetricRegistry registry) {
-        return new MapcloudPostcodeService(
-                mapcloud,
+            MetricRegistry registry,
+            @Named(MAPCLOUD_TARGET) WebTarget mapcloudTarget) {
+        return new Mapcloud(mapcloudTarget,
                 config.getMapcloudUser(),
                 config.getMapcloudPassword(),
                 registry);
+    }
+
+    @Provides
+    PostcodeService postcodeService(Mapcloud mapcloud) {
+        return new MapcloudPostcodeService(mapcloud);
     }
 
     @Provides
