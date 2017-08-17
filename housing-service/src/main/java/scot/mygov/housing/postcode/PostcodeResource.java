@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import scot.mygov.geosearch.api.models.Postcode;
 import scot.mygov.housing.modeltenancy.validation.ValidationUtil;
 import scot.mygov.housing.rpz.PostcodeSource;
-import scot.mygov.validation.ValidationResults;
 import scot.mygov.validation.ValidationResultsBuilder;
 
 import javax.inject.Inject;
@@ -42,13 +41,23 @@ public class PostcodeResource {
     public Response lookup(@Context UriInfo uriInfo) {
 
         String postcode = postcodeParam(uriInfo.getQueryParameters());
-        ValidationResults validationResult = validate(postcode);
-        if (!validationResult.getIssues().isEmpty()) {
-            return Response.status(400).entity(validationResult).build();
+        ValidationResultsBuilder resultBuilder = new ValidationResultsBuilder();
+        validate(postcode, resultBuilder);
+
+        if (resultBuilder.hasIssues()) {
+            return Response.status(400).entity(resultBuilder.build()).build();
+        }
+
+        // look this postcode up using the postcode source.
+        Postcode postcodeObj = postcodeSource.postcode(postcode);
+        if (postcodeObj == null) {
+            // this means it is nto a vlaid scottoish postcode
+            resultBuilder.issue(POSTCODE_PARAM, "Not a Scottish postcode");
+            return Response.status(400).entity(resultBuilder.build()).build();
         }
 
         try {
-            PostcodeServiceResults results = postcodeService.lookup(postcode);
+            PostcodeServiceResults results = postcodeService.lookup(postcodeObj.getNormalisedPostcode());
             return Response
                     .status(200)
                     .entity(results)
@@ -68,23 +77,16 @@ public class PostcodeResource {
         }
     }
 
-    private ValidationResults validate(String postcode) {
-        ValidationResultsBuilder resultBuilder = new ValidationResultsBuilder();
-
+    private void validate(String postcode, ValidationResultsBuilder resultBuilder) {
         if (StringUtils.isEmpty(postcode)) {
-            return resultBuilder.issue(POSTCODE_PARAM, "Missing required postcode param").build();
+            resultBuilder.issue(POSTCODE_PARAM, "Missing required postcode param");
+            return;
         }
 
         if (!ValidationUtil.validPostcode(postcode)) {
-            return resultBuilder.issue(POSTCODE_PARAM, "Invalid postcode").build();
+            resultBuilder.issue(POSTCODE_PARAM, "Invalid postcode");
+            return;
         }
-
-        // is this a scottish postcode?
-        Postcode postcodeObj = postcodeSource.postcode(postcode);
-        if (postcodeObj == null) {
-            return resultBuilder.issue(POSTCODE_PARAM, "Not a Scottish postcode").build();
-        }
-        return resultBuilder.build();
     }
 
 }
