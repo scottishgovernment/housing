@@ -5,6 +5,8 @@ import org.junit.Test;
 
 import java.util.Collections;
 
+import static org.junit.Assert.assertTrue;
+
 public class ValidatorTest {
 
 
@@ -15,7 +17,7 @@ public class ValidatorTest {
         try {
             sut.validate(new Value("bar"));
         } catch (ValidationException e) {
-            Assert.assertTrue(!e.getIssues().isEmpty());
+            assertTrue(!e.getIssues().isEmpty());
             throw e;
         }
     }

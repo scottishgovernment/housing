@@ -1,11 +1,7 @@
 package scot.mygov.housing.postcode;
 
-import javafx.geometry.Pos;
-import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.Mockito;
 import scot.mygov.geosearch.api.models.Postcode;
-import scot.mygov.housing.mapcloud.MapcloudResults;
 
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Invocation;
@@ -15,7 +11,6 @@ import javax.ws.rs.core.Response;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 

@@ -5,6 +5,9 @@ import org.junit.Test;
 import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.validation.ValidationResultsBuilder;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 public class ServicesRuleTest {
 
     private ObjectMother om = new ObjectMother();
@@ -20,7 +23,7 @@ public class ServicesRuleTest {
         rule.validate(modelTenancy, b);
 
         // ASSERT
-        Assert.assertTrue(b.build().getIssues().isEmpty());
+        assertTrue(b.build().getIssues().isEmpty());
     }
 
     @Test
@@ -34,7 +37,7 @@ public class ServicesRuleTest {
         rule.validate(modelTenancy, b);
 
         // ASSERT
-        Assert.assertNotNull(b.build().getIssues().get("service1-name"));
+        assertNotNull(b.build().getIssues().get("service1-name"));
     }
 }
 

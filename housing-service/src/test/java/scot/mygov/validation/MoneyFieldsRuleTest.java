@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+
 public class MoneyFieldsRuleTest {
 
     @Test
@@ -28,7 +30,7 @@ public class MoneyFieldsRuleTest {
 
 
         // ASSERT
-        Assert.assertEquals(validCount, inputs.size());
+        assertEquals(validCount, inputs.size());
     }
 
     @Test
@@ -49,7 +51,7 @@ public class MoneyFieldsRuleTest {
 
 
         // ASSERT
-        Assert.assertEquals(validCount, 0);
+        assertEquals(validCount, 0);
     }
 
     @Test
@@ -62,7 +64,7 @@ public class MoneyFieldsRuleTest {
         rule.validate(new Value("100.00"), b);
 
         // ASSERT
-        Assert.assertEquals(b.build().getIssues().size(), 1);
+        assertEquals(b.build().getIssues().size(), 1);
     }
 
     public class Value {

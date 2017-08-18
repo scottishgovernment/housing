@@ -6,6 +6,8 @@ import scot.mygov.housing.modeltenancy.model.CommunicationsAgreement;
 import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.validation.ValidationResultsBuilder;
 
+import static org.junit.Assert.assertEquals;
+
 public class CommunicationsAgreementRuleTest {
 
     private ObjectMother om = new ObjectMother();
@@ -24,7 +26,7 @@ public class CommunicationsAgreementRuleTest {
         rule.validate(modelTenancy, builder);
 
         // ASSERT
-        Assert.assertEquals(builder.build().getIssues().size(), 0);
+        assertEquals(builder.build().getIssues().size(), 0);
     }
 
     @Test
@@ -40,7 +42,7 @@ public class CommunicationsAgreementRuleTest {
         rule.validate(modelTenancy, builder);
 
         // ASSERT
-        Assert.assertEquals(builder.build().getIssues().size(), 0);
+        assertEquals(builder.build().getIssues().size(), 0);
     }
 
     @Test
@@ -56,7 +58,7 @@ public class CommunicationsAgreementRuleTest {
         rule.validate(modelTenancy, builder);
 
         // ASSERT
-        Assert.assertEquals(builder.build().getIssues().size(), 1);
+        assertEquals(builder.build().getIssues().size(), 1);
     }
 
 

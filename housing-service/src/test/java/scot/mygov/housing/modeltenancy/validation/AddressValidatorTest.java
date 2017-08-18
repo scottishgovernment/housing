@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.junit.Assert.assertTrue;
+
 public class AddressValidatorTest {
 
     private ObjectMother om = new ObjectMother();
@@ -25,7 +27,7 @@ public class AddressValidatorTest {
 
 
         // ASSERT
-        Assert.assertTrue(resultsBuilder.build().getIssues().isEmpty());
+        assertTrue(resultsBuilder.build().getIssues().isEmpty());
     }
 
     @Test

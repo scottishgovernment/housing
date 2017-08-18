@@ -5,6 +5,8 @@ import org.junit.Test;
 import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.validation.ValidationResultsBuilder;
 
+import static org.junit.Assert.assertEquals;
+
 public class AtLeastOneTenantRuleTest {
 
     private ObjectMother om = new ObjectMother();
@@ -20,7 +22,7 @@ public class AtLeastOneTenantRuleTest {
         rule.validate(tenancyWithTenantCount(1), b);
         ;
         // ASSERT
-        Assert.assertEquals(b.build().getIssues().size(), 0);
+        assertEquals(b.build().getIssues().size(), 0);
 
     }
 
@@ -34,7 +36,7 @@ public class AtLeastOneTenantRuleTest {
         rule.validate(tenancyWithTenantCount(0), b);
 
         // ASSERT
-        Assert.assertEquals(b.build().getIssues().size(), 1);
+        assertEquals(b.build().getIssues().size(), 1);
 
     }
 
@@ -48,7 +50,7 @@ public class AtLeastOneTenantRuleTest {
         rule.validate(tenancyWithTenantCount(5), b);
 
         // ASSERT
-        Assert.assertEquals(b.build().getIssues().size(), 0);
+        assertEquals(b.build().getIssues().size(), 0);
 
     }
 

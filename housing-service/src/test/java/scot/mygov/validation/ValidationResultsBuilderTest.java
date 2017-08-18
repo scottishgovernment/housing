@@ -7,13 +7,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 public class ValidationResultsBuilderTest {
 
     @Test
     public void canBuildResults() {
         ValidationResults results = new ValidationResultsBuilder().issue("one", "issueone").issue("two", "issuetwo").build();
-        Assert.assertEquals(results.getIssues().get("one"), Collections.singletonList("issueone"));
-        Assert.assertEquals(results.getIssues().get("two"), Collections.singletonList("issuetwo"));
+        assertEquals(results.getIssues().get("one"), Collections.singletonList("issueone"));
+        assertEquals(results.getIssues().get("two"), Collections.singletonList("issuetwo"));
     }
 
     @Test
@@ -21,7 +24,7 @@ public class ValidationResultsBuilderTest {
         ValidationResults results = new ValidationResultsBuilder().issue("one", "issueone").issue("one", "issuetwo").build();
         List<String> expectedIssues = new ArrayList<>();
         Collections.addAll(expectedIssues, "issueone", "issuetwo");
-        Assert.assertEquals(expectedIssues, results.getIssues().get("one"));
+        assertEquals(expectedIssues, results.getIssues().get("one"));
     }
 
     @Test
@@ -31,7 +34,7 @@ public class ValidationResultsBuilderTest {
                 .issue("two", "issuetwo")
                 .clear()
                 .build();
-        Assert.assertTrue(results.getIssues().isEmpty());
+        assertTrue(results.getIssues().isEmpty());
 
     }
 }

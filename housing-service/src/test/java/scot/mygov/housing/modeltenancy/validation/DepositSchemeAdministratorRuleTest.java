@@ -5,6 +5,9 @@ import org.junit.Test;
 import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.validation.ValidationResultsBuilder;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 public class DepositSchemeAdministratorRuleTest {
 
     private ObjectMother om = new ObjectMother();
@@ -21,7 +24,7 @@ public class DepositSchemeAdministratorRuleTest {
 
 
         // ASSERT
-        Assert.assertTrue(resultsBuilder.build().getIssues().isEmpty());
+        assertTrue(resultsBuilder.build().getIssues().isEmpty());
     }
 
     @Test
@@ -35,6 +38,6 @@ public class DepositSchemeAdministratorRuleTest {
 
 
         // ASSERT
-        Assert.assertFalse(resultsBuilder.build().getIssues().isEmpty());
+        assertFalse(resultsBuilder.build().getIssues().isEmpty());
     }
 }

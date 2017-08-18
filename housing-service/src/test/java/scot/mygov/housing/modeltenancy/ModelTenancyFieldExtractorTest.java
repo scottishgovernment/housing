@@ -11,6 +11,9 @@ import scot.mygov.housing.modeltenancy.validation.ObjectMother;
 import java.time.LocalDate;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 public class ModelTenancyFieldExtractorTest {
 
     private ObjectMother om = new ObjectMother();
@@ -26,8 +29,8 @@ public class ModelTenancyFieldExtractorTest {
         Map<String, Object> actual = sut.extractFields(modelTenancy);
 
         // ASSERT
-        Assert.assertEquals(expected, actual.get("tenantNameAndAddresses"));
-        Assert.assertTrue(!StringUtils.isEmpty(actual.get("tenantEmails").toString()));
+        assertEquals(expected, actual.get("tenantNameAndAddresses"));
+        assertTrue(!StringUtils.isEmpty(actual.get("tenantEmails").toString()));
     }
 
     @Test
@@ -41,9 +44,9 @@ public class ModelTenancyFieldExtractorTest {
         Map<String, Object> actual = sut.extractFields(modelTenancy);
 
         // ASSERT - no fields start with "lettingAgent"
-        Assert.assertEquals("_", actual.get("communicationsAgreementEmail"));
+        assertEquals("_", actual.get("communicationsAgreementEmail"));
 
-        Assert.assertEquals(0, actual.keySet().stream().filter(key -> key.startsWith("lettingAgent")).count());
+        assertEquals(0, actual.keySet().stream().filter(key -> key.startsWith("lettingAgent")).count());
     }
 
     @Test
@@ -57,7 +60,7 @@ public class ModelTenancyFieldExtractorTest {
         Map<String, Object> actual = sut.extractFields(modelTenancy);
 
         // ASSERT
-        Assert.assertEquals(expected, actual.get("tenantNameAndAddresses"));
+        assertEquals(expected, actual.get("tenantNameAndAddresses"));
     }
 
 
@@ -74,9 +77,9 @@ public class ModelTenancyFieldExtractorTest {
         Map<String, Object> actual = sut.extractFields(modelTenancy);
 
         // ASSERT
-        Assert.assertEquals("is", actual.get("hmoString"));
-        Assert.assertEquals("11111", actual.get("hmoContactNumber"));
-        Assert.assertEquals("01 October 2010", actual.get("hmoExpiryDate"));
+        assertEquals("is", actual.get("hmoString"));
+        assertEquals("11111", actual.get("hmoContactNumber"));
+        assertEquals("01 October 2010", actual.get("hmoExpiryDate"));
     }
 
     @Test
@@ -90,7 +93,7 @@ public class ModelTenancyFieldExtractorTest {
         Map<String, Object> actual = sut.extractFields(modelTenancy);
 
         // ASSERT
-        Assert.assertEquals("is", actual.get("rentPressureZoneString"));
+        assertEquals("is", actual.get("rentPressureZoneString"));
     }
 
     @Test
@@ -104,9 +107,9 @@ public class ModelTenancyFieldExtractorTest {
         Map<String, Object> actual = sut.extractFields(modelTenancy);
 
         // ASSERT
-        Assert.assertEquals("X", actual.get("communicationsAgreementEmail"));
-        Assert.assertEquals("_", actual.get("communicationsAgreementHardcopy"));
-        Assert.assertEquals("email", actual.get("communicationsAgreementType"));
+        assertEquals("X", actual.get("communicationsAgreementEmail"));
+        assertEquals("_", actual.get("communicationsAgreementHardcopy"));
+        assertEquals("email", actual.get("communicationsAgreementType"));
     }
 
     @Test
@@ -120,9 +123,9 @@ public class ModelTenancyFieldExtractorTest {
         Map<String, Object> actual = sut.extractFields(modelTenancy);
 
         // ASSERT
-        Assert.assertEquals("_", actual.get("communicationsAgreementEmail"));
-        Assert.assertEquals("X", actual.get("communicationsAgreementHardcopy"));
-        Assert.assertEquals("", actual.get("communicationsAgreementType"));
+        assertEquals("_", actual.get("communicationsAgreementEmail"));
+        assertEquals("X", actual.get("communicationsAgreementHardcopy"));
+        assertEquals("", actual.get("communicationsAgreementType"));
     }
 
     @Test
@@ -136,7 +139,7 @@ public class ModelTenancyFieldExtractorTest {
         Map<String, Object> actual = sut.extractFields(modelTenancy);
 
         // ASSERT
-        Assert.assertEquals("arrears", actual.get("advanceOrArrears"));
+        assertEquals("arrears", actual.get("advanceOrArrears"));
 
     }
 
@@ -151,7 +154,7 @@ public class ModelTenancyFieldExtractorTest {
         Map<String, Object> actual = sut.extractFields(modelTenancy);
 
         // ASSERT
-        Assert.assertEquals("advance", actual.get("advanceOrArrears"));
+        assertEquals("advance", actual.get("advanceOrArrears"));
 
     }
 

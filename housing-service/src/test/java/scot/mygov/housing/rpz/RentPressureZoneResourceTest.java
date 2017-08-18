@@ -14,6 +14,8 @@ import java.time.LocalDate;
 import java.util.Collections;
 
 import static java.util.Collections.emptySet;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class RentPressureZoneResourceTest {
 
@@ -22,7 +24,6 @@ public class RentPressureZoneResourceTest {
 
         // ARRANGE
         RentPressureZoneResource sut = new RentPressureZoneResource(null);
-        MultivaluedMap<String, String> params = null;
         URI uri = new ResteasyUriBuilder().queryParam("date", "2010-01-01").build();
         UriInfo uriInfo = new ResteasyUriInfo(uri);
 
@@ -30,10 +31,10 @@ public class RentPressureZoneResourceTest {
         Response response = sut.rpz(uriInfo);
 
         // ASSERT
-        Assert.assertEquals(ValidationResults.class, response.getEntity().getClass());
-        Assert.assertEquals(response.getStatus(), 400);
+        assertEquals(ValidationResults.class, response.getEntity().getClass());
+        assertEquals(response.getStatus(), 400);
         ValidationResults validationResult = (ValidationResults) response.getEntity();
-        Assert.assertTrue(validationResult.getIssues().containsKey("uprn"));
+        assertTrue(validationResult.getIssues().containsKey("uprn"));
     }
 
     @Test
@@ -41,7 +42,6 @@ public class RentPressureZoneResourceTest {
 
         // ARRANGE
         RentPressureZoneResource sut = new RentPressureZoneResource(null);
-        MultivaluedMap<String, String> params = null;
         URI uri = new ResteasyUriBuilder().queryParam("uprn", "EH104AX").build();
         UriInfo uriInfo = new ResteasyUriInfo(uri);
 
@@ -49,10 +49,10 @@ public class RentPressureZoneResourceTest {
         Response response = sut.rpz(uriInfo);
 
         // ASSERT
-        Assert.assertEquals(ValidationResults.class, response.getEntity().getClass());
-        Assert.assertEquals(response.getStatus(), 400);
+        assertEquals(ValidationResults.class, response.getEntity().getClass());
+        assertEquals(response.getStatus(), 400);
         ValidationResults validationResult = (ValidationResults) response.getEntity();
-        Assert.assertTrue(validationResult.getIssues().containsKey("date"));
+        assertTrue(validationResult.getIssues().containsKey("date"));
     }
 
     @Test
@@ -60,7 +60,6 @@ public class RentPressureZoneResourceTest {
 
         // ARRANGE
         RentPressureZoneResource sut = new RentPressureZoneResource(null);
-        MultivaluedMap<String, String> params = null;
         URI uri = new ResteasyUriBuilder()
                 .queryParam("uprn", "EH104AX")
                 .queryParam("date", "111")
@@ -71,10 +70,10 @@ public class RentPressureZoneResourceTest {
         Response response = sut.rpz(uriInfo);
 
         // ASSERT
-        Assert.assertEquals(ValidationResults.class, response.getEntity().getClass());
-        Assert.assertEquals(response.getStatus(), 400);
+        assertEquals(ValidationResults.class, response.getEntity().getClass());
+        assertEquals(response.getStatus(), 400);
         ValidationResults validationResult = (ValidationResults) response.getEntity();
-        Assert.assertTrue(validationResult.getIssues().containsKey("date"));
+        assertTrue(validationResult.getIssues().containsKey("date"));
     }
 
     @Test
@@ -96,12 +95,12 @@ public class RentPressureZoneResourceTest {
         Response response = sut.rpz(uriInfo);
 
         // ASSERT
-        Assert.assertEquals(RPZResult.class, response.getEntity().getClass());
-        Assert.assertEquals(response.getStatus(), 200);
+        assertEquals(RPZResult.class, response.getEntity().getClass());
+        assertEquals(response.getStatus(), 200);
         RPZResult rpzResult = (RPZResult) response.getEntity();
-        Assert.assertTrue(rpzResult.isInRentPressureZone());
-        Assert.assertEquals(rpzResult.getRentPressureZoneTitle(), rpz.getTitle());
-        Assert.assertEquals(rpzResult.getMaxIncrease(), rpz.getMaxRentIncrease(), 0);
+        assertTrue(rpzResult.isInRentPressureZone());
+        assertEquals(rpzResult.getRentPressureZoneTitle(), rpz.getTitle());
+        assertEquals(rpzResult.getMaxIncrease(), rpz.getMaxRentIncrease(), 0);
     }
 
     public RPZService rpzService(RPZResult result) {

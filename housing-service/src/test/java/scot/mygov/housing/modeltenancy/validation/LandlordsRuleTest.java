@@ -6,6 +6,8 @@ import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.validation.ValidationResults;
 import scot.mygov.validation.ValidationResultsBuilder;
 
+import static org.junit.Assert.assertEquals;
+
 public class LandlordsRuleTest {
 
     private final ObjectMother om = new ObjectMother();
@@ -22,7 +24,7 @@ public class LandlordsRuleTest {
         ValidationResults results = builder.build();
 
         // ASSERT
-        Assert.assertEquals(results.getIssues().size(), 1);
+        assertEquals(results.getIssues().size(), 1);
     }
 
     @Test
@@ -36,7 +38,7 @@ public class LandlordsRuleTest {
         ValidationResults results = builder.build();
 
         // ASSERT
-        Assert.assertEquals(results.getIssues().size(), 0);
+        assertEquals(results.getIssues().size(), 0);
     }
 
     @Test
@@ -50,7 +52,7 @@ public class LandlordsRuleTest {
         ValidationResults results = builder.build();
 
         // ASSERT
-        Assert.assertEquals(results.getIssues().size(), 0);
+        assertEquals(results.getIssues().size(), 0);
     }
 
     @Test
@@ -65,7 +67,7 @@ public class LandlordsRuleTest {
         ValidationResults results = builder.build();
 
         // ASSERT
-        Assert.assertEquals(results.getIssues().size(), 1);
+        assertEquals(results.getIssues().size(), 1);
     }
 
     @Test
@@ -80,7 +82,7 @@ public class LandlordsRuleTest {
         ValidationResults results = builder.build();
 
         // ASSERT
-        Assert.assertEquals(results.getIssues().size(), 1);
+        assertEquals(results.getIssues().size(), 1);
     }
 
     @Test
@@ -96,7 +98,7 @@ public class LandlordsRuleTest {
         ValidationResults results = builder.build();
 
         // ASSERT
-        Assert.assertEquals(results.getIssues().size(), 1);
+        assertEquals(results.getIssues().size(), 1);
     }
 
 

@@ -8,6 +8,9 @@ import scot.mygov.validation.ValidationRule;
 
 import java.time.LocalDate;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 public class HMORuleTest {
 
     private ValidationRule<ModelTenancy> rule = new HMORule();
@@ -26,7 +29,7 @@ public class HMORuleTest {
         rule.validate(model, b);
 
         // ASSERT
-        Assert.assertTrue(b.build().getIssues().isEmpty());
+        assertTrue(b.build().getIssues().isEmpty());
     }
 
     @Test
@@ -40,7 +43,7 @@ public class HMORuleTest {
         rule.validate(model, b);
 
         // ASSERT
-        Assert.assertTrue(b.build().getIssues().isEmpty());
+        assertTrue(b.build().getIssues().isEmpty());
     }
 
     @Test
@@ -54,7 +57,7 @@ public class HMORuleTest {
         rule.validate(model, b);
 
         // ASSERT
-        Assert.assertFalse(b.build().getIssues().isEmpty());
+        assertFalse(b.build().getIssues().isEmpty());
     }
 
     @Test
@@ -70,6 +73,6 @@ public class HMORuleTest {
         rule.validate(model, b);
 
         // ASSERT
-        Assert.assertFalse(b.build().getIssues().isEmpty());
+        assertFalse(b.build().getIssues().isEmpty());
     }
 }

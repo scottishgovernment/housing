@@ -2,7 +2,6 @@ package scot.mygov.housing.cpi;
 
 import org.jboss.resteasy.specimpl.ResteasyUriBuilder;
 import org.jboss.resteasy.spi.ResteasyUriInfo;
-import org.junit.Assert;
 import org.junit.Test;
 import scot.mygov.validation.ValidationResults;
 
@@ -11,6 +10,7 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.time.LocalDate;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.mock;
 
@@ -31,10 +31,10 @@ public class CPIResourceTest {
         Response response = sut.cpiDelta(uriInfo);
 
         // ASSERT
-        Assert.assertEquals(Double.class, response.getEntity().getClass());
-        Assert.assertEquals(response.getStatus(), 200);
+        assertEquals(Double.class, response.getEntity().getClass());
+        assertEquals(response.getStatus(), 200);
         Double result = (Double) response.getEntity();
-        Assert.assertEquals(result, 100.00, 0.0);
+        assertEquals(result, 100.00, 0.0);
     }
 
     @Test
@@ -51,8 +51,8 @@ public class CPIResourceTest {
         Response response = sut.cpiDelta(uriInfo);
 
         // ASSERT
-        Assert.assertEquals(ValidationResults.class, response.getEntity().getClass());
-        Assert.assertEquals(response.getStatus(), 400);
+        assertEquals(ValidationResults.class, response.getEntity().getClass());
+        assertEquals(response.getStatus(), 400);
     }
 
     @Test
@@ -69,8 +69,8 @@ public class CPIResourceTest {
         Response response = sut.cpiDelta(uriInfo);
 
         // ASSERT
-        Assert.assertEquals(ValidationResults.class, response.getEntity().getClass());
-        Assert.assertEquals(response.getStatus(), 400);
+        assertEquals(ValidationResults.class, response.getEntity().getClass());
+        assertEquals(response.getStatus(), 400);
     }
 
     @Test
@@ -88,8 +88,8 @@ public class CPIResourceTest {
         Response response = sut.cpiDelta(uriInfo);
 
         // ASSERT
-        Assert.assertEquals(ValidationResults.class, response.getEntity().getClass());
-        Assert.assertEquals(response.getStatus(), 400);
+        assertEquals(ValidationResults.class, response.getEntity().getClass());
+        assertEquals(response.getStatus(), 400);
     }
 
     @Test
@@ -107,8 +107,8 @@ public class CPIResourceTest {
         Response response = sut.cpiDelta(uriInfo);
 
         // ASSERT
-        Assert.assertEquals(ValidationResults.class, response.getEntity().getClass());
-        Assert.assertEquals(response.getStatus(), 400);
+        assertEquals(ValidationResults.class, response.getEntity().getClass());
+        assertEquals(response.getStatus(), 400);
     }
 
     @Test
@@ -126,8 +126,8 @@ public class CPIResourceTest {
         Response response = sut.cpiDelta(uriInfo);
 
         // ASSERT
-        Assert.assertEquals(ValidationResults.class, response.getEntity().getClass());
-        Assert.assertEquals(response.getStatus(), 400);
+        assertEquals(ValidationResults.class, response.getEntity().getClass());
+        assertEquals(response.getStatus(), 400);
     }
 
     @Test
@@ -145,8 +145,8 @@ public class CPIResourceTest {
         Response response = sut.cpiDelta(uriInfo);
 
         // ASSERT
-        Assert.assertEquals(String.class, response.getEntity().getClass());
-        Assert.assertEquals(response.getStatus(), 503);
+        assertEquals(String.class, response.getEntity().getClass());
+        assertEquals(response.getStatus(), 503);
     }
     private CPIService cpiService(double result) throws CPIServiceException {
 

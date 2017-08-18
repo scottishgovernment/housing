@@ -6,6 +6,8 @@ import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.validation.ValidationResults;
 import scot.mygov.validation.ValidationResultsBuilder;
 
+import static org.junit.Assert.assertEquals;
+
 public class LettingAgentRuleTest {
 
     private ObjectMother om = new ObjectMother();
@@ -22,7 +24,7 @@ public class LettingAgentRuleTest {
         ValidationResults results = builder.build();
 
         // ASSERT
-        Assert.assertEquals(results.getIssues().size(), 0);
+        assertEquals(results.getIssues().size(), 0);
     }
 
     @Test
@@ -37,7 +39,7 @@ public class LettingAgentRuleTest {
         ValidationResults results = builder.build();
 
         // ASSERT
-        Assert.assertEquals(results.getIssues().size(), 1);
+        assertEquals(results.getIssues().size(), 1);
     }
 
     @Test
@@ -52,7 +54,7 @@ public class LettingAgentRuleTest {
         ValidationResults results = builder.build();
 
         // ASSERT
-        Assert.assertEquals(results.getIssues().size(), 1);
+        assertEquals(results.getIssues().size(), 1);
     }
 
     @Test
@@ -68,7 +70,7 @@ public class LettingAgentRuleTest {
         ValidationResults results = builder.build();
 
         // ASSERT
-        Assert.assertEquals(results.getIssues().size(), 1);
+        assertEquals(results.getIssues().size(), 1);
     }
 
     @Test
@@ -83,7 +85,7 @@ public class LettingAgentRuleTest {
         ValidationResults results = builder.build();
 
         // ASSERT
-        Assert.assertEquals(results.getIssues().size(), 1);
+        assertEquals(results.getIssues().size(), 1);
     }
 
 }
