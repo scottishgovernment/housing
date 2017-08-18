@@ -18,7 +18,6 @@ import scot.mygov.housing.modeltenancy.model.Service;
 import javax.inject.Inject;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

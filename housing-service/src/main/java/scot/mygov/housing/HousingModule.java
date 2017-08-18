@@ -27,7 +27,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.Collections;
 
 import static java.util.Collections.singleton;
 
