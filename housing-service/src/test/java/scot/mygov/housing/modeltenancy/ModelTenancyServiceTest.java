@@ -8,7 +8,10 @@ import scot.mygov.housing.HousingConfiguration;
 import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.modeltenancy.validation.ObjectMother;
 
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ModelTenancyServiceTest {
 
@@ -49,17 +52,17 @@ public class ModelTenancyServiceTest {
         ModelTenancy modelTenancy = sut.getModelTenancyTemplate();
 
         // ASSERT
-        assertTrue(StringUtils.isNotEmpty(modelTenancy.getOptionalTerms().getContentsAndConditions()));
-        assertTrue(StringUtils.isNotEmpty(modelTenancy.getOptionalTerms().getLocalAuthorityTaxesAndCharges()));
-        assertTrue(StringUtils.isNotEmpty(modelTenancy.getOptionalTerms().getAlterations()));
-        assertTrue(StringUtils.isNotEmpty(modelTenancy.getOptionalTerms().getPrivateGarden()));
-        assertTrue(StringUtils.isNotEmpty(modelTenancy.getOptionalTerms().getRoof()));
-        assertTrue(StringUtils.isNotEmpty(modelTenancy.getOptionalTerms().getBinsAndRecycling()));
-        assertTrue(StringUtils.isNotEmpty(modelTenancy.getOptionalTerms().getStorage()));
-        assertTrue(StringUtils.isNotEmpty(modelTenancy.getOptionalTerms().getDangerousSubstances()));
-        assertTrue(StringUtils.isNotEmpty(modelTenancy.getOptionalTerms().getPets()));
-        assertTrue(StringUtils.isNotEmpty(modelTenancy.getOptionalTerms().getSmoking()));
-        assertTrue(StringUtils.isNotEmpty(modelTenancy.getOptionalTerms().getLiquidPetroleumGas()));
+        assertTrue(isNotEmpty(modelTenancy.getOptionalTerms().getContentsAndConditions()));
+        assertTrue(isNotEmpty(modelTenancy.getOptionalTerms().getLocalAuthorityTaxesAndCharges()));
+        assertTrue(isNotEmpty(modelTenancy.getOptionalTerms().getAlterations()));
+        assertTrue(isNotEmpty(modelTenancy.getOptionalTerms().getPrivateGarden()));
+        assertTrue(isNotEmpty(modelTenancy.getOptionalTerms().getRoof()));
+        assertTrue(isNotEmpty(modelTenancy.getOptionalTerms().getBinsAndRecycling()));
+        assertTrue(isNotEmpty(modelTenancy.getOptionalTerms().getStorage()));
+        assertTrue(isNotEmpty(modelTenancy.getOptionalTerms().getDangerousSubstances()));
+        assertTrue(isNotEmpty(modelTenancy.getOptionalTerms().getPets()));
+        assertTrue(isNotEmpty(modelTenancy.getOptionalTerms().getSmoking()));
+        assertTrue(isNotEmpty(modelTenancy.getOptionalTerms().getLiquidPetroleumGas()));
 
     }
 
@@ -78,8 +81,8 @@ public class ModelTenancyServiceTest {
     }
 
     private ModelTenancyJsonTemplateLoader exceptionThrowingJsonTemplateLoader() throws TemplateLoaderException {
-        ModelTenancyJsonTemplateLoader loader = Mockito.mock(ModelTenancyJsonTemplateLoader.class);
-        Mockito.when(loader.loadJsonTemplate()).thenThrow(new TemplateLoaderException("Arg", null));
+        ModelTenancyJsonTemplateLoader loader = mock(ModelTenancyJsonTemplateLoader.class);
+        when(loader.loadJsonTemplate()).thenThrow(new TemplateLoaderException("Arg", null));
         return loader;
     }
 
@@ -88,8 +91,8 @@ public class ModelTenancyServiceTest {
     }
 
     private ModelTenancyDocumentTemplateLoader exceptionThrowingTemplateLoader() throws TemplateLoaderException {
-        ModelTenancyDocumentTemplateLoader loader = Mockito.mock(ModelTenancyDocumentTemplateLoader.class);
-        Mockito.when(loader.loadDocumentTemplate()).thenThrow(new TemplateLoaderException("Arg", null));
+        ModelTenancyDocumentTemplateLoader loader = mock(ModelTenancyDocumentTemplateLoader.class);
+        when(loader.loadDocumentTemplate()).thenThrow(new TemplateLoaderException("Arg", null));
         return loader;
     }
 }

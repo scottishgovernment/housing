@@ -15,6 +15,7 @@ import java.util.Collections;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class PostcodeResourceTest {
@@ -103,15 +104,15 @@ public class PostcodeResourceTest {
     }
 
     private PostcodeService anyService() {
-        return Mockito.mock(PostcodeService.class);
+        return mock(PostcodeService.class);
     }
 
     private GeoPostcodeSource anySource() {
-        return Mockito.mock(GeoPostcodeSource.class);
+        return mock(GeoPostcodeSource.class);
     }
 
     private GeoPostcodeSource scottishSource() throws PostcodeServiceException {
-        GeoPostcodeSource source = Mockito.mock(GeoPostcodeSource.class);
+        GeoPostcodeSource source = mock(GeoPostcodeSource.class);
         Postcode postcode = new Postcode();
         postcode.setNormalisedPostcode(normalisedScottishPostcode());
         postcode.setPostcode(scottishPostcode());
@@ -120,13 +121,13 @@ public class PostcodeResourceTest {
     }
 
     private PostcodeService serviceWithResults(PostcodeServiceResults results) throws PostcodeServiceException {
-        PostcodeService service = Mockito.mock(PostcodeService.class);
+        PostcodeService service = mock(PostcodeService.class);
         when(service.lookup(any())).thenReturn(results);
         return service;
     }
 
     private PostcodeService exceptionThrowingService() throws PostcodeServiceException {
-        PostcodeService service = Mockito.mock(PostcodeService.class);
+        PostcodeService service = mock(PostcodeService.class);
         when(service.lookup(any())).thenThrow(new PostcodeServiceException("", new RuntimeException("")));
         return service;
     }

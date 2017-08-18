@@ -9,6 +9,11 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 
 import java.util.Collections;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 public class EmptySectionRemovingCallbackTest {
 
     @Test
@@ -16,22 +21,22 @@ public class EmptySectionRemovingCallbackTest {
 
         // ARRANGE
         EmptySectionRemovingCallback sut = new EmptySectionRemovingCallback(Collections.singleton("field"));
-        FieldMergingArgs args = Mockito.mock(FieldMergingArgs.class);
-        Mockito.when(args.getFieldValue()).thenReturn("");
-        Mockito.when(args.getFieldName()).thenReturn("field");
-        Field field = Mockito.mock(Field.class);
-        FieldStart fieldStart = Mockito.mock(FieldStart.class);
-        Node ancestor = Mockito.mock(Node.class);
+        FieldMergingArgs args = mock(FieldMergingArgs.class);
+        when(args.getFieldValue()).thenReturn("");
+        when(args.getFieldName()).thenReturn("field");
+        Field field = mock(Field.class);
+        FieldStart fieldStart = mock(FieldStart.class);
+        Node ancestor = mock(Node.class);
 
-        Mockito.when(args.getField()).thenReturn(field);
-        Mockito.when(field.getStart()).thenReturn(fieldStart);
-        Mockito.when(fieldStart.getAncestor(ArgumentMatchers.any())).thenReturn(ancestor);
+        when(args.getField()).thenReturn(field);
+        when(field.getStart()).thenReturn(fieldStart);
+        when(fieldStart.getAncestor(ArgumentMatchers.any())).thenReturn(ancestor);
 
         //  ACT
         sut.fieldMerging(args);
 
         // ASSERT
-        Mockito.verify(ancestor).remove();
+        verify(ancestor).remove();
     }
 
     @Test
@@ -39,22 +44,22 @@ public class EmptySectionRemovingCallbackTest {
 
         // ARRANGE
         EmptySectionRemovingCallback sut = new EmptySectionRemovingCallback(Collections.singleton("field"));
-        FieldMergingArgs args = Mockito.mock(FieldMergingArgs.class);
-        Mockito.when(args.getFieldValue()).thenReturn("value");
-        Mockito.when(args.getFieldName()).thenReturn("field");
-        Field field = Mockito.mock(Field.class);
-        FieldStart fieldStart = Mockito.mock(FieldStart.class);
-        Node ancestor = Mockito.mock(Node.class);
+        FieldMergingArgs args = mock(FieldMergingArgs.class);
+        when(args.getFieldValue()).thenReturn("value");
+        when(args.getFieldName()).thenReturn("field");
+        Field field = mock(Field.class);
+        FieldStart fieldStart = mock(FieldStart.class);
+        Node ancestor = mock(Node.class);
 
-        Mockito.when(args.getField()).thenReturn(field);
-        Mockito.when(field.getStart()).thenReturn(fieldStart);
-        Mockito.when(fieldStart.getAncestor(ArgumentMatchers.any())).thenReturn(ancestor);
+        when(args.getField()).thenReturn(field);
+        when(field.getStart()).thenReturn(fieldStart);
+        when(fieldStart.getAncestor(ArgumentMatchers.any())).thenReturn(ancestor);
 
         //  ACT
         sut.fieldMerging(args);
 
         // ASSERT
-        Mockito.verify(ancestor, Mockito.never()).remove();
+        verify(ancestor, Mockito.never()).remove();
     }
 
     @Test
@@ -62,22 +67,22 @@ public class EmptySectionRemovingCallbackTest {
 
         // ARRANGE
         EmptySectionRemovingCallback sut = new EmptySectionRemovingCallback(Collections.singleton("field"));
-        FieldMergingArgs args = Mockito.mock(FieldMergingArgs.class);
-        Mockito.when(args.getFieldValue()).thenReturn("");
-        Mockito.when(args.getFieldName()).thenReturn("anotherfield");
-        Field field = Mockito.mock(Field.class);
-        FieldStart fieldStart = Mockito.mock(FieldStart.class);
-        Node ancestor = Mockito.mock(Node.class);
+        FieldMergingArgs args = mock(FieldMergingArgs.class);
+        when(args.getFieldValue()).thenReturn("");
+        when(args.getFieldName()).thenReturn("anotherfield");
+        Field field = mock(Field.class);
+        FieldStart fieldStart = mock(FieldStart.class);
+        Node ancestor = mock(Node.class);
 
-        Mockito.when(args.getField()).thenReturn(field);
-        Mockito.when(field.getStart()).thenReturn(fieldStart);
-        Mockito.when(fieldStart.getAncestor(ArgumentMatchers.any())).thenReturn(ancestor);
+        when(args.getField()).thenReturn(field);
+        when(field.getStart()).thenReturn(fieldStart);
+        when(fieldStart.getAncestor(ArgumentMatchers.any())).thenReturn(ancestor);
 
         //  ACT
         sut.fieldMerging(args);
 
         // ASSERT
-        Mockito.verify(ancestor, Mockito.never()).remove();
+        verify(ancestor, Mockito.never()).remove();
     }
 
 

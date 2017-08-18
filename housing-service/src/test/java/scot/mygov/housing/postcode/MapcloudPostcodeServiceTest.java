@@ -1,6 +1,5 @@
 package scot.mygov.housing.postcode;
 
-import com.codahale.metrics.MetricRegistry;
 import org.junit.Test;
 import scot.mygov.housing.mapcloud.Mapcloud;
 import scot.mygov.housing.mapcloud.MapcloudException;
@@ -11,9 +10,9 @@ import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
+import static java.util.Collections.addAll;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
@@ -52,7 +51,7 @@ public class MapcloudPostcodeServiceTest {
         assertEquals(result1.getPostcode(), results.getResults().get(0).getPostcode(), scottishPostcode());
 
         List<String> expectedAddressLines = new ArrayList<>();
-        Collections.addAll(expectedAddressLines,
+        addAll(expectedAddressLines,
                 results.getResults().get(0).getAddressLine1(),
                 results.getResults().get(0).getAddressLine2(),
                 results.getResults().get(0).getAddressLine3());
@@ -80,7 +79,7 @@ public class MapcloudPostcodeServiceTest {
         assertEquals(result1.getPostcode(), results.getResults().get(0).getPostcode(), scottishPostcode());
 
         List<String> expectedAddressLines = new ArrayList<>();
-        Collections.addAll(expectedAddressLines,
+        addAll(expectedAddressLines,
                 results.getResults().get(0).getAddressLine1(),
                 results.getResults().get(0).getAddressLine3());
         assertEquals(expectedAddressLines, result1.getAddressLines());
@@ -145,10 +144,6 @@ public class MapcloudPostcodeServiceTest {
         res.setAddressLine3("line3");
         res.setTown("town");
         return res;
-    }
-
-    private MetricRegistry anyRegistry() {
-        return new MetricRegistry();
     }
 
 }

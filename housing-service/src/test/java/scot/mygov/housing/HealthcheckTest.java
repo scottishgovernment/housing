@@ -277,7 +277,7 @@ public class HealthcheckTest {
     }
 
     private CPIService cpiServiceWithData(CPIData cpiData) throws CPIServiceException {
-        CPIService service = Mockito.mock(CPIService.class);
+        CPIService service = mock(CPIService.class);
         Mockito.when(service.cpiData()).thenReturn(cpiData);
         return service;
     }
@@ -294,7 +294,7 @@ public class HealthcheckTest {
     }
 
     private CPIService exceptionThrowingCPIService() throws CPIServiceException {
-        CPIService service = Mockito.mock(CPIService.class);
+        CPIService service = mock(CPIService.class);
         Mockito.when(service.cpiData()).thenThrow(new CPIServiceException("error", new RuntimeException("runtime")));
         return service;
     }
