@@ -5,7 +5,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import scot.mygov.housing.modeltenancy.model.Person;
-import scot.mygov.housing.rpz.PostcodeSource;
+import scot.mygov.housing.postcode.GeoPostcodeSource;
 import scot.mygov.validation.ValidationResults;
 import scot.mygov.validation.ValidationResultsBuilder;
 
@@ -177,7 +177,6 @@ public class ValidationUtilTest {
 
     @Test
     public void validPostCodes() {
-        PostcodeSource sut = new PostcodeSource(null);
         List<String> inputs = new ArrayList<>();
         Collections.addAll(inputs, "EH104AX", "EH10 4AX", "eh104ax", "eh10 4ax", "B1 2HB");
         List<String> outputs = inputs.stream().filter(in -> ValidationUtil.validPostcode(in)).collect(Collectors.toList());
@@ -186,7 +185,6 @@ public class ValidationUtilTest {
 
     @Test
     public void invalidPostCodes() {
-        PostcodeSource sut = new PostcodeSource(null);
         List<String> inputs = new ArrayList<>();
         Collections.addAll(inputs, "", "aaa", "EH10-$AX");
         List<String> outputs = inputs.stream().filter(in -> !ValidationUtil.validPostcode(in)).collect(Collectors.toList());

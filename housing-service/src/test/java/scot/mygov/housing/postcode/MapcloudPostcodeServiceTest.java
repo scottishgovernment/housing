@@ -2,19 +2,11 @@ package scot.mygov.housing.postcode;
 
 import com.codahale.metrics.MetricRegistry;
 import org.junit.Test;
-import org.mockito.Mockito;
-import scot.mygov.housing.MetricName;
 import scot.mygov.housing.mapcloud.Mapcloud;
 import scot.mygov.housing.mapcloud.MapcloudException;
 import scot.mygov.housing.mapcloud.MapcloudResult;
 import scot.mygov.housing.mapcloud.MapcloudResults;
-import scot.mygov.housing.postcode.PostcodeService;
-import scot.mygov.housing.postcode.PostcodeServiceException;
-import scot.mygov.housing.postcode.PostcodeServiceResult;
-import scot.mygov.housing.postcode.PostcodeServiceResults;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 

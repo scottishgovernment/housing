@@ -5,7 +5,6 @@ import org.jboss.resteasy.spi.ResteasyUriInfo;
 import org.junit.Test;
 import org.mockito.Mockito;
 import scot.mygov.geosearch.api.models.Postcode;
-import scot.mygov.housing.rpz.PostcodeSource;
 import scot.mygov.validation.ValidationResults;
 
 import javax.ws.rs.core.Response;
@@ -60,7 +59,7 @@ public class PostcodeResourceTest {
     }
 
     @Test
-    public void englishPostcodeParamIsRejected() {
+    public void englishPostcodeParamIsRejected() throws PostcodeServiceException {
         // ARRANGE
         PostcodeResource sut = new PostcodeResource(anyService(), scottishSource());
 
@@ -107,12 +106,12 @@ public class PostcodeResourceTest {
         return Mockito.mock(PostcodeService.class);
     }
 
-    private PostcodeSource anySource() {
-        return Mockito.mock(PostcodeSource.class);
+    private GeoPostcodeSource anySource() {
+        return Mockito.mock(GeoPostcodeSource.class);
     }
 
-    private PostcodeSource scottishSource() {
-        PostcodeSource source = Mockito.mock(PostcodeSource.class);
+    private GeoPostcodeSource scottishSource() throws PostcodeServiceException {
+        GeoPostcodeSource source = Mockito.mock(GeoPostcodeSource.class);
         Postcode postcode = new Postcode();
         postcode.setNormalisedPostcode(normalisedScottishPostcode());
         postcode.setPostcode(scottishPostcode());

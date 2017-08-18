@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scot.mygov.geosearch.api.models.Postcode;
 import scot.mygov.housing.modeltenancy.validation.ValidationUtil;
-import scot.mygov.housing.rpz.PostcodeSource;
 import scot.mygov.validation.ValidationResultsBuilder;
 
 import javax.inject.Inject;
@@ -27,10 +26,10 @@ public class PostcodeResource {
 
     private final PostcodeService postcodeService;
 
-    private final PostcodeSource postcodeSource;
+    private final GeoPostcodeSource postcodeSource;
 
     @Inject
-    public PostcodeResource(PostcodeService postcodeService, PostcodeSource postcodeSource) {
+    public PostcodeResource(PostcodeService postcodeService, GeoPostcodeSource postcodeSource) {
         this.postcodeService = postcodeService;
         this.postcodeSource = postcodeSource;
     }
@@ -48,15 +47,14 @@ public class PostcodeResource {
             return Response.status(400).entity(resultBuilder.build()).build();
         }
 
-        // look this postcode up using the postcode source.
-        Postcode postcodeObj = postcodeSource.postcode(postcode);
-        if (postcodeObj == null) {
-            // this means it is nto a vlaid scottoish postcode
-            resultBuilder.issue(POSTCODE_PARAM, "Not a Scottish postcode");
-            return Response.status(400).entity(resultBuilder.build()).build();
-        }
-
         try {
+            // look this postcode up using the postcode source.
+            Postcode postcodeObj = postcodeSource.postcode(postcode);
+            if (postcodeObj == null) {
+                resultBuilder.issue(POSTCODE_PARAM, "Not a Scottish postcode");
+                return Response.status(400).entity(resultBuilder.build()).build();
+            }
+
             PostcodeServiceResults results = postcodeService.lookup(postcodeObj.getNormalisedPostcode());
             return Response
                     .status(200)
