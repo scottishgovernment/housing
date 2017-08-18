@@ -23,6 +23,11 @@ public class PostcodeSource {
 
     public Postcode postcode(String postcode) {
         Response response = target.path(postcode).request().get();
+
+        if (response.getStatus() == 404) {
+            return null;
+        }
+
         return response.readEntity(Postcode.class);
     }
 }
