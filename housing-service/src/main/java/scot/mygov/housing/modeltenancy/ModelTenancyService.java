@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static java.util.Collections.addAll;
+
 public class ModelTenancyService {
 
     private final ModelTenancyFieldExtractor fieldExtractor;
@@ -97,10 +99,7 @@ public class ModelTenancyService {
         }
 
         // other fields with sections
-        Collections.addAll(fields,
-                "hmoString",
-                "rentPressureZoneString",
-                "communicationsAgreementType");
+        addAll(fields, "hmoString", "rentPressureZoneString", "communicationsAgreementType");
         return fields;
     }
 }

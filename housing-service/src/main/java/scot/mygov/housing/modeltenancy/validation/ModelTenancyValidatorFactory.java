@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static java.util.Collections.addAll;
+
 public class ModelTenancyValidatorFactory {
 
     private static final String [] MANDATORY_FIELDS = {
@@ -36,22 +38,21 @@ public class ModelTenancyValidatorFactory {
      */
     public Validator<ModelTenancy> validator(boolean validationEnabled) {
         List<ValidationRule> rules = new ArrayList<>();
-
-        Collections.addAll(rules, new DepositSchemeAdministratorRule());
+        addAll(rules, new DepositSchemeAdministratorRule());
 
         if (validationEnabled) {
-            Collections.addAll(rules,
-                    new LandlordsRule(),
-                    new AtLeastOneTenantRule(),
-                    new TenantsRule(),
-                    new GuarantorRule(),
-                    new LettingAgentRule(),
-                    new EnumsRule(),
-                    new HMORule(),
-                    new ServicesRule(),
-                    new CommunicationsAgreementRule(),
-                    new MandatoryFieldsRule(MANDATORY_FIELDS),
-                    new MoneyFieldsRule(MONEY_FIELDS));
+            addAll(rules,
+                new LandlordsRule(),
+                new AtLeastOneTenantRule(),
+                new TenantsRule(),
+                new GuarantorRule(),
+                new LettingAgentRule(),
+                new EnumsRule(),
+                new HMORule(),
+                new ServicesRule(),
+                new CommunicationsAgreementRule(),
+                new MandatoryFieldsRule(MANDATORY_FIELDS),
+                new MoneyFieldsRule(MONEY_FIELDS));
         }
         return new Validator(rules);
     }

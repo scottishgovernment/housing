@@ -10,6 +10,7 @@ import org.mockito.Mockito;
 
 import java.util.Collections;
 
+import static java.util.Collections.singleton;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -20,7 +21,7 @@ public class EmptySectionRemovingCallbackTest {
     public void removesSectionWithEmptyField() throws Exception {
 
         // ARRANGE
-        EmptySectionRemovingCallback sut = new EmptySectionRemovingCallback(Collections.singleton("field"));
+        EmptySectionRemovingCallback sut = new EmptySectionRemovingCallback(singleton("field"));
         FieldMergingArgs args = mock(FieldMergingArgs.class);
         when(args.getFieldValue()).thenReturn("");
         when(args.getFieldName()).thenReturn("field");
@@ -43,7 +44,7 @@ public class EmptySectionRemovingCallbackTest {
     public void doesNotRemoveSectionWithNonEmptyField() throws Exception {
 
         // ARRANGE
-        EmptySectionRemovingCallback sut = new EmptySectionRemovingCallback(Collections.singleton("field"));
+        EmptySectionRemovingCallback sut = new EmptySectionRemovingCallback(singleton("field"));
         FieldMergingArgs args = mock(FieldMergingArgs.class);
         when(args.getFieldValue()).thenReturn("value");
         when(args.getFieldName()).thenReturn("field");
@@ -66,7 +67,7 @@ public class EmptySectionRemovingCallbackTest {
     public void ignoresEmptyFieldNotInFieldSet() throws Exception {
 
         // ARRANGE
-        EmptySectionRemovingCallback sut = new EmptySectionRemovingCallback(Collections.singleton("field"));
+        EmptySectionRemovingCallback sut = new EmptySectionRemovingCallback(singleton("field"));
         FieldMergingArgs args = mock(FieldMergingArgs.class);
         when(args.getFieldValue()).thenReturn("");
         when(args.getFieldName()).thenReturn("anotherfield");
@@ -88,7 +89,7 @@ public class EmptySectionRemovingCallbackTest {
 
     @Test
     public void imageFieldMergingDoesNothing() throws Exception {
-        EmptySectionRemovingCallback sut = new EmptySectionRemovingCallback(Collections.singleton("field"));
+        EmptySectionRemovingCallback sut = new EmptySectionRemovingCallback(singleton("field"));
         sut.imageFieldMerging(null);
     }
     // removes null fields

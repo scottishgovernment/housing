@@ -25,7 +25,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static java.lang.String.format;
+import static java.util.Collections.addAll;
 import static java.util.stream.Collectors.joining;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
  * Extract fields from a ModelTenancy object for use in a template.
@@ -128,10 +131,10 @@ public class ModelTenancyFieldExtractor {
         IntStream.range(1, modelTenancy.getTenants().size() + 1).forEach(i -> {
             Person tenant = modelTenancy.getTenants().get(i - 1);
             List<String> parts = new ArrayList<String>();
-            Collections.addAll(parts,
-                String.format("Tenant %d Signature:", i),
-                String.format("Tenant Full Name:\t %s", tenant.getName()),
-                String.format("Tenant Address:\n %s", addressFieldsMultipleLines(tenant.getAddress())),
+            addAll(parts,
+                format("Tenant %d Signature:", i),
+                format("Tenant Full Name:\t %s", tenant.getName()),
+                format("Tenant Address:\n %s", addressFieldsMultipleLines(tenant.getAddress())),
                 "Date: ");
             signatureBlocks.add(parts.stream().collect(joining("\n")));
         });
@@ -144,12 +147,12 @@ public class ModelTenancyFieldExtractor {
             Guarantor guarantor = modelTenancy.getGuarantors().get(i - 1);
             List<String> parts = new ArrayList<String>();
             String tenantNames = guarantor.getTenantNames().stream().collect(joining(", "));
-            Collections.addAll(parts,
-                String.format("Guarantor %d", i),
-                String.format("Name(s) of Tenant(s) for whom Guarantor 1 will act as Guarantor:\n\t%s", tenantNames),
-                String.format("Guarantor %d Signature:\t", i),
-                String.format("Guarantor Full Name (Block  Capitals):\t%s", guarantor.getName().toUpperCase()),
-                String.format("Guarantor Address:\n%s", addressFieldsMultipleLines(guarantor.getAddress())),
+            addAll(parts,
+                format("Guarantor %d", i),
+                format("Name(s) of Tenant(s) for whom Guarantor 1 will act as Guarantor:\n\t%s", tenantNames),
+                format("Guarantor %d Signature:\t", i),
+                format("Guarantor Full Name (Block  Capitals):\t%s", guarantor.getName().toUpperCase()),
+                format("Guarantor Address:\n%s", addressFieldsMultipleLines(guarantor.getAddress())),
                 "Date:\t");
             signatureBlocks.add(parts.stream().collect(joining("\n")));
         });
@@ -202,11 +205,11 @@ public class ModelTenancyFieldExtractor {
 
     private List<String> addressParts(Address address) {
         List<String> parts = new ArrayList<>();
-        Collections.addAll(parts,
-                address.getAddressLine1(),
-                address.getAddressLine2(),
-                address.getAddressLine3(),
-                address.getPostcode());
+        addAll(parts,
+            address.getAddressLine1(),
+            address.getAddressLine2(),
+            address.getAddressLine3(),
+            address.getPostcode());
         return parts.stream().filter(part -> StringUtils.isNotEmpty(part)).collect(Collectors.toList());
     }
 
@@ -220,12 +223,12 @@ public class ModelTenancyFieldExtractor {
 
     private String nameAndAddress(Person person, int i) {
         String address = addressFieldsSingleLine(person.getAddress());
-        String nameAndAddress = String.format("%s, %s", person.getName(), address);
+        String nameAndAddress = format("%s, %s", person.getName(), address);
         return numberedValue(nameAndAddress, i);
     }
 
     private String numberedValue(String val, int i) {
-        return String.format("(%d) %s", i, naForEmpty(val));
+        return format("(%d) %s", i, naForEmpty(val));
     }
 
     private String naForEmpty(String value) {
@@ -238,17 +241,17 @@ public class ModelTenancyFieldExtractor {
 
     private String depositSchemeAdministratorContactDetails(DepositSchemeAdministrator administrator) {
         List<String> parts = new ArrayList<>();
-        Collections.addAll(parts,
+        addAll(parts,
                 administrator.getWebsite(),
                 administrator.getEmail(),
                 administrator.getTelephone());
         return parts.stream()
-                .filter(part -> StringUtils.isNotEmpty(part))
+                .filter(StringUtils::isNotEmpty)
                 .collect(Collectors.joining("\n"));
     }
 
     private String defaultForEmpty(String value, String defaultValue) {
-        if (StringUtils.isEmpty(value)) {
+        if (isEmpty(value)) {
             return defaultValue;
         } else {
             return value;

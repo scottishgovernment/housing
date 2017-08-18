@@ -17,13 +17,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.addAll;
+import static java.util.Collections.singletonList;
+
 public class ObjectMother {
 
     public ModelTenancy anyTenancy() {
         ModelTenancy tenancy = new ModelTenancy();
-        tenancy.setTenants(Collections.singletonList(validPerson()));
+        tenancy.setTenants(singletonList(validPerson()));
         tenancy.setLettingAgent(anyAgentOrLandlord());
-        tenancy.setLandlords(Collections.singletonList(anyAgentOrLandlord()));
+        tenancy.setLandlords(singletonList(anyAgentOrLandlord()));
         tenancy.setCommunicationsAgreement(CommunicationsAgreement.HARDCOPY.name());
         tenancy.setPropertyAddress(validAddress());
         tenancy.setPropertyType("FLAT");
@@ -68,7 +71,7 @@ public class ObjectMother {
             Guarantor guarantor = new Guarantor();
             guarantor.setName("guarentor name for " + tenant.getName());
             guarantor.setAddress(validAddress());
-            guarantor.setTenantNames(Collections.singletonList(tenant.getName()));
+            guarantor.setTenantNames(singletonList(tenant.getName()));
             return guarantor;
         }).collect(Collectors.toList());
         modelTenancy.setGuarantors(guarantors);
@@ -94,7 +97,7 @@ public class ObjectMother {
     public ModelTenancy tenancyWithTwoLandlords() {
         ModelTenancy tenancy = anyTenancy();
         List<AgentOrLandLord> landlords = new ArrayList<>();
-        Collections.addAll(landlords, anyAgentOrLandlord(), anyAgentOrLandlord());
+        addAll(landlords, anyAgentOrLandlord(), anyAgentOrLandlord());
         tenancy.setLandlords(landlords);
         return tenancy;
     }
@@ -102,7 +105,7 @@ public class ObjectMother {
     public ModelTenancy tenancyWithThreeLandlords() {
         ModelTenancy tenancy = anyTenancy();
         List<AgentOrLandLord> landlords = new ArrayList<>();
-        Collections.addAll(landlords, anyAgentOrLandlord(), anyAgentOrLandlord(), anyAgentOrLandlord());
+        addAll(landlords, anyAgentOrLandlord(), anyAgentOrLandlord(), anyAgentOrLandlord());
         tenancy.setLandlords(landlords);
         return tenancy;
     }
@@ -119,7 +122,7 @@ public class ObjectMother {
 
     public List<Person> validPeople() {
         List<Person> people = new ArrayList<>();
-        Collections.addAll(people,
+        addAll(people,
                 personWithAllFields(),
                 personWithNullEmail(),
                 personWithEmptyEmail(),
@@ -131,7 +134,7 @@ public class ObjectMother {
 
     public List<Person> invalidPeople() {
         List<Person> people = new ArrayList<>();
-        Collections.addAll(people,
+        addAll(people,
                 emptyPerson(),
                 personWithNoContactInfo(),
                 personWithInvalidEmail()
@@ -141,7 +144,7 @@ public class ObjectMother {
 
     public List<Address> validAddresses() {
         List<Address> addresses = new ArrayList<Address>();
-        Collections.addAll(addresses,
+        addAll(addresses,
                 oneLineAddress(),
                 twoLineAddress(),
                 threeLineAddress());
@@ -150,7 +153,7 @@ public class ObjectMother {
 
     public List<Address> invalidAddresses() {
         List<Address> addresses = new ArrayList<Address>();
-        Collections.addAll(addresses,
+        addAll(addresses,
                 null,
                 zeroLineAddress(),
                 invalidPostcodeAddress(),
@@ -266,25 +269,25 @@ public class ObjectMother {
 
     public List<String> invalidEmails() {
         List<String> emails = new ArrayList<>();
-        Collections.addAll(emails, "asd", "", null, "@gmail.com", "google@ggogle@google", "http://www.google.com/");
+        addAll(emails, "asd", "", null, "@gmail.com", "google@ggogle@google", "http://www.google.com/");
         return emails;
     }
 
     public List<String> validEmails() {
         List<String> emails = new ArrayList<>();
-        Collections.addAll(emails, "david.sinclait@gov.scot", "someone@blah.blah.blah");
+        addAll(emails, "david.sinclait@gov.scot", "someone@blah.blah.blah");
         return emails;
     }
 
     public List<String> invalidRegNumbers() {
         List<String> registrationNumbers = new ArrayList<>();
-        Collections.addAll(registrationNumbers, null, "", "aaa", "1111111/222/1111111", "11111111111111111111");
+        addAll(registrationNumbers, null, "", "aaa", "1111111/222/1111111", "11111111111111111111");
         return registrationNumbers;
     }
 
     public List<String> validRegNumbers() {
         List<String> registrationNumbers = new ArrayList<>();
-        Collections.addAll(registrationNumbers, "666666/333/55555");
+        addAll(registrationNumbers, "666666/333/55555");
         return registrationNumbers;
     }
 

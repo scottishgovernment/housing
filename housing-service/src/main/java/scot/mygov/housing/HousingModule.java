@@ -29,6 +29,8 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Collections;
 
+import static java.util.Collections.singleton;
+
 @Module(injects = Housing.class)
 public class HousingModule {
 
@@ -81,9 +83,9 @@ public class HousingModule {
         RPZ rpz = new RPZ("Davids flat",
                 LocalDate.of(2016, 1, 1),
                 LocalDate.of(2017, 1, 1), 1,
-                Collections.singleton("EH104AX"),
-                Collections.singleton(""));
-        return new InMemoryRPZService(Collections.singleton(rpz), mapcloud);
+                singleton("EH104AX"),
+                singleton(""));
+        return new InMemoryRPZService(singleton(rpz), mapcloud);
     }
 
     @Provides

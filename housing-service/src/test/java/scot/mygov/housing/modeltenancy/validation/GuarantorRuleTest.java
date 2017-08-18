@@ -3,10 +3,13 @@ package scot.mygov.housing.modeltenancy.validation;
 import org.junit.Assert;
 import org.junit.Test;
 import scot.mygov.housing.modeltenancy.model.ModelTenancy;
-import scot.mygov.housing.modeltenancy.model.Person;
 import scot.mygov.validation.ValidationResultsBuilder;
 
 import java.util.Collections;
+
+import static java.util.Collections.emptyList;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class GuarantorRuleTest {
     private ObjectMother om = new ObjectMother();
@@ -22,21 +25,21 @@ public class GuarantorRuleTest {
         rule.validate(modelTenancy, b);
 
         // ASSERT
-        Assert.assertTrue(b.build().getIssues().isEmpty());
+        assertTrue(b.build().getIssues().isEmpty());
     }
 
     @Test
     public void acceptsNoGuarentors() {
         // ARRANGE
         ModelTenancy modelTenancy = om.tenancyWithGuarentors();
-        modelTenancy.setGuarantors(Collections.emptyList());
+        modelTenancy.setGuarantors(emptyList());
         ValidationResultsBuilder b = new ValidationResultsBuilder();
 
         // ACT
         rule.validate(modelTenancy, b);
 
         // ASSERT
-        Assert.assertTrue(b.build().getIssues().isEmpty());
+        assertTrue(b.build().getIssues().isEmpty());
     }
 
     @Test
@@ -50,7 +53,7 @@ public class GuarantorRuleTest {
         rule.validate(modelTenancy, b);
 
         // ASSERT
-        Assert.assertFalse(b.build().getIssues().isEmpty());
+        assertFalse(b.build().getIssues().isEmpty());
     }
 
     @Test
@@ -64,21 +67,21 @@ public class GuarantorRuleTest {
         rule.validate(modelTenancy, b);
 
         // ASSERT
-        Assert.assertFalse(b.build().getIssues().isEmpty());
+        assertFalse(b.build().getIssues().isEmpty());
     }
 
     @Test
     public void rejectsGuarentorsWithNoTenantNames() {
         // ARRANGE
         ModelTenancy modelTenancy = om.tenancyWithGuarentors();
-        modelTenancy.getGuarantors().get(0).setTenantNames(Collections.emptyList());
+        modelTenancy.getGuarantors().get(0).setTenantNames(emptyList());
         ValidationResultsBuilder b = new ValidationResultsBuilder();
 
         // ACT
         rule.validate(modelTenancy, b);
 
         // ASSERT
-        Assert.assertFalse(b.build().getIssues().isEmpty());
+        assertFalse(b.build().getIssues().isEmpty());
     }
 
     @Test
@@ -92,14 +95,6 @@ public class GuarantorRuleTest {
         rule.validate(modelTenancy, b);
 
         // ASSERT
-        Assert.assertFalse(b.build().getIssues().isEmpty());
-    }
-
-    private Person tenantWithNoGuarentor() {
-        Person p = new Person();
-        p.setName("qqq");
-        p.setAddress(om.validAddress());
-        p.setTelephone("111");
-        return p;
+        assertFalse(b.build().getIssues().isEmpty());
     }
 }

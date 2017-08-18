@@ -12,6 +12,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.addAll;
+import static java.util.stream.Collectors.toList;
+import static org.junit.Assert.assertEquals;
+
 public class EnumsRuleTest {
 
     private ObjectMother om = new ObjectMother();
@@ -25,7 +29,7 @@ public class EnumsRuleTest {
         List<String> values = Arrays.asList(CommunicationsAgreement.values())
                 .stream()
                 .map(CommunicationsAgreement::name)
-                .collect(Collectors.toList());
+                .collect(toList());
         ValidationResultsBuilder builder = new ValidationResultsBuilder();
 
 
@@ -36,7 +40,7 @@ public class EnumsRuleTest {
         });
 
         // ASSERT
-        Assert.assertEquals(builder.build().getIssues().size(), 0);
+        assertEquals(builder.build().getIssues().size(), 0);
     }
 
     @Test
@@ -44,7 +48,7 @@ public class EnumsRuleTest {
         // ARRANGE
         ModelTenancy modelTenancy = om.anyTenancy();
         List<String> values = new ArrayList<>();
-        Collections.addAll(values, "blah", null, "");
+        addAll(values, "blah", null, "");
 
         // ACT
         values.stream().forEach(value -> {
@@ -53,7 +57,7 @@ public class EnumsRuleTest {
             rule.validate(modelTenancy, builder);
 
             // ASSERT
-            Assert.assertEquals(builder.build().getIssues().size(), 1);
+            assertEquals(builder.build().getIssues().size(), 1);
         });
     }
 
@@ -62,7 +66,7 @@ public class EnumsRuleTest {
         // ARRANGE
         ModelTenancy modelTenancy = om.anyTenancy();
         List<String> values = new ArrayList<>();
-        Collections.addAll(values, "blah", null, "");
+        addAll(values, "blah", null, "");
 
         // ACT
         values.stream().forEach(value -> {
@@ -71,7 +75,7 @@ public class EnumsRuleTest {
             rule.validate(modelTenancy, builder);
 
             // ASSERT
-            Assert.assertEquals(builder.build().getIssues().size(), 1);
+            assertEquals(builder.build().getIssues().size(), 1);
         });
     }
 
@@ -80,7 +84,7 @@ public class EnumsRuleTest {
         // ARRANGE
         ModelTenancy modelTenancy = om.anyTenancy();
         List<String> values = new ArrayList<>();
-        Collections.addAll(values, "blah", null, "");
+        addAll(values, "blah", null, "");
 
         // ACT
         values.stream().forEach(value -> {
@@ -89,7 +93,7 @@ public class EnumsRuleTest {
             rule.validate(modelTenancy, builder);
 
             // ASSERT
-            Assert.assertEquals(builder.build().getIssues().size(), 1);
+            assertEquals(builder.build().getIssues().size(), 1);
         });
     }
 }
