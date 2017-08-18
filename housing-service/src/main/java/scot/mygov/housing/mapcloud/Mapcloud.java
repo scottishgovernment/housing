@@ -18,9 +18,7 @@ public class Mapcloud {
 
     private final WebTarget mapcloudTarget;
 
-    private final String user;
-
-    private final String password;
+    private final String authHeader;
 
     private final Timer responseTimes;
 
@@ -38,9 +36,7 @@ public class Mapcloud {
             String password,
             MetricRegistry registry) {
         this.mapcloudTarget = mapcloudTarget;
-        this.user = user;
-        this.password = password;
-
+        this.authHeader = authHeader(user, password);
         this.responseTimes = registry.timer(MetricName.RESPONSE_TIMES.name(this));
         this.requestCounter = registry.counter(MetricName.REQUESTS.name(this));
         this.errorCounter = registry.counter(MetricName.ERRORS.name(this));
@@ -66,7 +62,7 @@ public class Mapcloud {
                     .queryParam(paramName, paramValue)
                     .queryParam("addrformat", 2)
                     .request()
-                    .header("Authorization", authHeader())
+                    .header("Authorization", authHeader)
                     .get(MapcloudResults.class);
             timer.stop();
             return results;
@@ -77,7 +73,7 @@ public class Mapcloud {
         }
     }
 
-    private String authHeader() {
+    private static String authHeader(String user, String password) {
         String userAndPassword = user + ":" + password;
         String encoded = Base64.getEncoder().encodeToString(userAndPassword.getBytes());
         return "Basic " + encoded;

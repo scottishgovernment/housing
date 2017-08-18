@@ -16,6 +16,7 @@ import org.mockito.Mockito;
 import scot.mygov.housing.cpi.CPIService;
 import scot.mygov.housing.cpi.CPIServiceException;
 import scot.mygov.housing.cpi.model.CPIData;
+import scot.mygov.housing.mapcloud.Mapcloud;
 import scot.mygov.housing.postcode.PostcodeService;
 import scot.mygov.housing.postcode.PostcodeServiceException;
 import scot.mygov.housing.postcode.PostcodeServiceResults;
@@ -55,10 +56,9 @@ public class HealthcheckTest {
         mapper = new ObjectMapper();
         healthcheck = new Healthcheck();
         healthcheck.metricRegistry = new MetricRegistry();
-        healthcheck.postcodeService = new DummyPostcodeService(healthcheck.metricRegistry);
+        healthcheck.mapcloud = new Mapcloud(mock(WebTarget.class), "", "", healthcheck.metricRegistry);
         healthcheck.housingConfiguration = new HousingConfiguration();
         healthcheck.asposeLicense = anyValidLicense();
-        healthcheck.geoHealthTarget = target(200);
         healthcheck.cpiService = validCPIService();
         dispatcher = MockDispatcherFactory.createDispatcher();
         dispatcher.getRegistry().addSingletonResource(healthcheck);
@@ -74,7 +74,6 @@ public class HealthcheckTest {
         assertEquals(200, response.getStatus());
         JsonNode health = mapper.readTree(response.getContentAsString());
         assertTrue("licence not as expected", health.get("license").asBoolean());
-        assertTrue("geosearch not as expected", health.get("geosearch").asBoolean());
         JsonNode data = health.get("data");
         assertEquals("days until expiry not as expected", 100L, data.get("daysUntilExpiry").asLong());
         String expectedExpiry = healthcheck.asposeLicense.expires().toString();
@@ -120,30 +119,6 @@ public class HealthcheckTest {
         JsonNode errors = health.get("errors");
         assertEquals(1, errors.size());
         assertTrue(errors.get(0).asText().contains("license"));
-    }
-
-    @Test
-    public void notOkForExceptionFromGeo() throws IOException {
-        this.healthcheck.geoHealthTarget = exceptionTarget();
-
-        dispatcher.invoke(request, response);
-
-        assertEquals(503, response.getStatus());
-        JsonNode health = mapper.readTree(response.getContentAsString());
-        assertTrue("licence not as expected", health.get("license").asBoolean());
-        assertFalse("geosearch not as expected", health.get("geosearch").asBoolean());
-    }
-
-    @Test
-    public void notOkForErrorResponseFromGeo() throws IOException {
-        this.healthcheck.geoHealthTarget = target(503);
-
-        dispatcher.invoke(request, response);
-
-        assertEquals(503, response.getStatus());
-        JsonNode health = mapper.readTree(response.getContentAsString());
-        assertEquals("licence not as expected", true, health.get("license").asBoolean());
-        assertEquals("geosearch not as expected", false, health.get("geosearch").asBoolean());
     }
 
     @Test
@@ -214,21 +189,21 @@ public class HealthcheckTest {
         SortedMap<String, Meter> meters = new TreeMap<>();
         Meter errorRate = mock(Meter.class);
         when(errorRate.getFiveMinuteRate()).thenReturn(errorFiveMinRate);
-        meters.put(MetricName.ERROR_RATE.name(healthcheck.postcodeService), errorRate);
+        meters.put(MetricName.ERROR_RATE.name(healthcheck.mapcloud), errorRate);
         when(registry.getMeters()).thenReturn(meters);
         when(registry.getMeters(Mockito.any())).thenReturn(meters);
 
         SortedMap<String, Timer> timers = new TreeMap<>();
         Timer responseTimes = mock(Timer.class);
         when(responseTimes.getFiveMinuteRate()).thenReturn(responseTimesFiveMinuteRate);
-        timers.put(MetricName.RESPONSE_TIMES.name(healthcheck.postcodeService), responseTimes);
+        timers.put(MetricName.RESPONSE_TIMES.name(healthcheck.mapcloud), responseTimes);
         when(registry.getTimers()).thenReturn(timers);
         when(registry.getTimers(Mockito.any())).thenReturn(timers);
 
         SortedMap<String, Counter> counters = new TreeMap<>();
         Counter errorCounter = mock(Counter.class);
         when(errorCounter.getCount()).thenReturn(0L);
-        counters.put(MetricName.ERRORS.name(healthcheck.postcodeService), errorCounter);
+        counters.put(MetricName.ERRORS.name(healthcheck.mapcloud), errorCounter);
         when(registry.getCounters()).thenReturn(counters);
         when(registry.getCounters(Mockito.any())).thenReturn(counters);
 

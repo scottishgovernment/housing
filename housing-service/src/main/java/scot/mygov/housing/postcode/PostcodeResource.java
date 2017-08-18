@@ -26,12 +26,9 @@ public class PostcodeResource {
 
     private final PostcodeService postcodeService;
 
-    private final GeoPostcodeSource postcodeSource;
-
     @Inject
-    public PostcodeResource(PostcodeService postcodeService, GeoPostcodeSource postcodeSource) {
+    public PostcodeResource(PostcodeService postcodeService) {
         this.postcodeService = postcodeService;
-        this.postcodeSource = postcodeSource;
     }
 
     @Path("address-lookup")
@@ -48,14 +45,18 @@ public class PostcodeResource {
         }
 
         try {
-            // look this postcode up using the postcode source.
-            Postcode postcodeObj = postcodeSource.postcode(postcode);
-            if (postcodeObj == null) {
-                resultBuilder.issue(POSTCODE_PARAM, "Not a Scottish postcode");
-                return Response.status(400).entity(resultBuilder.build()).build();
-            }
 
-            PostcodeServiceResults results = postcodeService.lookup(postcodeObj.getNormalisedPostcode());
+            // normalise the postcode
+
+            // look this postcode up using the postcode source.
+//            Postcode postcodeObj = postcodeSource.postcode(postcode);
+//            if (postcodeObj == null) {
+//                resultBuilder.issue(POSTCODE_PARAM, "Not a Scottish postcode");
+//                return Response.status(400).entity(resultBuilder.build()).build();
+//            }
+
+            String normalisedPostcode = normalisePostcode(postcode);
+            PostcodeServiceResults results = postcodeService.lookup(normalisedPostcode);
             return Response
                     .status(200)
                     .entity(results)
@@ -72,6 +73,18 @@ public class PostcodeResource {
             return params.getFirst(POSTCODE_PARAM).toUpperCase();
         } else {
             return null;
+        }
+    }
+
+    private String normalisePostcode(String postcodeIn) {
+        // make it upper case and remove all sapces
+        String postcode = postcodeIn.toUpperCase().replace(" ", "");
+        if (postcode.charAt(3) == ' ') {
+            return postcode.toUpperCase();
+        } else {
+            // ensure it contains a space
+            int threeFromEnd = postcode.length() - 3;
+            return String.format("%s %s", postcode.substring(0, threeFromEnd), postcode.substring(threeFromEnd));
         }
     }
 

@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import scot.mygov.housing.cpi.CPIService;
 import scot.mygov.housing.cpi.CPIServiceException;
 import scot.mygov.housing.cpi.model.CPIData;
+import scot.mygov.housing.mapcloud.Mapcloud;
 import scot.mygov.housing.postcode.PostcodeService;
 
 import javax.inject.Inject;
@@ -48,14 +49,10 @@ public class Healthcheck {
     AsposeLicense asposeLicense;
 
     @Inject
-    @Named(HousingModule.GEO_HEALTH)
-    WebTarget geoHealthTarget;
-
-    @Inject
     CPIService cpiService;
 
     @Inject
-    PostcodeService postcodeService;
+    Mapcloud mapcloud;
 
     @Inject
     MetricRegistry metricRegistry;
@@ -71,7 +68,6 @@ public class Healthcheck {
         ArrayNode warnings = factory.arrayNode();
         ObjectNode data = factory.objectNode();
 
-        addGeosearchInfo(result, errors);
         addLicenseInfo(result, errors, warnings, data, licenseDays);
         addCPIInfo(result, errors, data);
         addPostcodeInfo(result, errors, data);
@@ -99,14 +95,6 @@ public class Healthcheck {
                 .build();
     }
 
-    private void addGeosearchInfo(ObjectNode result, ArrayNode errors) {
-        boolean geosearchOK = geosearchHealth();
-        result.put("geosearch", geosearchOK);
-        if (!geosearchOK) {
-            errors.add("Geosearch is unavailable");
-        }
-    }
-
     private boolean addLicenseInfo(
             ObjectNode result,
             ArrayNode errors,
@@ -127,17 +115,6 @@ public class Healthcheck {
             warnings.add(format("License expires in %d days", daysRemaining));
         }
         return licensed;
-    }
-
-    private boolean geosearchHealth() {
-        try {
-            Response response = geoHealthTarget.request().get();
-            response.close();
-            return response.getStatus() == 200;
-        } catch (ProcessingException ex) {
-            LOG.info("Failed to fetch geosearch status", ex);
-            return false;
-        }
     }
 
     private void addCPIInfo(ObjectNode result, ArrayNode errors, ObjectNode data) {
@@ -176,8 +153,8 @@ public class Healthcheck {
 
     private void addPostcodeInfo(ObjectNode result, ArrayNode errors, ObjectNode data) {
 
-        Meter errorRate = metricRegistry.getMeters().get(MetricName.ERROR_RATE.name(postcodeService));
-        Timer timer = metricRegistry.getTimers().get(MetricName.RESPONSE_TIMES.name(postcodeService));
+        Meter errorRate = metricRegistry.getMeters().get(MetricName.ERROR_RATE.name(mapcloud));
+        Timer timer = metricRegistry.getTimers().get(MetricName.RESPONSE_TIMES.name(mapcloud));
 
         double responsetimeThreshold = housingConfiguration.getMapcloudResponseTimeThreshold();
         boolean ok = errorRate.getFiveMinuteRate() == 0 && timer.getFiveMinuteRate() < responsetimeThreshold;
@@ -192,7 +169,7 @@ public class Healthcheck {
 
         if (!ok) {
             // collect all of the metrics for mapcloud and add them to the data
-            MetricFilter filter = forClass(postcodeService.getClass());
+            MetricFilter filter = forClass(mapcloud.getClass());
             for (Map.Entry<String, Timer> entry : metricRegistry.getTimers(filter).entrySet()) {
                 data.put(entry.getKey(), entry.getValue().getFiveMinuteRate());
             }

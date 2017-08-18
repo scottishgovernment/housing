@@ -23,7 +23,7 @@ public class PostcodeResourceTest {
     @Test
     public void missingPoscodeParamIsRejected() {
         // ARRANGE
-        PostcodeResource sut = new PostcodeResource(anyService(), anySource());
+        PostcodeResource sut = new PostcodeResource(anyService());
 
         // ACT
         Response actual = sut.lookup(uriInfoWithNoPostcodeParam());
@@ -36,7 +36,7 @@ public class PostcodeResourceTest {
     @Test
     public void emptyPostcodeParamIsRejected() {
         // ARRANGE
-        PostcodeResource sut = new PostcodeResource(anyService(), anySource());
+        PostcodeResource sut = new PostcodeResource(anyService());
 
         // ACT
         Response actual = sut.lookup(uriInfoWithPostcodeParam(""));
@@ -49,7 +49,7 @@ public class PostcodeResourceTest {
     @Test
     public void invalidPostcodeParamIsRejected() {
         // ARRANGE
-        PostcodeResource sut = new PostcodeResource(anyService(), anySource());
+        PostcodeResource sut = new PostcodeResource(anyService());
 
         // ACT
         Response actual = sut.lookup(uriInfoWithPostcodeParam("invalid"));
@@ -60,23 +60,10 @@ public class PostcodeResourceTest {
     }
 
     @Test
-    public void englishPostcodeParamIsRejected() throws PostcodeServiceException {
-        // ARRANGE
-        PostcodeResource sut = new PostcodeResource(anyService(), scottishSource());
-
-        // ACT
-        Response actual = sut.lookup(uriInfoWithPostcodeParam(englishPostcode()));
-
-        // ASSERT
-        ValidationResults validationResults = (ValidationResults) actual.getEntity();
-        assertTrue(validationResults.getIssues().containsKey("postcode"));
-    }
-
-    @Test
     public void returnsResultsFromService() throws PostcodeServiceException {
         // ARRANGE
         PostcodeServiceResults expectedResults = greenpathResults();
-        PostcodeResource sut = new PostcodeResource(serviceWithResults(expectedResults), scottishSource());
+        PostcodeResource sut = new PostcodeResource(serviceWithResults(expectedResults));
 
         // ACT
         Response actual = sut.lookup(uriInfoWithPostcodeParam(scottishPostcode()));
@@ -90,7 +77,7 @@ public class PostcodeResourceTest {
     @Test
     public void exceptionFromServiceReturns503() throws PostcodeServiceException {
         // ARRANGE
-        PostcodeResource sut = new PostcodeResource(exceptionThrowingService(), scottishSource());
+        PostcodeResource sut = new PostcodeResource(exceptionThrowingService());
 
         // ACT
         Response actual = sut.lookup(uriInfoWithPostcodeParam(scottishPostcode()));
@@ -105,19 +92,6 @@ public class PostcodeResourceTest {
 
     private PostcodeService anyService() {
         return mock(PostcodeService.class);
-    }
-
-    private GeoPostcodeSource anySource() {
-        return mock(GeoPostcodeSource.class);
-    }
-
-    private GeoPostcodeSource scottishSource() throws PostcodeServiceException {
-        GeoPostcodeSource source = mock(GeoPostcodeSource.class);
-        Postcode postcode = new Postcode();
-        postcode.setNormalisedPostcode(normalisedScottishPostcode());
-        postcode.setPostcode(scottishPostcode());
-        when(source.postcode(Mockito.eq(scottishPostcode()))).thenReturn(postcode);
-        return source;
     }
 
     private PostcodeService serviceWithResults(PostcodeServiceResults results) throws PostcodeServiceException {
@@ -158,14 +132,6 @@ public class PostcodeResourceTest {
 
     private String scottishPostcode() {
         return "EH104AX";
-    }
-
-    private String normalisedScottishPostcode() {
-        return "EH10 4AX";
-    }
-
-    private String englishPostcode() {
-        return "B1 2HB";
     }
 
 }
