@@ -15,17 +15,14 @@ import scot.mygov.housing.cpi.CPIService;
 import scot.mygov.housing.cpi.CPIServiceException;
 import scot.mygov.housing.cpi.model.CPIData;
 import scot.mygov.housing.mapcloud.Mapcloud;
-import scot.mygov.housing.postcode.PostcodeService;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.ProcessingException;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.Duration;
@@ -167,21 +164,20 @@ public class Healthcheck {
             errors.add("Postcode slow in the last 5 minutes");
         }
 
-        if (!ok) {
-            // collect all of the metrics for mapcloud and add them to the data
-            MetricFilter filter = forClass(mapcloud.getClass());
-            for (Map.Entry<String, Timer> entry : metricRegistry.getTimers(filter).entrySet()) {
-                data.put(entry.getKey(), entry.getValue().getFiveMinuteRate());
-            }
-
-            for (Map.Entry<String, Meter> entry : metricRegistry.getMeters(filter).entrySet()) {
-                data.put(entry.getKey(), entry.getValue().getFiveMinuteRate());
-            }
-
-            for (Map.Entry<String, Counter> entry : metricRegistry.getCounters(filter).entrySet()) {
-                data.put(entry.getKey(), entry.getValue().getCount());
-            }
+        // collect all of the metrics for mapcloud and add them to the data
+        MetricFilter filter = forClass(mapcloud.getClass());
+        for (Map.Entry<String, Timer> entry : metricRegistry.getTimers(filter).entrySet()) {
+            data.put(entry.getKey(), entry.getValue().getFiveMinuteRate());
         }
+
+        for (Map.Entry<String, Meter> entry : metricRegistry.getMeters(filter).entrySet()) {
+            data.put(entry.getKey(), entry.getValue().getFiveMinuteRate());
+        }
+
+        for (Map.Entry<String, Counter> entry : metricRegistry.getCounters(filter).entrySet()) {
+            data.put(entry.getKey(), entry.getValue().getCount());
+        }
+
         result.put("postcode", ok);
     }
 
