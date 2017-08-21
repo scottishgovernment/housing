@@ -10,6 +10,7 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.Collections;
 
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -106,12 +107,12 @@ public class PostcodeResourceTest {
 
     private PostcodeServiceResults greenpathResults() {
         PostcodeServiceResults results = new PostcodeServiceResults();
-        results.setResults(Collections.singletonList(anyResult()));
+        results.setResults(singletonList(anyResult()));
         return results;
     }
     private PostcodeServiceResult anyResult() {
         PostcodeServiceResult result = new PostcodeServiceResult();
-        result.setAddressLines(Collections.singletonList("address line 1"));
+        result.setAddressLines(singletonList("address line 1"));
         result.setUprn("uprn");
         result.setPostcode("EH10 4AX");
         result.setTown("Edinburgh");

@@ -9,16 +9,16 @@ import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.modeltenancy.model.Person;
 import scot.mygov.housing.modeltenancy.model.RentPaymentFrequency;
 import scot.mygov.housing.modeltenancy.model.Service;
-import scot.mygov.housing.modeltenancy.model.Utility;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.Collections.addAll;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 
 public class ObjectMother {
 
@@ -73,7 +73,7 @@ public class ObjectMother {
             guarantor.setAddress(validAddress());
             guarantor.setTenantNames(singletonList(tenant.getName()));
             return guarantor;
-        }).collect(Collectors.toList());
+        }).collect(toList());
         modelTenancy.setGuarantors(guarantors);
         return modelTenancy;
     }
@@ -86,7 +86,7 @@ public class ObjectMother {
 
     public ModelTenancy tenancyWithNoLandlords() {
         ModelTenancy tenancy = anyTenancy();
-        tenancy.setLandlords(Collections.emptyList());
+        tenancy.setLandlords(emptyList());
         return tenancy;
     }
 

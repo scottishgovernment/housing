@@ -8,6 +8,7 @@ import scot.mygov.validation.ValidationResultsBuilder;
 import java.util.Collections;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -88,7 +89,7 @@ public class GuarantorRuleTest {
     public void rejectsGuarentorsWithTenantNameNotInTenants() {
         // ARRANGE
         ModelTenancy modelTenancy = om.tenancyWithGuarentors();
-        modelTenancy.getGuarantors().get(0).setTenantNames(Collections.singletonList("not a tenant name"));
+        modelTenancy.getGuarantors().get(0).setTenantNames(singletonList("not a tenant name"));
         ValidationResultsBuilder b = new ValidationResultsBuilder();
 
         // ACT

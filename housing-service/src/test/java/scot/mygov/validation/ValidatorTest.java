@@ -5,6 +5,8 @@ import org.junit.Test;
 
 import java.util.Collections;
 
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertTrue;
 
 public class ValidatorTest {
@@ -13,7 +15,7 @@ public class ValidatorTest {
     @Test(expected = ValidationException.class)
     public void throwsExceptionIfAnyIssues() throws ValidationException {
 
-        Validator<Value> sut = new Validator<>(Collections.singletonList(new FailingRule()));
+        Validator<Value> sut = new Validator<>(singletonList(new FailingRule()));
         try {
             sut.validate(new Value("bar"));
         } catch (ValidationException e) {
@@ -24,7 +26,7 @@ public class ValidatorTest {
 
     @Test
     public void noExceptionIfNoIssues() throws ValidationException {
-        Validator<Value> sut = new Validator<>(Collections.emptyList());
+        Validator<Value> sut = new Validator<>(emptyList());
         sut.validate(new Value("bar"));
     }
 

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertTrue;
 
 public class AddressValidatorTest {
@@ -44,7 +45,7 @@ public class AddressValidatorTest {
 
                     return !resultsBuilder.build().getIssues().isEmpty();
                 })
-                .collect(Collectors.toList());
+                .collect(toList());
 
 
         // ASSERT

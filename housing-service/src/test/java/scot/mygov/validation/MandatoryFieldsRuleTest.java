@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.util.Collections;
 
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 
 public class MandatoryFieldsRuleTest {
@@ -24,9 +25,9 @@ public class MandatoryFieldsRuleTest {
         ValidationResults res = b.build();
 
         // ASSERT
-        assertEquals(res.getIssues().get("foo"), Collections.singletonList("Invalid field"));
-        assertEquals(res.getIssues().get("nullField"), Collections.singletonList("Required"));
-        assertEquals(res.getIssues().get("emptyField"), Collections.singletonList("Required"));
+        assertEquals(res.getIssues().get("foo"), singletonList("Invalid field"));
+        assertEquals(res.getIssues().get("nullField"), singletonList("Required"));
+        assertEquals(res.getIssues().get("emptyField"), singletonList("Required"));
         assertEquals(res.getIssues().get("validField"), null);
     }
 

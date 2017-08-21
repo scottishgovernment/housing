@@ -23,9 +23,6 @@ import javax.inject.Singleton;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 
 import static java.util.Collections.singleton;
@@ -113,19 +110,4 @@ public class HousingModule {
     MetricRegistry metricsRegistry() {
         return new MetricRegistry();
     }
-
-    static URI appendPath(URI uri, String path) {
-        try {
-            return new URI(uri.getScheme(),
-                    uri.getUserInfo(),
-                    uri.getHost(),
-                    uri.getPort(),
-                    Paths.get(uri.getPath(), path).toString(),
-                    uri.getQuery(),
-                    uri.getFragment());
-        } catch (URISyntaxException ex) {
-            throw new RuntimeException("Could not append path " + path + " to " + uri, ex);
-        }
-    }
-
 }

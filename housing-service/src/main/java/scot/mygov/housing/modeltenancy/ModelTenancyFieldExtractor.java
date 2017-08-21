@@ -21,13 +21,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static java.lang.String.format;
 import static java.util.Collections.addAll;
 import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 /**
  * Extract fields from a ModelTenancy object for use in a template.
@@ -209,7 +210,7 @@ public class ModelTenancyFieldExtractor {
             address.getAddressLine2(),
             address.getAddressLine3(),
             address.getPostcode());
-        return parts.stream().filter(part -> StringUtils.isNotEmpty(part)).collect(Collectors.toList());
+        return parts.stream().filter(part -> isNotEmpty(part)).collect(toList());
     }
 
     private String addressFieldsMultipleLines(Address address) {
@@ -246,7 +247,7 @@ public class ModelTenancyFieldExtractor {
                 administrator.getTelephone());
         return parts.stream()
                 .filter(StringUtils::isNotEmpty)
-                .collect(Collectors.joining("\n"));
+                .collect(joining("\n"));
     }
 
     private String defaultForEmpty(String value, String defaultValue) {

@@ -22,8 +22,11 @@ import static java.util.Collections.addAll;
 public class ModelTenancyService {
 
     private final ModelTenancyFieldExtractor fieldExtractor;
+
     private final ModelTenancyDocumentTemplateLoader templateLoader;
+
     private final EmptySectionRemovingCallback emptySectionRemovingCallback;
+
     private final ModelTenancyJsonTemplateLoader modelTenancyJsonTemplateLoader;
 
     @Inject

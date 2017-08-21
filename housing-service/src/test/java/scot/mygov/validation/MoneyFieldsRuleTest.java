@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static java.util.Collections.addAll;
 import static org.junit.Assert.assertEquals;
 
 public class MoneyFieldsRuleTest {
@@ -17,7 +18,7 @@ public class MoneyFieldsRuleTest {
         // ARRANGE
         MoneyFieldsRule<Value> rule = new MoneyFieldsRule<>("money");
         List<String> inputs = new ArrayList<>();
-        Collections.addAll(inputs, "10.00", "200.19", "1000000.00");
+        addAll(inputs, "10.00", "200.19", "1000000.00");
 
         // ACT
         long validCount = inputs.stream()
@@ -38,7 +39,7 @@ public class MoneyFieldsRuleTest {
         // ARRANGE
         MoneyFieldsRule<Value> rule = new MoneyFieldsRule<>("money");
         List<String> inputs = new ArrayList<>();
-        Collections.addAll(inputs, null, "", "ten", "10", "10.0", "100.000", "1000,000.00");
+        addAll(inputs, null, "", "ten", "10", "10.0", "100.000", "1000,000.00");
 
         // ACT
         long validCount = inputs.stream()
