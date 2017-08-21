@@ -3,7 +3,6 @@ package scot.mygov.housing.postcode;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import scot.mygov.geosearch.api.models.Postcode;
 import scot.mygov.housing.modeltenancy.validation.ValidationUtil;
 import scot.mygov.validation.ValidationResultsBuilder;
 
@@ -45,16 +44,6 @@ public class PostcodeResource {
         }
 
         try {
-
-            // normalise the postcode
-
-            // look this postcode up using the postcode source.
-//            Postcode postcodeObj = postcodeSource.postcode(postcode);
-//            if (postcodeObj == null) {
-//                resultBuilder.issue(POSTCODE_PARAM, "Not a Scottish postcode");
-//                return Response.status(400).entity(resultBuilder.build()).build();
-//            }
-
             String normalisedPostcode = normalisePostcode(postcode);
             PostcodeServiceResults results = postcodeService.lookup(normalisedPostcode);
             return Response
@@ -69,7 +58,6 @@ public class PostcodeResource {
 
     private String postcodeParam(MultivaluedMap<String, String> params) {
         if (params.containsKey(POSTCODE_PARAM)) {
-            // the postcode param is case insensitive
             return params.getFirst(POSTCODE_PARAM).toUpperCase();
         } else {
             return null;
@@ -82,7 +70,7 @@ public class PostcodeResource {
         if (postcode.charAt(3) == ' ') {
             return postcode.toUpperCase();
         } else {
-            // ensure it contains a space
+            // ensure it contains a space before the final three characters
             int threeFromEnd = postcode.length() - 3;
             return String.format("%s %s", postcode.substring(0, threeFromEnd), postcode.substring(threeFromEnd));
         }

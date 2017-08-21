@@ -3,8 +3,6 @@ package scot.mygov.housing.rpz;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scot.mygov.housing.Healthcheck;
-import scot.mygov.housing.rpz.RPZResult;
-import scot.mygov.housing.rpz.RPZService;
 import scot.mygov.validation.ValidationResults;
 import scot.mygov.validation.ValidationResultsBuilder;
 

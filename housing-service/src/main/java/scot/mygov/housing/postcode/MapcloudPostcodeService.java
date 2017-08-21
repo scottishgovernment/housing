@@ -1,6 +1,5 @@
 package scot.mygov.housing.postcode;
 
-import org.apache.commons.lang3.StringUtils;
 import scot.mygov.housing.mapcloud.Mapcloud;
 import scot.mygov.housing.mapcloud.MapcloudException;
 import scot.mygov.housing.mapcloud.MapcloudResult;
@@ -11,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
  * Implement the PostcodeService exeption using a Mapcloud client.
@@ -56,7 +56,7 @@ public class MapcloudPostcodeService implements PostcodeService {
     }
 
     private void addIfNotEmpty(String value, List<String> list) {
-        if (!StringUtils.isEmpty(value)) {
+        if (!isEmpty(value)) {
             list.add(value);
         }
     }

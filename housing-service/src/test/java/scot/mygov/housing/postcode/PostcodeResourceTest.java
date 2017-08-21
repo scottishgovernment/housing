@@ -3,8 +3,6 @@ package scot.mygov.housing.postcode;
 import org.jboss.resteasy.specimpl.ResteasyUriBuilder;
 import org.jboss.resteasy.spi.ResteasyUriInfo;
 import org.junit.Test;
-import org.mockito.Mockito;
-import scot.mygov.geosearch.api.models.Postcode;
 import scot.mygov.validation.ValidationResults;
 
 import javax.ws.rs.core.Response;

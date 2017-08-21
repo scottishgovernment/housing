@@ -17,7 +17,6 @@ import scot.mygov.housing.cpi.model.CPIData;
 import scot.mygov.housing.mapcloud.Mapcloud;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

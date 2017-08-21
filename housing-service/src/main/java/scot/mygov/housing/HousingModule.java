@@ -33,10 +33,6 @@ import static java.util.Collections.singleton;
 @Module(injects = Housing.class)
 public class HousingModule {
 
-    public static final String GEO_HEALTH = "geosearch-health";
-
-    public static final String GEO_POSTCODES = "geosearch-postcodes";
-
     public static final String MAPCLOUD_TARGET = "mapcloudTarget";
 
     private static final Logger LOG = LoggerFactory.getLogger(HousingConfiguration.class);
@@ -51,18 +47,6 @@ public class HousingModule {
                 .validate();
         LOG.info("{}", configuration);
         return configuration.getConfiguration();
-    }
-
-    @Provides
-    @Named(GEO_HEALTH)
-    WebTarget geosearchHealth(Client client, HousingConfiguration configuration) {
-        return client.target(appendPath(configuration.getGeosearch(), "health"));
-    }
-
-    @Provides
-    @Named(GEO_POSTCODES)
-    WebTarget geosearchPostcode(Client client, HousingConfiguration configuration) {
-        return client.target(appendPath(configuration.getGeosearch(), "postcodes"));
     }
 
     @Provides
