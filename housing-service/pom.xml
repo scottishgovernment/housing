@@ -217,9 +217,8 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-          <!--<argLine>@{argLine} -Djava.awt.headless=true</argLine>-->
+          <argLine>@{argLine} -Djava.awt.headless=true</argLine>
         </configuration>
-
       </plugin>
 
       <plugin>
