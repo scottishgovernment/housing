@@ -15,6 +15,8 @@ import scot.mygov.housing.cpi.CPIService;
 import scot.mygov.housing.cpi.CPIServiceException;
 import scot.mygov.housing.cpi.model.CPIData;
 import scot.mygov.housing.mapcloud.Mapcloud;
+import scot.mygov.housing.rpz.RPZService;
+import scot.mygov.housing.rpz.RPZServiceException;
 
 import javax.inject.Inject;
 import javax.ws.rs.DefaultValue;
@@ -48,6 +50,9 @@ public class Healthcheck {
     CPIService cpiService;
 
     @Inject
+    RPZService esService;
+
+    @Inject
     Mapcloud mapcloud;
 
     @Inject
@@ -67,6 +72,7 @@ public class Healthcheck {
         addLicenseInfo(result, errors, warnings, data, licenseDays);
         addCPIInfo(result, errors, data);
         addPostcodeInfo(result, errors, data);
+        addRPZInfo(result, errors, data);
 
         boolean ok = errors.size() == 0;
         result.put("ok", ok);
@@ -178,6 +184,21 @@ public class Healthcheck {
         }
 
         result.put("postcode", ok);
+    }
+
+    private void addRPZInfo(ObjectNode result, ArrayNode errors, ObjectNode data) {
+        boolean ok = true;
+
+        try {
+            // This should never return a result. If the service is not available, an exception will be thrown
+            esService.rpz("906030092", LocalDate.MIN);
+        } catch (RPZServiceException e) {
+            LOG.error("Failed to get RPZ data", e);
+            errors.add("RPZ data is not available");
+            ok = false;
+        }
+
+        result.put("rpz", ok);
     }
 
     private MetricFilter forClass(Class clazz) {

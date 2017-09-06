@@ -80,11 +80,14 @@ public class RentPressureZoneResourceTest {
     public void returnsResultFromService() {
 
         // ARRANGE
-        RPZ rpz = new RPZ("title", LocalDate.MIN, LocalDate.MAX, 100, emptySet(), emptySet());
-        RPZResult result = new RPZResult.Builder().rpz(rpz).build();
+        double expectedMaxIncrease = 100;
+        String expectedTitle = "title";
+        RPZResult result = new RPZResult.Builder()
+                .inRentPressureZone(true)
+                .title(expectedTitle)
+                .maxIncrease(expectedMaxIncrease).build();
         RPZService service = rpzService(result);
         RentPressureZoneResource sut = new RentPressureZoneResource(service);
-        MultivaluedMap<String, String> params = null;
         URI uri = new ResteasyUriBuilder()
                 .queryParam("uprn", "validuprn")
                 .queryParam("date", "2012-10-10")
@@ -99,8 +102,8 @@ public class RentPressureZoneResourceTest {
         assertEquals(response.getStatus(), 200);
         RPZResult rpzResult = (RPZResult) response.getEntity();
         assertTrue(rpzResult.isInRentPressureZone());
-        assertEquals(rpzResult.getRentPressureZoneTitle(), rpz.getTitle());
-        assertEquals(rpzResult.getMaxIncrease(), rpz.getMaxRentIncrease(), 0);
+        assertEquals(rpzResult.getRentPressureZoneTitle(), expectedTitle);
+        assertEquals(rpzResult.getMaxIncrease(), expectedMaxIncrease, 0);
     }
 
     public RPZService rpzService(RPZResult result) {

@@ -13,6 +13,8 @@ public class HousingConfiguration {
 
     private URI cpiDataURI = URI.create("http://localhost:9200/housing-data/cpi/cpi/_source");
 
+    private URI rpzDataURI = URI.create("http://localhost:9200/housing-data/rpz/_search/template");
+
     private URI mapcloudURI = URI.create("https://api.themapcloud.com/");
 
     private String mapcloudUser = "";
@@ -50,9 +52,9 @@ public class HousingConfiguration {
         }
     }
 
-    public URI getCpiDataURI() {
-        return cpiDataURI;
-    }
+    public URI getCpiDataURI() { return cpiDataURI; }
+
+    public URI getRpzDataURI() { return rpzDataURI; }
 
     public URI getMapcloudURI() {
         return mapcloudURI;

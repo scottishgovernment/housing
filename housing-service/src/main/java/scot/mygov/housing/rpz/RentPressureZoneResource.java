@@ -61,7 +61,7 @@ public class RentPressureZoneResource {
             RPZResult result = rpzService.rpz(uprn, date);
             return Response.status(200).entity(result).build();
         } catch (RPZServiceException e) {
-            LOG.error("Failed to get rpz", e);
+            LOG.error("Failed to get scot.mygov.housing.rpz", e);
             return Response.status(503).entity("RPZ data not available").build();
         }
 

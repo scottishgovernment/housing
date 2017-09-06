@@ -37,12 +37,16 @@ public class RPZResult {
             return this;
         }
 
-        public Builder rpz(RPZ rpz) {
-            this.inRentPressureZone = true;
-            this.rentPressureZoneTitle = rpz.getTitle();
-            this.maxIncrease = rpz.getMaxRentIncrease();
+        public Builder title(String rentPressureZoneTitle) {
+            this.rentPressureZoneTitle = rentPressureZoneTitle;
             return this;
         }
+
+        public Builder maxIncrease(double maxIncrease) {
+            this.maxIncrease = maxIncrease;
+            return this;
+        }
+
 
         public RPZResult build() {
             return new RPZResult(inRentPressureZone, rentPressureZoneTitle, maxIncrease);

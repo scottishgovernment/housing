@@ -17,9 +17,14 @@ import scot.mygov.housing.cpi.CPIService;
 import scot.mygov.housing.cpi.CPIServiceException;
 import scot.mygov.housing.cpi.model.CPIData;
 import scot.mygov.housing.mapcloud.Mapcloud;
+import scot.mygov.housing.mapcloud.MapcloudException;
+import scot.mygov.housing.mapcloud.MapcloudResult;
+import scot.mygov.housing.mapcloud.MapcloudResults;
 import scot.mygov.housing.postcode.PostcodeService;
 import scot.mygov.housing.postcode.PostcodeServiceException;
 import scot.mygov.housing.postcode.PostcodeServiceResults;
+import scot.mygov.housing.rpz.ElasticSearchRPZService;
+import scot.mygov.housing.rpz.RPZServiceException;
 
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Invocation;
@@ -33,9 +38,11 @@ import java.util.SortedMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -52,11 +59,12 @@ public class HealthcheckTest {
     private MockHttpResponse response;
 
     @Before
-    public void setUp() throws URISyntaxException, CPIServiceException {
+    public void setUp() throws Exception {
         mapper = new ObjectMapper();
         healthcheck = new Healthcheck();
         healthcheck.metricRegistry = new MetricRegistry();
         healthcheck.mapcloud = new Mapcloud(mock(WebTarget.class), "", "", healthcheck.metricRegistry);
+        healthcheck.esService = mock(ElasticSearchRPZService.class);
         healthcheck.housingConfiguration = new HousingConfiguration();
         healthcheck.asposeLicense = anyValidLicense();
         healthcheck.cpiService = validCPIService();
@@ -182,6 +190,19 @@ public class HealthcheckTest {
         assertEquals(503, response.getStatus());
     }
 
+    @Test
+    public void notOkIfRPZServiceThrowsException() throws Exception {
+
+        when(healthcheck.esService.rpz(any(), any())).thenThrow(new RPZServiceException("Arg!"));
+
+        dispatcher.invoke(request, response);
+
+        JsonNode health = mapper.readTree(response.getContentAsString());
+        assertEquals("RPZ data is not unhealthy", false, health.get("rpz").asBoolean());
+        assertEquals(503, response.getStatus());
+    }
+
+
     private MetricRegistry mockMetricsRegistry(double errorFiveMinRate, double responseTimesFiveMinuteRate) {
 
         MetricRegistry registry = mock(MetricRegistry.class);
@@ -232,25 +253,6 @@ public class HealthcheckTest {
         return license;
     }
 
-    private WebTarget exceptionTarget() {
-        WebTarget target = mock(WebTarget.class);
-        Invocation.Builder builder = mock(Invocation.Builder.class);
-        when(builder.get()).thenThrow(new ProcessingException("processing exception"));
-        when(target.request()).thenReturn(builder);
-        return target;
-    }
-
-
-    private WebTarget target(int status) {
-        WebTarget target = mock(WebTarget.class);
-        Invocation.Builder builder = mock(Invocation.Builder.class);
-        Response response = mock(Response.class);
-        when(response.getStatus()).thenReturn(status);
-        when(builder.get()).thenReturn(response);
-        when(target.request()).thenReturn(builder);
-        return target;
-    }
-
     private CPIService cpiServiceWithData(CPIData cpiData) throws CPIServiceException {
         CPIService service = mock(CPIService.class);
         Mockito.when(service.cpiData()).thenReturn(cpiData);
@@ -274,27 +276,4 @@ public class HealthcheckTest {
         return service;
     }
 
-    private class DummyPostcodeService implements PostcodeService {
-        private final Timer responseTimes;
-
-        private final Counter requestCounter;
-
-        private final Counter errorCounter;
-
-        private final Meter requestMeter;
-
-        private final Meter errorMeter;
-
-        public DummyPostcodeService(MetricRegistry registry) {
-            this.responseTimes = registry.timer(MetricName.RESPONSE_TIMES.name(this));
-            this.requestCounter = registry.counter(MetricName.REQUESTS.name(this));
-            this.errorCounter = registry.counter(MetricName.ERRORS.name(this));
-            this.requestMeter = registry.meter(MetricName.REQUEST_RATE.name(this));
-            this.errorMeter = registry.meter(MetricName.ERROR_RATE.name(this));
-        }
-
-        public PostcodeServiceResults lookup(String postcode) throws PostcodeServiceException {
-            return null;
-        }
-    }
 }

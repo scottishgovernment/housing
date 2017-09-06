@@ -13,8 +13,7 @@ import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.modeltenancy.validation.ModelTenancyValidatorFactory;
 import scot.mygov.housing.postcode.PostcodeService;
 import scot.mygov.housing.postcode.MapcloudPostcodeService;
-import scot.mygov.housing.rpz.InMemoryRPZService;
-import scot.mygov.housing.rpz.RPZ;
+import scot.mygov.housing.rpz.ElasticSearchRPZService;
 import scot.mygov.housing.rpz.RPZService;
 import scot.mygov.validation.Validator;
 
@@ -23,14 +22,12 @@ import javax.inject.Singleton;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 import java.net.MalformedURLException;
-import java.time.LocalDate;
-
-import static java.util.Collections.singleton;
 
 @Module(injects = Housing.class)
 public class HousingModule {
 
     public static final String MAPCLOUD_TARGET = "mapcloudTarget";
+    public static final String ELASTICSEARCH_TARGET = "esTarget";
 
     private static final Logger LOG = LoggerFactory.getLogger(HousingConfiguration.class);
 
@@ -53,19 +50,21 @@ public class HousingModule {
     }
 
     @Provides
+    @Named(ELASTICSEARCH_TARGET)
+    WebTarget esTarget(Client client, HousingConfiguration configuration) {
+        return client.target(configuration.getRpzDataURI());
+    }
+
+    @Provides
     @Singleton
     Client client() {
         return new ResteasyClientBuilder().connectionPoolSize(10).build();
     }
 
+
     @Provides
-    RPZService rpzService(Mapcloud mapcloud) {
-        RPZ rpz = new RPZ("Davids flat",
-                LocalDate.of(2016, 1, 1),
-                LocalDate.of(2017, 1, 1), 1,
-                singleton("EH104AX"),
-                singleton(""));
-        return new InMemoryRPZService(singleton(rpz), mapcloud);
+    RPZService rpzService(Mapcloud mapcloud, @Named(ELASTICSEARCH_TARGET) WebTarget esTarget) {
+        return new ElasticSearchRPZService(mapcloud, esTarget);
     }
 
     @Provides

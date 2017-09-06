@@ -1,0 +1,27 @@
+{
+  "hits" : {
+    "total" : 1,
+    "hits" : [
+      {
+        "_index" : "housing-data",
+        "_type" : "rpz",
+        "_id" : "0d5d39e6cc1d36231039d79259009d8d",
+        "_score" : 1.0,
+        "_source" : {
+          "_rev" : "2-2802195f5a6afb0c319c86ed7315b8bb",
+          "name" : "FIXTURE: canCreateThenThenUpdateAnRPZ",
+          "fromDate" : "2010-01-01",
+          "toDate" : "2011-01-01",
+          "maxIncrease" : 1.5,
+          "postcodes" : [ ],
+          "uprns" : [
+            "906269783"
+          ],
+          "username" : "gudrun.greenfelder@hotmail.com",
+          "timestamp" : 1504514882944,
+          "id" : "0d5d39e6cc1d36231039d79259009d8d"
+        }
+      }
+    ]
+  }
+}

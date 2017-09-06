@@ -1,0 +1,50 @@
+{
+  "query":{
+    "bool":{
+      "must":{
+        "match_all":{}
+      },
+      "filter":{
+        "bool":{
+          "must":[
+            {
+            "type": {
+            "value": "rpz"
+            }
+            },
+            {
+              "range":{
+                "fromDate":{
+                  "lte":"{{date}}"
+                }
+              }
+            },
+            {
+              "range":{
+                "toDate":{
+                  "gte":"{{date}}"
+                }
+              }
+            },
+            {
+              "bool":{
+                "should":[
+                  {
+                    "term":{
+                      "postcodes":"{{postcode}}"
+                    }
+                  },
+                  {
+                    "term":{
+                      "uprns":"{{uprn}}"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}
