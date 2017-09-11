@@ -1,7 +1,9 @@
 package scot.mygov.housing.modeltenancy;
 
+import com.aspose.words.Document;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.junit.Test;
 import org.mockito.Mockito;
 import scot.mygov.housing.AsposeLicense;
@@ -9,6 +11,8 @@ import scot.mygov.housing.HousingConfiguration;
 import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.modeltenancy.validation.ObjectMother;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.Map;
 import java.util.Set;
 
@@ -30,12 +34,34 @@ public class ModelTenancyServiceTest {
     private final ModelTenancyJsonTemplateLoader jsonTemplateLoader = new ModelTenancyJsonTemplateLoader();
 
     @Test
-    public void greenpathSave() throws ModelTenancyServiceException {
+    public void canGeneratePDF() throws Exception {
 
+        // ARRANGE
         ModelTenancyDocumentTemplateLoader templateLoader = templateLoader();
         ModelTenancyService sut = new ModelTenancyService(templateLoader, fieldExtractor, jsonTemplateLoader);
+
+        // ACT
         ModelTenancy modelTenancy = om.anyTenancy();
-        sut.save(modelTenancy, DocumentType.PDF);
+        byte [] result = sut.save(modelTenancy, DocumentType.PDF);
+
+        // ASSERT - can parse it as a pdf
+        PDDocument document = PDDocument.load(new ByteArrayInputStream(result));
+        document.close();
+    }
+
+    @Test
+    public void canGenerateWordDocument() throws Exception {
+
+        // ARRANGE
+        ModelTenancyDocumentTemplateLoader templateLoader = templateLoader();
+        ModelTenancyService sut = new ModelTenancyService(templateLoader, fieldExtractor, jsonTemplateLoader);
+
+        // ACT
+        ModelTenancy modelTenancy = om.anyTenancy();
+        byte [] result = sut.save(modelTenancy, DocumentType.WORD);
+
+        // ASSERT - can parse it as a pdf
+        Document document = new Document(new ByteArrayInputStream(result));
     }
 
     @Test(expected = ModelTenancyServiceException.class)
