@@ -1,5 +1,6 @@
 package scot.mygov.housing.modeltenancy;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -8,6 +9,11 @@ import scot.mygov.housing.HousingConfiguration;
 import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.modeltenancy.validation.ObjectMother;
 
+import java.util.Map;
+import java.util.Set;
+
+import static java.util.Objects.isNull;
+import static java.util.stream.Collectors.toSet;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -29,7 +35,7 @@ public class ModelTenancyServiceTest {
         ModelTenancyDocumentTemplateLoader templateLoader = templateLoader();
         ModelTenancyService sut = new ModelTenancyService(templateLoader, fieldExtractor, jsonTemplateLoader);
         ModelTenancy modelTenancy = om.anyTenancy();
-        sut.save(modelTenancy);
+        sut.save(modelTenancy, DocumentType.PDF);
     }
 
     @Test(expected = ModelTenancyServiceException.class)
@@ -38,7 +44,7 @@ public class ModelTenancyServiceTest {
         ModelTenancyDocumentTemplateLoader templateLoader = exceptionThrowingTemplateLoader();
         ModelTenancyService sut = new ModelTenancyService(templateLoader, fieldExtractor, jsonTemplateLoader);
         ModelTenancy modelTenancy = om.anyTenancy();
-        sut.save(modelTenancy);
+        sut.save(modelTenancy, DocumentType.PDF);
     }
 
     @Test

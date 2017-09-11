@@ -47,9 +47,14 @@ public class ModelTenancyService {
         }
     }
 
-    public byte[] save(ModelTenancy modelTenancy) throws ModelTenancyServiceException {
+    public byte[] save(ModelTenancy modelTenancy, DocumentType type) throws ModelTenancyServiceException {
         Map<String, Object> fields = fieldExtractor.extractFields(modelTenancy);
         byte[] mergedDocument = executeMailMerge(fields);
+
+        if (type == DocumentType.WORD) {
+            return mergedDocument;
+        }
+        // render as a PDF
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         savePdf(mergedDocument, os);
         return os.toByteArray();

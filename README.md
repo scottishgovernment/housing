@@ -102,10 +102,11 @@ Returns the rent pressure zone information for a given postcode.  Example result
 
 Returns a template model tenancy JSON document.  This will include default values for conditional terms.
 
-`POST /modeltenancy`
+`POST /modeltenancy?type=<PDF|WORD>`
 
 Returns a filled out model tenancy PDF for the model tenancy documents returned
-to it, or a list of validations errors of the tenancy is not valid.
+to it, or a list of validations errors of the tenancy is not valid.  The type param can be used to specify wether
+to return a PDF or a WORD document (docx).  Type will default to PDF.
 
 'GET /postcode/address-lookup?postcode=<postcode>'
 
