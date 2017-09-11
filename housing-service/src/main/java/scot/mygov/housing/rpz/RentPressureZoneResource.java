@@ -60,11 +60,15 @@ public class RentPressureZoneResource {
         try {
             RPZResult result = rpzService.rpz(uprn, date);
             return Response.status(200).entity(result).build();
+        } catch (RPZServiceClientException e) {
+            LOG.error("Failed to get RPZResult:", e);
+            ValidationResultsBuilder resultBuilder = new ValidationResultsBuilder();
+            e.getErrors().entrySet().stream().forEach(entry -> resultBuilder.issue(entry.getKey(), entry.getValue()));
+            return Response.status(400).entity(resultBuilder.build()).build();
         } catch (RPZServiceException e) {
-            LOG.error("Failed to get scot.mygov.housing.rpz", e);
+            LOG.error("Failed to get RPZResult", e);
             return Response.status(503).entity("RPZ data not available").build();
         }
-
     }
 
     private ValidationResults validateRPZParams(MultivaluedMap<String, String> params) {

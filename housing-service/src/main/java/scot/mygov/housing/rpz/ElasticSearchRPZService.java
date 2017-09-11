@@ -16,6 +16,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import java.io.*;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -91,7 +92,11 @@ public class ElasticSearchRPZService implements RPZService {
             MapcloudResult result = results.getResults().get(0);
             return result.getPostcode();
         } catch (MapcloudException e) {
-            throw new RPZServiceException("Failed to fetch postcode for scot.mygov.housing.rpz", e);
+            if ("Failed to lookup postcode".equals(e.getMessage())) {
+                throw new RPZServiceClientException(Collections.singletonMap("uprn", "Invalid UPRN"));
+            } else {
+                throw new RPZServiceException("Failed to fetch postcode for UPRN: " + uprn, e);
+            }
         }
     }
 
