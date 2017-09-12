@@ -191,7 +191,7 @@ public class Healthcheck {
 
         try {
             // This should never return a result. If the service is not available, an exception will be thrown
-            esService.rpz("906030092", LocalDate.MIN);
+            esService.rpz("906030092", LocalDate.of(1970, 01, 01));
         } catch (RPZServiceException e) {
             LOG.error("Failed to get RPZ data", e);
             errors.add("RPZ data is not available");
