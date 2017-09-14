@@ -92,7 +92,7 @@ public class ElasticSearchRPZService implements RPZService {
             MapcloudResult result = results.getResults().get(0);
             return result.getPostcode();
         } catch (MapcloudException e) {
-            if ("Failed to lookup postcode".equals(e.getMessage())) {
+            if ("Failed to lookup uprn".equals(e.getMessage())) {
                 throw new RPZServiceClientException(Collections.singletonMap("uprn", "Invalid UPRN"));
             } else {
                 throw new RPZServiceException("Failed to fetch postcode for UPRN: " + uprn, e);

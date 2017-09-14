@@ -136,8 +136,8 @@ public class ElasticSearchRPZServiceTest {
 
     private Mapcloud exceptionThrowingMapcloud() throws MapcloudException {
         Mapcloud mapcloud = mock(Mapcloud.class);
-        when(mapcloud.lookupUprn(any())).thenThrow(new MapcloudException("", new RuntimeException("")));
-        when(mapcloud.lookupPostcode(any())).thenThrow(new MapcloudException("", new RuntimeException("")));
+        when(mapcloud.lookupUprn(any())).thenThrow(new MapcloudException("Failed to lookup uprn", new RuntimeException("")));
+        when(mapcloud.lookupPostcode(any())).thenThrow(new MapcloudException("Failed to lookup postcode", new RuntimeException("")));
         return mapcloud;
     }
 

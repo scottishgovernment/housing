@@ -4,6 +4,8 @@ import org.jboss.resteasy.specimpl.ResteasyUriBuilder;
 import org.jboss.resteasy.spi.ResteasyUriInfo;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mockito;
 import scot.mygov.validation.ValidationResults;
 
 import javax.ws.rs.core.MultivaluedMap;
@@ -13,11 +15,51 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.Collections;
 
+import static java.util.Collections.emptyMap;
 import static java.util.Collections.emptySet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 public class RentPressureZoneResourceTest {
+
+
+    @Test
+    public void serviceExceptionReturnServerError() throws RPZServiceException {
+
+        // ARRANGE
+        RentPressureZoneResource sut = new RentPressureZoneResource(exceptionThrowingRpzService());
+        URI uri = new ResteasyUriBuilder()
+                .queryParam("uprn", "validuprn")
+                .queryParam("date", "2012-10-10")
+                .build();
+        UriInfo uriInfo = new ResteasyUriInfo(uri);
+
+        // ACT
+        Response response = sut.rpz(uriInfo);
+
+        // ASSERT
+        assertEquals(response.getStatus(), 503);
+    }
+
+    @Test
+    public void clientExceptionReturnClientError() throws RPZServiceException {
+
+        // ARRANGE
+        RentPressureZoneResource sut = new RentPressureZoneResource(clientExceptionThrowingRpzService());
+        URI uri = new ResteasyUriBuilder()
+                .queryParam("uprn", "validuprn")
+                .queryParam("date", "2012-10-10")
+                .build();
+        UriInfo uriInfo = new ResteasyUriInfo(uri);
+
+        // ACT
+        Response response = sut.rpz(uriInfo);
+
+        // ASSERT
+        assertEquals(response.getStatus(), 400);
+    }
 
     @Test
     public void missingUprnReturnsError() {
@@ -104,6 +146,18 @@ public class RentPressureZoneResourceTest {
         assertTrue(rpzResult.isInRentPressureZone());
         assertEquals(rpzResult.getRentPressureZoneTitle(), expectedTitle);
         assertEquals(rpzResult.getMaxIncrease(), expectedMaxIncrease, 0);
+    }
+
+    public RPZService exceptionThrowingRpzService() throws RPZServiceException {
+        RPZService service = Mockito.mock(RPZService.class);
+        when(service.rpz(any(), any())).thenThrow(new RPZServiceException(""));
+        return service;
+    }
+
+    public RPZService clientExceptionThrowingRpzService() throws RPZServiceException {
+        RPZService service = Mockito.mock(RPZService.class);
+        when(service.rpz(any(), any())).thenThrow(new RPZServiceClientException(emptyMap()));
+        return service;
     }
 
     public RPZService rpzService(RPZResult result) {

@@ -7,4 +7,3 @@ public class PostcodeServiceException extends Exception {
     }
 
 }
-
