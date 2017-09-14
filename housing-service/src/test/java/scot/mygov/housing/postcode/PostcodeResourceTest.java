@@ -10,6 +10,7 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.Collections;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -74,6 +75,34 @@ public class PostcodeResourceTest {
     }
 
     @Test
+    public void returnsResultsFromServicePostcodeHasSpace() throws PostcodeServiceException {
+        // ARRANGE
+        PostcodeServiceResults expectedResults = greenpathResults();
+        PostcodeResource sut = new PostcodeResource(serviceWithResults(expectedResults));
+
+        // ACT
+        Response actual = sut.lookup(uriInfoWithPostcodeParam(scottishPostcodeWithSpace()));
+
+        // ASSERT
+        assertEquals(actual.getStatus(), 200);
+        PostcodeServiceResults actualResults = (PostcodeServiceResults) actual.getEntity();
+        assertResults(expectedResults, actualResults);
+    }
+
+    @Test
+    public void returns404IfNoResultsFromService() throws PostcodeServiceException {
+        // ARRANGE
+        PostcodeServiceResults expectedResults = emptyResults();
+        PostcodeResource sut = new PostcodeResource(serviceWithResults(expectedResults));
+
+        // ACT
+        Response actual = sut.lookup(uriInfoWithPostcodeParam(scottishPostcode()));
+
+        // ASSERT
+        assertEquals(actual.getStatus(), 404);
+    }
+
+    @Test
     public void exceptionFromServiceReturns503() throws PostcodeServiceException {
         // ARRANGE
         PostcodeResource sut = new PostcodeResource(exceptionThrowingService());
@@ -110,6 +139,13 @@ public class PostcodeResourceTest {
         results.setResults(singletonList(anyResult()));
         return results;
     }
+
+    private PostcodeServiceResults emptyResults() {
+        PostcodeServiceResults results = new PostcodeServiceResults();
+        results.setResults(emptyList());
+        return results;
+    }
+
     private PostcodeServiceResult anyResult() {
         PostcodeServiceResult result = new PostcodeServiceResult();
         result.setAddressLines(singletonList("address line 1"));
@@ -131,6 +167,10 @@ public class PostcodeResourceTest {
 
     private String scottishPostcode() {
         return "EH104AX";
+    }
+
+    private String scottishPostcodeWithSpace() {
+        return "EH10 4AX";
     }
 
 }

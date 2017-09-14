@@ -40,19 +40,32 @@ public class PostcodeResource {
         validate(postcode, resultBuilder);
 
         if (resultBuilder.hasIssues()) {
-            return Response.status(400).entity(resultBuilder.build()).build();
+            return Response
+                    .status(400)
+                    .entity(resultBuilder.build())
+                    .build();
         }
 
         try {
             String normalisedPostcode = normalisePostcode(postcode);
             PostcodeServiceResults results = postcodeService.lookup(normalisedPostcode);
+
+            if (results.getResults().isEmpty()) {
+                return Response
+                        .status(404)
+                        .build();
+            }
             return Response
                     .status(200)
                     .entity(results)
                     .build();
+
         } catch (PostcodeServiceException e) {
             LOG.error("Failed to get postcode", e);
-            return Response.status(503).entity("Postcode data not available").build();
+            return Response
+                    .status(503)
+                    .entity("Postcode data not available")
+                    .build();
         }
     }
 
@@ -67,13 +80,9 @@ public class PostcodeResource {
     private String normalisePostcode(String postcodeIn) {
         // make it upper case and remove all sapces
         String postcode = postcodeIn.toUpperCase().replace(" ", "");
-        if (postcode.charAt(3) == ' ') {
-            return postcode.toUpperCase();
-        } else {
-            // ensure it contains a space before the final three characters
-            int threeFromEnd = postcode.length() - 3;
-            return String.format("%s %s", postcode.substring(0, threeFromEnd), postcode.substring(threeFromEnd));
-        }
+        int threeFromEnd = postcode.length() - 3;
+        // ensure it contains a space before the final three characters
+        return String.format("%s %s", postcode.substring(0, threeFromEnd), postcode.substring(threeFromEnd));
     }
 
     private void validate(String postcode, ValidationResultsBuilder resultBuilder) {
