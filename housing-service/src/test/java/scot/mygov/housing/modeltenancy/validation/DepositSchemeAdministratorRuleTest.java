@@ -28,6 +28,37 @@ public class DepositSchemeAdministratorRuleTest {
     }
 
     @Test
+    public void accceptsEmptyAdmin() {
+        // ARRANGE
+        ModelTenancy modelTenancy = om.anyTenancy();
+        modelTenancy.setTenancyDepositSchemeAdministrator("");
+
+        // ACT
+        ValidationResultsBuilder resultsBuilder = new ValidationResultsBuilder();
+        sut.validate(modelTenancy, resultsBuilder);
+
+
+        // ASSERT
+        assertTrue(resultsBuilder.build().getIssues().isEmpty());
+    }
+
+    @Test
+    public void accceptsNullAdmin() {
+        // ARRANGE
+        ModelTenancy modelTenancy = om.anyTenancy();
+        modelTenancy.setTenancyDepositSchemeAdministrator(null);
+
+        // ACT
+        ValidationResultsBuilder resultsBuilder = new ValidationResultsBuilder();
+        sut.validate(modelTenancy, resultsBuilder);
+
+
+        // ASSERT
+        assertTrue(resultsBuilder.build().getIssues().isEmpty());
+    }
+
+
+    @Test
     public void rejectsUnrecognisedAdmin() {
         // ARRANGE
         ModelTenancy modelTenancy = om.anyTenancy();

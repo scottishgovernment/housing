@@ -28,9 +28,21 @@ import static org.mockito.Mockito.*;
 public class ElasticSearchRPZServiceTest {
 
     @Test(expected = RPZServiceException.class)
-    public void mapCloudExceptionWrappedAsExpected() throws RPZServiceException, MapcloudException, IOException {
+    public void mapCloudNotFoundExceptionWrappedAsExpected() throws RPZServiceException, MapcloudException, IOException {
         // ARRANGE
         RPZService service = new ElasticSearchRPZService(exceptionThrowingMapcloud(), anyTarget());
+
+        // ACT
+        RPZResult actual = service.rpz("anyUprn", now().plusDays(1000));
+
+        // ASSERT
+        assertFalse(actual.isInRentPressureZone());
+    }
+
+    @Test(expected = RPZServiceException.class)
+    public void mapCloudExceptionWrappedAsExpected() throws RPZServiceException, MapcloudException, IOException {
+        // ARRANGE
+        RPZService service = new ElasticSearchRPZService(exceptionThrowingMapcloudUnexpectedError(), anyTarget());
 
         // ACT
         RPZResult actual = service.rpz("anyUprn", now().plusDays(1000));
@@ -138,6 +150,13 @@ public class ElasticSearchRPZServiceTest {
         Mapcloud mapcloud = mock(Mapcloud.class);
         when(mapcloud.lookupUprn(any())).thenThrow(new MapcloudException("Failed to lookup uprn", new RuntimeException("")));
         when(mapcloud.lookupPostcode(any())).thenThrow(new MapcloudException("Failed to lookup postcode", new RuntimeException("")));
+        return mapcloud;
+    }
+
+    private Mapcloud exceptionThrowingMapcloudUnexpectedError() throws MapcloudException {
+        Mapcloud mapcloud = mock(Mapcloud.class);
+        when(mapcloud.lookupUprn(any())).thenThrow(new MapcloudException("Unexpected error", new RuntimeException("")));
+        when(mapcloud.lookupPostcode(any())).thenThrow(new MapcloudException("Unexpected error", new RuntimeException("")));
         return mapcloud;
     }
 
