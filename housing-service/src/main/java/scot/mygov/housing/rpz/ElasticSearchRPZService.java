@@ -67,11 +67,11 @@ public class ElasticSearchRPZService implements RPZService {
                     .readEntity(ObjectNode.class);
 
             if (isNull(result)) {
-                throw new RPZServiceException("Null result from Elastcisearch");
+                throw new RPZServiceException("Null result from Elasticsearch");
             }
 
             if (!result.has("hits")) {
-                throw new RPZServiceException("Invalid result from Elastcisearch (no hits). JSON: " + result.toString());
+                throw new RPZServiceException("Invalid result from Elasticsearch (no hits). JSON: " + result.toString());
             }
 
             return result;
