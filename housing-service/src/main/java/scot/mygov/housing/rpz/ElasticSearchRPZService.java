@@ -1,7 +1,6 @@
 package scot.mygov.housing.rpz;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.io.IOUtils;
 import scot.mygov.housing.mapcloud.Mapcloud;
