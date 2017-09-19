@@ -1,6 +1,7 @@
 package scot.mygov.housing.rpz;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.Test;
 
@@ -85,6 +86,28 @@ public class ElasticSearchRPZServiceTest {
 
         // ASSERT -- see expected exception
 
+    }
+
+    @Test(expected = RPZServiceException.class)
+    public void nullResultFromElasticsearchThrownAsException() throws RPZServiceException, MapcloudException, IOException {
+        // ARRANGE
+        RPZService service = new ElasticSearchRPZService(validMapcloud(), targetWithObjectNode(null));
+
+        // ACT
+        RPZResult actual = service.rpz("anyUprn", anyDate());
+
+        // ASSERT -- see expected exception
+    }
+
+    @Test(expected = RPZServiceException.class)
+    public void resultWithNoHitsFromElasticsearchThrownAsException() throws RPZServiceException, MapcloudException, IOException {
+        // ARRANGE
+        RPZService service = new ElasticSearchRPZService(validMapcloud(), targetWithObjectNode(JsonNodeFactory.instance.objectNode()));
+
+        // ACT
+        RPZResult actual = service.rpz("anyUprn", anyDate());
+
+        // ASSERT -- see expected exception
     }
 
     @Test

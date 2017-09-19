@@ -20,6 +20,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.util.Objects.isNull;
+
 
 /**
  * Created by z441571 on 30/08/2017.
@@ -58,13 +60,22 @@ public class ElasticSearchRPZService implements RPZService {
 
     private ObjectNode performQuery(ESTemplateQuery query) throws RPZServiceException {
         try{
-            return target.request()
+            ObjectNode result = target
+                    .request()
                     .accept(MediaType.APPLICATION_JSON_TYPE)
-                    .post(Entity.json(query)).readEntity(ObjectNode.class);
+                    .post(Entity.json(query))
+                    .readEntity(ObjectNode.class);
+
+            if (isNull(result) || !result.has("hits")) {
+                throw new RPZServiceException("Invalid result from Elastcisearch. Result = " + result);
+            }
+
+            return result;
         } catch (ProcessingException | WebApplicationException ex) {
             throw new RPZServiceException("Failed to execute query", ex);
         }
     }
+
     private ESTemplateQuery buildTemplateQuery(String uprn, String postcode, LocalDate date) throws RPZServiceException {
         Map<String, String> params = new HashMap<>();
         params.put("uprn", uprn);
