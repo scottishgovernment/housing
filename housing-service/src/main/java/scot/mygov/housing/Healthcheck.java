@@ -50,7 +50,7 @@ public class Healthcheck {
     CPIService cpiService;
 
     @Inject
-    RPZService esService;
+    RPZService rpzService;
 
     @Inject
     Mapcloud mapcloud;
@@ -190,8 +190,9 @@ public class Healthcheck {
         boolean ok = true;
 
         try {
+
             // This should never return a result. If the service is not available, an exception will be thrown
-            esService.rpz("906030092", LocalDate.of(1970, 1, 1));
+            rpzService.rpz("906030092", LocalDate.of(1970, 1, 1));
         } catch (RPZServiceException e) {
             LOG.error("Failed to get RPZ data", e);
             errors.add("RPZ data is not available");

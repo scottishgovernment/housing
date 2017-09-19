@@ -17,28 +17,16 @@ import scot.mygov.housing.cpi.CPIService;
 import scot.mygov.housing.cpi.CPIServiceException;
 import scot.mygov.housing.cpi.model.CPIData;
 import scot.mygov.housing.mapcloud.Mapcloud;
-import scot.mygov.housing.mapcloud.MapcloudException;
-import scot.mygov.housing.mapcloud.MapcloudResult;
-import scot.mygov.housing.mapcloud.MapcloudResults;
-import scot.mygov.housing.postcode.PostcodeService;
-import scot.mygov.housing.postcode.PostcodeServiceException;
-import scot.mygov.housing.postcode.PostcodeServiceResults;
 import scot.mygov.housing.rpz.ElasticSearchRPZService;
 import scot.mygov.housing.rpz.RPZServiceException;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.util.SortedMap;
-import java.util.Map;
 import java.util.TreeMap;
 
-import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -64,7 +52,7 @@ public class HealthcheckTest {
         healthcheck = new Healthcheck();
         healthcheck.metricRegistry = new MetricRegistry();
         healthcheck.mapcloud = new Mapcloud(mock(WebTarget.class), "", "", healthcheck.metricRegistry);
-        healthcheck.esService = mock(ElasticSearchRPZService.class);
+        healthcheck.rpzService = mock(ElasticSearchRPZService.class);
         healthcheck.housingConfiguration = new HousingConfiguration();
         healthcheck.asposeLicense = anyValidLicense();
         healthcheck.cpiService = validCPIService();
@@ -193,7 +181,7 @@ public class HealthcheckTest {
     @Test
     public void notOkIfRPZServiceThrowsException() throws Exception {
 
-        when(healthcheck.esService.rpz(any(), any())).thenThrow(new RPZServiceException("Arg!"));
+        when(healthcheck.rpzService.rpz(any(), any())).thenThrow(new RPZServiceException("Arg!"));
 
         dispatcher.invoke(request, response);
 

@@ -1,6 +1,7 @@
 package scot.mygov.housing.rpz;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.io.IOUtils;
 import scot.mygov.housing.mapcloud.Mapcloud;
@@ -66,8 +67,12 @@ public class ElasticSearchRPZService implements RPZService {
                     .post(Entity.json(query))
                     .readEntity(ObjectNode.class);
 
-            if (isNull(result) || !result.has("hits")) {
-                throw new RPZServiceException("Invalid result from Elastcisearch. Result = " + result);
+            if (isNull(result)) {
+                throw new RPZServiceException("Null result from Elastcisearch");
+            }
+
+            if (!result.has("hits")) {
+                throw new RPZServiceException("Invalid result from Elastcisearch (no hits). JSON: " + result.toString());
             }
 
             return result;
