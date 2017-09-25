@@ -3,6 +3,7 @@ package scot.mygov.housing;
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.Snapshot;
 import com.codahale.metrics.Timer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,11 +18,11 @@ import scot.mygov.housing.cpi.CPIService;
 import scot.mygov.housing.cpi.CPIServiceException;
 import scot.mygov.housing.cpi.model.CPIData;
 import scot.mygov.housing.mapcloud.Mapcloud;
-import scot.mygov.housing.rpz.ElasticSearchRPZService;
-import scot.mygov.housing.rpz.RPZServiceException;
 
+import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.SortedMap;
@@ -30,7 +31,6 @@ import java.util.TreeMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -52,10 +52,10 @@ public class HealthcheckTest {
         healthcheck = new Healthcheck();
         healthcheck.metricRegistry = new MetricRegistry();
         healthcheck.mapcloud = new Mapcloud(mock(WebTarget.class), "", "", healthcheck.metricRegistry);
-        healthcheck.rpzService = mock(ElasticSearchRPZService.class);
         healthcheck.housingConfiguration = new HousingConfiguration();
         healthcheck.asposeLicense = anyValidLicense();
         healthcheck.cpiService = validCPIService();
+        healthcheck.esRPZHealthTarget = validTarget();
         dispatcher = MockDispatcherFactory.createDispatcher();
         dispatcher.getRegistry().addSingletonResource(healthcheck);
         request = MockHttpRequest.get("health");
@@ -162,7 +162,7 @@ public class HealthcheckTest {
         dispatcher.invoke(request, response);
 
         JsonNode health = mapper.readTree(response.getContentAsString());
-        assertEquals("postcode not as expected", false, health.get("postcode").asBoolean());
+        assertEquals("postcode not as expected", false, health.get("Mapcloud lookups").asBoolean());
         assertEquals(503, response.getStatus());
     }
 
@@ -174,22 +174,21 @@ public class HealthcheckTest {
         dispatcher.invoke(request, response);
 
         JsonNode health = mapper.readTree(response.getContentAsString());
-        assertEquals("postcode not as expected", false, health.get("postcode").asBoolean());
+        assertEquals("postcode not as expected", false, health.get("Mapcloud lookups").asBoolean());
         assertEquals(503, response.getStatus());
     }
 
     @Test
-    public void notOkIfRPZServiceThrowsException() throws Exception {
+    public void notOKIfErrorFromEZRPZ() throws CPIServiceException, IOException, InterruptedException {
 
-        when(healthcheck.rpzService.rpz(any(), any())).thenThrow(new RPZServiceException("Arg!"));
+        this.healthcheck.esRPZHealthTarget = errorTarget();
 
         dispatcher.invoke(request, response);
 
         JsonNode health = mapper.readTree(response.getContentAsString());
-        assertEquals("RPZ data is not unhealthy", false, health.get("rpz").asBoolean());
+        assertEquals("error from postcode not as expected", false, health.get("RPZ Elasticsearch Data").asBoolean());
         assertEquals(503, response.getStatus());
     }
-
 
     private MetricRegistry mockMetricsRegistry(double errorFiveMinRate, double responseTimesFiveMinuteRate) {
 
@@ -203,7 +202,9 @@ public class HealthcheckTest {
         when(registry.getMeters(Mockito.any())).thenReturn(meters);
 
         SortedMap<String, Timer> timers = new TreeMap<>();
+        Snapshot snapshot = mock(Snapshot.class);
         Timer responseTimes = mock(Timer.class);
+        when(responseTimes.getSnapshot()).thenReturn(snapshot);
         when(responseTimes.getFiveMinuteRate()).thenReturn(responseTimesFiveMinuteRate);
         timers.put(MetricName.RESPONSE_TIMES.name(healthcheck.mapcloud), responseTimes);
         when(registry.getTimers()).thenReturn(timers);
@@ -264,4 +265,23 @@ public class HealthcheckTest {
         return service;
     }
 
+    private WebTarget validTarget() {
+        WebTarget target = mock(WebTarget.class);
+        Invocation.Builder builder = mock(Invocation.Builder.class);
+        Response response = mock(Response.class);
+        when(target.request()).thenReturn(builder);
+        when(builder.get()).thenReturn(response);
+        when(response.getStatus()).thenReturn(200);
+        return target;
+    }
+
+    private WebTarget errorTarget() {
+        WebTarget target = mock(WebTarget.class);
+        Invocation.Builder builder = mock(Invocation.Builder.class);
+        Response response = mock(Response.class);
+        when(target.request()).thenReturn(builder);
+        when(builder.get()).thenReturn(response);
+        when(response.getStatus()).thenReturn(500);
+        return target;
+    }
 }

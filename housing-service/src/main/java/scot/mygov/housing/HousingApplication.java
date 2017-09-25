@@ -1,6 +1,7 @@
 package scot.mygov.housing;
 
 import scot.mygov.housing.cpi.CPIResource;
+import scot.mygov.housing.mapcloud.Mapcloud;
 import scot.mygov.housing.modeltenancy.ModelTenancyResource;
 import scot.mygov.housing.postcode.PostcodeResource;
 import scot.mygov.housing.rpz.RentPressureZoneResource;
@@ -35,6 +36,9 @@ public class HousingApplication extends Application {
     @Inject
     RequestLogger logger;
 
+    @Inject
+    Mapcloud mapcloud;
+
     @Override
     public Set<Object> getSingletons() {
         return new HashSet<>(asList(
@@ -44,6 +48,7 @@ public class HousingApplication extends Application {
                 postcodeResource,
                 errorHandler,
                 healthcheck,
+                mapcloud,
                 logger
         ));
     }

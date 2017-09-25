@@ -15,11 +15,16 @@ public class HousingConfiguration {
 
     private URI rpzDataURI = URI.create("http://localhost:9200/housing-data/rpz/_search/template");
 
+    private URI rpzHealthURI = URI.create("http://localhost:9200/housing-data/rpz/_search");
+
     private URI mapcloudURI = URI.create("https://api.themapcloud.com/");
 
     private String mapcloudUser = "";
 
     private String mapcloudPassword = "";
+
+    // once per 5 minutes
+    private long mapcloudMonitoringInterval = 5;
 
     private String cpiGracePeriod = "PT12H";
 
@@ -56,6 +61,10 @@ public class HousingConfiguration {
 
     public URI getRpzDataURI() { return rpzDataURI; }
 
+    public URI getRpzHealthURI() {
+        return rpzHealthURI;
+    }
+
     public URI getMapcloudURI() {
         return mapcloudURI;
     }
@@ -66,5 +75,9 @@ public class HousingConfiguration {
 
     public String getMapcloudPassword() {
         return mapcloudPassword;
+    }
+
+    public long getMapcloudMonitoringInterval() {
+        return mapcloudMonitoringInterval;
     }
 }

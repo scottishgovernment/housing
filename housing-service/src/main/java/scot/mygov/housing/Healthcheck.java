@@ -2,9 +2,9 @@ package scot.mygov.housing;
 
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.Meter;
-import com.codahale.metrics.Metric;
 import com.codahale.metrics.MetricFilter;
 import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.Snapshot;
 import com.codahale.metrics.Timer;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
@@ -15,21 +15,24 @@ import scot.mygov.housing.cpi.CPIService;
 import scot.mygov.housing.cpi.CPIServiceException;
 import scot.mygov.housing.cpi.model.CPIData;
 import scot.mygov.housing.mapcloud.Mapcloud;
-import scot.mygov.housing.rpz.RPZService;
-import scot.mygov.housing.rpz.RPZServiceException;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.ProcessingException;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static java.lang.String.format;
 
@@ -39,6 +42,8 @@ import static java.lang.String.format;
 public class Healthcheck {
 
     private static final Logger LOG = LoggerFactory.getLogger(Healthcheck.class);
+
+    private static final double EPSILON = 0.00001;
 
     @Inject
     HousingConfiguration housingConfiguration;
@@ -50,13 +55,14 @@ public class Healthcheck {
     CPIService cpiService;
 
     @Inject
-    RPZService rpzService;
-
-    @Inject
     Mapcloud mapcloud;
 
     @Inject
     MetricRegistry metricRegistry;
+
+    @Named(HousingModule.ES_RPZ_HEALTH_TARGET)
+    @Inject
+    WebTarget esRPZHealthTarget;
 
     @GET
     public Response health(
@@ -71,8 +77,8 @@ public class Healthcheck {
 
         addLicenseInfo(result, errors, warnings, data, licenseDays);
         addCPIInfo(result, errors, data);
-        addPostcodeInfo(result, errors, data);
-        addRPZInfo(result, errors, data);
+        addMapcloudLookupMetricsInfo(result, errors, data);
+        addRPZElasticsearchInfo(result, errors, data);
 
         boolean ok = errors.size() == 0;
         result.put("ok", ok);
@@ -153,61 +159,88 @@ public class Healthcheck {
         result.put("cpi", ok);
     }
 
-    private void addPostcodeInfo(ObjectNode result, ArrayNode errors, ObjectNode data) {
+    private void addMapcloudLookupMetricsInfo(ObjectNode result, ArrayNode errors, ObjectNode data) {
 
         Meter errorRate = metricRegistry.getMeters().get(MetricName.ERROR_RATE.name(mapcloud));
         Timer timer = metricRegistry.getTimers().get(MetricName.RESPONSE_TIMES.name(mapcloud));
+        double responseTimeThreshold = housingConfiguration.getMapcloudResponseTimeThreshold();
+        boolean ok = errorRate.getFiveMinuteRate() == 0 && timer.getFiveMinuteRate() < responseTimeThreshold;
 
-        double responsetimeThreshold = housingConfiguration.getMapcloudResponseTimeThreshold();
-        boolean ok = errorRate.getFiveMinuteRate() == 0 && timer.getFiveMinuteRate() < responsetimeThreshold;
-
-        if (errorRate.getFiveMinuteRate() > 0) {
-            errors.add("Postcode errors in the last 5 minutes");
+        if (errorRate.getFiveMinuteRate() > EPSILON) {
+            errors.add("Mapcloud lookup errors in the last 5 minutes");
         }
 
-        if (timer.getFiveMinuteRate() > 500) {
-            errors.add("Postcode slow in the last 5 minutes");
+        if (timer.getFiveMinuteRate() > responseTimeThreshold) {
+            errors.add("Slow Mapcloud lookups in the last 5 minutes");
         }
 
         // collect all of the metrics for mapcloud and add them to the data
         MetricFilter filter = forClass(mapcloud.getClass());
         for (Map.Entry<String, Timer> entry : metricRegistry.getTimers(filter).entrySet()) {
-            data.put(entry.getKey(), entry.getValue().getFiveMinuteRate());
+            data.put(entry.getKey(), formatSnapshot(entry.getValue().getSnapshot()));
         }
 
         for (Map.Entry<String, Meter> entry : metricRegistry.getMeters(filter).entrySet()) {
-            data.put(entry.getKey(), entry.getValue().getFiveMinuteRate());
+            data.put(entry.getKey(), formatMeter(entry.getValue()));
         }
 
         for (Map.Entry<String, Counter> entry : metricRegistry.getCounters(filter).entrySet()) {
             data.put(entry.getKey(), entry.getValue().getCount());
         }
 
-        result.put("postcode", ok);
+        result.put("Mapcloud lookups", ok);
     }
 
-    private void addRPZInfo(ObjectNode result, ArrayNode errors, ObjectNode data) {
+    private String formatSnapshot(Snapshot ss) {
+        return String.format(
+                "min: %d, " +
+                "max: %d, " +
+                "mean: %.02f, " +
+                "median: %.02f, " +
+                "75th percentile: %.02f, " +
+                "95th percentile: %.02f, " +
+                "99th percentile: %.02f",
+                toMillis(ss.getMin()),
+                toMillis(ss.getMax()),
+                toMillis(ss.getMean()),
+                toMillis(ss.getMedian()),
+                toMillis(ss.get75thPercentile()),
+                toMillis(ss.get95thPercentile()),
+                toMillis(ss.get99thPercentile()));
+    }
+
+    private long toMillis(long nanos) {
+        return TimeUnit.MILLISECONDS.convert(nanos, TimeUnit.NANOSECONDS);
+    }
+
+    private double toMillis(double nanos) {
+        return nanos / TimeUnit.MILLISECONDS.toNanos(1);
+    }
+
+    private String formatMeter(Meter m) {
+        return String.format("count: %d, meanRate: %.02f, oneMinRate: %.02f, fiveMinRate: %.02f, fifteenMinRate: %.02f",
+                m.getCount(), m.getMeanRate(),
+                m.getOneMinuteRate(),  m.getFiveMinuteRate(), m.getFifteenMinuteRate() );
+    }
+
+    private void addRPZElasticsearchInfo(ObjectNode result, ArrayNode errors, ObjectNode data) {
         boolean ok = true;
-
         try {
+            Response response = esRPZHealthTarget.request().get();
 
-            // This should never return a result. If the service is not available, an exception will be thrown
-            rpzService.rpz("906030092", LocalDate.of(1970, 1, 1));
-        } catch (RPZServiceException e) {
-            LOG.error("Failed to get RPZ data", e);
-            errors.add("RPZ data is not available");
+            if (response.getStatus() != 200) {
+                ok = false;
+                errors.add("Non 200 response code from Elasticsearch RPZ health target: " + response.getStatus());
+            }
+        } catch (ProcessingException | WebApplicationException e) {
             ok = false;
+            errors.add("Exception trying to get RPZ data from ES:" + e.getMessage());
+            LOG.error("Failed to get RPZ info from Elasticsearch", e);
         }
-
-        result.put("rpz", ok);
-    }
+        result.put("RPZ Elasticsearch Data", ok);
+     }
 
     private MetricFilter forClass(Class clazz) {
-        return new MetricFilter() {
-            @Override
-            public boolean matches(String name, Metric metric) {
-                return name.startsWith(clazz.getName());
-            }
-        };
+        return (name, metric) -> name.startsWith(clazz.getName());
     }
 }

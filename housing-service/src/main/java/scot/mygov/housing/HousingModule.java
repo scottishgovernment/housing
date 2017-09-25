@@ -28,6 +28,7 @@ public class HousingModule {
 
     public static final String MAPCLOUD_TARGET = "mapcloudTarget";
     public static final String ELASTICSEARCH_TARGET = "esTarget";
+    public static final String ES_RPZ_HEALTH_TARGET = "esRPZHealthTarget";
 
     private static final Logger LOG = LoggerFactory.getLogger(HousingConfiguration.class);
 
@@ -53,6 +54,12 @@ public class HousingModule {
     @Named(ELASTICSEARCH_TARGET)
     WebTarget esTarget(Client client, HousingConfiguration configuration) {
         return client.target(configuration.getRpzDataURI());
+    }
+
+    @Provides
+    @Named(ES_RPZ_HEALTH_TARGET)
+    WebTarget rpzHealthTarget(Client client, HousingConfiguration configuration) {
+        return client.target(configuration.getRpzHealthURI());
     }
 
     @Provides
@@ -89,6 +96,7 @@ public class HousingModule {
     }
 
     @Provides
+    @Singleton
     Mapcloud mapcloud(
             HousingConfiguration config,
             MetricRegistry registry,
