@@ -232,6 +232,7 @@ public class Healthcheck {
                 ok = false;
                 errors.add("Non 200 response code from Elasticsearch RPZ health target: " + response.getStatus());
             }
+            response.close();
         } catch (ProcessingException | WebApplicationException e) {
             ok = false;
             errors.add("Exception trying to get RPZ data from ES:" + e.getMessage());
