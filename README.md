@@ -114,24 +114,17 @@ Returns the addresses for this postcode. The postcode parameter is case insensit
 spaces in them are recognised.  So the following parameter values will all return the same results:
 EH104AX, EH10 4AX, eh104ax, eh10 4ax.  The postcode returned will be in the normalised for, i.e. EH10 4AX
 
-The results will indicate if the postcode is valid via the validPostcode property.  They will also indicate if the
-psotcode is a within Scotland via the scottishPostcode property.
-
-The results property will contains a list of addreses for that postcode.  Currently this will only work for Scottish
-postcodes.
+The results property will contains a list of addresses for that postcode.
 
 Example results:
 {
-    "validPostcode": true,
-    "scottishPostcode": true,
     "results": [
-        {
-            "uprn": "906169837",
-            "addressLines": [
-                "145 MORNINGSIDE ROAD"
-            ],
-            "town": "EDINBURGH",
-            "postcode": "EH10 4AX"
-        }
+        "uprn": "906169837",
+        "building": "",
+        "org": "",
+        "street": "145 MORNINGSIDE ROAD",
+        "locality": "",
+        "town": "EDINBURGH",
+        "postcode": "EH10 4AX"
     ]
 }
