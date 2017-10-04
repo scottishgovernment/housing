@@ -1,6 +1,7 @@
 package scot.mygov.housing.mapcloud;
 
 import com.codahale.metrics.MetricRegistry;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 
@@ -19,7 +20,7 @@ public class MapcloudTest {
     public void greenpathPostcode() throws MapcloudException {
 
         // ARRANGE
-        MapcloudResults results = postcodeResults("eh104ax");
+        MapcloudResults results = postcodeResults("EH10 4AX");
         Mapcloud sut = new Mapcloud(targetWithResults(results), "", "", new MetricRegistry());
 
         // ACT
@@ -27,7 +28,7 @@ public class MapcloudTest {
 
         // ASSERT
         assertEquals(actual.getResults().size(), results.getResults().size());
-        assertEquals(actual.getResults().get(0).getPostcode(), "eh104ax");
+        assertEquals(actual.getResults().get(0).getPostcode(), "EH10 4AX");
     }
 
     @Test
@@ -84,25 +85,25 @@ public class MapcloudTest {
         return results;
     }
 
-    private MapcloudResult uprnResult(String uprn) {
-        MapcloudResult result = new MapcloudResult();
+    private DPAMapcloudResult uprnResult(String uprn) {
+        DPAMapcloudResult result = new DPAMapcloudResult();
         result.setUprn(uprn);
         result.setPostcode("EH10 4AX");
-        result.setAddressLine1("address line 1");
-        result.setAddressLine2("address line 2");
-        result.setAddressLine3("address line 3");
-        result.setTown("Edinburgh");
+        result.setAddressBuilding("address building");
+        result.setAddressStreet("address street");
+        result.setAddressLocality("address locality");
+        result.setPostTown("Edinburgh");
         return result;
     }
 
-    private MapcloudResult postcodeResult(String postcode) {
-        MapcloudResult result = new MapcloudResult();
+    private DPAMapcloudResult postcodeResult(String postcode) {
+        DPAMapcloudResult result = new DPAMapcloudResult();
         result.setUprn(RandomStringUtils.random(6));
         result.setPostcode(postcode);
-        result.setAddressLine1("address line 1");
-        result.setAddressLine2("address line 2");
-        result.setAddressLine3("address line 3");
-        result.setTown("Edinburgh");
+        result.setAddressBuilding("address building");
+        result.setAddressStreet("address street");
+        result.setAddressLocality("address locality");
+        result.setPostTown("Edinburgh");
         return result;
     }
 
@@ -113,6 +114,7 @@ public class MapcloudTest {
         when(target.queryParam(eq("uprn"), any())).thenReturn(target);
         when(target.queryParam(eq("pc"), any())).thenReturn(target);
         when(target.queryParam(eq("addrformat"), eq(2))).thenReturn(target);
+        when(target.queryParam(eq("datatype"), eq("dpa"))).thenReturn(target);
         when(target.request()).thenReturn(builder);
         Response response = mock(Response.class);
         when(response.getStatus()).thenReturn(200);
@@ -128,6 +130,7 @@ public class MapcloudTest {
         when(target.queryParam(eq("uprn"), any())).thenReturn(target);
         when(target.queryParam(eq("pc"), any())).thenReturn(target);
         when(target.queryParam(eq("addrformat"), eq(2))).thenReturn(target);
+        when(target.queryParam(eq("datatype"), eq("dpa"))).thenReturn(target);
         when(target.request()).thenReturn(builder);
         Response response = mock(Response.class);
         when(response.getStatus()).thenReturn(200);

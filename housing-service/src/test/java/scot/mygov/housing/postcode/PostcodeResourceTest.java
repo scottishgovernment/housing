@@ -90,7 +90,7 @@ public class PostcodeResourceTest {
     }
 
     @Test
-    public void returns404IfNoResultsFromService() throws PostcodeServiceException {
+    public void returnsEmptyListIfNoResultsFromService() throws PostcodeServiceException {
         // ARRANGE
         PostcodeServiceResults expectedResults = emptyResults();
         PostcodeResource sut = new PostcodeResource(serviceWithResults(expectedResults));
@@ -99,7 +99,9 @@ public class PostcodeResourceTest {
         Response actual = sut.lookup(uriInfoWithPostcodeParam(scottishPostcode()));
 
         // ASSERT
-        assertEquals(actual.getStatus(), 404);
+        assertEquals(actual.getStatus(), 200);
+        PostcodeServiceResults actualResults = (PostcodeServiceResults) actual.getEntity();
+        assertResults(expectedResults, actualResults);
     }
 
     @Test
@@ -148,7 +150,6 @@ public class PostcodeResourceTest {
 
     private PostcodeServiceResult anyResult() {
         PostcodeServiceResult result = new PostcodeServiceResult();
-        result.setAddressLines(singletonList("address line 1"));
         result.setUprn("uprn");
         result.setPostcode("EH10 4AX");
         result.setTown("Edinburgh");

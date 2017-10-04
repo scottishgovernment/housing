@@ -1,12 +1,13 @@
 package scot.mygov.housing.postcode;
 
-import java.util.List;
-
 public class PostcodeServiceResult {
 
     private String uprn;
 
-    private List<String> addressLines;
+    private String building;
+    private String org;
+    private String street;
+    private String locality;
     private String town;
     private String postcode;
 
@@ -18,12 +19,36 @@ public class PostcodeServiceResult {
         this.uprn = uprn;
     }
 
-    public List<String> getAddressLines() {
-        return addressLines;
+    public String getBuilding() {
+        return building;
     }
 
-    public void setAddressLines(List<String> addressLines) {
-        this.addressLines = addressLines;
+    public void setBuilding(String building) {
+        this.building = building;
+    }
+
+    public String getOrg() {
+        return org;
+    }
+
+    public void setOrg(String org) {
+        this.org = org;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getLocality() {
+        return locality;
+    }
+
+    public void setLocality(String locality) {
+        this.locality = locality;
     }
 
     public String getTown() {

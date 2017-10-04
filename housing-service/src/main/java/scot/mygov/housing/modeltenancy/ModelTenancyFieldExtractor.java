@@ -8,12 +8,13 @@ import scot.mygov.housing.modeltenancy.model.Address;
 import scot.mygov.housing.modeltenancy.model.AgentOrLandLord;
 import scot.mygov.housing.modeltenancy.model.CommunicationsAgreement;
 import scot.mygov.housing.modeltenancy.model.DepositSchemeAdministrator;
+import scot.mygov.housing.modeltenancy.model.Facility;
+import scot.mygov.housing.modeltenancy.model.FacilityType;
 import scot.mygov.housing.modeltenancy.model.Guarantor;
 import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.modeltenancy.model.OptionalTerms;
 import scot.mygov.housing.modeltenancy.model.Person;
 import scot.mygov.housing.modeltenancy.model.RentPaymentFrequency;
-import scot.mygov.housing.modeltenancy.model.Service;
 
 import javax.inject.Inject;
 import java.time.format.DateTimeFormatter;
@@ -24,6 +25,7 @@ import java.util.Map;
 import java.util.stream.IntStream;
 
 import static java.lang.String.format;
+import static java.lang.String.join;
 import static java.util.Collections.addAll;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
@@ -57,18 +59,13 @@ public class ModelTenancyFieldExtractor {
         extractLettingAgent(modelTenancy, fields);
         extractLandlords(modelTenancy, fields);
         extractCommunicationAgreement(modelTenancy, fields);
-
+        extractFacilities(modelTenancy, fields);
         fields.put("propertyAddress", addressFieldsMultipleLines(modelTenancy.getPropertyAddress()));
         fields.put("propertyType", modelTenancy.getPropertyType());
-        fields.put("propertyIncludedAreasOrFacilities", modelTenancy.getIncludedAreasOrFacilities());
-        fields.put("propertySharedFacilities", modelTenancy.getSharedFacilities());
-        fields.put("propertyExcludedAreasFacilities", modelTenancy.getExcludedAreasFacilities());
         fields.put("furnishingType", modelTenancy.getFurnishingType().toLowerCase());
-
         if (modelTenancy.isInRentPressureZone()) {
             fields.put("rentPressureZoneString", "is");
         }
-
         if (modelTenancy.isHmoProperty()) {
             fields.put("hmoString", "is");
             fields.put("hmoContactNumber", modelTenancy.getHmo24ContactNumber());
@@ -88,7 +85,6 @@ public class ModelTenancyFieldExtractor {
         fields.put("rentPaymentDayOrDate", modelTenancy.getRentPaymentDayOrDate());
         fields.put("rentPaymentSchedule", modelTenancy.getRentPaymentSchedule());
         fields.put("rentPaymentMethod", modelTenancy.getRentPaymentMethod());
-        fields.put("servicesIncludedInRent", servicesIncludedInRent(modelTenancy.getServicesIncludedInRent()));
         fields.put("depositAmount", modelTenancy.getDepositAmount());
         fields.put("depositSchemeAdministrator", modelTenancy.getTenancyDepositSchemeAdministrator());
         DepositSchemeAdministrator depositSchemeAdministrator =
@@ -97,6 +93,21 @@ public class ModelTenancyFieldExtractor {
         fields.put("depositSchemeContactDetails", depositSchemeAdministratorContactDetails);
         extractOptionalTerms(modelTenancy.getOptionalTerms(), fields);
         return fields;
+    }
+
+    private void extractFacilities(ModelTenancy modelTenancy, Map<String, Object> fields) {
+        extractFacilitiesOfType(modelTenancy, fields, FacilityType.INCLUDED, "propertyIncludedAreasOrFacilities");
+        extractFacilitiesOfType(modelTenancy, fields, FacilityType.EXCLUDED, "propertyExcludedAreasFacilities");
+        extractFacilitiesOfType(modelTenancy, fields, FacilityType.SHARED, "propertySharedFacilities");
+    }
+
+    private void extractFacilitiesOfType(ModelTenancy modelTenancy, Map<String, Object> fields, FacilityType type, String key) {
+        String facilitiesString = modelTenancy.getFacilities()
+                .stream()
+                .filter(f -> f.getType() == type)
+                .map(Facility::getName)
+                .collect(joining(", "));
+        fields.put(key, facilitiesString);
     }
 
     private void extractOptionalTerms(OptionalTerms optionalTerms, Map<String, Object> fields) {
@@ -233,10 +244,6 @@ public class ModelTenancyFieldExtractor {
 
     private String naForEmpty(String value) {
         return defaultForEmpty(value, NOT_APPLICABLE);
-    }
-
-    private String servicesIncludedInRent(List<Service> services) {
-        return services.stream().map(service -> service.getName() + " " + service.getValue()).collect(joining("\n"));
     }
 
     private String depositSchemeAdministratorContactDetails(DepositSchemeAdministrator administrator) {

@@ -3,11 +3,14 @@ package scot.mygov.housing.modeltenancy.validation;
 import scot.mygov.housing.modeltenancy.model.Address;
 import scot.mygov.housing.modeltenancy.model.AgentOrLandLord;
 import scot.mygov.housing.modeltenancy.model.CommunicationsAgreement;
+import scot.mygov.housing.modeltenancy.model.Facility;
+import scot.mygov.housing.modeltenancy.model.FacilityType;
 import scot.mygov.housing.modeltenancy.model.FurnishingType;
 import scot.mygov.housing.modeltenancy.model.Guarantor;
 import scot.mygov.housing.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.modeltenancy.model.Person;
 import scot.mygov.housing.modeltenancy.model.RentPaymentFrequency;
+import scot.mygov.housing.modeltenancy.model.ResponsiblePersonType;
 import scot.mygov.housing.modeltenancy.model.Service;
 
 import java.time.LocalDate;
@@ -44,26 +47,10 @@ public class ObjectMother {
         tenancy.setRentPaymentMethod("CASH");
         tenancy.setDepositAmount("300.00");
         tenancy.setTenancyDepositSchemeAdministrator("Letting Protection Service Scotland");
-        tenancy.setServicesIncludedInRent(anyServices());
+        tenancy.setServices(anyServices());
+        tenancy.setFacilities(anyFacilities());
         return tenancy;
     }
-
-    public List<Service> anyServices() {
-        List<Service> services = new ArrayList<>();
-
-        Service serviceWithMonetaryValue = new Service();
-        serviceWithMonetaryValue.setName("with monetary value");
-        serviceWithMonetaryValue.setValue("100.00");
-        services.add(serviceWithMonetaryValue);
-
-        Service serviceWithMonetaryValuePerYear = new Service();
-        serviceWithMonetaryValuePerYear.setName("with monetary value per year");
-        serviceWithMonetaryValuePerYear.setValue("100.00 per year");
-        services.add(serviceWithMonetaryValuePerYear);
-
-        return services;
-    }
-
 
     public ModelTenancy tenancyWithGuarentors() {
         ModelTenancy modelTenancy = anyTenancy();
@@ -293,6 +280,40 @@ public class ObjectMother {
 
     public String validPostcode() {
         return "EH104AX";
+    }
+
+    public List<Service> anyServices() {
+        List<Service> services = new ArrayList<>();
+
+        Service serviceWithMonetaryValue = new Service();
+        serviceWithMonetaryValue.setName("with monetary value");
+        serviceWithMonetaryValue.setValue("100.00");
+        serviceWithMonetaryValue.setResponsiblePersonType(ResponsiblePersonType.LETTING_AGENT_DELIVERED);
+        services.add(serviceWithMonetaryValue);
+
+        Service serviceWithMonetaryValuePerYear = new Service();
+        serviceWithMonetaryValuePerYear.setName("with monetary value per year");
+        serviceWithMonetaryValuePerYear.setValue("100.00 per year");
+        serviceWithMonetaryValue.setResponsiblePersonType(ResponsiblePersonType.LETTING_AGENT_PRIMARY_CONTACT);
+        services.add(serviceWithMonetaryValuePerYear);
+
+        return services;
+    }
+
+    public List<Facility> anyFacilities() {
+        List<Facility> facilities = new ArrayList<>();
+
+        Facility facility1 = new Facility();
+        facility1.setName("Excluded Facility");
+        facility1.setType(FacilityType.EXCLUDED);
+        facilities.add(facility1);
+
+        Facility facility2 = new Facility();
+        facility2.setName("Included Facility");
+        facility2.setType(FacilityType.INCLUDED);
+        facilities.add(facility2);
+
+        return facilities;
     }
 
 }

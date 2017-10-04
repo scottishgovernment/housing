@@ -48,7 +48,6 @@ public class ModelTenancyValidatorFactory {
                 new LettingAgentRule(),
                 new EnumsRule(),
                 new HMORule(),
-                new ServicesRule(),
                 new CommunicationsAgreementRule(),
                 new MandatoryFieldsRule(MANDATORY_FIELDS),
                 new MoneyFieldsRule(MONEY_FIELDS));

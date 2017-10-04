@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class MapcloudResult {
+public class LGGMapcloudResult {
 
     // always present
     private String uprn;
@@ -21,7 +21,6 @@ public class MapcloudResult {
     private String addressLine3;
     private String town;
     private String postcode;
-
 
     public String getUprn() {
         return uprn;

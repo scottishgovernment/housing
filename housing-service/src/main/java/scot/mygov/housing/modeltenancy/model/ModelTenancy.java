@@ -20,9 +20,6 @@ public class ModelTenancy {
     private String communicationsAgreement;
     private Address propertyAddress;
     private String propertyType;
-    private String includedAreasOrFacilities;
-    private String sharedFacilities;
-    private String excludedAreasFacilities;
     private List<String> landlordStructureList = new ArrayList<>();
     private String furnishingType;
     private boolean inRentPressureZone;
@@ -50,10 +47,12 @@ public class ModelTenancy {
     private String rentPaymentDayOrDate;
     private String rentPaymentSchedule;
     private String rentPaymentMethod;
-    private List<Service> servicesIncludedInRent = new ArrayList<>();
+    private List<Service> services = new ArrayList<>();
+    private List<Facility> facilities = new ArrayList<>();
     private String depositAmount;
     private String tenancyDepositSchemeAdministrator;
     private OptionalTerms optionalTerms = new OptionalTerms();
+
 
     public List<Person> getTenants() {
         return tenants;
@@ -109,30 +108,6 @@ public class ModelTenancy {
 
     public void setPropertyType(String propertyType) {
         this.propertyType = propertyType;
-    }
-
-    public String getIncludedAreasOrFacilities() {
-        return includedAreasOrFacilities;
-    }
-
-    public void setIncludedAreasOrFacilities(String includedAreasOrFacilities) {
-        this.includedAreasOrFacilities = includedAreasOrFacilities;
-    }
-
-    public String getSharedFacilities() {
-        return sharedFacilities;
-    }
-
-    public void setSharedFacilities(String sharedFacilities) {
-        this.sharedFacilities = sharedFacilities;
-    }
-
-    public String getExcludedAreasFacilities() {
-        return excludedAreasFacilities;
-    }
-
-    public void setExcludedAreasFacilities(String excludedAreasFacilities) {
-        this.excludedAreasFacilities = excludedAreasFacilities;
     }
 
     public List<String> getLandlordStructureList() {
@@ -271,12 +246,20 @@ public class ModelTenancy {
         this.rentPaymentMethod = rentPaymentMethod;
     }
 
-    public List<Service> getServicesIncludedInRent() {
-        return servicesIncludedInRent;
+    public List<Service> getServices() {
+        return services;
     }
 
-    public void setServicesIncludedInRent(List<Service> servicesIncludedInRent) {
-        this.servicesIncludedInRent = servicesIncludedInRent;
+    public void setServices(List<Service> services) {
+        this.services = services;
+    }
+
+    public List<Facility> getFacilities() {
+        return facilities;
+    }
+
+    public void setFacilities(List<Facility> facilities) {
+        this.facilities = facilities;
     }
 
     public String getDepositAmount() {

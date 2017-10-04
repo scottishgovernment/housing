@@ -60,7 +60,12 @@ public class Mapcloud {
             MapcloudResults results = mapcloudTarget
                     .path(url)
                     .queryParam(paramName, paramValue)
+                    // addrformat 2 specifies that the data should be returned in multiple lines.
                     .queryParam("addrformat", 2)
+                    // set the datatype to dpa: this is delivery point address.
+                    // This is to avoid returning things like "POND 1511M FROM THREEBURNFORD FARM 986M FROM UNNAMED ROAD"
+                    // which are returned by the default datatype of lgg
+                    .queryParam("datatype", "dpa")
                     .request()
                     .header("Authorization", authHeader)
                     .get(MapcloudResults.class);

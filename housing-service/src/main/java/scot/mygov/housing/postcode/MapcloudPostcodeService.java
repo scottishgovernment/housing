@@ -1,19 +1,17 @@
 package scot.mygov.housing.postcode;
 
+import scot.mygov.housing.mapcloud.DPAMapcloudResult;
 import scot.mygov.housing.mapcloud.Mapcloud;
 import scot.mygov.housing.mapcloud.MapcloudException;
-import scot.mygov.housing.mapcloud.MapcloudResult;
 import scot.mygov.housing.mapcloud.MapcloudResults;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
- * Implement the PostcodeService exeption using a Mapcloud client.
+ * Implement the PostcodeService interface using a Mapcloud client.
  */
 public class MapcloudPostcodeService implements PostcodeService {
 
@@ -33,7 +31,8 @@ public class MapcloudPostcodeService implements PostcodeService {
     }
 
     private PostcodeServiceResults toResults(MapcloudResults from) {
-        List<PostcodeServiceResult> to = from.getResults()
+        List<PostcodeServiceResult> to
+                = from.getResults()
                 .stream()
                 .map(this::toResult)
                 .collect(toList());
@@ -42,22 +41,16 @@ public class MapcloudPostcodeService implements PostcodeService {
         return res;
     }
 
-    private PostcodeServiceResult toResult(MapcloudResult from) {
+    private PostcodeServiceResult toResult(DPAMapcloudResult from) {
         PostcodeServiceResult to = new PostcodeServiceResult();
         to.setUprn(from.getUprn());
-        List<String> addessLines = new ArrayList<>();
-        addIfNotEmpty(from.getAddressLine1(), addessLines);
-        addIfNotEmpty(from.getAddressLine2(), addessLines);
-        addIfNotEmpty(from.getAddressLine3(), addessLines);
-        to.setAddressLines(addessLines);
-        to.setTown(from.getTown());
+        to.setBuilding(from.getAddressBuilding());
+        to.setOrg(from.getAddressOrg());
+        to.setStreet(from.getAddressStreet());
+        to.setLocality(from.getAddressLocality());
+        to.setTown(from.getPostTown());
         to.setPostcode(from.getPostcode());
         return to;
     }
 
-    private void addIfNotEmpty(String value, List<String> list) {
-        if (!isEmpty(value)) {
-            list.add(value);
-        }
-    }
 }

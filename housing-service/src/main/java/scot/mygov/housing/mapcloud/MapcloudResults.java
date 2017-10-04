@@ -11,7 +11,7 @@ public class MapcloudResults {
     private String dataType;
     private String addressType;
     private String errorCode;
-    private List<MapcloudResult> results;
+    private List<DPAMapcloudResult> results;
 
     public String getQuery() {
         return query;
@@ -69,11 +69,11 @@ public class MapcloudResults {
         this.errorCode = errorCode;
     }
 
-    public List<MapcloudResult> getResults() {
+    public List<DPAMapcloudResult> getResults() {
         return results;
     }
 
-    public void setResults(List<MapcloudResult> results) {
+    public void setResults(List<DPAMapcloudResult> results) {
         this.results = results;
     }
 }

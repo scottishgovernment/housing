@@ -49,12 +49,6 @@ public class PostcodeResource {
         try {
             String normalisedPostcode = normalisePostcode(postcode);
             PostcodeServiceResults results = postcodeService.lookup(normalisedPostcode);
-
-            if (results.getResults().isEmpty()) {
-                return Response
-                        .status(404)
-                        .build();
-            }
             return Response
                     .status(200)
                     .entity(results)

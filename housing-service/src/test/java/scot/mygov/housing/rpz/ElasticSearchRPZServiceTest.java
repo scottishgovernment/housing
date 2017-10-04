@@ -5,9 +5,10 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.Test;
 
+import scot.mygov.housing.mapcloud.DPAMapcloudResult;
 import scot.mygov.housing.mapcloud.Mapcloud;
 import scot.mygov.housing.mapcloud.MapcloudException;
-import scot.mygov.housing.mapcloud.MapcloudResult;
+import scot.mygov.housing.mapcloud.LGGMapcloudResult;
 import scot.mygov.housing.mapcloud.MapcloudResults;
 
 import javax.ws.rs.ProcessingException;
@@ -156,7 +157,7 @@ public class ElasticSearchRPZServiceTest {
 
     private MapcloudResults mapcloudResults(String uprn, String postcode) {
         MapcloudResults results = new MapcloudResults();
-        MapcloudResult result = new MapcloudResult();
+        DPAMapcloudResult result = new DPAMapcloudResult();
         result.setUprn(uprn);
         result.setPostcode(postcode);
         results.setResults(singletonList(result));
