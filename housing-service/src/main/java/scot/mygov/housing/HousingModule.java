@@ -7,10 +7,15 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scot.mygov.config.Configuration;
+import scot.mygov.documents.DocumentTemplateLoader;
 import scot.mygov.housing.cpi.CPIService;
+import scot.mygov.housing.forms.modeltenancy.ModelTenancyFieldExtractor;
+import scot.mygov.housing.forms.modeltenancy.model.ModelTenancy;
+import scot.mygov.housing.forms.rentadjudication.RentAdjudicationFieldExtractor;
+import scot.mygov.housing.forms.rentadjudication.RentAdjudicationService;
 import scot.mygov.housing.mapcloud.Mapcloud;
-import scot.mygov.housing.modeltenancy.model.ModelTenancy;
-import scot.mygov.housing.modeltenancy.validation.ModelTenancyValidatorFactory;
+import scot.mygov.housing.forms.modeltenancy.validation.ModelTenancyValidatorFactory;
+import scot.mygov.housing.forms.modeltenancy.ModelTenancyService;
 import scot.mygov.housing.postcode.PostcodeService;
 import scot.mygov.housing.postcode.MapcloudPostcodeService;
 import scot.mygov.housing.rpz.ElasticSearchRPZService;
@@ -26,13 +31,16 @@ import java.net.MalformedURLException;
 @Module(injects = Housing.class)
 public class HousingModule {
 
+    private static final Logger LOG = LoggerFactory.getLogger(HousingConfiguration.class);
+
     public static final String MAPCLOUD_TARGET = "mapcloudTarget";
     public static final String ELASTICSEARCH_TARGET = "esTarget";
     public static final String ES_RPZ_HEALTH_TARGET = "esRPZHealthTarget";
 
-    private static final Logger LOG = LoggerFactory.getLogger(HousingConfiguration.class);
-
     private static final String APP_NAME = "housing";
+
+    private static final String MODEL_TENANCY_TEMPLATE_LOADER = "modelTenancyTemplateLoader";
+    private static final String RENT_ADJUDICATION_TEMPLATE_LOADER = "rentAdjudicationTemplateLoader";
 
     @Provides
     @Singleton
@@ -116,5 +124,36 @@ public class HousingModule {
     @Singleton
     MetricRegistry metricsRegistry() {
         return new MetricRegistry();
+    }
+
+
+    @Provides
+    @Named(MODEL_TENANCY_TEMPLATE_LOADER)
+    @Singleton
+    DocumentTemplateLoader modelTenancyTemplateLoader(AsposeLicense asposeLicense) {
+        return new DocumentTemplateLoader(scot.mygov.housing.forms.modeltenancy.ModelTenancyService.DOCUMENT_TEMPLATE_PATH, asposeLicense);
+    }
+
+    @Provides
+    @Singleton
+    ModelTenancyService modelTenancyService(
+            @Named(MODEL_TENANCY_TEMPLATE_LOADER) DocumentTemplateLoader templateLoader) {
+        ModelTenancyFieldExtractor fieldExtractor = new ModelTenancyFieldExtractor();
+        return new ModelTenancyService(templateLoader, fieldExtractor);
+    }
+
+    @Provides
+    @Named(RENT_ADJUDICATION_TEMPLATE_LOADER)
+    @Singleton
+    DocumentTemplateLoader rentAdjudicationTemplateLoader(AsposeLicense asposeLicense) {
+        return new DocumentTemplateLoader(RentAdjudicationService.DOCUMENT_TEMPLATE_PATH, asposeLicense);
+    }
+
+    @Provides
+    @Singleton
+    RentAdjudicationService rentAdjudicationService(
+            @Named(RENT_ADJUDICATION_TEMPLATE_LOADER) DocumentTemplateLoader templateLoader) {
+        RentAdjudicationFieldExtractor fieldExtractor = new RentAdjudicationFieldExtractor();
+        return new RentAdjudicationService(templateLoader, fieldExtractor);
     }
 }

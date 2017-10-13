@@ -1,8 +1,9 @@
 package scot.mygov.housing;
 
 import scot.mygov.housing.cpi.CPIResource;
+import scot.mygov.housing.forms.modeltenancy.ModelTenancyResource;
+import scot.mygov.housing.forms.rentadjudication.RentAdjudicationResource;
 import scot.mygov.housing.mapcloud.Mapcloud;
-import scot.mygov.housing.modeltenancy.ModelTenancyResource;
 import scot.mygov.housing.postcode.PostcodeResource;
 import scot.mygov.housing.rpz.RentPressureZoneResource;
 
@@ -20,6 +21,9 @@ public class HousingApplication extends Application {
 
     @Inject
     ModelTenancyResource modelTenancy;
+
+    @Inject
+    RentAdjudicationResource rentAdjudication;
 
     @Inject
     CPIResource cpiResource;
@@ -44,6 +48,7 @@ public class HousingApplication extends Application {
         return new HashSet<>(asList(
                 rentPressureZone,
                 modelTenancy,
+                rentAdjudication,
                 cpiResource,
                 postcodeResource,
                 errorHandler,

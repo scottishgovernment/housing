@@ -3,7 +3,7 @@ package scot.mygov.housing.postcode;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import scot.mygov.housing.modeltenancy.validation.ValidationUtil;
+import scot.mygov.housing.forms.modeltenancy.validation.ValidationUtil;
 import scot.mygov.validation.ValidationResultsBuilder;
 
 import javax.inject.Inject;
