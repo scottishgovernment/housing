@@ -140,7 +140,6 @@ public class Healthcheck {
             Duration gracePeriod = Duration.parse(housingConfiguration.getCpiGracePeriod());
             LocalDateTime latestAcceptableReleaseTime = nextreleaseDate.plus(gracePeriod);
 
-            LocalDate oneMonthInPast = LocalDate.now().minusMonths(1);
             if (LocalDateTime.now().compareTo(latestAcceptableReleaseTime) > 0) {
                 // we have passed the data that the new data should have been released
                 errors.add("Next cpi release date has passed");
