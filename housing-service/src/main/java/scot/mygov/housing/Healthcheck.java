@@ -145,10 +145,6 @@ public class Healthcheck {
                 // we have passed the data that the new data should have been released
                 errors.add("Next cpi release date has passed");
                 ok = false;
-            } else if (oneMonthInPast.isAfter(releaseDate)) {
-                // the data is more than a month old
-                errors.add("Data is more than a month old");
-                ok = false;
             }
         } catch (CPIServiceException e) {
             LOG.error("Failed to get CPI data", e);

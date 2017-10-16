@@ -142,19 +142,6 @@ public class HealthcheckTest {
     }
 
     @Test
-    public void notOkWhenDataIsMoreThanAMonthOld() throws CPIServiceException, IOException {
-        LocalDate nextRelease = LocalDate.now().plusDays(1);
-        LocalDate release = LocalDate.now().minusMonths(1).minusDays(1);
-        this.healthcheck.cpiService = cpiServiceWithDates(nextRelease, release);
-
-        dispatcher.invoke(request, response);
-
-        assertEquals(503, response.getStatus());
-        JsonNode health = mapper.readTree(response.getContentAsString());
-        assertEquals("cpi not as expected", false, health.get("cpi").asBoolean());
-    }
-
-    @Test
     public void notOkPostcodeServiceHasErrors() throws CPIServiceException, IOException, InterruptedException {
 
         this.healthcheck.metricRegistry = mockMetricsRegistry(10, 0);
