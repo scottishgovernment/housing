@@ -1,6 +1,8 @@
 package scot.mygov.housing.modeltenancy.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 
@@ -11,6 +13,7 @@ import java.util.List;
 /**
  * POJO for model tenancy data
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ModelTenancy {
 
     private List<Person> tenants = new ArrayList<>();
