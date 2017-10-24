@@ -22,7 +22,6 @@ public class ModelTenancy {
     private String communicationsAgreement;
     private String propertyAddress;
     private String propertyType = "";
-    private List<String> landlordStructureList = new ArrayList<>();
     private String furnishingType  = "";
     private boolean inRentPressureZone;
     private boolean hmoProperty;
@@ -40,9 +39,6 @@ public class ModelTenancy {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate firstPaymentDate;
     private String firstPaymentAmount = "";
-    @JsonDeserialize(using= LocalDateDeserializer.class)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate firstPaymentPeriodStart;
     @JsonDeserialize(using= LocalDateDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate firstPaymentPeriodEnd;
@@ -114,14 +110,6 @@ public class ModelTenancy {
 
     public void setPropertyType(String propertyType) {
         this.propertyType = propertyType;
-    }
-
-    public List<String> getLandlordStructureList() {
-        return landlordStructureList;
-    }
-
-    public void setLandlordStructureList(List<String> landlordStructureList) {
-        this.landlordStructureList = landlordStructureList;
     }
 
     public String getFurnishingType() {
@@ -210,14 +198,6 @@ public class ModelTenancy {
 
     public void setFirstPaymentAmount(String firstPaymentAmount) {
         this.firstPaymentAmount = firstPaymentAmount;
-    }
-
-    public LocalDate getFirstPaymentPeriodStart() {
-        return firstPaymentPeriodStart;
-    }
-
-    public void setFirstPaymentPeriodStart(LocalDate firstPaymentPeriodStart) {
-        this.firstPaymentPeriodStart = firstPaymentPeriodStart;
     }
 
     public LocalDate getFirstPaymentPeriodEnd() {

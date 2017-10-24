@@ -182,7 +182,7 @@ public class ModelTenancyFieldExtractor {
         fields.put("advanceOrArrears", advanceOrArrears);
         fields.put("firstPaymentDate", formatDate(tenancy.getFirstPaymentDate()));
         fields.put("firstPaymentAmount", tenancy.getFirstPaymentAmount());
-        fields.put("firstPaymentPeriodStart", formatDate(tenancy.getFirstPaymentPeriodStart()));
+        fields.put("firstPaymentPeriodStart", formatDate(tenancy.getTenancyStartDate()));
         fields.put("firstPaymentPeriodEnd", formatDate(tenancy.getFirstPaymentPeriodEnd()));
         fields.put("rentPaymentDayOrDate", tenancy.getRentPaymentDayOrDate());
         fields.put("rentPaymentSchedule", tenancy.getRentPaymentSchedule());

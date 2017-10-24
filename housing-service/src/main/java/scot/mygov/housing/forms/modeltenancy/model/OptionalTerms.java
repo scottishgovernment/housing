@@ -13,7 +13,6 @@ public class OptionalTerms {
     private String dangerousSubstances;
     private String pets;
     private String smoking;
-    private String additionalTerms;
 
     public String getContentsAndConditions() {
         return contentsAndConditions;
@@ -109,13 +108,5 @@ public class OptionalTerms {
 
     public void setSmoking(String smoking) {
         this.smoking = smoking;
-    }
-
-    public String getAdditionalTerms() {
-        return additionalTerms;
-    }
-
-    public void setAdditionalTerms(String additionalTerms) {
-        this.additionalTerms = additionalTerms;
     }
 }

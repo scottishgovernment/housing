@@ -35,7 +35,6 @@ public class ModelTenancyObjectMother {
         tenancy.setRentAmount("200.00");
         tenancy.setFirstPaymentAmount("300.00");
         tenancy.setFirstPaymentDate(LocalDate.now());
-        tenancy.setFirstPaymentPeriodStart(LocalDate.now());
         tenancy.setFirstPaymentPeriodEnd(LocalDate.now());
         tenancy.setRentPaymentDayOrDate("Monday");
         tenancy.setRentPaymentSchedule("Second Monday of each month");
