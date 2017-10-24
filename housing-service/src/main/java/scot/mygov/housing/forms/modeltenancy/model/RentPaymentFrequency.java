@@ -18,4 +18,11 @@ public enum RentPaymentFrequency {
     public String getDescription() {
         return description;
     }
+
+    public static String description(String rpf) {
+        if (rpf == null) {
+            return "";
+        }
+        return RentPaymentFrequency.valueOf(rpf).getDescription();
+    }
 }

@@ -16,10 +16,6 @@ public class AddressValidator {
             return;
         }
 
-        if (StringUtils.isEmpty(address.getAddressLine1())) {
-            resultsBuilder.issue(field + "-addressline1", "Address must specify at least one line");
-        }
-
         // validate the postcode ... need postcode source.
         if (StringUtils.isEmpty(address.getPostcode())) {
             resultsBuilder.issue(field + "-postcode", "Mandatory");

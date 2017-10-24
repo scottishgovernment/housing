@@ -1,33 +1,42 @@
 package scot.mygov.housing.forms.modeltenancy.model;
 
 public class Address {
-    private String addressLine1;
-    private String addressLine2;
-    private String addressLine3;
+    private String building;
+    private String street;
+    private String region;
+    private String town;
     private String postcode;
 
-    public String getAddressLine1() {
-        return addressLine1;
+    public String getBuilding() {
+        return building;
     }
 
-    public void setAddressLine1(String addressLine1) {
-        this.addressLine1 = addressLine1;
+    public void setBuilding(String building) {
+        this.building = building;
     }
 
-    public String getAddressLine2() {
-        return addressLine2;
+    public String getStreet() {
+        return street;
     }
 
-    public void setAddressLine2(String addressLine2) {
-        this.addressLine2 = addressLine2;
+    public void setStreet(String street) {
+        this.street = street;
     }
 
-    public String getAddressLine3() {
-        return addressLine3;
+    public String getRegion() {
+        return region;
     }
 
-    public void setAddressLine3(String addressLine3) {
-        this.addressLine3 = addressLine3;
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+    public String getTown() {
+        return town;
+    }
+
+    public void setTown(String town) {
+        this.town = town;
     }
 
     public String getPostcode() {

@@ -25,13 +25,13 @@ public class DepositSchemeAdministrators {
                     .readValue(in, new TypeReference<List<DepositSchemeAdministrator>>(){});
             depositScemeAdministrators = administrators
                     .stream()
-                    .collect(toMap(DepositSchemeAdministrator::getName, identity()));
+                    .collect(toMap(admin -> admin.getName().toLowerCase(), identity()));
         } catch (IOException e) {
             throw new UnavailableResourceException("Unable to load deposit scheme adminstrators", e);
         }
     }
 
     public DepositSchemeAdministrator forName(String name) {
-        return depositScemeAdministrators.get(name);
+        return depositScemeAdministrators.get(name.toLowerCase());
     }
 }

@@ -163,7 +163,6 @@ public class ModelTenancyResourceTest {
         assertTrue(isNotEmpty(modelTenancy.getOptionalTerms().getDangerousSubstances()));
         assertTrue(isNotEmpty(modelTenancy.getOptionalTerms().getPets()));
         assertTrue(isNotEmpty(modelTenancy.getOptionalTerms().getSmoking()));
-        assertTrue(isNotEmpty(modelTenancy.getOptionalTerms().getLiquidPetroleumGas()));
     }
 
     @Test(expected = ModelTenancyServiceException.class)

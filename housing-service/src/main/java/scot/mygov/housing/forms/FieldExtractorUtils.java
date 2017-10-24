@@ -4,10 +4,12 @@ import scot.mygov.housing.forms.modeltenancy.model.Address;
 import scot.mygov.housing.forms.modeltenancy.model.Person;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static java.lang.String.format;
 import static java.util.Collections.addAll;
+import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -15,18 +17,23 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 public class FieldExtractorUtils {
 
-    private static final String NOT_APPLICABLE = "n/a";
+    public static final String NOT_APPLICABLE = "n/a";
 
     private FieldExtractorUtils() {
         // prevent instantiation
     }
 
     public static List<String> addressParts(Address address) {
+        if (address == null) {
+            return Collections.emptyList();
+        }
+
         List<String> parts = new ArrayList<>();
         addAll(parts,
-                address.getAddressLine1(),
-                address.getAddressLine2(),
-                address.getAddressLine3(),
+                address.getBuilding(),
+                address.getStreet(),
+                address.getRegion(),
+                address.getTown(),
                 address.getPostcode());
         return parts.stream().filter(part -> isNotEmpty(part)).collect(toList());
     }
@@ -61,4 +68,11 @@ public class FieldExtractorUtils {
         }
     }
 
+    public static Object defaultForNull(Object value, String defaultValue) {
+        if (isNull(value)) {
+            return defaultValue;
+        } else {
+            return value;
+        }
+    }
 }

@@ -3,15 +3,11 @@ package scot.mygov.housing.forms.modeltenancy.validation;
 import scot.mygov.housing.forms.modeltenancy.model.Address;
 import scot.mygov.housing.forms.modeltenancy.model.AgentOrLandLord;
 import scot.mygov.housing.forms.modeltenancy.model.CommunicationsAgreement;
-import scot.mygov.housing.forms.modeltenancy.model.Facility;
-import scot.mygov.housing.forms.modeltenancy.model.FacilityType;
 import scot.mygov.housing.forms.modeltenancy.model.FurnishingType;
 import scot.mygov.housing.forms.modeltenancy.model.Guarantor;
 import scot.mygov.housing.forms.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.forms.modeltenancy.model.Person;
 import scot.mygov.housing.forms.modeltenancy.model.RentPaymentFrequency;
-import scot.mygov.housing.forms.modeltenancy.model.ResponsiblePersonType;
-import scot.mygov.housing.forms.modeltenancy.model.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -30,7 +26,7 @@ public class ModelTenancyObjectMother {
         tenancy.setLettingAgent(anyAgentOrLandlord());
         tenancy.setLandlords(singletonList(anyAgentOrLandlord()));
         tenancy.setCommunicationsAgreement(CommunicationsAgreement.HARDCOPY.name());
-        tenancy.setPropertyAddress(validAddress());
+        tenancy.setPropertyAddress(validPropertyAddress());
         tenancy.setPropertyType("FLAT");
         tenancy.setFurnishingType(FurnishingType.FURNISHED.name());
         tenancy.setRentPaymentFrequency(RentPaymentFrequency.CALENDAR_MONTH.name());
@@ -46,8 +42,6 @@ public class ModelTenancyObjectMother {
         tenancy.setRentPaymentMethod("CASH");
         tenancy.setDepositAmount("300.00");
         tenancy.setTenancyDepositSchemeAdministrator("Letting Protection Service Scotland");
-        tenancy.setServices(anyServices());
-        tenancy.setFacilities(anyFacilities());
         return tenancy;
     }
 
@@ -132,8 +126,8 @@ public class ModelTenancyObjectMother {
         List<Address> addresses = new ArrayList<Address>();
         addAll(addresses,
                 oneLineAddress(),
-                twoLineAddress(),
-                threeLineAddress());
+                partialDataAddress(),
+                allDataAddress());
         return addresses;
     }
 
@@ -161,43 +155,66 @@ public class ModelTenancyObjectMother {
 
     public Address zeroLineAddress() {
         Address address = validAddress();
-        address.setAddressLine1("");
-        address.setAddressLine2("");
-        address.setAddressLine3("");
+        address.setBuilding("");
+        address.setStreet("");
+        address.setTown("");
+        address.setRegion("");
+        address.setPostcode("");
         return address;
     }
+
     public Address validAddress() {
-        return threeLineAddress();
+        return allDataAddress();
     }
 
-    public String validAdressFormatted() {
-        return "(1) name, 21 Some random street, Randomtown, Midlothian, EH104AX";
+    public Address validAddress(String prefix) {
+        return allDataAddress(prefix);
+    }
+
+    public String validPropertyAddress() {
+        return "111 Royal Mile\n" +
+                "Edinburgh" +
+                "EH10 4BT";
+    }
+
+    public String validAddressFormatted() {
+        return "(1) name, Dunroamin, 21 Some random street, Midlothian, Penicuik, EH104AX";
     }
 
     public Address oneLineAddress() {
         Address address = new Address();
-        address.setAddressLine1("21 Some random street");
+        address.setStreet("21 Some random street");
         address.setPostcode(validPostcode());
         return address;
     }
 
-    public Address twoLineAddress() {
+    public Address partialDataAddress() {
         Address address = new Address();
-        address.setAddressLine1("21 Some random street");
-        address.setAddressLine2("Randomtown");
+        address.setStreet("21 Some random street");
+        address.setTown("Randomtown");
         address.setPostcode(validPostcode());
         return address;
     }
 
-    public Address threeLineAddress() {
+    public Address allDataAddress() {
         Address address = new Address();
-        address.setAddressLine1("21 Some random street");
-        address.setAddressLine2("Randomtown");
-        address.setAddressLine3("Midlothian");
+        address.setBuilding("Dunroamin");
+        address.setStreet("21 Some random street");
+        address.setTown("Penicuik");
+        address.setRegion("Midlothian");
         address.setPostcode(validPostcode());
         return address;
     }
 
+    public Address allDataAddress(String prefix) {
+        Address address = new Address();
+        address.setBuilding(prefix + "Dunroamin");
+        address.setStreet(prefix + "21 Some random street");
+        address.setTown(prefix + "Penicuik");
+        address.setRegion(prefix + "Midlothian");
+        address.setPostcode(validPostcode());
+        return address;
+    }
     public Person validPerson() {
         return personWithAllFields();
     }
@@ -279,40 +296,6 @@ public class ModelTenancyObjectMother {
 
     public String validPostcode() {
         return "EH104AX";
-    }
-
-    public List<Service> anyServices() {
-        List<Service> services = new ArrayList<>();
-
-        Service serviceWithMonetaryValue = new Service();
-        serviceWithMonetaryValue.setName("with monetary value");
-        serviceWithMonetaryValue.setValue("100.00");
-        serviceWithMonetaryValue.setResponsiblePersonType(ResponsiblePersonType.LETTING_AGENT_DELIVERED);
-        services.add(serviceWithMonetaryValue);
-
-        Service serviceWithMonetaryValuePerYear = new Service();
-        serviceWithMonetaryValuePerYear.setName("with monetary value per year");
-        serviceWithMonetaryValuePerYear.setValue("100.00 per year");
-        serviceWithMonetaryValue.setResponsiblePersonType(ResponsiblePersonType.LETTING_AGENT_PRIMARY_CONTACT);
-        services.add(serviceWithMonetaryValuePerYear);
-
-        return services;
-    }
-
-    public List<Facility> anyFacilities() {
-        List<Facility> facilities = new ArrayList<>();
-
-        Facility facility1 = new Facility();
-        facility1.setName("Excluded Facility");
-        facility1.setType(FacilityType.EXCLUDED);
-        facilities.add(facility1);
-
-        Facility facility2 = new Facility();
-        facility2.setName("Included Facility");
-        facility2.setType(FacilityType.INCLUDED);
-        facilities.add(facility2);
-
-        return facilities;
     }
 
 }

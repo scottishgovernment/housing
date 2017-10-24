@@ -17,7 +17,7 @@ import static java.util.Collections.addAll;
 
 public class ModelTenancyService {
 
-    public static final String DOCUMENT_TEMPLATE_PATH = "/templates/model-tenancy-agreement.docx";
+    public static final String DOCUMENT_TEMPLATE_PATH = "/templates/model-tenancy-agreement-with-notes.docx";
 
     private final ModelTenancyFieldExtractor fieldExtractor;
 

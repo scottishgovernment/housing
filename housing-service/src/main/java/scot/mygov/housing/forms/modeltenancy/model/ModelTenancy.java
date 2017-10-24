@@ -20,41 +20,45 @@ public class ModelTenancy {
     private AgentOrLandLord lettingAgent;
     private List<AgentOrLandLord> landlords = new ArrayList<>();
     private String communicationsAgreement;
-    private Address propertyAddress;
-    private String propertyType;
+    private String propertyAddress;
+    private String propertyType = "";
     private List<String> landlordStructureList = new ArrayList<>();
-    private String furnishingType;
+    private String furnishingType  = "";
     private boolean inRentPressureZone;
     private boolean hmoProperty;
-    private String hmo24ContactNumber;
+    private String hmo24ContactNumber = "";
     @JsonDeserialize(using= LocalDateDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate hmoRegistrationExpiryDate;
     @JsonDeserialize(using= LocalDateDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate tenancyStartDate;
-    private String rentAmount;
-    private String rentPaymentFrequency;
+    private String rentAmount  = "";
+    private String rentPaymentFrequency = "";
     private boolean rentPayableInAdvance;
     @JsonDeserialize(using= LocalDateDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate firstPaymentDate;
-    private String firstPaymentAmount;
+    private String firstPaymentAmount = "";
     @JsonDeserialize(using= LocalDateDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate firstPaymentPeriodStart;
     @JsonDeserialize(using= LocalDateDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate firstPaymentPeriodEnd;
-    private String rentPaymentDayOrDate;
-    private String rentPaymentSchedule;
-    private String rentPaymentMethod;
-    private List<Service> services = new ArrayList<>();
-    private List<Facility> facilities = new ArrayList<>();
-    private String depositAmount;
-    private String tenancyDepositSchemeAdministrator;
+    private String rentPaymentDayOrDate = "";
+    private String rentPaymentSchedule = "";
+    private String rentPaymentMethod = "";
+    private List<Service> servicesIncludedInRent = new ArrayList<>();
+    private List<Service> servicesProvidedByLettingAgent = new ArrayList<>();
+    private List<Service> servicesLettingAgentIsFirstContactFor = new ArrayList<>();
+    private List<String> includedAreasOrFacilities = new ArrayList<>();
+    private List<String> excludedAreasFacilities = new ArrayList<>();
+    private List<String> sharedFacilities = new ArrayList<>();
+    private String depositAmount = "";
+    private String tenancyDepositSchemeAdministrator = "";
     private OptionalTerms optionalTerms = new OptionalTerms();
-
+    private List<Term> additionalTerms = new ArrayList<>();
 
     public List<Person> getTenants() {
         return tenants;
@@ -96,11 +100,11 @@ public class ModelTenancy {
         this.communicationsAgreement = communicationsAgreement;
     }
 
-    public Address getPropertyAddress() {
+    public String getPropertyAddress() {
         return propertyAddress;
     }
 
-    public void setPropertyAddress(Address propertyAddress) {
+    public void setPropertyAddress(String propertyAddress) {
         this.propertyAddress = propertyAddress;
     }
 
@@ -248,20 +252,52 @@ public class ModelTenancy {
         this.rentPaymentMethod = rentPaymentMethod;
     }
 
-    public List<Service> getServices() {
-        return services;
+    public List<Service> getServicesIncludedInRent() {
+        return servicesIncludedInRent;
     }
 
-    public void setServices(List<Service> services) {
-        this.services = services;
+    public void setServicesIncludedInRent(List<Service> servicesIncludedInRent) {
+        this.servicesIncludedInRent = servicesIncludedInRent;
     }
 
-    public List<Facility> getFacilities() {
-        return facilities;
+    public List<Service> getServicesProvidedByLettingAgent() {
+        return servicesProvidedByLettingAgent;
     }
 
-    public void setFacilities(List<Facility> facilities) {
-        this.facilities = facilities;
+    public void setServicesProvidedByLettingAgent(List<Service> servicesProvidedByLettingAgent) {
+        this.servicesProvidedByLettingAgent = servicesProvidedByLettingAgent;
+    }
+
+    public List<Service> getServicesLettingAgentIsFirstContactFor() {
+        return servicesLettingAgentIsFirstContactFor;
+    }
+
+    public void setServicesLettingAgentIsFirstContactFor(List<Service> servicesLettingAgentIsFirstContactFor) {
+        this.servicesLettingAgentIsFirstContactFor = servicesLettingAgentIsFirstContactFor;
+    }
+
+    public List<String> getIncludedAreasOrFacilities() {
+        return includedAreasOrFacilities;
+    }
+
+    public void setIncludedAreasOrFacilities(List<String> includedAreasOrFacilities) {
+        this.includedAreasOrFacilities = includedAreasOrFacilities;
+    }
+
+    public List<String> getExcludedAreasFacilities() {
+        return excludedAreasFacilities;
+    }
+
+    public void setExcludedAreasFacilities(List<String> excludedAreasFacilities) {
+        this.excludedAreasFacilities = excludedAreasFacilities;
+    }
+
+    public List<String> getSharedFacilities() {
+        return sharedFacilities;
+    }
+
+    public void setSharedFacilities(List<String> sharedFacilities) {
+        this.sharedFacilities = sharedFacilities;
     }
 
     public String getDepositAmount() {
@@ -286,5 +322,13 @@ public class ModelTenancy {
 
     public void setOptionalTerms(OptionalTerms optionalTerms) {
         this.optionalTerms = optionalTerms;
+    }
+
+    public List<Term> getAdditionalTerms() {
+        return additionalTerms;
+    }
+
+    public void setAdditionalTerms(List<Term> additionalTerms) {
+        this.additionalTerms = additionalTerms;
     }
 }

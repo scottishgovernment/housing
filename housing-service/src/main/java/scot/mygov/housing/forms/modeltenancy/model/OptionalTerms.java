@@ -2,9 +2,10 @@ package scot.mygov.housing.forms.modeltenancy.model;
 
 public class OptionalTerms {
     private String contentsAndConditions;
-    private String commonParts;
     private String localAuthorityTaxesAndCharges;
+    private String utilities;
     private String alterations;
+    private String commonParts;
     private String privateGarden;
     private String roof;
     private String binsAndRecycling;
@@ -12,9 +13,7 @@ public class OptionalTerms {
     private String dangerousSubstances;
     private String pets;
     private String smoking;
-    private String liquidPetroleumGas;
     private String additionalTerms;
-    private String utilities;
 
     public String getContentsAndConditions() {
         return contentsAndConditions;
@@ -28,16 +27,16 @@ public class OptionalTerms {
         return localAuthorityTaxesAndCharges;
     }
 
-    public String getCommonParts() {
-        return commonParts;
-    }
-
-    public void setCommonParts(String commonParts) {
-        this.commonParts = commonParts;
-    }
-
     public void setLocalAuthorityTaxesAndCharges(String localAuthorityTaxesAndCharges) {
         this.localAuthorityTaxesAndCharges = localAuthorityTaxesAndCharges;
+    }
+
+    public String getUtilities() {
+        return utilities;
+    }
+
+    public void setUtilities(String utilities) {
+        this.utilities = utilities;
     }
 
     public String getAlterations() {
@@ -46,6 +45,14 @@ public class OptionalTerms {
 
     public void setAlterations(String alterations) {
         this.alterations = alterations;
+    }
+
+    public String getCommonParts() {
+        return commonParts;
+    }
+
+    public void setCommonParts(String commonParts) {
+        this.commonParts = commonParts;
     }
 
     public String getPrivateGarden() {
@@ -104,27 +111,11 @@ public class OptionalTerms {
         this.smoking = smoking;
     }
 
-    public String getLiquidPetroleumGas() {
-        return liquidPetroleumGas;
-    }
-
-    public void setLiquidPetroleumGas(String liquidPetroleumGas) {
-        this.liquidPetroleumGas = liquidPetroleumGas;
-    }
-
     public String getAdditionalTerms() {
         return additionalTerms;
     }
 
     public void setAdditionalTerms(String additionalTerms) {
         this.additionalTerms = additionalTerms;
-    }
-
-    public String getUtilities() {
-        return utilities;
-    }
-
-    public void setUtilities(String utilities) {
-        this.utilities = utilities;
     }
 }

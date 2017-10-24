@@ -24,12 +24,12 @@ public class ModelTenancyFieldExtractorTest {
 
         // ARRANGE
         ModelTenancy modelTenancy = om.anyTenancy();
-        String expected = om.validAdressFormatted();
+        String expected = om.validAddressFormatted();
         // ACT
         Map<String, Object> actual = sut.extractFields(modelTenancy);
 
         // ASSERT
-        assertEquals(expected, actual.get("tenantNameAndAddresses"));
+        assertEquals(expected, actual.get("tenantNamesAndAddresses"));
         assertTrue(!StringUtils.isEmpty(actual.get("tenantEmails").toString()));
     }
 
@@ -44,24 +44,9 @@ public class ModelTenancyFieldExtractorTest {
         Map<String, Object> actual = sut.extractFields(modelTenancy);
 
         // ASSERT - no fields start with "lettingAgent"
-        assertEquals("_", actual.get("communicationsAgreementEmail"));
-
-        assertEquals(0, actual.keySet().stream().filter(key -> key.startsWith("lettingAgent")).count());
+        assertEquals(" ", actual.get("communicationsAgreementEmail"));
     }
 
-    @Test
-    public void canExtractGuarentorSignatureblock() {
-
-        // ARRANGE
-        ModelTenancy modelTenancy = om.tenancyWithGuarentors();
-        String expected = "(1) name, 21 Some random street, Randomtown, Midlothian, EH104AX";
-
-        // ACT
-        Map<String, Object> actual = sut.extractFields(modelTenancy);
-
-        // ASSERT
-        assertEquals(expected, actual.get("tenantNameAndAddresses"));
-    }
 
 
     @Test
@@ -108,8 +93,7 @@ public class ModelTenancyFieldExtractorTest {
 
         // ASSERT
         assertEquals("X", actual.get("communicationsAgreementEmail"));
-        assertEquals("_", actual.get("communicationsAgreementHardcopy"));
-        assertEquals("email", actual.get("communicationsAgreementType"));
+        assertEquals(" ", actual.get("communicationsAgreementHardcopy"));
     }
 
     @Test
@@ -123,9 +107,8 @@ public class ModelTenancyFieldExtractorTest {
         Map<String, Object> actual = sut.extractFields(modelTenancy);
 
         // ASSERT
-        assertEquals("_", actual.get("communicationsAgreementEmail"));
+        assertEquals(" ", actual.get("communicationsAgreementEmail"));
         assertEquals("X", actual.get("communicationsAgreementHardcopy"));
-        assertEquals("", actual.get("communicationsAgreementType"));
     }
 
     @Test

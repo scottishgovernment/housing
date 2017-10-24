@@ -8,15 +8,16 @@ import scot.mygov.housing.forms.modeltenancy.model.AgentOrLandLord;
 import scot.mygov.housing.forms.modeltenancy.model.CommunicationsAgreement;
 import scot.mygov.housing.forms.modeltenancy.model.DepositSchemeAdministrator;
 import scot.mygov.housing.forms.modeltenancy.model.DepositSchemeAdministrators;
-import scot.mygov.housing.forms.modeltenancy.model.Facility;
-import scot.mygov.housing.forms.modeltenancy.model.FacilityType;
 import scot.mygov.housing.forms.modeltenancy.model.Guarantor;
 import scot.mygov.housing.forms.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.forms.modeltenancy.model.OptionalTerms;
 import scot.mygov.housing.forms.modeltenancy.model.Person;
 import scot.mygov.housing.forms.modeltenancy.model.RentPaymentFrequency;
+import scot.mygov.housing.forms.modeltenancy.model.Service;
+import scot.mygov.housing.forms.modeltenancy.model.Term;
 
 import javax.inject.Inject;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,63 +50,193 @@ public class ModelTenancyFieldExtractor {
         // Default constructor
     }
 
-    public Map<String, Object> extractFields(ModelTenancy modelTenancy) {
+    public Map<String, Object> extractFields(ModelTenancy tenancy) {
         Map<String, Object> fields = new HashMap<>();
 
-        extractTenants(modelTenancy, fields);
-        extractGuarentorSignatureblock(modelTenancy, fields);
-        extractLettingAgent(modelTenancy, fields);
-        extractLandlords(modelTenancy, fields);
-        extractCommunicationAgreement(modelTenancy, fields);
-        extractFacilities(modelTenancy, fields);
-        fields.put("propertyAddress", addressFieldsMultipleLines(modelTenancy.getPropertyAddress()));
-        fields.put("propertyType", modelTenancy.getPropertyType());
-        fields.put("furnishingType", modelTenancy.getFurnishingType().toLowerCase());
-        if (modelTenancy.isInRentPressureZone()) {
-            fields.put("rentPressureZoneString", "is");
-        }
-        if (modelTenancy.isHmoProperty()) {
-            fields.put("hmoString", "is");
-            fields.put("hmoContactNumber", modelTenancy.getHmo24ContactNumber());
-            fields.put("hmoExpiryDate", dateFormatter.format(modelTenancy.getHmoRegistrationExpiryDate()));
-        }
+        // extract the fields - extract in the order they appear in the template for clarity.
+        extractTenants(tenancy, fields);
+        extractLettingAgent(tenancy, fields);
+        extractLandlords(tenancy, fields);
+        extractCommunicationAgreement(tenancy, fields);
+        extractPropertyDetails(tenancy, fields);
+        fields.put("tenancyStartDate", formatDate(tenancy.getTenancyStartDate()));
+        extractRent(tenancy, fields);
+        extractDeposit(tenancy, fields);
+        extractOptionalTerms(tenancy.getOptionalTerms(), fields);
+        extractAdditionalTerms(tenancy, fields);
+        extractGuarantorSignatureblock(tenancy, fields);
+        extractTenantSignatureblock(tenancy, fields);
+        extractLandlordSignatureblock(tenancy, fields);
 
-        fields.put("tenancyStartDate", dateFormatter.format(modelTenancy.getTenancyStartDate()));
-        fields.put("rentAmount", modelTenancy.getRentAmount());
-        fields.put("rentPaymentFrequency",
-                RentPaymentFrequency.valueOf(modelTenancy.getRentPaymentFrequency()).getDescription());
-        String advanceOrArrears = modelTenancy.isRentPayableInAdvance() ? "advance" : "arrears";
-        fields.put("advanceOrArrears", advanceOrArrears);
-        fields.put("firstPaymentDate", dateFormatter.format(modelTenancy.getFirstPaymentDate()));
-        fields.put("firstPaymentAmount", modelTenancy.getFirstPaymentAmount());
-        fields.put("firstPaymentPeriodStart", dateFormatter.format(modelTenancy.getFirstPaymentPeriodStart()));
-        fields.put("firstPaymentPeriodEnd", dateFormatter.format(modelTenancy.getFirstPaymentPeriodEnd()));
-        fields.put("rentPaymentDayOrDate", modelTenancy.getRentPaymentDayOrDate());
-        fields.put("rentPaymentSchedule", modelTenancy.getRentPaymentSchedule());
-        fields.put("rentPaymentMethod", modelTenancy.getRentPaymentMethod());
-        fields.put("depositAmount", modelTenancy.getDepositAmount());
-        fields.put("depositSchemeAdministrator", modelTenancy.getTenancyDepositSchemeAdministrator());
-        DepositSchemeAdministrator depositSchemeAdministrator =
-                depositScemeAdministrators.forName(modelTenancy.getTenancyDepositSchemeAdministrator());
-        String depositSchemeAdministratorContactDetails = depositSchemeAdministratorContactDetails(depositSchemeAdministrator);
-        fields.put("depositSchemeContactDetails", depositSchemeAdministratorContactDetails);
-        extractOptionalTerms(modelTenancy.getOptionalTerms(), fields);
         return fields;
     }
 
-    private void extractFacilities(ModelTenancy modelTenancy, Map<String, Object> fields) {
-        extractFacilitiesOfType(modelTenancy, fields, FacilityType.INCLUDED, "propertyIncludedAreasOrFacilities");
-        extractFacilitiesOfType(modelTenancy, fields, FacilityType.EXCLUDED, "propertyExcludedAreasFacilities");
-        extractFacilitiesOfType(modelTenancy, fields, FacilityType.SHARED, "propertySharedFacilities");
+    private void extractTenants(ModelTenancy tenancy, Map<String, Object> fields) {
+        List<String> namesAndAddresses = new ArrayList<>();
+        List<String> emails = new ArrayList<>();
+        List<String> phones = new ArrayList<>();
+
+        for (int i = 0; i < tenancy.getTenants().size(); i++) {
+            Person tenant = tenancy.getTenants().get(i);
+            int tenantIndex = i + 1;
+            namesAndAddresses.add(nameAndAddress(tenant, tenantIndex));
+            emails.add(numberedValue(tenant.getEmail(), tenantIndex));
+            phones.add(numberedValue(tenant.getTelephone(), tenantIndex));
+        }
+
+        fields.put("tenantNamesAndAddresses", namesAndAddresses.stream().collect(joining(NEWLINE)));
+        fields.put("tenantEmails", emails.stream().collect(joining(NEWLINE)));
+        fields.put("tenantPhoneNumbers", phones.stream().collect(joining(NEWLINE)));
+        extractTenantSignatureblock(tenancy, fields);
     }
 
-    private void extractFacilitiesOfType(ModelTenancy modelTenancy, Map<String, Object> fields, FacilityType type, String key) {
-        String facilitiesString = modelTenancy.getFacilities()
-                .stream()
-                .filter(f -> f.getType() == type)
-                .map(Facility::getName)
-                .collect(joining(", "));
-        fields.put(key, facilitiesString);
+    private void extractLettingAgent(ModelTenancy tenancy, Map<String, Object> fields) {
+        // letting agent is optional
+        if (tenancy.getLettingAgent() == null) {
+            fields.put("lettingAgentName", NOT_APPLICABLE);
+            fields.put("lettingAgentAddress", NOT_APPLICABLE);
+            fields.put("lettingAgentEmail", NOT_APPLICABLE);
+            fields.put("lettingAgentPhone", NOT_APPLICABLE);
+            fields.put("lettingAgentRegistrationNumber", NOT_APPLICABLE);
+            return;
+        }
+
+        AgentOrLandLord agent = tenancy.getLettingAgent();
+        fields.put("lettingAgentName", agent.getName());
+        fields.put("lettingAgentAddress", addressFieldsMultipleLines(agent.getAddress()));
+        fields.put("lettingAgentEmail", naForEmpty(agent.getEmail()));
+        fields.put("lettingAgentPhone", naForEmpty(agent.getTelephone()));
+        fields.put("lettingAgentRegistrationNumber", agent.getRegistrationNumber());
+    }
+
+    private void extractLandlords(ModelTenancy modelTenancy, Map<String, Object> fields) {
+        List<String> landlordNames = new ArrayList<>();
+        List<String> landlordAddresses = new ArrayList<>();
+        List<String> landlordEmails = new ArrayList<>();
+        List<String> landlordPhones = new ArrayList<>();
+        List<String> landlordRegNumbers = new ArrayList<>();
+
+        for (int i = 0; i < modelTenancy.getLandlords().size(); i++) {
+            AgentOrLandLord landlord = modelTenancy.getLandlords().get(i);
+            int landlordIndex = i + 1;
+            landlordNames.add(String.format("Name (%d): %s", landlordIndex, landlord.getName()));
+            landlordAddresses.add(String.format("Address (%d): %s%s%s",
+                    landlordIndex, NEWLINE, addressFieldsMultipleLines(landlord.getAddress()), NEWLINE));
+            landlordEmails.add(numberedValue(landlord.getEmail(), landlordIndex));
+            landlordPhones.add(numberedValue(landlord.getTelephone(), landlordIndex));
+            landlordRegNumbers.add(
+                    String.format("Registration number (Landlord %d):  %s", landlordIndex, regNumber(landlord)));
+        }
+        fields.put("landlordNames", landlordNames.stream().collect(joining(NEWLINE)));
+        fields.put("landlordAddresses", landlordAddresses.stream().collect(joining(NEWLINE)));
+        fields.put("landlordEmails", landlordEmails.stream().collect(joining(NEWLINE)));
+        fields.put("landlordPhones", landlordPhones.stream().collect(joining(NEWLINE)));
+        fields.put("landlordRegNumbers", landlordRegNumbers.stream().collect(joining(NEWLINE + NEWLINE)));
+    }
+
+    private void extractCommunicationAgreement(ModelTenancy tenancy, Map<String, Object> fields) {
+
+        if (Objects.isNull(tenancy.getCommunicationsAgreement())) {
+            return;
+        }
+
+        if (tenancy.getCommunicationsAgreement().equals(CommunicationsAgreement.HARDCOPY.name())) {
+            fields.put("communicationsAgreementHardcopy", "X");
+            fields.put("communicationsAgreementEmail", " ");
+        }
+
+        if (tenancy.getCommunicationsAgreement().equals(CommunicationsAgreement.EMAIL.name())) {
+            fields.put("communicationsAgreementHardcopy", " ");
+            fields.put("communicationsAgreementEmail", "X");
+        }
+    }
+
+    private void extractPropertyDetails(ModelTenancy tenancy, Map<String, Object> fields) {
+
+        fields.put("propertyAddress", tenancy.getPropertyAddress());
+        fields.put("propertyType", tenancy.getPropertyType());
+        fields.put("furnishingType", tenancy.getFurnishingType().toLowerCase());
+        if (tenancy.isInRentPressureZone()) {
+            fields.put("rentPressureZoneString", "is");
+        } else {
+            fields.put("rentPressureZoneString", "is not");
+        }
+        if (tenancy.isHmoProperty()) {
+            fields.put("hmoString", "is");
+            fields.put("hmoContactNumber", tenancy.getHmo24ContactNumber());
+            fields.put("hmoExpiryDate", formatDate(tenancy.getHmoRegistrationExpiryDate()));
+        } else {
+            fields.put("hmoString", "is not");
+            fields.put("hmoContactNumber", NOT_APPLICABLE);
+            fields.put("hmoExpiryDate", NOT_APPLICABLE);
+        }
+
+        extractServices(tenancy, fields);
+        extractFacilities(tenancy, fields);
+    }
+
+    public void extractRent(ModelTenancy tenancy, Map<String, Object> fields) {
+        fields.put("rentAmount", tenancy.getRentAmount());
+        fields.put("rentPaymentFrequency", RentPaymentFrequency.description(tenancy.getRentPaymentFrequency()));
+        String advanceOrArrears = tenancy.isRentPayableInAdvance() ? "advance" : "arrears";
+        fields.put("advanceOrArrears", advanceOrArrears);
+        fields.put("firstPaymentDate", formatDate(tenancy.getFirstPaymentDate()));
+        fields.put("firstPaymentAmount", tenancy.getFirstPaymentAmount());
+        fields.put("firstPaymentPeriodStart", formatDate(tenancy.getFirstPaymentPeriodStart()));
+        fields.put("firstPaymentPeriodEnd", formatDate(tenancy.getFirstPaymentPeriodEnd()));
+        fields.put("rentPaymentDayOrDate", tenancy.getRentPaymentDayOrDate());
+        fields.put("rentPaymentSchedule", tenancy.getRentPaymentSchedule());
+        fields.put("rentPaymentMethod", tenancy.getRentPaymentMethod());
+    }
+
+    public void extractDeposit(ModelTenancy tenancy, Map<String, Object> fields) {
+        fields.put("depositAmount", tenancy.getDepositAmount());
+        fields.put("depositSchemeAdministrator", tenancy.getTenancyDepositSchemeAdministrator());
+        DepositSchemeAdministrator depositSchemeAdministrator =
+                depositScemeAdministrators.forName(tenancy.getTenancyDepositSchemeAdministrator());
+        String depositSchemeAdministratorContactDetails = depositSchemeAdministratorContactDetails(depositSchemeAdministrator);
+        fields.put("depositSchemeContactDetails", depositSchemeAdministratorContactDetails);
+    }
+
+    public void extractAdditionalTerms(ModelTenancy tenancy, Map<String, Object> fields) {
+        if (tenancy.getAdditionalTerms().isEmpty()) {
+            fields.put("additionalTerms", NOT_APPLICABLE);
+            return;
+        }
+
+        String terms = tenancy.getAdditionalTerms().stream().map(this::formatTerm).collect(joining(NEWLINE));
+        fields.put("additionalTerms", terms);
+    }
+
+    private String formatTerm(Term term) {
+        return String.format("%s%s%s%s", term.getTitle(), NEWLINE, term.getContent(), NEWLINE);
+    }
+
+    private void extractServices(ModelTenancy tenancy, Map<String, Object> fields) {
+        extractServicesList(tenancy.getServicesIncludedInRent(), fields, "servicesIncludedInRent");
+        extractServicesList(tenancy.getServicesProvidedByLettingAgent(), fields, "lettingAgentServices");
+        extractServicesList(tenancy.getServicesLettingAgentIsFirstContactFor(), fields, "lettingAgentPointOfContactServices");
+    }
+
+    private void extractServicesList(List<Service> services, Map<String, Object> fields, String field) {
+        fields.put(field, services.stream().map(this::formatService).collect(joining(", ")));
+    }
+
+    private String formatService(Service service) {
+        if (StringUtils.isEmpty(service.getValue())) {
+            return service.getName();
+        } else {
+            return format("%s £%s", service.getName(), service.getValue());
+        }
+    }
+
+    private void extractFacilities(ModelTenancy tenancy, Map<String, Object> fields) {
+        fields.put("includedAreasOrFacilities",
+                naForEmpty(tenancy.getIncludedAreasOrFacilities().stream().collect(joining(", "))));
+        fields.put("excludedAreasFacilities",
+                naForEmpty(tenancy.getExcludedAreasFacilities().stream().collect(joining(", "))));
+        fields.put("sharedFacilities",
+                naForEmpty(tenancy.getSharedFacilities().stream().collect(joining(", "))));
     }
 
     private void extractOptionalTerms(OptionalTerms optionalTerms, Map<String, Object> fields) {
@@ -119,41 +250,10 @@ public class ModelTenancyFieldExtractor {
         }
     }
 
-    private void extractTenants(ModelTenancy modelTenancy, Map<String, Object> fields) {
-        List<String> names = new ArrayList<>();
-        List<String> emails = new ArrayList<>();
-        List<String> phones = new ArrayList<>();
-        IntStream.range(1, modelTenancy.getTenants().size() + 1).forEach(i -> {
-            Person tenant = modelTenancy.getTenants().get(i - 1);
-            names.add(nameAndAddress(tenant, i));
-            emails.add(numberedValue(tenant.getEmail(), i));
-            phones.add(numberedValue(tenant.getTelephone(), i));
-        });
-        fields.put("tenantNameAndAddresses", names.stream().collect(joining(NEWLINE)));
-        fields.put("tenantEmails", emails.stream().collect(joining(NEWLINE)));
-        fields.put("tenantPhoneNumbers", phones.stream().collect(joining(NEWLINE)));
-        extractTenantSignatureblock(modelTenancy, fields);
-    }
-
-    private void extractTenantSignatureblock(ModelTenancy modelTenancy, Map<String, Object> fields) {
+    private void extractGuarantorSignatureblock(ModelTenancy tenancy, Map<String, Object> fields) {
         List<String> signatureBlocks = new ArrayList<>();
-        IntStream.range(1, modelTenancy.getTenants().size() + 1).forEach(i -> {
-            Person tenant = modelTenancy.getTenants().get(i - 1);
-            List<String> parts = new ArrayList<String>();
-            addAll(parts,
-                format("Tenant %d Signature:", i),
-                format("Tenant Full Name:\t %s", tenant.getName()),
-                format("Tenant Address:\n %s", addressFieldsMultipleLines(tenant.getAddress())),
-                "Date: ");
-            signatureBlocks.add(parts.stream().collect(joining("\n")));
-        });
-        fields.put("tenantSignatures", signatureBlocks.stream().collect(joining("\n\n")));
-    }
-
-    private void extractGuarentorSignatureblock(ModelTenancy modelTenancy, Map<String, Object> fields) {
-        List<String> signatureBlocks = new ArrayList<>();
-        IntStream.range(1, modelTenancy.getGuarantors().size() + 1).forEach(i -> {
-            Guarantor guarantor = modelTenancy.getGuarantors().get(i - 1);
+        IntStream.range(1, tenancy.getGuarantors().size() + 1).forEach(i -> {
+            Guarantor guarantor = tenancy.getGuarantors().get(i - 1);
             List<String> parts = new ArrayList<String>();
             String tenantNames = guarantor.getTenantNames().stream().collect(joining(", "));
             addAll(parts,
@@ -165,59 +265,59 @@ public class ModelTenancyFieldExtractor {
                 "Date:\t");
             signatureBlocks.add(parts.stream().collect(joining("\n")));
         });
-        fields.put("guarentorSignatures", signatureBlocks.stream().collect(joining("\n\n")));
+        fields.put("guarentorSignatures", signatureBlocks.stream().collect(joining(NEWLINE + NEWLINE)));
     }
 
-    private void extractLandlords(ModelTenancy modelTenancy, Map<String, Object> fields) {
-        IntStream.range(1, modelTenancy.getLandlords().size() + 1).forEach(i -> {
-            AgentOrLandLord landlord = modelTenancy.getLandlords().get(i - 1);
-            fields.put("landlordName"+i, landlord.getName());
-            fields.put("landlordAddress"+i, addressFieldsMultipleLines(landlord.getAddress()));
-            fields.put("landlordEmail"+i, numberedValue(landlord.getEmail(), i));
-            fields.put("landlordPhone"+i, numberedValue(landlord.getTelephone(), i));
-            fields.put("landlordRegistrationNumber"+i, landlord.getRegistrationNumber());
-        });
+    private void extractTenantSignatureblock(ModelTenancy tenancy, Map<String, Object> fields) {
+        List<String> signatureBlocks = new ArrayList<>();
+        int index = 1;
+        for (Person tenant : tenancy.getLandlords()) {
+            List<String> parts = new ArrayList<String>();
+            addAll(parts,
+                    format("Tenant %d Full Name: %s", index, tenant.getName()),
+                    format("Tenant %d Address:%s%s",
+                            index, NEWLINE, addressFieldsMultipleLines(tenant.getAddress())),
+                    format("Tenant %d Signature:", index),
+                    format("Date:"),
+                    NEWLINE);
+            signatureBlocks.add(parts.stream().collect(joining(NEWLINE)));
+            index++;
+        }
+
+        fields.put("tenantSignatures", signatureBlocks.stream().collect(joining(NEWLINE)));
     }
 
-    private void extractLettingAgent(ModelTenancy modelTenancy, Map<String, Object> fields) {
-
-        // letting agent is optional
-        if (modelTenancy.getLettingAgent() == null) {
-            return;
+    private void extractLandlordSignatureblock(ModelTenancy tenancy, Map<String, Object> fields) {
+        List<String> signatureBlocks = new ArrayList<>();
+        int index = 1;
+        for (AgentOrLandLord landLord : tenancy.getLandlords()) {
+            List<String> parts = new ArrayList<String>();
+            addAll(parts,
+                    format("Landlord %d Full Name: %s", index, landLord.getName()),
+                    format("Landlord %d Address:%s%s",
+                            index, NEWLINE, addressFieldsMultipleLines(landLord.getAddress())),
+                    format("Landlord %d Signature:", index),
+                    format("Date:"),
+                    NEWLINE);
+            signatureBlocks.add(parts.stream().collect(joining(NEWLINE)));
+            index++;
         }
-
-        AgentOrLandLord agent = modelTenancy.getLettingAgent();
-        fields.put("lettingAgentName", agent.getName());
-        fields.put("lettingAgentAddress", addressFieldsMultipleLines(agent.getAddress()));
-        fields.put("lettingAgentEmail", naForEmpty(agent.getEmail()));
-        fields.put("lettingAgentPhone", naForEmpty(agent.getTelephone()));
-        fields.put("lettingAgentRegistrationNumber", agent.getRegistrationNumber());
-        fields.put("lettingAgentServices",
-                naForEmpty(agent.getAgentServices().stream().collect(joining(", "))));
-        fields.put("lettingAgentPointOfContact",
-                naForEmpty(agent.getPointOfContact().stream().collect(joining(", "))));
+        fields.put("landlordSignatures", signatureBlocks.stream().collect(joining(NEWLINE)));
     }
 
-    private void extractCommunicationAgreement(ModelTenancy modelTenancy, Map<String, Object> fields) {
-
-        if (Objects.isNull(modelTenancy.getCommunicationsAgreement())) {
-            return;
-        }
-
-        if (modelTenancy.getCommunicationsAgreement().equals(CommunicationsAgreement.HARDCOPY.name())) {
-            fields.put("communicationsAgreementHardcopy", "X");
-            fields.put("communicationsAgreementEmail", "_");
-            fields.put("communicationsAgreementType", "");
-        }
-
-        if (modelTenancy.getCommunicationsAgreement().equals(CommunicationsAgreement.EMAIL.name())) {
-            fields.put("communicationsAgreementHardcopy", "_");
-            fields.put("communicationsAgreementEmail", "X");
-            fields.put("communicationsAgreementType", "email");
+    private String regNumber(AgentOrLandLord landlord) {
+        if (StringUtils.isEmpty(landlord.getRegistrationNumber())) {
+            return "Pending – the Landlord will inform the Tenant of the Registration number once they have it";
+        } else {
+            return String.format("[%s]", landlord.getRegistrationNumber());
         }
     }
 
     private String depositSchemeAdministratorContactDetails(DepositSchemeAdministrator administrator) {
+        if (administrator == null) {
+            return "";
+        }
+
         List<String> parts = new ArrayList<>();
         addAll(parts,
                 administrator.getWebsite(),
@@ -227,4 +327,12 @@ public class ModelTenancyFieldExtractor {
                 .filter(StringUtils::isNotEmpty)
                 .collect(joining("\n"));
     }
+
+    private String formatDate(LocalDate date) {
+        if (date == null) {
+            return "";
+        }
+        return dateFormatter.format(date);
+    }
+
 }

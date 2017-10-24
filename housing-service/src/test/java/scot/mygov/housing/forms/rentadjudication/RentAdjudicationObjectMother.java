@@ -3,6 +3,7 @@ package scot.mygov.housing.forms.rentadjudication;
 import scot.mygov.housing.forms.modeltenancy.model.Address;
 import scot.mygov.housing.forms.modeltenancy.model.Person;
 import scot.mygov.housing.forms.modeltenancy.model.RentPaymentFrequency;
+import scot.mygov.housing.forms.modeltenancy.validation.ModelTenancyObjectMother;
 import scot.mygov.housing.forms.rentadjudication.model.RentAdjudication;
 import scot.mygov.housing.forms.rentadjudication.model.Room;
 
@@ -48,18 +49,9 @@ public class RentAdjudicationObjectMother {
     public static Person person(String prefix) {
         Person p = new Person();
         p.setName(prefix + "anyTenant");
-        p.setAddress(anyAddress(prefix));
+        p.setAddress(new ModelTenancyObjectMother().validAddress(prefix));
         p.setEmail(prefix + "@ddd.com");
         return p;
-    }
-
-    public static Address anyAddress(String prefix) {
-        Address a = new Address();
-        a.setAddressLine1(prefix + "adsressLine1");
-        a.setAddressLine2(prefix + "adsressLine2");
-        a.setAddressLine3(prefix + "adsressLine3");
-        a.setPostcode("EH10 4AX");
-        return a;
     }
 
     public static List<Room> someRooms() {
