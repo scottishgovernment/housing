@@ -17,7 +17,6 @@ public class ModelTenancyValidatorFactory {
         "propertyType",
         "tenancyStartDate",
         "firstPaymentDate",
-        "firstPaymentPeriodStart",
         "firstPaymentPeriodEnd",
         "rentPaymentMethod",
         "rentPaymentDayOrDate",
