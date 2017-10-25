@@ -1,11 +1,13 @@
 package scot.mygov.housing.forms.modeltenancy.validation;
 
+import scot.mygov.housing.forms.modeltenancy.OptionalTermsUtil;
 import scot.mygov.housing.forms.modeltenancy.model.Address;
 import scot.mygov.housing.forms.modeltenancy.model.AgentOrLandLord;
 import scot.mygov.housing.forms.modeltenancy.model.CommunicationsAgreement;
 import scot.mygov.housing.forms.modeltenancy.model.FurnishingType;
 import scot.mygov.housing.forms.modeltenancy.model.Guarantor;
 import scot.mygov.housing.forms.modeltenancy.model.ModelTenancy;
+import scot.mygov.housing.forms.modeltenancy.model.OptionalTerms;
 import scot.mygov.housing.forms.modeltenancy.model.Person;
 import scot.mygov.housing.forms.modeltenancy.model.RentPaymentFrequency;
 
@@ -41,6 +43,7 @@ public class ModelTenancyObjectMother {
         tenancy.setRentPaymentMethod("CASH");
         tenancy.setDepositAmount("300.00");
         tenancy.setTenancyDepositSchemeAdministrator("Letting Protection Service Scotland");
+        tenancy.setOptionalTerms(OptionalTermsUtil.defaultTerms());
         return tenancy;
     }
 

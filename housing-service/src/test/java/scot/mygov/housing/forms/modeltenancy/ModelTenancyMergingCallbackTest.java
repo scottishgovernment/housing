@@ -1,5 +1,6 @@
 package scot.mygov.housing.forms.modeltenancy;
 
+import com.aspose.words.Document;
 import com.aspose.words.Field;
 import com.aspose.words.FieldMergingArgs;
 import com.aspose.words.FieldStart;
@@ -8,6 +9,7 @@ import com.aspose.words.Section;
 import org.junit.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
+import scot.mygov.housing.forms.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.forms.modeltenancy.validation.ModelTenancyObjectMother;
 
 import static org.mockito.Mockito.mock;
@@ -87,6 +89,57 @@ public class ModelTenancyMergingCallbackTest {
         verify(ancestor, Mockito.never()).remove();
     }
 
+    @Test
+    public void emptyEasyreadNotesRemoved() throws Exception {
+
+        // ARRANGE
+        ModelTenancy tenancy = om.anyTenancy();
+        tenancy.getOptionalTerms().setUtilities("");
+        ModelTenancyMergingCallback sut = new ModelTenancyMergingCallback(tenancy);
+        FieldMergingArgs args = mock(FieldMergingArgs.class);
+        when(args.getFieldValue()).thenReturn("");
+        when(args.getFieldName()).thenReturn("utilitiesEasyreadNotes");
+        Field field = mock(Field.class);
+        FieldStart fieldStart = mock(FieldStart.class);
+        Node ancestor = mock(Section.class);
+
+        when(args.getField()).thenReturn(field);
+        when(field.getStart()).thenReturn(fieldStart);
+        when(fieldStart.getAncestor(ArgumentMatchers.any())).thenReturn(ancestor);
+        when(args.getDocument()).thenReturn(new Document());
+
+        //  ACT
+        sut.fieldMerging(args);
+
+        // ASSERT
+        verify(ancestor, Mockito.atLeastOnce()).remove();
+    }
+
+    @Test
+    public void utilitiesEasyreadNotesUsePlaceholderForChangedNotes() throws Exception {
+
+        // ARRANGE
+        ModelTenancy tenancy = om.anyTenancy();
+        tenancy.getOptionalTerms().setUtilities("changed");
+
+        ModelTenancyMergingCallback sut = new ModelTenancyMergingCallback(om.anyTenancy());
+        FieldMergingArgs args = mock(FieldMergingArgs.class);
+        when(args.getFieldValue()).thenReturn("changed");
+        when(args.getFieldName()).thenReturn("utilitiesEasyreadNotes");
+        Field field = mock(Field.class);
+        FieldStart fieldStart = mock(FieldStart.class);
+        Node ancestor = mock(Section.class);
+
+        when(args.getField()).thenReturn(field);
+        when(field.getStart()).thenReturn(fieldStart);
+        when(fieldStart.getAncestor(ArgumentMatchers.any())).thenReturn(ancestor);
+        when(args.getDocument()).thenReturn(new Document());
+
+        //  ACT
+        sut.fieldMerging(args);
+
+        // ASSERT
+    }
 
     @Test
     public void imageFieldMergingDoesNothing() throws Exception {
