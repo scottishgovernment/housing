@@ -44,6 +44,29 @@ public class ModelTenancyMergingCallbackTest {
     }
 
     @Test
+    public void removesSectionWithNullField() throws Exception {
+
+        // ARRANGE
+        ModelTenancyMergingCallback sut = new ModelTenancyMergingCallback(om.anyTenancy());
+        FieldMergingArgs args = mock(FieldMergingArgs.class);
+        when(args.getFieldValue()).thenReturn(null);
+        when(args.getFieldName()).thenReturn("utilities");
+        Field field = mock(Field.class);
+        FieldStart fieldStart = mock(FieldStart.class);
+        Node ancestor = mock(Section.class);
+
+        when(args.getField()).thenReturn(field);
+        when(field.getStart()).thenReturn(fieldStart);
+        when(fieldStart.getAncestor(ArgumentMatchers.any())).thenReturn(ancestor);
+
+        //  ACT
+        sut.fieldMerging(args);
+
+        // ASSERT
+        verify(ancestor).remove();
+    }
+
+    @Test
     public void doesNotRemoveSectionWithNonEmptyField() throws Exception {
 
         // ARRANGE
