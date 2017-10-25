@@ -109,4 +109,5 @@ public class OptionalTerms {
     public void setSmoking(String smoking) {
         this.smoking = smoking;
     }
+
 }

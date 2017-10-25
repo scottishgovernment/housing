@@ -20,7 +20,7 @@ public class DocumentGeneratorTest {
 
         // ARRANGE
         DocumentTemplateLoader templateLoader = templateLoader();
-        DocumentGenerator sut = new DocumentGenerator(templateLoader, emptySet());
+        DocumentGenerator sut = new DocumentGenerator(templateLoader);
 
         // ACT
         byte[] result = sut.save(fieldMap(), DocumentType.PDF);
@@ -36,7 +36,7 @@ public class DocumentGeneratorTest {
 
         // ARRANGE
         DocumentTemplateLoader templateLoader = templateLoader();
-        DocumentGenerator sut = new DocumentGenerator(templateLoader, emptySet());
+        DocumentGenerator sut = new DocumentGenerator(templateLoader);
 
         // ACT
         byte[] result = sut.save(fieldMap(), DocumentType.WORD);
@@ -49,7 +49,7 @@ public class DocumentGeneratorTest {
     public void loaderThrowsExceptionOnSave() throws DocumentGeneratorException {
 
         DocumentTemplateLoader templateLoader = exceptionThrowingTemplateLoader();
-        DocumentGenerator sut = new DocumentGenerator(templateLoader, emptySet());
+        DocumentGenerator sut = new DocumentGenerator(templateLoader);
         sut.save(fieldMap(), DocumentType.PDF);
     }
 

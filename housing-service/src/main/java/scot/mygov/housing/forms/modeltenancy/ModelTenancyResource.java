@@ -42,7 +42,8 @@ public class ModelTenancyResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response modelTenancyMultipart(ModelTenancy modelTenancy, @QueryParam("type") String typeParam) throws ModelTenancyServiceException {
+    public Response modelTenancyMultipart(ModelTenancy modelTenancy, @QueryParam("type") String typeParam)
+            throws ModelTenancyServiceException {
         return modelTenancyResponse(modelTenancy, typeParam);
     }
 

@@ -6,8 +6,6 @@ import scot.mygov.documents.DocumentTemplateLoader;
 import scot.mygov.documents.DocumentType;
 import scot.mygov.housing.forms.rentadjudication.model.RentAdjudication;
 
-import java.util.Collections;
-
 public class RentAdjudicationService {
 
     public static final String DOCUMENT_TEMPLATE_PATH = "/templates/rent-adjudication.docx";
@@ -17,7 +15,7 @@ public class RentAdjudicationService {
     DocumentGenerator documentGenerator;
 
     public RentAdjudicationService(DocumentTemplateLoader templateLoader, RentAdjudicationFieldExtractor fieldExtractor) {
-        this.documentGenerator = new DocumentGenerator(templateLoader, Collections.emptySet());
+        this.documentGenerator = new DocumentGenerator(templateLoader);
         this.fieldExtractor = fieldExtractor;
     }
 

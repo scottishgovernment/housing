@@ -1,32 +1,34 @@
-package scot.mygov.documents;
+package scot.mygov.housing.forms.modeltenancy;
 
 import com.aspose.words.Field;
 import com.aspose.words.FieldMergingArgs;
 import com.aspose.words.FieldStart;
 import com.aspose.words.Node;
+import com.aspose.words.Section;
 import org.junit.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
-import scot.mygov.documents.EmptySectionRemovingCallback;
+import scot.mygov.housing.forms.modeltenancy.validation.ModelTenancyObjectMother;
 
-import static java.util.Collections.singleton;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class EmptySectionRemovingCallbackTest {
+public class ModelTenancyMergingCallbackTest {
+
+    ModelTenancyObjectMother om = new ModelTenancyObjectMother();
 
     @Test
     public void removesSectionWithEmptyField() throws Exception {
 
         // ARRANGE
-        EmptySectionRemovingCallback sut = new EmptySectionRemovingCallback(singleton("field"));
+        ModelTenancyMergingCallback sut = new ModelTenancyMergingCallback(om.anyTenancy());
         FieldMergingArgs args = mock(FieldMergingArgs.class);
         when(args.getFieldValue()).thenReturn("");
-        when(args.getFieldName()).thenReturn("field");
+        when(args.getFieldName()).thenReturn("utilities");
         Field field = mock(Field.class);
         FieldStart fieldStart = mock(FieldStart.class);
-        Node ancestor = mock(Node.class);
+        Node ancestor = mock(Section.class);
 
         when(args.getField()).thenReturn(field);
         when(field.getStart()).thenReturn(fieldStart);
@@ -43,7 +45,7 @@ public class EmptySectionRemovingCallbackTest {
     public void doesNotRemoveSectionWithNonEmptyField() throws Exception {
 
         // ARRANGE
-        EmptySectionRemovingCallback sut = new EmptySectionRemovingCallback(singleton("field"));
+        ModelTenancyMergingCallback sut = new ModelTenancyMergingCallback(om.anyTenancy());
         FieldMergingArgs args = mock(FieldMergingArgs.class);
         when(args.getFieldValue()).thenReturn("value");
         when(args.getFieldName()).thenReturn("field");
@@ -66,7 +68,7 @@ public class EmptySectionRemovingCallbackTest {
     public void ignoresEmptyFieldNotInFieldSet() throws Exception {
 
         // ARRANGE
-        EmptySectionRemovingCallback sut = new EmptySectionRemovingCallback(singleton("field"));
+        ModelTenancyMergingCallback sut = new ModelTenancyMergingCallback(om.anyTenancy());
         FieldMergingArgs args = mock(FieldMergingArgs.class);
         when(args.getFieldValue()).thenReturn("");
         when(args.getFieldName()).thenReturn("anotherfield");
@@ -88,12 +90,7 @@ public class EmptySectionRemovingCallbackTest {
 
     @Test
     public void imageFieldMergingDoesNothing() throws Exception {
-        EmptySectionRemovingCallback sut = new EmptySectionRemovingCallback(singleton("field"));
+        ModelTenancyMergingCallback sut = new ModelTenancyMergingCallback(om.anyTenancy());
         sut.imageFieldMerging(null);
     }
-    // removes null fields
-
-    // leaves other feidls
-
-
 }

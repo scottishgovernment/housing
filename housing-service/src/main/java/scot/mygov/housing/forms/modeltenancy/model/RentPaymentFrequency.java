@@ -1,5 +1,7 @@
 package scot.mygov.housing.forms.modeltenancy.model;
 
+import org.apache.commons.lang3.StringUtils;
+
 public enum RentPaymentFrequency {
 
     WEEKLY("week"),
@@ -20,7 +22,7 @@ public enum RentPaymentFrequency {
     }
 
     public static String description(String rpf) {
-        if (rpf == null) {
+        if (StringUtils.isEmpty(rpf)) {
             return "";
         }
         return RentPaymentFrequency.valueOf(rpf).getDescription();

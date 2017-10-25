@@ -1,6 +1,7 @@
 package scot.mygov.documents;
 
 import com.aspose.words.Document;
+import com.aspose.words.IFieldMergingCallback;
 import com.aspose.words.PdfSaveOptions;
 import com.aspose.words.SaveFormat;
 
@@ -10,7 +11,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Generates documents from a ampa of fields.
@@ -18,15 +18,19 @@ import java.util.Set;
 public class DocumentGenerator {
 
     private final DocumentTemplateLoader templateLoader;
-    private final EmptySectionRemovingCallback emptySectionRemovingCallback;
 
-    public DocumentGenerator(DocumentTemplateLoader templateLoader, Set<String> emptySectionFields) {
+    public DocumentGenerator(DocumentTemplateLoader templateLoader) {
         this.templateLoader = templateLoader;
-        this.emptySectionRemovingCallback = new EmptySectionRemovingCallback(emptySectionFields);
     }
 
     public byte[] save(Map<String, Object> fields, DocumentType type) throws DocumentGeneratorException {
-        byte[] mergedDocument = executeMailMerge(fields);
+        return save(fields, type, null);
+    }
+
+    public byte[] save(Map<String, Object> fields, DocumentType type, IFieldMergingCallback mergingCallback)
+                throws DocumentGeneratorException {
+
+        byte[] mergedDocument = executeMailMerge(fields, mergingCallback);
 
         if (type == DocumentType.WORD) {
             return mergedDocument;
@@ -38,10 +42,14 @@ public class DocumentGenerator {
         return os.toByteArray();
     }
 
-    private byte[] executeMailMerge(Map<String, Object> fields) throws DocumentGeneratorException {
+    private byte[] executeMailMerge(Map<String, Object> fields, IFieldMergingCallback mergingCallback)
+                throws DocumentGeneratorException {
+
         Document template = templateLoader.loadDocumentTemplate();
         template.getMailMerge().setTrimWhitespaces(true);
-        template.getMailMerge().setFieldMergingCallback(emptySectionRemovingCallback);
+        if (mergingCallback != null) {
+            template.getMailMerge().setFieldMergingCallback(mergingCallback);
+        }
 
         try {
             List<String> fieldnames = new ArrayList<>();
@@ -55,6 +63,7 @@ public class DocumentGenerator {
                     values.toArray());
             template.updateFields();
             template.updatePageLayout();
+
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             template.save(out, SaveFormat.DOCX);
             return out.toByteArray();
