@@ -7,7 +7,6 @@ import com.codahale.metrics.Timer;
 import scot.mygov.documents.DocumentGenerator;
 import scot.mygov.documents.DocumentGeneratorException;
 import scot.mygov.documents.DocumentType;
-import scot.mygov.documents.DocumentTemplateLoader;
 import scot.mygov.housing.MetricName;
 import scot.mygov.housing.forms.modeltenancy.model.ModelTenancy;
 
@@ -36,12 +35,12 @@ public class ModelTenancyService {
     private final Meter errorMeter;
 
     public ModelTenancyService(
-            DocumentTemplateLoader templateLoader,
+            DocumentGenerator documentGenerator,
             ModelTenancyFieldExtractor fieldExtractor,
             MetricRegistry registry) {
 
         this.fieldExtractor = fieldExtractor;
-        this.documentGenerator = new DocumentGenerator(templateLoader);
+        this.documentGenerator = documentGenerator;
 
         this.responseTimes = registry.timer(MetricName.RESPONSE_TIMES.name(this));
         this.requestCounter = registry.counter(MetricName.REQUESTS.name(this));
@@ -50,7 +49,6 @@ public class ModelTenancyService {
         this.errorMeter = registry.meter(MetricName.ERROR_RATE.name(this));
         this.unchangedUtilitiesCounter = registry.counter(MetricRegistry.name(this.getClass(), "unchanged-utilities"));
         this.changedUtilitiesCounter = registry.counter(MetricRegistry.name(this.getClass(), "changed-utilities"));
-
     }
 
     public byte[] save(ModelTenancy tenancy, DocumentType type) throws ModelTenancyServiceException {

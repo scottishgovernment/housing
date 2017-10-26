@@ -7,6 +7,7 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scot.mygov.config.Configuration;
+import scot.mygov.documents.DocumentGenerator;
 import scot.mygov.documents.DocumentTemplateLoader;
 import scot.mygov.housing.cpi.CPIService;
 import scot.mygov.housing.forms.modeltenancy.ModelTenancyFieldExtractor;
@@ -140,7 +141,8 @@ public class HousingModule {
             @Named(MODEL_TENANCY_TEMPLATE_LOADER) DocumentTemplateLoader templateLoader,
             MetricRegistry metricRegistry) {
         ModelTenancyFieldExtractor fieldExtractor = new ModelTenancyFieldExtractor();
-        return new ModelTenancyService(templateLoader, fieldExtractor, metricRegistry);
+        DocumentGenerator documentGenerator = new DocumentGenerator(templateLoader);
+        return new ModelTenancyService(documentGenerator, fieldExtractor, metricRegistry);
     }
 
     @Provides

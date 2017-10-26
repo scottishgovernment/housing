@@ -14,6 +14,7 @@ import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import scot.mygov.documents.DocumentGenerator;
 import scot.mygov.documents.DocumentTemplateLoader;
 import scot.mygov.housing.cpi.CPIService;
 import scot.mygov.housing.cpi.CPIServiceException;
@@ -64,7 +65,10 @@ public class HealthcheckTest {
         request = MockHttpRequest.get("health");
         request.accept(MediaType.APPLICATION_JSON_TYPE);
         response = new MockHttpResponse();
-        healthcheck.modelTenancyService = new ModelTenancyService(new DocumentTemplateLoader("", healthcheck.asposeLicense),
+        DocumentTemplateLoader templateLoader = new DocumentTemplateLoader("", healthcheck.asposeLicense);
+        DocumentGenerator documentGenerator = new DocumentGenerator(templateLoader);
+        healthcheck.modelTenancyService = new ModelTenancyService(
+                documentGenerator,
                 new ModelTenancyFieldExtractor(),
                 healthcheck.metricRegistry);
     }
