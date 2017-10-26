@@ -137,9 +137,10 @@ public class HousingModule {
     @Provides
     @Singleton
     ModelTenancyService modelTenancyService(
-            @Named(MODEL_TENANCY_TEMPLATE_LOADER) DocumentTemplateLoader templateLoader) {
+            @Named(MODEL_TENANCY_TEMPLATE_LOADER) DocumentTemplateLoader templateLoader,
+            MetricRegistry metricRegistry) {
         ModelTenancyFieldExtractor fieldExtractor = new ModelTenancyFieldExtractor();
-        return new ModelTenancyService(templateLoader, fieldExtractor);
+        return new ModelTenancyService(templateLoader, fieldExtractor, metricRegistry);
     }
 
     @Provides

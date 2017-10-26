@@ -1,6 +1,7 @@
 package scot.mygov.housing.forms.modeltenancy;
 
 import com.aspose.words.Document;
+import com.codahale.metrics.MetricRegistry;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.junit.Test;
 import scot.mygov.documents.DocumentTemplateLoader;
@@ -26,7 +27,7 @@ public class ModelTenancyServiceTest {
 
         // ARRANGE
         DocumentTemplateLoader templateLoader = templateLoader();
-        ModelTenancyService sut = new ModelTenancyService(templateLoader, fieldExtractor);
+        ModelTenancyService sut = new ModelTenancyService(templateLoader, fieldExtractor, new MetricRegistry());
 
         // ACT
         ModelTenancy modelTenancy = om.anyTenancy();
@@ -42,7 +43,7 @@ public class ModelTenancyServiceTest {
 
         // ARRANGE
         DocumentTemplateLoader templateLoader = templateLoader();
-        ModelTenancyService sut = new ModelTenancyService(templateLoader, fieldExtractor);
+        ModelTenancyService sut = new ModelTenancyService(templateLoader, fieldExtractor, new MetricRegistry());
 
         // ACT
         ModelTenancy modelTenancy = om.anyTenancy();

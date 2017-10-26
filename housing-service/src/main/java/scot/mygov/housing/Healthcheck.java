@@ -2,6 +2,7 @@ package scot.mygov.housing;
 
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.Meter;
+import com.codahale.metrics.Metered;
 import com.codahale.metrics.MetricFilter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Snapshot;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import scot.mygov.housing.cpi.CPIService;
 import scot.mygov.housing.cpi.CPIServiceException;
 import scot.mygov.housing.cpi.model.CPIData;
+import scot.mygov.housing.forms.modeltenancy.ModelTenancyService;
 import scot.mygov.housing.mapcloud.Mapcloud;
 
 import javax.inject.Inject;
@@ -64,6 +66,9 @@ public class Healthcheck {
     @Inject
     WebTarget esRPZHealthTarget;
 
+    @Inject
+    ModelTenancyService modelTenancyService;
+
     @GET
     public Response health(
             @QueryParam("licenseDays") @DefaultValue("10") int licenseDays
@@ -78,6 +83,7 @@ public class Healthcheck {
         addLicenseInfo(result, errors, warnings, data, licenseDays);
         addCPIInfo(result, errors, data);
         addMapcloudLookupMetricsInfo(result, errors, data);
+        addModelTenancyMetricsInfo(result, errors, data);
         addRPZElasticsearchInfo(result, errors, data);
 
         boolean ok = errors.size() == 0;
@@ -186,6 +192,30 @@ public class Healthcheck {
         result.put("Mapcloud lookups", ok);
     }
 
+    private void addModelTenancyMetricsInfo(ObjectNode result, ArrayNode errors, ObjectNode data) {
+
+        Meter errorRate = metricRegistry.getMeters().get(MetricName.ERROR_RATE.name(modelTenancyService));
+        Timer timer = metricRegistry.getTimers().get(MetricName.RESPONSE_TIMES.name(modelTenancyService));
+
+
+        data.put("modelTenancyErrorRate", formatMeter(errorRate));
+        data.put("modelTenancyTimer", formatMeter(timer));
+
+        // collect all of the metrics for modelTenancyService and add them to the data
+        MetricFilter filter = forClass(modelTenancyService.getClass());
+        for (Map.Entry<String, Timer> entry : metricRegistry.getTimers(filter).entrySet()) {
+            data.put(entry.getKey(), formatSnapshot(entry.getValue().getSnapshot()));
+        }
+
+        for (Map.Entry<String, Meter> entry : metricRegistry.getMeters(filter).entrySet()) {
+            data.put(entry.getKey(), formatMeter(entry.getValue()));
+        }
+
+        for (Map.Entry<String, Counter> entry : metricRegistry.getCounters(filter).entrySet()) {
+            data.put(entry.getKey(), entry.getValue().getCount());
+        }
+    }
+
     private String formatSnapshot(Snapshot ss) {
         return String.format(
                 "min: %d, " +
@@ -212,7 +242,10 @@ public class Healthcheck {
         return nanos / TimeUnit.MILLISECONDS.toNanos(1);
     }
 
-    private String formatMeter(Meter m) {
+    private String formatMeter(Metered m) {
+        if (m == null) {
+            return "null meter";
+        }
         return String.format("count: %d, meanRate: %.02f, oneMinRate: %.02f, fiveMinRate: %.02f, fifteenMinRate: %.02f",
                 m.getCount(), m.getMeanRate(),
                 m.getOneMinuteRate(),  m.getFiveMinuteRate(), m.getFifteenMinuteRate() );
