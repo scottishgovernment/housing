@@ -1,6 +1,7 @@
 package scot.mygov.housing.forms.rentadjudication;
 
 import org.apache.commons.lang3.StringUtils;
+import scot.mygov.housing.forms.FieldExtractor;
 import scot.mygov.housing.forms.modeltenancy.model.Person;
 import scot.mygov.housing.forms.rentadjudication.model.RentAdjudication;
 import scot.mygov.housing.forms.rentadjudication.model.Room;
@@ -19,7 +20,7 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static scot.mygov.housing.forms.FieldExtractorUtils.addressParts;
 import static scot.mygov.housing.forms.FieldExtractorUtils.defaultForEmpty;
 
-public class RentAdjudicationFieldExtractor {
+public class RentAdjudicationFieldExtractor implements FieldExtractor<RentAdjudication> {
 
     public Map<String, Object> extractFields(RentAdjudication model) {
 

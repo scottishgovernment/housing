@@ -1,5 +1,6 @@
 package scot.mygov.housing;
 
+import com.aspose.words.IFieldMergingCallback;
 import com.codahale.metrics.MetricRegistry;
 import dagger.Module;
 import dagger.Provides;
@@ -10,11 +11,18 @@ import scot.mygov.config.Configuration;
 import scot.mygov.documents.DocumentGenerator;
 import scot.mygov.documents.DocumentTemplateLoader;
 import scot.mygov.housing.cpi.CPIService;
+
 import scot.mygov.housing.forms.RecaptchaCheck;
+import scot.mygov.housing.forms.DocumentGenerationService;
+import scot.mygov.housing.forms.DocumentGeneratorServiceListener;
+import scot.mygov.housing.forms.DocumentGeneratorServiceListenerAdaptor;
+import scot.mygov.housing.forms.FieldExtractor;
 import scot.mygov.housing.forms.modeltenancy.ModelTenancyFieldExtractor;
 import scot.mygov.housing.forms.modeltenancy.model.ModelTenancy;
+import scot.mygov.housing.forms.nonprovisionofdocumentation.NonProvisionOfDocumentationFieldExtractor;
+import scot.mygov.housing.forms.nonprovisionofdocumentation.model.NonProvisionOfDocumentation;
 import scot.mygov.housing.forms.rentadjudication.RentAdjudicationFieldExtractor;
-import scot.mygov.housing.forms.rentadjudication.RentAdjudicationService;
+import scot.mygov.housing.forms.rentadjudication.model.RentAdjudication;
 import scot.mygov.housing.mapcloud.Mapcloud;
 import scot.mygov.housing.forms.modeltenancy.validation.ModelTenancyValidatorFactory;
 import scot.mygov.housing.forms.modeltenancy.ModelTenancyService;
@@ -42,7 +50,9 @@ public class HousingModule {
     private static final String APP_NAME = "housing";
 
     private static final String MODEL_TENANCY_TEMPLATE_LOADER = "modelTenancyTemplateLoader";
-    private static final String RENT_ADJUDICATION_TEMPLATE_LOADER = "rentAdjudicationTemplateLoader";
+
+
+
 
     @Provides
     @Singleton
@@ -85,11 +95,6 @@ public class HousingModule {
     }
 
     @Provides
-    Validator<ModelTenancy> modelTenancyValidator() {
-        return new ModelTenancyValidatorFactory().validator(false);
-    }
-
-    @Provides
     @Singleton
     AsposeLicense asposeLicense(HousingConfiguration configuration) {
         return new AsposeLicense(configuration.getAspose().getLicense());
@@ -129,6 +134,55 @@ public class HousingModule {
     }
 
     @Provides
+    Validator<ModelTenancy> modelTenancyValidator() {
+        return new ModelTenancyValidatorFactory().validator(false);
+    }
+
+
+    @Provides
+    DocumentGenerationService<RentAdjudication> rentAdjudicationDocumentGenerationService(
+            AsposeLicense asposeLicense,
+            MetricRegistry metricRegistry) {
+
+        String templatePath = "/templates/rent-adjudication.docx";
+        DocumentTemplateLoader templateLoader = new DocumentTemplateLoader(templatePath, asposeLicense);
+        FieldExtractor<RentAdjudication> fieldExtractor = new RentAdjudicationFieldExtractor();
+        DocumentGenerator documentGenerator = new DocumentGenerator(templateLoader);
+        DocumentGeneratorServiceListener<RentAdjudication> listener = new DocumentGeneratorServiceListenerAdaptor<>();
+        IFieldMergingCallback fieldMergingCallback = null;
+
+        return  new DocumentGenerationService<>(
+                documentGenerator,
+                listener,
+                fieldExtractor,
+                fieldMergingCallback,
+                metricRegistry);
+    }
+
+    @Provides
+    DocumentGenerationService<NonProvisionOfDocumentation> nonProvisionOfDocumentationDocumentGenerationService(
+            AsposeLicense asposeLicense,
+            MetricRegistry metricRegistry) {
+
+        String templatePath = "/templates/non-provision-of-documentation.docx";
+        DocumentTemplateLoader templateLoader = new DocumentTemplateLoader(templatePath, asposeLicense);
+        FieldExtractor<NonProvisionOfDocumentation> fieldExtractor = new NonProvisionOfDocumentationFieldExtractor();
+        DocumentGenerator documentGenerator = new DocumentGenerator(templateLoader);
+        DocumentGeneratorServiceListener<RentAdjudication> listener = new DocumentGeneratorServiceListenerAdaptor<>();
+        IFieldMergingCallback fieldMergingCallback = null;
+        return  new DocumentGenerationService<>(
+                documentGenerator,
+                listener,
+                fieldExtractor,
+                fieldMergingCallback,
+                metricRegistry);
+    }
+
+
+
+
+
+    @Provides
     @Named(MODEL_TENANCY_TEMPLATE_LOADER)
     @Singleton
     DocumentTemplateLoader modelTenancyTemplateLoader(AsposeLicense asposeLicense) {
@@ -145,6 +199,7 @@ public class HousingModule {
         return new ModelTenancyService(documentGenerator, fieldExtractor, metricRegistry);
     }
 
+<<<<<<< 21d1bc08e11e27c7f3eebb913e0e5b0eaeab5366
     @Provides
     @Named(RENT_ADJUDICATION_TEMPLATE_LOADER)
     @Singleton
@@ -170,4 +225,6 @@ public class HousingModule {
                 recaptchaConfig.getSecret());
     }
 
+=======
+>>>>>>> refactoring in progress
 }

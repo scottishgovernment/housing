@@ -4,7 +4,9 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import scot.mygov.housing.forms.modeltenancy.model.Address;
+import scot.mygov.housing.forms.FieldExtractor;
 import scot.mygov.housing.forms.modeltenancy.model.AgentOrLandLord;
 import scot.mygov.housing.forms.modeltenancy.model.CommunicationsAgreement;
 import scot.mygov.housing.forms.modeltenancy.model.DepositSchemeAdministrator;
@@ -34,7 +36,7 @@ import static scot.mygov.housing.forms.FieldExtractorUtils.addressFieldsMultiple
 /**
  * Extract fields from a ModelTenancy object for use in a template.
  */
-public class ModelTenancyFieldExtractor {
+public class ModelTenancyFieldExtractor implements FieldExtractor<ModelTenancy> {
 
     private static final Logger LOG = LoggerFactory.getLogger(ModelTenancyFieldExtractor.class);
 
