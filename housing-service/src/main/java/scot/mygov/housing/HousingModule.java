@@ -178,10 +178,6 @@ public class HousingModule {
                 metricRegistry);
     }
 
-
-
-
-
     @Provides
     @Named(MODEL_TENANCY_TEMPLATE_LOADER)
     @Singleton
