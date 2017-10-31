@@ -141,18 +141,20 @@ public class ModelTenancyFieldExtractorTest {
 
     }
 
+
     @Test
-    public void canExtractWithNullCommsAgreement() {
+    public void canExtractWithEmptyCommsAgreement() {
 
         // ARRANGE
         ModelTenancy modelTenancy = om.anyTenancy();
-        modelTenancy.setCommunicationsAgreement(null);
+        modelTenancy.setCommunicationsAgreement("");
 
         // ACT
         Map<String, Object> actual = sut.extractFields(modelTenancy);
 
         // ASSERT
-        Assert.assertNull(actual.get("communicationsAgreementHardcopy"));
+        Assert.assertEquals(" ", actual.get("communicationsAgreementHardcopy"));
+        Assert.assertEquals(" ", actual.get("communicationsAgreementEmail"));
 
     }
 }
