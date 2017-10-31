@@ -74,7 +74,8 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
             if ("utilities".equals(termName)) {
                 // special case for utilities field.
                 html = easyreadNotesForUtilities(value, BeanUtils.getProperty(defaultNotes, termName));
-            } else {
+            } else
+            {
                 // default to using the easytread notes for this field.
                 html = BeanUtils.getProperty(defaultNotes, termName);
 

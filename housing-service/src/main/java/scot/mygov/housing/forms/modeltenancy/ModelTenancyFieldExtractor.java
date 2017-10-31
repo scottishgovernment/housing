@@ -271,7 +271,7 @@ public class ModelTenancyFieldExtractor {
     private void extractTenantSignatureblock(ModelTenancy tenancy, Map<String, Object> fields) {
         List<String> signatureBlocks = new ArrayList<>();
         int index = 1;
-        for (Person tenant : tenancy.getLandlords()) {
+        for (Person tenant : tenancy.getTenants()) {
             List<String> parts = new ArrayList<String>();
             addAll(parts,
                     format("Tenant %d Full Name: %s", index, tenant.getName()),
