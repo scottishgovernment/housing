@@ -76,6 +76,7 @@ public class DocumentGenerator {
         try {
             PdfSaveOptions saveOptions = new PdfSaveOptions();
             saveOptions.setUseHighQualityRendering(true);
+
             Document doc = new Document(new ByteArrayInputStream(wordDocument));
             doc.save(outputStream, saveOptions);
         } catch (Exception e) {
