@@ -38,7 +38,10 @@ public class HousingApplication extends Application {
     Healthcheck healthcheck;
 
     @Inject
-    RequestLogger logger;
+    ResponseLogger responseLogger;
+
+    @Inject
+    RequestLogger requestLogger;
 
     @Inject
     Mapcloud mapcloud;
@@ -54,7 +57,8 @@ public class HousingApplication extends Application {
                 errorHandler,
                 healthcheck,
                 mapcloud,
-                logger
+                responseLogger,
+                requestLogger
         ));
     }
 
