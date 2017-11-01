@@ -105,14 +105,6 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
         });
     }
 
-    public String string(int length) {
-        StringBuilder b = new StringBuilder();
-        for (int i = 0; i < length; i++) {
-            b.append(' ');
-        }
-        return b.toString();
-    }
-
     public void writeNumberedLines(DocumentBuilder builder, int n) {
         ParagraphFormat paragraphFormat = builder.getParagraphFormat();
         paragraphFormat.getShading().setBackgroundPatternColor(Color.LIGHT_GRAY);
