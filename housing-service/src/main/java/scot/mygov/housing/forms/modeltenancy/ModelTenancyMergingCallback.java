@@ -4,6 +4,7 @@ import com.aspose.words.DocumentBuilder;
 import com.aspose.words.FieldMergingArgs;
 import com.aspose.words.IFieldMergingCallback;
 import com.aspose.words.ImageFieldMergingArgs;
+import com.aspose.words.ParagraphFormat;
 import com.aspose.words.Section;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -11,10 +12,15 @@ import scot.mygov.housing.forms.InitialisationFailedException;
 import scot.mygov.housing.forms.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.forms.modeltenancy.model.OptionalTerms;
 
+import java.awt.*;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import static java.util.Collections.addAll;
+import static java.util.stream.Collectors.joining;
 
 public class ModelTenancyMergingCallback implements IFieldMergingCallback {
 
@@ -30,8 +36,118 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
 
     private final ModelTenancy tenancy;
 
+
+    private Map<String, Consumer<DocumentBuilder>> placeholders = new HashMap<>();
+
     public ModelTenancyMergingCallback(ModelTenancy tenancy) {
         this.tenancy = tenancy;
+        populatePlaceholders();
+    }
+
+    public void populatePlaceholders() {
+        String datePlaceholder = "__/__/__";
+        String monetaryPlaceholder = "____.__";
+        placeholders.put("tenantNamesAndAddresses", documentBuilder -> writeNumberedDoubleLines(documentBuilder, 5));
+        placeholders.put("tenantEmails", documentBuilder -> writeNumberedLines(documentBuilder, 5));
+        placeholders.put("tenantPhoneNumbers", documentBuilder -> writeNumberedLines(documentBuilder, 5));
+        placeholders.put("lettingAgentName", documentBuilder -> writeLines(documentBuilder, 1));
+        placeholders.put("lettingAgentAddress", documentBuilder -> writeLines(documentBuilder, 3));
+        placeholders.put("lettingAgentEmail", documentBuilder -> writeLines(documentBuilder, 1));
+        placeholders.put("lettingAgentPhone", documentBuilder -> writeLines(documentBuilder, 1));
+        placeholders.put("lettingAgentRegistrationNumber", documentBuilder -> writeLines(documentBuilder, 1));
+        placeholders.put("lettingAgentServices", documentBuilder -> writeLines(documentBuilder, 3));
+        placeholders.put("lettingAgentPointOfContactServices", documentBuilder -> writeLines(documentBuilder, 3));
+        placeholders.put("landlordNames", documentBuilder -> writeNumberedLines(documentBuilder, 2));
+        placeholders.put("landlordAddresses", documentBuilder -> writeNumberedLines(documentBuilder, 6));
+        placeholders.put("landlordEmails", documentBuilder -> writeNumberedLines(documentBuilder, 2));
+        placeholders.put("landlordPhones", documentBuilder -> writeNumberedLines(documentBuilder, 2));
+        placeholders.put("landlordRegNumbers",
+                documentBuilder -> writeNumberedLinesWithLabel(documentBuilder, "Landlord Registration number ", 2));
+        placeholders.put("propertyAddress", documentBuilder -> writeLines(documentBuilder, 3));
+        placeholders.put("propertyType", documentBuilder -> writeLines(documentBuilder, 1));
+        placeholders.put("includedAreasOrFacilities", documentBuilder -> writeLines(documentBuilder, 2));
+        placeholders.put("sharedFacilities", documentBuilder -> writeLines(documentBuilder, 2));
+        placeholders.put("excludedAreasFacilities", documentBuilder -> writeLines(documentBuilder, 2));
+        placeholders.put("furnishingType",
+                documentBuilder -> writeInlineField(documentBuilder, "[Furnished / Unfurnished]"));
+        placeholders.put("hmoString", documentBuilder -> writeInlineField(documentBuilder, "[is / is not]"));
+        placeholders.put("hmoContactNumber", documentBuilder -> writeLines(documentBuilder, 2));
+        placeholders.put("hmoExpiryDate", documentBuilder -> writeInlineField(documentBuilder, datePlaceholder));
+        placeholders.put("tenancyStartDate", documentBuilder -> writeInlineField(documentBuilder, datePlaceholder));
+        placeholders.put("rentAmount", documentBuilder -> writeInlineField(documentBuilder, monetaryPlaceholder));
+        placeholders.put("rentPaymentFrequency", documentBuilder -> writeInlineField(documentBuilder,
+                "[week/fortnight/four weeks/calendar month/quarter/year]"));
+        placeholders.put("firstPaymentDate", documentBuilder -> writeInlineField(documentBuilder, datePlaceholder));
+        placeholders.put("advanceOrArrears",
+                documentBuilder -> writeInlineField(documentBuilder, "[advance / arears]"));
+        placeholders.put("firstPaymentAmount",
+                documentBuilder -> writeInlineField(documentBuilder, monetaryPlaceholder));
+        placeholders.put("firstPaymentPeriodStart",
+                documentBuilder -> writeInlineField(documentBuilder, datePlaceholder));
+        placeholders.put("firstPaymentPeriodEnd",
+                documentBuilder -> writeInlineField(documentBuilder, datePlaceholder));
+        placeholders.put("rentPaymentDayOrDate", documentBuilder -> writeInlineField(documentBuilder, "__________"));
+        placeholders.put("rentPaymentSchedule",
+                documentBuilder -> writeInlineField(documentBuilder,
+                        "[day of each week/fortnight/four weekly period/date each calendar month/date each 6-month period]"));
+        placeholders.put("rentPaymentMethod", documentBuilder -> writeInlineField(documentBuilder, "__________"));
+        placeholders.put("guarentorSignatures", documentBuilder -> {
+            writeInlineField(documentBuilder, "Guarantor signature(s)");
+            writeLines(documentBuilder, 15);
+        });
+        placeholders.put("tenantSignatures", documentBuilder -> {
+            writeInlineField(documentBuilder, "Tenant signature(s)");
+            writeLines(documentBuilder, 15);
+        });
+        placeholders.put("landlordSignatures", documentBuilder -> {
+            writeInlineField(documentBuilder, "Landlord signature(s)");
+            writeLines(documentBuilder, 15);
+        });
+    }
+
+    public String string(int length) {
+        StringBuilder b = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            b.append(' ');
+        }
+        return b.toString();
+    }
+
+    public void writeNumberedLines(DocumentBuilder builder, int n) {
+        ParagraphFormat paragraphFormat = builder.getParagraphFormat();
+        paragraphFormat.getShading().setBackgroundPatternColor(Color.LIGHT_GRAY);
+        for (int i = 1; i <= n; i++) {
+            builder.writeln("(" + i + ")\t  \t\t");
+        }
+    }
+
+    public void writeNumberedLinesWithLabel(DocumentBuilder builder, String label, int n) {
+        ParagraphFormat paragraphFormat = builder.getParagraphFormat();
+        paragraphFormat.getShading().setBackgroundPatternColor(Color.LIGHT_GRAY);
+        for (int i = 1; i <= n; i++) {
+            builder.writeln(String.format("%s (%d) \t\t", label, i));
+        }
+    }
+
+    public void writeNumberedDoubleLines(DocumentBuilder builder, int n) {
+        ParagraphFormat paragraphFormat = builder.getParagraphFormat();
+        paragraphFormat.getShading().setBackgroundPatternColor(Color.LIGHT_GRAY);
+        for (int i = 1; i <= n; i++) {
+            builder.writeln("(" + i + ")\t  \t\t\n\t\t");
+        }
+    }
+
+    public void writeLines(DocumentBuilder builder, int n) {
+        ParagraphFormat paragraphFormat = builder.getParagraphFormat();
+        paragraphFormat.getShading().setBackgroundPatternColor(Color.LIGHT_GRAY);
+        for (int i = 1; i <= n; i++) {
+            builder.writeln("\t \t\t");
+        }
+    }
+
+    public void writeInlineField(DocumentBuilder builder, String field) {
+        builder.getFont().getShading().setBackgroundPatternColor(Color.LIGHT_GRAY);
+        builder.writeln(field);
     }
 
     @Override
@@ -39,8 +155,13 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
 
         String fieldValue = fieldMergingArgs.getFieldValue() == null ?
                 null : fieldMergingArgs.getFieldValue().toString();
-
         String fieldName = fieldMergingArgs.getFieldName();
+
+        // do we want to provide a placeholder for an empty value?
+        if (placeholders.containsKey(fieldName) && StringUtils.isEmpty(fieldValue)) {
+            provdePlacholder(fieldMergingArgs);
+            return;
+        }
 
         // if the field is one of the fieldsToRemoveIfEmpty then remove the sections it is contained within from the
         // document.
@@ -91,11 +212,15 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
         }
     }
 
+    public void provdePlacholder(FieldMergingArgs fieldMergingArgs) throws Exception {
+        DocumentBuilder builder = new DocumentBuilder(fieldMergingArgs.getDocument());
+        builder.moveToMergeField(fieldMergingArgs.getFieldName());
+        placeholders.get(fieldMergingArgs.getFieldName()).accept(builder);
+    }
+
 
     /**
      * The utilities term contains a placeholder within []'s.
-     *
-     * In order to decide if we oinclude the easyreadnotes for
      */
     public static String easyreadNotesForUtilities(String utilitiesTerm, String defaultTerm) {
         String utilsList = "[gas/electricity/telephone/TV licence/internet/broadband]";
