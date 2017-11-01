@@ -12,6 +12,10 @@ import org.mockito.Mockito;
 import scot.mygov.housing.forms.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.forms.modeltenancy.validation.ModelTenancyObjectMother;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -168,5 +172,41 @@ public class ModelTenancyMergingCallbackTest {
     public void imageFieldMergingDoesNothing() throws Exception {
         ModelTenancyMergingCallback sut = new ModelTenancyMergingCallback(om.anyTenancy());
         sut.imageFieldMerging(null);
+    }
+
+    @Test
+    public void emptyFields() throws Exception {
+
+        Set<String> fields = new HashSet<>();
+        Collections.addAll(fields, "advanceOrArrears",
+                "landlordRegNumbers", "furnishingType", "utilitiesEasyreadNotes",
+                "firstPaymentPeriodStart", "firstPaymentPeriodEnd", "rentPaymentSchedule", "firstPaymentAmount",
+                "tenantSignatures", "landlordSignatures", "guarentorSignatures");
+
+        ModelTenancy tenancy = om.emptyTenancy();
+        ModelTenancyMergingCallback sut = new ModelTenancyMergingCallback(tenancy);
+
+        for (String fieldname : fields) {
+            FieldMergingArgs args = mock(FieldMergingArgs.class);
+            when(args.getFieldValue()).thenReturn("");
+            when(args.getFieldName()).thenReturn(fieldname);
+            Field field = mock(Field.class);
+            FieldStart fieldStart = mock(FieldStart.class);
+            Node ancestor = mock(Section.class);
+
+            when(args.getField()).thenReturn(field);
+            when(field.getStart()).thenReturn(fieldStart);
+            when(fieldStart.getAncestor(ArgumentMatchers.any())).thenReturn(ancestor);
+            when(args.getDocument()).thenReturn(new Document());
+
+            when(args.getFieldValue()).thenReturn("");
+
+            sut.fieldMerging(args);
+        }
+
+
+
+
+
     }
 }

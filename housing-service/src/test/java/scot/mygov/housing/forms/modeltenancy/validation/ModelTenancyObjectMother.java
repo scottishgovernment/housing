@@ -47,6 +47,11 @@ public class ModelTenancyObjectMother {
         return tenancy;
     }
 
+    public ModelTenancy emptyTenancy() {
+        ModelTenancy tenancy = new ModelTenancy();
+        return tenancy;
+    }
+
     public ModelTenancy tenancyWithGuarentors() {
         ModelTenancy modelTenancy = anyTenancy();
         List<Guarantor> guarantors = modelTenancy.getTenants().stream().map(tenant -> {
