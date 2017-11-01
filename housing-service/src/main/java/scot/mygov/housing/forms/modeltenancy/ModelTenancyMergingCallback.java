@@ -36,7 +36,6 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
 
     private final ModelTenancy tenancy;
 
-
     private Map<String, Consumer<DocumentBuilder>> placeholders = new HashMap<>();
 
     public ModelTenancyMergingCallback(ModelTenancy tenancy) {
