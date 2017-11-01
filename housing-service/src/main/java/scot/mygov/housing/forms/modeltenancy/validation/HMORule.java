@@ -8,7 +8,8 @@ import scot.mygov.validation.ValidationRule;
 public class HMORule implements ValidationRule<ModelTenancy> {
 
     public void validate(ModelTenancy modelTenancy, ValidationResultsBuilder resultsBuilder) {
-        if (modelTenancy.isHmoProperty()) {
+
+        if ("true".equals(modelTenancy.getHmoProperty())) {
             if (StringUtils.isEmpty(modelTenancy.getHmo24ContactNumber())) {
                 resultsBuilder.issue("hmoContactNumber", "Required for HMO properties");
             }
@@ -16,7 +17,9 @@ public class HMORule implements ValidationRule<ModelTenancy> {
             if (modelTenancy.getHmoRegistrationExpiryDate() == null) {
                 resultsBuilder.issue("hmoExpirationDate", "Required for HMO properties");
             }
-        } else {
+        }
+
+        if ("false".equals(modelTenancy.getHmoProperty())) {
             if (!StringUtils.isEmpty(modelTenancy.getHmo24ContactNumber())) {
                 resultsBuilder.issue("hmoContactNumber", "Not allowed for non-HMO properties");
             }

@@ -54,7 +54,7 @@ public class ModelTenancyFieldExtractorTest {
 
         // ARRANGE
         ModelTenancy modelTenancy = om.anyTenancy();
-        modelTenancy.setHmoProperty(true);
+        modelTenancy.setHmoProperty("true");
         modelTenancy.setHmoRegistrationExpiryDate(LocalDate.of(2010, 10, 01));
         modelTenancy.setHmo24ContactNumber("11111");
 
@@ -72,7 +72,7 @@ public class ModelTenancyFieldExtractorTest {
 
         // ARRANGE
         ModelTenancy modelTenancy = om.anyTenancy();
-        modelTenancy.setInRentPressureZone(true);
+        modelTenancy.setInRentPressureZone("true");
 
         // ACT
         Map<String, Object> actual = sut.extractFields(modelTenancy);
@@ -116,7 +116,7 @@ public class ModelTenancyFieldExtractorTest {
 
         // ARRANGE
         ModelTenancy modelTenancy = om.anyTenancy();
-        modelTenancy.setRentPayableInAdvance(false);
+        modelTenancy.setRentPayableInAdvance("false");
 
         // ACT
         Map<String, Object> actual = sut.extractFields(modelTenancy);
@@ -131,7 +131,7 @@ public class ModelTenancyFieldExtractorTest {
 
         // ARRANGE
         ModelTenancy modelTenancy = om.anyTenancy();
-        modelTenancy.setRentPayableInAdvance(true);
+        modelTenancy.setRentPayableInAdvance("true");
 
         // ACT
         Map<String, Object> actual = sut.extractFields(modelTenancy);

@@ -155,20 +155,37 @@ public class ModelTenancyFieldExtractor {
         fields.put("propertyAddress", tenancy.getPropertyAddress());
         fields.put("propertyType", tenancy.getPropertyType());
         fields.put("furnishingType", tenancy.getFurnishingType().toLowerCase());
-        if (tenancy.isInRentPressureZone()) {
-            fields.put("rentPressureZoneString", "is");
-        } else {
-            fields.put("rentPressureZoneString", "is not");
+
+        String rentPressureZoneString = "";
+        if (isTrue(tenancy.getInRentPressureZone())) {
+            rentPressureZoneString = "is";
         }
-        if (tenancy.isHmoProperty()) {
-            fields.put("hmoString", "is");
-            fields.put("hmoContactNumber", tenancy.getHmo24ContactNumber());
-            fields.put("hmoExpiryDate", formatDate(tenancy.getHmoRegistrationExpiryDate()));
-        } else {
-            fields.put("hmoString", "is not");
-            fields.put("hmoContactNumber", NOT_APPLICABLE);
-            fields.put("hmoExpiryDate", NOT_APPLICABLE);
+
+        if (isFalse(tenancy.getInRentPressureZone())) {
+            rentPressureZoneString = "is not";
         }
+        fields.put("rentPressureZoneString", rentPressureZoneString);
+
+        String hmoString = "";
+        String hmoContactNumber = "";
+        String hmoExpiryDate = "";
+
+        if (isTrue(tenancy.getHmoProperty())) {
+            hmoString = "is";
+            hmoContactNumber = tenancy.getHmo24ContactNumber();
+            hmoExpiryDate = formatDate(tenancy.getHmoRegistrationExpiryDate());
+        }
+
+        if (isFalse(tenancy.getHmoProperty())) {
+            hmoString = "is not";
+            hmoContactNumber = NOT_APPLICABLE;
+            hmoExpiryDate = NOT_APPLICABLE;
+        }
+
+        fields.put("hmoString", hmoString);
+        fields.put("hmoContactNumber", hmoContactNumber);
+        fields.put("hmoExpiryDate", hmoExpiryDate);
+
 
         extractServices(tenancy, fields);
         extractFacilities(tenancy, fields);
@@ -177,8 +194,7 @@ public class ModelTenancyFieldExtractor {
     public void extractRent(ModelTenancy tenancy, Map<String, Object> fields) {
         fields.put("rentAmount", tenancy.getRentAmount());
         fields.put("rentPaymentFrequency", RentPaymentFrequency.description(tenancy.getRentPaymentFrequency()));
-        String advanceOrArrears = tenancy.isRentPayableInAdvance() ? "advance" : "arrears";
-        fields.put("advanceOrArrears", advanceOrArrears);
+        extractAdvanceOrArrears(tenancy, fields);
         fields.put("firstPaymentDate", formatDate(tenancy.getFirstPaymentDate()));
         fields.put("firstPaymentAmount", tenancy.getFirstPaymentAmount());
         fields.put("firstPaymentPeriodStart", formatDate(tenancy.getTenancyStartDate()));
@@ -186,6 +202,17 @@ public class ModelTenancyFieldExtractor {
         fields.put("rentPaymentDayOrDate", tenancy.getRentPaymentDayOrDate());
         fields.put("rentPaymentSchedule", tenancy.getRentPaymentSchedule());
         fields.put("rentPaymentMethod", tenancy.getRentPaymentMethod());
+    }
+
+    public void extractAdvanceOrArrears(ModelTenancy tenancy, Map<String, Object> fields) {
+        String advanceOrArrears = "";
+        if (isTrue(tenancy.getRentPayableInAdvance())) {
+            advanceOrArrears = "advance";
+        }
+        if (isFalse(tenancy.getRentPayableInAdvance())) {
+            advanceOrArrears = "arrears";
+        }
+        fields.put("advanceOrArrears", advanceOrArrears);
     }
 
     public void extractDeposit(ModelTenancy tenancy, Map<String, Object> fields) {
@@ -332,6 +359,14 @@ public class ModelTenancyFieldExtractor {
             return "";
         }
         return dateFormatter.format(date);
+    }
+
+    private boolean isTrue(String str) {
+        return "true".equals(str);
+    }
+
+    private boolean isFalse(String str) {
+        return "false".equals(str);
     }
 
 }

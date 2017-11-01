@@ -16,7 +16,6 @@ public class RequestLogger implements ContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
-        System.out.println(requestContext.getUriInfo());
         StopWatch stopwatch = new StopWatch();
         requestContext.setProperty("stopwatch", stopwatch);
         stopwatch.start();

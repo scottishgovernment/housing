@@ -74,6 +74,8 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
         placeholders.put("hmoExpiryDate", documentBuilder -> writeInlineField(documentBuilder, datePlaceholder));
         placeholders.put("tenancyStartDate", documentBuilder -> writeInlineField(documentBuilder, datePlaceholder));
         placeholders.put("rentAmount", documentBuilder -> writeInlineField(documentBuilder, monetaryPlaceholder));
+        placeholders.put("rentPressureZoneString", documentBuilder -> writeInlineField(documentBuilder,
+                "[is / is not]"));
         placeholders.put("rentPaymentFrequency", documentBuilder -> writeInlineField(documentBuilder,
                 "[week/fortnight/four weeks/calendar month/quarter/year]"));
         placeholders.put("firstPaymentDate", documentBuilder -> writeInlineField(documentBuilder, datePlaceholder));
@@ -138,7 +140,7 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
 
     public void writeInlineField(DocumentBuilder builder, String field) {
         builder.getFont().getShading().setBackgroundPatternColor(Color.LIGHT_GRAY);
-        builder.writeln(field);
+        builder.write(field);
     }
 
     @Override
@@ -239,7 +241,7 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
             fields.addAll(BeanUtils.describe(new OptionalTerms()).keySet());
 
             // other fields with sections
-            addAll(fields, "hmoString", "rentPressureZoneString", "communicationsAgreementType");
+            addAll(fields, "communicationsAgreementType");
             return fields;
         } catch (Exception e) {
             throw new InitialisationFailedException("Failed to extract optional section fields", e);

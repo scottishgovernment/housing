@@ -19,7 +19,7 @@ public class HMORuleTest {
     public void acceptsHMOPropertyWithFields() {
         // ARRANGE
         ModelTenancy model = om.anyTenancy();
-        model.setHmoProperty(true);
+        model.setHmoProperty("true");
         model.setHmo24ContactNumber("111");
         model.setHmoRegistrationExpiryDate(LocalDate.now());
         ValidationResultsBuilder b = new ValidationResultsBuilder();
@@ -35,7 +35,7 @@ public class HMORuleTest {
     public void acceptsNonHMOPropertyWithoutFields() {
         // ARRANGE
         ModelTenancy model = om.anyTenancy();
-        model.setHmoProperty(false);
+        model.setHmoProperty("false");
         ValidationResultsBuilder b = new ValidationResultsBuilder();
 
         // ACT
@@ -49,7 +49,7 @@ public class HMORuleTest {
     public void rejectsHMOPropertyWithoutFields() {
         // ARRANGE
         ModelTenancy model = om.anyTenancy();
-        model.setHmoProperty(true);
+        model.setHmoProperty("true");
         ValidationResultsBuilder b = new ValidationResultsBuilder();
 
         // ACT
@@ -63,7 +63,7 @@ public class HMORuleTest {
     public void rejectsNonHMOPropertyWithFields() {
         // ARRANGE
         ModelTenancy model = om.anyTenancy();
-        model.setHmoProperty(false);
+        model.setHmoProperty("false");
         model.setHmo24ContactNumber("111");
         model.setHmoRegistrationExpiryDate(LocalDate.now());
         ValidationResultsBuilder b = new ValidationResultsBuilder();

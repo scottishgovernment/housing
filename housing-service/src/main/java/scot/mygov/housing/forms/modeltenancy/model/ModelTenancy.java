@@ -23,8 +23,8 @@ public class ModelTenancy {
     private String propertyAddress;
     private String propertyType = "";
     private String furnishingType  = "";
-    private boolean inRentPressureZone;
-    private boolean hmoProperty;
+    private String inRentPressureZone;
+    private String hmoProperty;
     private String hmo24ContactNumber = "";
     @JsonDeserialize(using= LocalDateDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
@@ -34,7 +34,7 @@ public class ModelTenancy {
     private LocalDate tenancyStartDate;
     private String rentAmount  = "";
     private String rentPaymentFrequency = "";
-    private boolean rentPayableInAdvance;
+    private String rentPayableInAdvance;
     @JsonDeserialize(using= LocalDateDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate firstPaymentDate;
@@ -45,6 +45,8 @@ public class ModelTenancy {
     private String rentPaymentDayOrDate = "";
     private String rentPaymentSchedule = "";
     private String rentPaymentMethod = "";
+    private String altRentAmount;
+    private String altRentPaymentFrequency;
     private List<Service> servicesIncludedInRent = new ArrayList<>();
     private List<Service> servicesProvidedByLettingAgent = new ArrayList<>();
     private List<Service> servicesLettingAgentIsFirstContactFor = new ArrayList<>();
@@ -120,19 +122,19 @@ public class ModelTenancy {
         this.furnishingType = furnishingType;
     }
 
-    public boolean isInRentPressureZone() {
+    public String getInRentPressureZone() {
         return inRentPressureZone;
     }
 
-    public void setInRentPressureZone(boolean inRentPressureZone) {
+    public void setInRentPressureZone(String inRentPressureZone) {
         this.inRentPressureZone = inRentPressureZone;
     }
 
-    public boolean isHmoProperty() {
+    public String getHmoProperty() {
         return hmoProperty;
     }
 
-    public void setHmoProperty(boolean hmoProperty) {
+    public void setHmoProperty(String hmoProperty) {
         this.hmoProperty = hmoProperty;
     }
 
@@ -176,11 +178,11 @@ public class ModelTenancy {
         this.rentPaymentFrequency = rentPaymentFrequency;
     }
 
-    public boolean isRentPayableInAdvance() {
+    public String getRentPayableInAdvance() {
         return rentPayableInAdvance;
     }
 
-    public void setRentPayableInAdvance(boolean rentPayableInAdvance) {
+    public void setRentPayableInAdvance(String rentPayableInAdvance) {
         this.rentPayableInAdvance = rentPayableInAdvance;
     }
 
@@ -230,6 +232,22 @@ public class ModelTenancy {
 
     public void setRentPaymentMethod(String rentPaymentMethod) {
         this.rentPaymentMethod = rentPaymentMethod;
+    }
+
+    public String getAltRentAmount() {
+        return altRentAmount;
+    }
+
+    public void setAltRentAmount(String altRentAmount) {
+        this.altRentAmount = altRentAmount;
+    }
+
+    public String getAltRentPaymentFrequency() {
+        return altRentPaymentFrequency;
+    }
+
+    public void setAltRentPaymentFrequency(String altRentPaymentFrequency) {
+        this.altRentPaymentFrequency = altRentPaymentFrequency;
     }
 
     public List<Service> getServicesIncludedInRent() {
