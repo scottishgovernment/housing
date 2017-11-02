@@ -192,8 +192,16 @@ public class ModelTenancyFieldExtractor {
     }
 
     public void extractRent(ModelTenancy tenancy, Map<String, Object> fields) {
-        fields.put("rentAmount", tenancy.getRentAmount());
-        fields.put("rentPaymentFrequency", RentPaymentFrequency.description(tenancy.getRentPaymentFrequency()));
+        String rentAmount = tenancy.getRentAmount();
+        String rentPaymentFrequnecy = RentPaymentFrequency.description(tenancy.getRentPaymentFrequency());
+        if (!StringUtils.isEmpty(tenancy.getAltRentAmount())) {
+            rentAmount = tenancy.getAltRentAmount();
+        }
+        if (!StringUtils.isEmpty(tenancy.getAltRentPaymentFrequency())) {
+            rentPaymentFrequnecy = tenancy.getAltRentPaymentFrequency();
+        }
+        fields.put("rentAmount", rentAmount);
+        fields.put("rentPaymentFrequency", rentPaymentFrequnecy);
         extractAdvanceOrArrears(tenancy, fields);
         fields.put("firstPaymentDate", formatDate(tenancy.getFirstPaymentDate()));
         fields.put("firstPaymentAmount", tenancy.getFirstPaymentAmount());
