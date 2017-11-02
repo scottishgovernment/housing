@@ -78,6 +78,7 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
                 "[is / is not]"));
         placeholders.put("rentPaymentFrequency", documentBuilder -> writeInlineField(documentBuilder,
                 "[week/fortnight/four weeks/calendar month/quarter/year]"));
+        placeholders.put("servicesIncludedInRent", documentBuilder -> writeLines(documentBuilder, 3));
         placeholders.put("firstPaymentDate", documentBuilder -> writeInlineField(documentBuilder, datePlaceholder));
         placeholders.put("advanceOrArrears",
                 documentBuilder -> writeInlineField(documentBuilder, "[advance / arears]"));
