@@ -20,7 +20,6 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 import static java.util.Collections.addAll;
-import static java.util.stream.Collectors.joining;
 
 public class ModelTenancyMergingCallback implements IFieldMergingCallback {
 
@@ -202,7 +201,8 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
             // insert the relevant content into the document.
             DocumentBuilder builder = new DocumentBuilder(fieldMergingArgs.getDocument());
             builder.moveToMergeField(fieldName);
-            builder.insertHtml(html);
+
+            builder.insertHtml("<font face=\"arial\">" + html + "</font>");
         }
     }
 
