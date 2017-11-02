@@ -136,8 +136,8 @@ public class ModelTenancyFieldExtractor {
 
     private void extractCommunicationAgreement(ModelTenancy tenancy, Map<String, Object> fields) {
 
-        String communicationsAgreementHardcopy = "";
-        String communicationsAgreementEmail = "";
+        String communicationsAgreementHardcopy = " ";
+        String communicationsAgreementEmail = " ";
         String showEmailParagraphs = " ";
 
         if (tenancy.getCommunicationsAgreement().equals(CommunicationsAgreement.HARDCOPY.name())) {
