@@ -135,20 +135,24 @@ public class ModelTenancyFieldExtractor {
     }
 
     private void extractCommunicationAgreement(ModelTenancy tenancy, Map<String, Object> fields) {
-        fields.put("communicationsAgreementHardcopy", " ");
-        fields.put("communicationsAgreementEmail", " ");
 
-        if (StringUtils.isEmpty(tenancy.getCommunicationsAgreement())) {
-            return;
-        }
+        String communicationsAgreementHardcopy = "";
+        String communicationsAgreementEmail = "";
+        String showEmailParagraphs = " ";
 
         if (tenancy.getCommunicationsAgreement().equals(CommunicationsAgreement.HARDCOPY.name())) {
-            fields.put("communicationsAgreementHardcopy", "X");
+            communicationsAgreementHardcopy = "X";
+            showEmailParagraphs = "";
         }
 
         if (tenancy.getCommunicationsAgreement().equals(CommunicationsAgreement.EMAIL.name())) {
-            fields.put("communicationsAgreementEmail", "X");
+            communicationsAgreementEmail = "X";
+            showEmailParagraphs = " ";
         }
+
+        fields.put("communicationsAgreementHardcopy", communicationsAgreementHardcopy);
+        fields.put("communicationsAgreementEmail", communicationsAgreementEmail);
+        fields.put("showEmailParagraphs", showEmailParagraphs);
     }
 
     private void extractPropertyDetails(ModelTenancy tenancy, Map<String, Object> fields) {
