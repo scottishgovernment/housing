@@ -140,12 +140,13 @@ public class ModelTenancyFieldExtractor {
         String communicationsAgreementEmail = " ";
         String showEmailParagraphs = " ";
 
-        if (tenancy.getCommunicationsAgreement().equals(CommunicationsAgreement.HARDCOPY.name())) {
+
+        if (CommunicationsAgreement.HARDCOPY.name().equals(tenancy.getCommunicationsAgreement())) {
             communicationsAgreementHardcopy = "X";
             showEmailParagraphs = "";
         }
 
-        if (tenancy.getCommunicationsAgreement().equals(CommunicationsAgreement.EMAIL.name())) {
+        if (CommunicationsAgreement.EMAIL.name().equals(tenancy.getCommunicationsAgreement())) {
             communicationsAgreementEmail = "X";
             showEmailParagraphs = " ";
         }
