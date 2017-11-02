@@ -241,7 +241,7 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
             fields.addAll(BeanUtils.describe(new OptionalTerms()).keySet());
 
             // other fields with sections
-            addAll(fields, "communicationsAgreementType");
+            addAll(fields, "communicationsAgreementType", "showHmoNotification");
             return fields;
         } catch (Exception e) {
             throw new InitialisationFailedException("Failed to extract optional section fields", e);

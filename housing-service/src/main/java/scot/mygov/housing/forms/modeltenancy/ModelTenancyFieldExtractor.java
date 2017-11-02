@@ -8,6 +8,7 @@ import scot.mygov.housing.forms.modeltenancy.model.AgentOrLandLord;
 import scot.mygov.housing.forms.modeltenancy.model.CommunicationsAgreement;
 import scot.mygov.housing.forms.modeltenancy.model.DepositSchemeAdministrator;
 import scot.mygov.housing.forms.modeltenancy.model.DepositSchemeAdministrators;
+import scot.mygov.housing.forms.modeltenancy.model.FurnishingType;
 import scot.mygov.housing.forms.modeltenancy.model.Guarantor;
 import scot.mygov.housing.forms.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.forms.modeltenancy.model.OptionalTerms;
@@ -154,7 +155,7 @@ public class ModelTenancyFieldExtractor {
 
         fields.put("propertyAddress", tenancy.getPropertyAddress());
         fields.put("propertyType", tenancy.getPropertyType());
-        fields.put("furnishingType", tenancy.getFurnishingType().toLowerCase());
+        fields.put("furnishingType", FurnishingType.describe(tenancy.getFurnishingType()));
 
         String rentPressureZoneString = "";
         if (isTrue(tenancy.getInRentPressureZone())) {
@@ -169,11 +170,13 @@ public class ModelTenancyFieldExtractor {
         String hmoString = "";
         String hmoContactNumber = "";
         String hmoExpiryDate = "";
+        String showHmoNotification = " ";
 
         if (isTrue(tenancy.getHmoProperty())) {
             hmoString = "is";
             hmoContactNumber = tenancy.getHmo24ContactNumber();
             hmoExpiryDate = formatDate(tenancy.getHmoRegistrationExpiryDate());
+            showHmoNotification = "";
         }
 
         if (isFalse(tenancy.getHmoProperty())) {
@@ -182,10 +185,11 @@ public class ModelTenancyFieldExtractor {
             hmoExpiryDate = NOT_APPLICABLE;
         }
 
+
         fields.put("hmoString", hmoString);
         fields.put("hmoContactNumber", hmoContactNumber);
         fields.put("hmoExpiryDate", hmoExpiryDate);
-
+        fields.put("showHmoNotification", showHmoNotification);
 
         extractServices(tenancy, fields);
         extractFacilities(tenancy, fields);
