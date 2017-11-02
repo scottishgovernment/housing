@@ -171,6 +171,7 @@ public class ModelTenancyFieldExtractor {
         String hmoContactNumber = "";
         String hmoExpiryDate = "";
         String showHmoNotification = " ";
+        String showHmoFields = " ";
 
         if (isTrue(tenancy.getHmoProperty())) {
             hmoString = "is";
@@ -183,13 +184,14 @@ public class ModelTenancyFieldExtractor {
             hmoString = "is not";
             hmoContactNumber = NOT_APPLICABLE;
             hmoExpiryDate = NOT_APPLICABLE;
+            showHmoFields = "";
         }
-
 
         fields.put("hmoString", hmoString);
         fields.put("hmoContactNumber", hmoContactNumber);
         fields.put("hmoExpiryDate", hmoExpiryDate);
         fields.put("showHmoNotification", showHmoNotification);
+        fields.put("showHmoFields", showHmoFields);
 
         extractServices(tenancy, fields);
         extractFacilities(tenancy, fields);
