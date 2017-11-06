@@ -88,7 +88,7 @@ public class HousingConfiguration {
     }
 
     public static class Recaptcha {
-        private boolean enabled = true;
+        private boolean enabled = false;
 
         private String secret = "";
 
