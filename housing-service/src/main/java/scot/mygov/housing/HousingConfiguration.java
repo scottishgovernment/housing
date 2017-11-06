@@ -11,6 +11,8 @@ public class HousingConfiguration {
 
     private Aspose aspose = new Aspose();
 
+    private Recaptcha recaptcha = new Recaptcha();
+
     private URI cpiDataURI = URI.create("http://localhost:9200/housing-data/cpi/cpi/_source");
 
     private URI rpzDataURI = URI.create("http://localhost:9200/housing-data/rpz/_search/template");
@@ -44,17 +46,12 @@ public class HousingConfiguration {
         return aspose;
     }
 
-    public String getCpiGracePeriod() {
-        return cpiGracePeriod;
+    public Recaptcha getRecaptcha() {
+        return recaptcha;
     }
 
-    public static class Aspose {
-
-        private File license;
-
-        public File getLicense() {
-            return license;
-        }
+    public String getCpiGracePeriod() {
+        return cpiGracePeriod;
     }
 
     public URI getCpiDataURI() { return cpiDataURI; }
@@ -79,5 +76,34 @@ public class HousingConfiguration {
 
     public long getMapcloudMonitoringInterval() {
         return mapcloudMonitoringInterval;
+    }
+
+    public static class Aspose {
+
+        private File license;
+
+        public File getLicense() {
+            return license;
+        }
+    }
+
+    public static class Recaptcha {
+        private boolean enabled = true;
+
+        private String secret = "";
+
+        private String url = "https://www.google.com/recaptcha/api/siteverify";
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public String getSecret() {
+            return secret;
+        }
+
+        public String getUrl() {
+            return url;
+        }
     }
 }

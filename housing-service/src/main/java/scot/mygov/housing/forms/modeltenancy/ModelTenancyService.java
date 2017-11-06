@@ -41,7 +41,6 @@ public class ModelTenancyService {
 
         this.fieldExtractor = fieldExtractor;
         this.documentGenerator = documentGenerator;
-
         this.responseTimes = registry.timer(MetricName.RESPONSE_TIMES.name(this));
         this.requestCounter = registry.counter(MetricName.REQUESTS.name(this));
         this.errorCounter = registry.counter(MetricName.ERRORS.name(this));

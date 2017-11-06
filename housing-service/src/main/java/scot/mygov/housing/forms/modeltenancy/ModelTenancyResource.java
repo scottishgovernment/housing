@@ -2,6 +2,7 @@ package scot.mygov.housing.forms.modeltenancy;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import scot.mygov.documents.DocumentType;
+import scot.mygov.housing.forms.RecaptchaCheck;
 import scot.mygov.housing.forms.modeltenancy.model.ModelTenancy;
 import scot.mygov.validation.Validator;
 
@@ -20,6 +21,8 @@ import java.util.Map;
 @Path("model-tenancy")
 public class ModelTenancyResource {
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
     @Inject
     ModelTenancyService modelTenancyService;
 
@@ -28,6 +31,9 @@ public class ModelTenancyResource {
 
     @Inject
     ModelTenancyJsonTemplateLoader jsonTemplateLoader;
+
+    @Inject
+    RecaptchaCheck recaptchaCheck;
 
     @GET
     @Path("template")
@@ -56,6 +62,12 @@ public class ModelTenancyResource {
     }
 
     private Response modelTenancyResponse(ModelTenancy modelTenancy, String typeParam) throws ModelTenancyServiceException {
+
+        if (!recaptchaCheck.verify(modelTenancy.getRecaptcha())) {
+            // reject it ... what is the right response to send?
+            return Response.status(Response.Status.BAD_REQUEST).entity("Failed recaptcha check").build();
+        }
+
         DocumentType type = DocumentType.determineDocumentType(typeParam);
         modelTenancyValidator.validate(modelTenancy);
         byte[] tenancyBytes = modelTenancyService.save(modelTenancy, type);
@@ -71,7 +83,7 @@ public class ModelTenancyResource {
 
     private ModelTenancy parseModel(String data) throws ModelTenancyServiceException {
         try {
-            return new ObjectMapper().readValue(data, ModelTenancy.class);
+            return objectMapper.readValue(data, ModelTenancy.class);
         } catch (IOException ex) {
             throw new ModelTenancyServiceException("Could not parse model data", ex);
         }

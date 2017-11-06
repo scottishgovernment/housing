@@ -10,6 +10,7 @@ import scot.mygov.config.Configuration;
 import scot.mygov.documents.DocumentGenerator;
 import scot.mygov.documents.DocumentTemplateLoader;
 import scot.mygov.housing.cpi.CPIService;
+import scot.mygov.housing.forms.RecaptchaCheck;
 import scot.mygov.housing.forms.modeltenancy.ModelTenancyFieldExtractor;
 import scot.mygov.housing.forms.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.forms.rentadjudication.RentAdjudicationFieldExtractor;
@@ -127,7 +128,6 @@ public class HousingModule {
         return new MetricRegistry();
     }
 
-
     @Provides
     @Named(MODEL_TENANCY_TEMPLATE_LOADER)
     @Singleton
@@ -159,4 +159,12 @@ public class HousingModule {
         RentAdjudicationFieldExtractor fieldExtractor = new RentAdjudicationFieldExtractor();
         return new RentAdjudicationService(templateLoader, fieldExtractor);
     }
+
+    @Provides
+    RecaptchaCheck recaptchaCheck(HousingConfiguration configuration, Client client) {
+        HousingConfiguration.Recaptcha recaptchaConfig = configuration.getRecaptcha();
+        return new RecaptchaCheck(
+                recaptchaConfig.isEnabled(), client.target(recaptchaConfig.getUrl()), recaptchaConfig.getSecret());
+    }
+
 }

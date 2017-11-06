@@ -4,6 +4,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import scot.mygov.housing.forms.modeltenancy.model.Address;
 import scot.mygov.housing.forms.modeltenancy.model.AgentOrLandLord;
 import scot.mygov.housing.forms.modeltenancy.model.CommunicationsAgreement;
 import scot.mygov.housing.forms.modeltenancy.model.DepositSchemeAdministrator;
@@ -29,6 +30,7 @@ import java.util.stream.IntStream;
 import static java.lang.String.format;
 import static java.util.Collections.addAll;
 import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
 import static scot.mygov.housing.forms.FieldExtractorUtils.*;
 import static scot.mygov.housing.forms.FieldExtractorUtils.addressFieldsMultipleLines;
 
@@ -76,8 +78,13 @@ public class ModelTenancyFieldExtractor {
         List<String> emails = new ArrayList<>();
         List<String> phones = new ArrayList<>();
 
-        for (int i = 0; i < tenancy.getTenants().size(); i++) {
-            Person tenant = tenancy.getTenants().get(i);
+        List<Person> filteredTenants = tenancy.getTenants()
+                .stream()
+                .filter(person -> !isEmpty(person))
+                .collect(toList());
+
+        for (int i = 0; i < filteredTenants.size(); i++) {
+            Person tenant = filteredTenants.get(i);
             int tenantIndex = i + 1;
             namesAndAddresses.add(nameAndAddress(tenant, tenantIndex));
             emails.add(numberedValue(tenant.getEmail(), tenantIndex));
@@ -88,6 +95,29 @@ public class ModelTenancyFieldExtractor {
         fields.put("tenantEmails", emails.stream().collect(joining(NEWLINE)));
         fields.put("tenantPhoneNumbers", phones.stream().collect(joining(NEWLINE)));
         extractTenantSignatureblock(tenancy, fields);
+    }
+
+    boolean isEmpty(Person person) {
+        return allEmpty(person.getName(), person.getTelephone(), person.getEmail()) &&
+                isEmpty(person.getAddress());
+    }
+
+    boolean isEmpty(Address address) {
+        return allEmpty(
+                address.getBuilding(),
+                address.getPostcode(),
+                address.getRegion(),
+                address.getStreet(),
+                address.getTown());
+    }
+
+    boolean allEmpty(String ...values) {
+        for (String value : values) {
+            if (!StringUtils.isEmpty(value)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private void extractLettingAgent(ModelTenancy tenancy, Map<String, Object> fields) {

@@ -57,6 +57,7 @@ public class ModelTenancy {
     private String tenancyDepositSchemeAdministrator = "";
     private OptionalTerms optionalTerms = new OptionalTerms();
     private List<Term> additionalTerms = new ArrayList<>();
+    private String recaptcha;
 
     public List<Person> getTenants() {
         return tenants;
@@ -328,5 +329,13 @@ public class ModelTenancy {
 
     public void setAdditionalTerms(List<Term> additionalTerms) {
         this.additionalTerms = additionalTerms;
+    }
+
+    public String getRecaptcha() {
+        return recaptcha;
+    }
+
+    public void setRecaptcha(String recaptcha) {
+        this.recaptcha = recaptcha;
     }
 }
