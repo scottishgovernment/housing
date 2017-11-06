@@ -123,11 +123,6 @@ public class ModelTenancyFieldExtractor {
     private void extractLettingAgent(ModelTenancy tenancy, Map<String, Object> fields) {
         // letting agent is optional
         if (tenancy.getLettingAgent() == null) {
-            fields.put("lettingAgentName", NOT_APPLICABLE);
-            fields.put("lettingAgentAddress", NOT_APPLICABLE);
-            fields.put("lettingAgentEmail", NOT_APPLICABLE);
-            fields.put("lettingAgentPhone", NOT_APPLICABLE);
-            fields.put("lettingAgentRegistrationNumber", NOT_APPLICABLE);
             return;
         }
 
@@ -307,11 +302,11 @@ public class ModelTenancyFieldExtractor {
 
     private void extractFacilities(ModelTenancy tenancy, Map<String, Object> fields) {
         fields.put("includedAreasOrFacilities",
-                naForEmpty(tenancy.getIncludedAreasOrFacilities().stream().collect(joining(", "))));
+                tenancy.getIncludedAreasOrFacilities().stream().collect(joining(", ")));
         fields.put("excludedAreasFacilities",
-                naForEmpty(tenancy.getExcludedAreasFacilities().stream().collect(joining(", "))));
+                tenancy.getExcludedAreasFacilities().stream().collect(joining(", ")));
         fields.put("sharedFacilities",
-                naForEmpty(tenancy.getSharedFacilities().stream().collect(joining(", "))));
+                tenancy.getSharedFacilities().stream().collect(joining(", ")));
     }
 
     private void extractOptionalTerms(OptionalTerms optionalTerms, Map<String, Object> fields) {
