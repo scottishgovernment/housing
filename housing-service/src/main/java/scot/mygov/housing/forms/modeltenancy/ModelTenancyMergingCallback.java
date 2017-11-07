@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import scot.mygov.housing.forms.InitialisationFailedException;
 import scot.mygov.housing.forms.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.forms.modeltenancy.model.OptionalTerms;
+import scot.mygov.housing.forms.modeltenancy.model.Term;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -20,6 +21,9 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 import static java.util.Collections.addAll;
+import static java.util.stream.Collectors.joining;
+import static scot.mygov.housing.forms.FieldExtractorUtils.NOT_APPLICABLE;
+import static scot.mygov.housing.forms.modeltenancy.ModelTenancyFieldExtractor.NEWLINE;
 
 public class ModelTenancyMergingCallback implements IFieldMergingCallback {
 
@@ -164,6 +168,14 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
             return;
         }
 
+        // special cas efor terms so that we can insert some html...
+        if ("additionalTerms".equals(fieldName) {
+            String html =  formatAdditionalTerms(tenancy);
+            DocumentBuilder builder = new DocumentBuilder(fieldMergingArgs.getDocument());
+            builder.moveToMergeField(fieldName);
+            builder.insertHtml("<font face=\"arial\">" + html + "</font>");
+        }
+
         // For any field ending in EasyreadNotes we need to decide wether to :
         //
         // 1/ include the note (if the term has not been changed by the user)
@@ -184,26 +196,39 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
                 return;
             }
 
-            String html;
-            if ("utilities".equals(termName)) {
-                // special case for utilities field.
-                html = easyreadNotesForUtilities(value, BeanUtils.getProperty(defaultNotes, termName));
-            } else {
-                // default to using the easytread notes for this field.
-                html = BeanUtils.getProperty(defaultNotes, termName);
-
-                if (!value.equals(defaultValue)){
-                    // they chnged the value, use the placeholder html.
-                    html = PLACEHOLDER_HTML;
-                }
-            }
+            String html = htmlForTerm(termName, value, defaultValue);
 
             // insert the relevant content into the document.
             DocumentBuilder builder = new DocumentBuilder(fieldMergingArgs.getDocument());
             builder.moveToMergeField(fieldName);
-
             builder.insertHtml("<font face=\"arial\">" + html + "</font>");
         }
+    }
+
+    private String htmlForTerm(String termName, String value, String defaultValue) throws Illegal{
+        if ("utilities".equals(termName)) {
+            // special case for utilities field.
+            return easyreadNotesForUtilities(value, BeanUtils.getProperty(defaultNotes, termName));
+        }
+
+        if (!value.equals(defaultValue)) {
+            // they changed the value, use the placeholder html.
+            return PLACEHOLDER_HTML;
+        }
+
+        // default to using the easytread notes for this field.
+        return BeanUtils.getProperty(defaultNotes, termName);
+    }
+    public String formatAdditionalTerms(ModelTenancy tenancy) {
+        if (tenancy.getAdditionalTerms().isEmpty()) {
+            return "<p>n/a</p>";
+        }
+
+        return tenancy.getAdditionalTerms().stream().map(this::formatAdditionalTerm).collect(joining(NEWLINE));
+    }
+
+    private String formatAdditionalTerm(Term term) {
+        return String.format("<div><strong>%s</strong></div><p>%s</p>", term.getTitle(), term.getContent());
     }
 
     public void provdePlacholder(FieldMergingArgs fieldMergingArgs) throws Exception {

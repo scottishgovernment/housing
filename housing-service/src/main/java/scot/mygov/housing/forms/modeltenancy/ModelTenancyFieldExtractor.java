@@ -16,7 +16,6 @@ import scot.mygov.housing.forms.modeltenancy.model.OptionalTerms;
 import scot.mygov.housing.forms.modeltenancy.model.Person;
 import scot.mygov.housing.forms.modeltenancy.model.RentPaymentFrequency;
 import scot.mygov.housing.forms.modeltenancy.model.Service;
-import scot.mygov.housing.forms.modeltenancy.model.Term;
 
 import javax.inject.Inject;
 import java.time.LocalDate;
@@ -41,7 +40,7 @@ public class ModelTenancyFieldExtractor {
 
     private static final Logger LOG = LoggerFactory.getLogger(ModelTenancyFieldExtractor.class);
 
-    private static final String NEWLINE = "\n";
+    public static final String NEWLINE = "\n";
 
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
 
@@ -65,7 +64,6 @@ public class ModelTenancyFieldExtractor {
         extractRent(tenancy, fields);
         extractDeposit(tenancy, fields);
         extractOptionalTerms(tenancy.getOptionalTerms(), fields);
-        extractAdditionalTerms(tenancy, fields);
         extractGuarantorSignatureblock(tenancy, fields);
         extractTenantSignatureblock(tenancy, fields);
         extractLandlordSignatureblock(tenancy, fields);
@@ -266,20 +264,6 @@ public class ModelTenancyFieldExtractor {
                 depositScemeAdministrators.forName(tenancy.getTenancyDepositSchemeAdministrator());
         String depositSchemeAdministratorContactDetails = depositSchemeAdministratorContactDetails(depositSchemeAdministrator);
         fields.put("depositSchemeContactDetails", depositSchemeAdministratorContactDetails);
-    }
-
-    public void extractAdditionalTerms(ModelTenancy tenancy, Map<String, Object> fields) {
-        if (tenancy.getAdditionalTerms().isEmpty()) {
-            fields.put("additionalTerms", NOT_APPLICABLE);
-            return;
-        }
-
-        String terms = tenancy.getAdditionalTerms().stream().map(this::formatTerm).collect(joining(NEWLINE));
-        fields.put("additionalTerms", terms);
-    }
-
-    private String formatTerm(Term term) {
-        return String.format("%s%s%s%s", term.getTitle(), NEWLINE, term.getContent(), NEWLINE);
     }
 
     private void extractServices(ModelTenancy tenancy, Map<String, Object> fields) {
