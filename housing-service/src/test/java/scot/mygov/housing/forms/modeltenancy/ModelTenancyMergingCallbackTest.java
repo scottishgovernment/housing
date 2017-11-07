@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import scot.mygov.housing.forms.modeltenancy.model.ModelTenancy;
+import scot.mygov.housing.forms.modeltenancy.model.Term;
 import scot.mygov.housing.forms.modeltenancy.validation.ModelTenancyObjectMother;
 
 import java.util.Collections;
@@ -114,6 +115,27 @@ public class ModelTenancyMergingCallbackTest {
 
         // ASSERT
         verify(ancestor, Mockito.never()).remove();
+    }
+
+    @Test
+    public void additionalTermsFormattedCorrectly() throws Exception {
+
+        // ARRANGE
+        Term term = new Term();
+        term.setContent("title");
+        term.setContent("content");
+        ModelTenancy tenancy = om.anyTenancy();
+        tenancy.setAdditionalTerms(Collections.singletonList(term));
+
+        ModelTenancyMergingCallback sut = new ModelTenancyMergingCallback(tenancy);
+        FieldMergingArgs args = mock(FieldMergingArgs.class);
+        when(args.getFieldName()).thenReturn("additionalTerms");
+        when(args.getDocument()).thenReturn(new Document());
+
+        //  ACT
+        sut.fieldMerging(args);
+
+        // ASSERT
     }
 
     @Test
