@@ -14,6 +14,7 @@ import scot.mygov.housing.forms.modeltenancy.model.OptionalTerms;
 import scot.mygov.housing.forms.modeltenancy.model.Term;
 
 import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -169,7 +170,7 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
         }
 
         // special cas efor terms so that we can insert some html...
-        if ("additionalTerms".equals(fieldName) {
+        if ("additionalTerms".equals(fieldName)) {
             String html =  formatAdditionalTerms(tenancy);
             DocumentBuilder builder = new DocumentBuilder(fieldMergingArgs.getDocument());
             builder.moveToMergeField(fieldName);
@@ -205,7 +206,8 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
         }
     }
 
-    private String htmlForTerm(String termName, String value, String defaultValue) throws Illegal{
+    private String htmlForTerm(String termName, String value, String defaultValue)
+            throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         if ("utilities".equals(termName)) {
             // special case for utilities field.
             return easyreadNotesForUtilities(value, BeanUtils.getProperty(defaultNotes, termName));
