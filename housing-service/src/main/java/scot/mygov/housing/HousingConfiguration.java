@@ -88,11 +88,11 @@ public class HousingConfiguration {
     }
 
     public static class Recaptcha {
+        public static final String RECAPTCHA_VERIFY_URL = "https://www.google.com/recaptcha/api/siteverify";
+
         private boolean enabled = true;
 
         private String secret = "";
-
-        private String url = "https://www.google.com/recaptcha/api/siteverify";
 
         public boolean isEnabled() {
             return enabled;
@@ -100,10 +100,6 @@ public class HousingConfiguration {
 
         public String getSecret() {
             return secret;
-        }
-
-        public String getUrl() {
-            return url;
         }
     }
 }

@@ -163,8 +163,11 @@ public class HousingModule {
     @Provides
     RecaptchaCheck recaptchaCheck(HousingConfiguration configuration, Client client) {
         HousingConfiguration.Recaptcha recaptchaConfig = configuration.getRecaptcha();
+        WebTarget verifyTarget = client.target(recaptchaConfig.RECAPTCHA_VERIFY_URL);
         return new RecaptchaCheck(
-                recaptchaConfig.isEnabled(), client.target(recaptchaConfig.getUrl()), recaptchaConfig.getSecret());
+                recaptchaConfig.isEnabled(),
+                verifyTarget,
+                recaptchaConfig.getSecret());
     }
 
 }

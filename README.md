@@ -34,6 +34,17 @@ This application provides endpoints for:
   * Type: URI
   * Default: `http://localhost:9200/housing-data/cpi/cpi/_source`
 
+* `recaptcha_enabled`
+  * should we check the recaptcha sent by the client.  Diabling this is useful when testing the api through postman.
+  * Type: boolean
+  * Default: true
+
+* `recaptcha_secret`
+  * secret used when verifying recaptcha key from cleint
+  * Type: string
+  * Default: (none)
+
+
 # Monitoring
 
 The healthcheck endpoint is `GET /health`. The endpoint returns a JSON response
