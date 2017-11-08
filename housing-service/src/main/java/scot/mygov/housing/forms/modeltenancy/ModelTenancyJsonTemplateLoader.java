@@ -11,7 +11,8 @@ public class ModelTenancyJsonTemplateLoader {
     @Inject
     public ModelTenancyJsonTemplateLoader() {
         modelTenancyTemplate = new ModelTenancy();
-        modelTenancyTemplate.setOptionalTerms(OptionalTermsUtil.defaultTerms());
+        modelTenancyTemplate.setOptionalTerms(TermsUtil.defaultOptionalTerms());
+        modelTenancyTemplate.setMustIncludeTerms(TermsUtil.defaultMustIncludeTerms());
     }
 
     public ModelTenancy loadJsonTemplate() {

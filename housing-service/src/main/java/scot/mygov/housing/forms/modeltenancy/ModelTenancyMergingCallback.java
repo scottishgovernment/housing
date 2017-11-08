@@ -23,7 +23,6 @@ import java.util.function.Consumer;
 
 import static java.util.Collections.addAll;
 import static java.util.stream.Collectors.joining;
-import static scot.mygov.housing.forms.FieldExtractorUtils.NOT_APPLICABLE;
 import static scot.mygov.housing.forms.modeltenancy.ModelTenancyFieldExtractor.NEWLINE;
 
 public class ModelTenancyMergingCallback implements IFieldMergingCallback {
@@ -33,10 +32,12 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
             "<p>If you need more information about this clauses you may want to discuss them with your landlord, " +
             "or contact the advice groups listed at the end of these Notes.</p>";
 
+    private static final String ALTERATIONS = "alterations";
+
     // the name of fields that will cause their section to be removed if they are empty
     private static final Set<String> fieldsToRemoveIfEmpty = fieldsToDeleteIfEmpty();
-    private static final OptionalTerms defaultTerms = OptionalTermsUtil.defaultTerms();
-    private static final OptionalTerms defaultNotes = OptionalTermsUtil.defaultEasyreadNotes();
+    private static final OptionalTerms defaultTerms = TermsUtil.defaultOptionalTerms();
+    private static final OptionalTerms defaultNotes = TermsUtil.defaultEasyreadNotes();
 
     private final ModelTenancy tenancy;
 
@@ -163,13 +164,13 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
 
         // if the field is one of the fieldsToRemoveIfEmpty then remove the sections it is contained within from the
         // document.
-        if (fieldsToRemoveIfEmpty.contains(fieldName) && StringUtils.isEmpty(fieldValue)) {
+        if (shouldRemoveSection(fieldName, fieldValue, fieldMergingArgs)) {
             Section section = (Section) fieldMergingArgs.getField().getStart().getAncestor(Section.class);
             section.remove();
             return;
         }
 
-        // special cas efor terms so that we can insert some html...
+        // special case for terms so that we can insert some html...
         if ("additionalTerms".equals(fieldName)) {
             String html =  formatAdditionalTerms(tenancy);
             DocumentBuilder builder = new DocumentBuilder(fieldMergingArgs.getDocument());
@@ -204,6 +205,21 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
             builder.moveToMergeField(fieldName);
             builder.insertHtml("<font face=\"arial\">" + html + "</font>");
         }
+    }
+
+    private boolean shouldRemoveSection(String fieldName, String fieldValue, FieldMergingArgs fieldMergingArgs) {
+        if (fieldsToRemoveIfEmpty.contains(fieldName) && StringUtils.isEmpty(fieldValue)){
+            return true;
+        }
+
+        // special case for alterations
+        if (ALTERATIONS.equals(fieldName)
+                && tenancy.getExcludedTerms().stream().anyMatch(t -> ALTERATIONS.equals(t))  ) {
+            Section section = (Section) fieldMergingArgs.getField().getStart().getAncestor(Section.class);
+            section.remove();
+        }
+
+        return false;
     }
 
     private String htmlForTerm(String termName, String value, String defaultValue)
@@ -245,7 +261,7 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
      */
     public static String easyreadNotesForUtilities(String utilitiesTerm, String defaultTerm) {
         String utilsList = "[gas/electricity/telephone/TV licence/internet/broadband]";
-        String defaultUtilitiesTerm = OptionalTermsUtil.defaultTerms().getUtilities();
+        String defaultUtilitiesTerm = TermsUtil.defaultOptionalTerms().getUtilities();
         String prefix = org.apache.commons.lang.StringUtils.substringBefore(defaultUtilitiesTerm, utilsList);
         String postfix = org.apache.commons.lang.StringUtils.substringAfter(defaultUtilitiesTerm, utilsList);
         if (utilitiesTerm.startsWith(prefix) && utilitiesTerm.endsWith(postfix)) {
@@ -267,6 +283,7 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
         // add al of the optional sections.
         try {
             fields.addAll(BeanUtils.describe(new OptionalTerms()).keySet());
+            fields.remove(ALTERATIONS);
 
             // other fields with sections
             addAll(fields,

@@ -56,7 +56,9 @@ public class ModelTenancy {
     private String depositAmount = "";
     private String tenancyDepositSchemeAdministrator = "";
     private OptionalTerms optionalTerms = new OptionalTerms();
+    private MustIncludeTerms mustIncludeTerms = new MustIncludeTerms();
     private List<Term> additionalTerms = new ArrayList<>();
+    private List<String> excludedTerms = new ArrayList<>();
     private String recaptcha;
 
     public List<Person> getTenants() {
@@ -323,12 +325,28 @@ public class ModelTenancy {
         this.optionalTerms = optionalTerms;
     }
 
+    public MustIncludeTerms getMustIncludeTerms() {
+        return mustIncludeTerms;
+    }
+
+    public void setMustIncludeTerms(MustIncludeTerms mustIncludeTerms) {
+        this.mustIncludeTerms = mustIncludeTerms;
+    }
+
     public List<Term> getAdditionalTerms() {
         return additionalTerms;
     }
 
     public void setAdditionalTerms(List<Term> additionalTerms) {
         this.additionalTerms = additionalTerms;
+    }
+
+    public List<String> getExcludedTerms() {
+        return excludedTerms;
+    }
+
+    public void setExcludedTerms(List<String> excludedTerms) {
+        this.excludedTerms = excludedTerms;
     }
 
     public String getRecaptcha() {
