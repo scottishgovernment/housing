@@ -202,14 +202,6 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
             return;
         }
 
-        // if there are no tenants that have guarentors then remove the section
-        // cant get this to work.
-//        if (tenancy.getGuarantors().isEmpty()) {
-//            Section section = (Section) fieldMergingArgs.getField().getStart().getAncestor(Section.class);
-//            section.remove();
-//            return;
-//        }
-
         for (int i = 0; i < tenancy.getGuarantors().size(); i++) {
             Guarantor guarantor = tenancy.getGuarantors().get(i);
 

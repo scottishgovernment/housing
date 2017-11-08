@@ -191,6 +191,156 @@ public class ModelTenancyMergingCallbackTest {
     }
 
     @Test
+    public void guarentorsSignatureBlock() throws Exception {
+
+        // ARRANGE
+        ModelTenancy tenancy = om.tenancyWithGuarentors();;
+
+        ModelTenancyMergingCallback sut = new ModelTenancyMergingCallback(tenancy);
+        FieldMergingArgs args = mock(FieldMergingArgs.class);
+        when(args.getFieldValue()).thenReturn("");
+        when(args.getFieldName()).thenReturn("guarentorSignatures");
+        Field field = mock(Field.class);
+        FieldStart fieldStart = mock(FieldStart.class);
+        Node ancestor = mock(Section.class);
+
+        when(args.getField()).thenReturn(field);
+        when(field.getStart()).thenReturn(fieldStart);
+        when(fieldStart.getAncestor(ArgumentMatchers.any())).thenReturn(ancestor);
+        when(args.getDocument()).thenReturn(new Document());
+
+        //  ACT
+        sut.fieldMerging(args);
+
+        // ASSERT
+    }
+
+    @Test
+    public void tenantSignatureBlock() throws Exception {
+
+        // ARRANGE
+        ModelTenancy tenancy = om.anyTenancy();;
+
+        ModelTenancyMergingCallback sut = new ModelTenancyMergingCallback(tenancy);
+        FieldMergingArgs args = mock(FieldMergingArgs.class);
+        when(args.getFieldValue()).thenReturn("");
+        when(args.getFieldName()).thenReturn("tenantSignatures");
+        Field field = mock(Field.class);
+        FieldStart fieldStart = mock(FieldStart.class);
+        Node ancestor = mock(Section.class);
+
+        when(args.getField()).thenReturn(field);
+        when(field.getStart()).thenReturn(fieldStart);
+        when(fieldStart.getAncestor(ArgumentMatchers.any())).thenReturn(ancestor);
+        when(args.getDocument()).thenReturn(new Document());
+
+        //  ACT
+        sut.fieldMerging(args);
+
+        // ASSERT
+    }
+
+    @Test
+    public void landlordSignatureBlock() throws Exception {
+
+        // ARRANGE
+        ModelTenancy tenancy = om.anyTenancy();;
+
+        ModelTenancyMergingCallback sut = new ModelTenancyMergingCallback(tenancy);
+        FieldMergingArgs args = mock(FieldMergingArgs.class);
+        when(args.getFieldValue()).thenReturn("");
+        when(args.getFieldName()).thenReturn("landlordSignatures");
+        Field field = mock(Field.class);
+        FieldStart fieldStart = mock(FieldStart.class);
+        Node ancestor = mock(Section.class);
+
+        when(args.getField()).thenReturn(field);
+        when(field.getStart()).thenReturn(fieldStart);
+        when(fieldStart.getAncestor(ArgumentMatchers.any())).thenReturn(ancestor);
+        when(args.getDocument()).thenReturn(new Document());
+
+        //  ACT
+        sut.fieldMerging(args);
+
+        // ASSERT
+    }
+
+    @Test
+    public void tenantEmails() throws Exception {
+
+        // ARRANGE
+        ModelTenancy tenancy = om.anyTenancy();;
+
+        ModelTenancyMergingCallback sut = new ModelTenancyMergingCallback(tenancy);
+        FieldMergingArgs args = mock(FieldMergingArgs.class);
+        when(args.getFieldValue()).thenReturn("");
+        when(args.getFieldName()).thenReturn("tenantEmails");
+        Field field = mock(Field.class);
+        FieldStart fieldStart = mock(FieldStart.class);
+        Node ancestor = mock(Section.class);
+
+        when(args.getField()).thenReturn(field);
+        when(field.getStart()).thenReturn(fieldStart);
+        when(fieldStart.getAncestor(ArgumentMatchers.any())).thenReturn(ancestor);
+        when(args.getDocument()).thenReturn(new Document());
+
+        //  ACT
+        sut.fieldMerging(args);
+
+        // ASSERT
+    }
+
+    @Test
+    public void landlordNames() throws Exception {
+
+        // ARRANGE
+        ModelTenancy tenancy = om.anyTenancy();;
+
+        ModelTenancyMergingCallback sut = new ModelTenancyMergingCallback(tenancy);
+        FieldMergingArgs args = mock(FieldMergingArgs.class);
+        when(args.getFieldValue()).thenReturn("");
+        when(args.getFieldName()).thenReturn("landlordNames");
+        Field field = mock(Field.class);
+        FieldStart fieldStart = mock(FieldStart.class);
+        Node ancestor = mock(Section.class);
+
+        when(args.getField()).thenReturn(field);
+        when(field.getStart()).thenReturn(fieldStart);
+        when(fieldStart.getAncestor(ArgumentMatchers.any())).thenReturn(ancestor);
+        when(args.getDocument()).thenReturn(new Document());
+
+        //  ACT
+        sut.fieldMerging(args);
+
+        // ASSERT
+    }
+
+    @Test
+    public void tenantNamesAndAddresses() throws Exception {
+
+        // ARRANGE
+        ModelTenancy tenancy = om.anyTenancy();;
+
+        ModelTenancyMergingCallback sut = new ModelTenancyMergingCallback(tenancy);
+        FieldMergingArgs args = mock(FieldMergingArgs.class);
+        when(args.getFieldValue()).thenReturn("");
+        when(args.getFieldName()).thenReturn("tenantNamesAndAddresses");
+        Field field = mock(Field.class);
+        FieldStart fieldStart = mock(FieldStart.class);
+        Node ancestor = mock(Section.class);
+
+        when(args.getField()).thenReturn(field);
+        when(field.getStart()).thenReturn(fieldStart);
+        when(fieldStart.getAncestor(ArgumentMatchers.any())).thenReturn(ancestor);
+        when(args.getDocument()).thenReturn(new Document());
+
+        //  ACT
+        sut.fieldMerging(args);
+
+        // ASSERT
+    }
+
+    @Test
     public void imageFieldMergingDoesNothing() throws Exception {
         ModelTenancyMergingCallback sut = new ModelTenancyMergingCallback(om.anyTenancy());
         sut.imageFieldMerging(null);
