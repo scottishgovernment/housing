@@ -10,7 +10,6 @@ import scot.mygov.housing.forms.modeltenancy.model.CommunicationsAgreement;
 import scot.mygov.housing.forms.modeltenancy.model.DepositSchemeAdministrator;
 import scot.mygov.housing.forms.modeltenancy.model.DepositSchemeAdministrators;
 import scot.mygov.housing.forms.modeltenancy.model.FurnishingType;
-import scot.mygov.housing.forms.modeltenancy.model.Guarantor;
 import scot.mygov.housing.forms.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.forms.modeltenancy.model.OptionalTerms;
 import scot.mygov.housing.forms.modeltenancy.model.Person;
@@ -24,7 +23,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.IntStream;
 
 import static java.lang.String.format;
 import static java.util.Collections.addAll;
@@ -64,9 +62,6 @@ public class ModelTenancyFieldExtractor {
         extractRent(tenancy, fields);
         extractDeposit(tenancy, fields);
         extractOptionalTerms(tenancy.getOptionalTerms(), fields);
-        extractGuarantorSignatureblock(tenancy, fields);
-        extractTenantSignatureblock(tenancy, fields);
-        extractLandlordSignatureblock(tenancy, fields);
 
         return fields;
     }
@@ -92,15 +87,14 @@ public class ModelTenancyFieldExtractor {
         fields.put("tenantNamesAndAddresses", namesAndAddresses.stream().collect(joining(NEWLINE)));
         fields.put("tenantEmails", emails.stream().collect(joining(NEWLINE)));
         fields.put("tenantPhoneNumbers", phones.stream().collect(joining(NEWLINE)));
-        extractTenantSignatureblock(tenancy, fields);
     }
 
-    boolean isEmpty(Person person) {
+    public static boolean isEmpty(Person person) {
         return allEmpty(person.getName(), person.getTelephone(), person.getEmail()) &&
                 isEmpty(person.getAddress());
     }
 
-    boolean isEmpty(Address address) {
+    public static boolean isEmpty(Address address) {
         return allEmpty(
                 address.getBuilding(),
                 address.getPostcode(),
@@ -109,7 +103,7 @@ public class ModelTenancyFieldExtractor {
                 address.getTown());
     }
 
-    boolean allEmpty(String ...values) {
+    public static boolean allEmpty(String ...values) {
         for (String value : values) {
             if (!StringUtils.isEmpty(value)) {
                 return false;
@@ -132,15 +126,20 @@ public class ModelTenancyFieldExtractor {
         fields.put("lettingAgentRegistrationNumber", agent.getRegistrationNumber());
     }
 
-    private void extractLandlords(ModelTenancy modelTenancy, Map<String, Object> fields) {
+    private void extractLandlords(ModelTenancy tenancy, Map<String, Object> fields) {
         List<String> landlordNames = new ArrayList<>();
         List<String> landlordAddresses = new ArrayList<>();
         List<String> landlordEmails = new ArrayList<>();
         List<String> landlordPhones = new ArrayList<>();
         List<String> landlordRegNumbers = new ArrayList<>();
 
-        for (int i = 0; i < modelTenancy.getLandlords().size(); i++) {
-            AgentOrLandLord landlord = modelTenancy.getLandlords().get(i);
+        List<AgentOrLandLord> filteredLandlords = tenancy.getLandlords()
+                .stream()
+                .filter(person -> !isEmpty(person))
+                .collect(toList());
+
+        for (int i = 0; i < filteredLandlords.size(); i++) {
+            AgentOrLandLord landlord = filteredLandlords.get(i);
             int landlordIndex = i + 1;
             landlordNames.add(String.format("Name (%d): %s", landlordIndex, landlord.getName()));
             landlordAddresses.add(String.format("Address (%d): %s%s%s",
@@ -227,21 +226,22 @@ public class ModelTenancyFieldExtractor {
 
     public void extractRent(ModelTenancy tenancy, Map<String, Object> fields) {
         String rentAmount = tenancy.getRentAmount();
-        String rentPaymentFrequnecy = RentPaymentFrequency.description(tenancy.getRentPaymentFrequency());
+        String rentPaymentFrequency = RentPaymentFrequency.description(tenancy.getRentPaymentFrequency());
         if (!StringUtils.isEmpty(tenancy.getAltRentAmount())) {
             rentAmount = tenancy.getAltRentAmount();
         }
         if (!StringUtils.isEmpty(tenancy.getAltRentPaymentFrequency())) {
-            rentPaymentFrequnecy = tenancy.getAltRentPaymentFrequency();
+            rentPaymentFrequency = tenancy.getAltRentPaymentFrequency();
         }
         fields.put("rentAmount", rentAmount);
-        fields.put("rentPaymentFrequency", rentPaymentFrequnecy);
+        fields.put("originalRentAmount", tenancy.getRentAmount());
+        fields.put("rentPaymentFrequency", rentPaymentFrequency);
+        fields.put("rentPaymentFrequencyDayOrDate", RentPaymentFrequency.dayOrDate(tenancy.getRentPaymentFrequency()));
         extractAdvanceOrArrears(tenancy, fields);
         fields.put("firstPaymentDate", formatDate(tenancy.getFirstPaymentDate()));
         fields.put("firstPaymentAmount", tenancy.getFirstPaymentAmount());
         fields.put("firstPaymentPeriodStart", formatDate(tenancy.getTenancyStartDate()));
         fields.put("firstPaymentPeriodEnd", formatDate(tenancy.getFirstPaymentPeriodEnd()));
-        fields.put("rentPaymentDayOrDate", tenancy.getRentPaymentDayOrDate());
         fields.put("rentPaymentSchedule", tenancy.getRentPaymentSchedule());
         fields.put("rentPaymentMethod", tenancy.getRentPaymentMethod());
     }
@@ -302,61 +302,6 @@ public class ModelTenancyFieldExtractor {
         } catch (Exception e) {
             LOG.warn("Failed to extract properties", e);
         }
-    }
-
-    private void extractGuarantorSignatureblock(ModelTenancy tenancy, Map<String, Object> fields) {
-        List<String> signatureBlocks = new ArrayList<>();
-        IntStream.range(1, tenancy.getGuarantors().size() + 1).forEach(i -> {
-            Guarantor guarantor = tenancy.getGuarantors().get(i - 1);
-            List<String> parts = new ArrayList<String>();
-            String tenantNames = guarantor.getTenantNames().stream().collect(joining(", "));
-            addAll(parts,
-                format("Guarantor %d", i),
-                format("Name(s) of Tenant(s) for whom Guarantor 1 will act as Guarantor:\n\t%s", tenantNames),
-                format("Guarantor %d Signature:\t", i),
-                format("Guarantor Full Name (Block  Capitals):\t%s", guarantor.getName().toUpperCase()),
-                format("Guarantor Address:\n%s", addressFieldsMultipleLines(guarantor.getAddress())),
-                "Date:\t");
-            signatureBlocks.add(parts.stream().collect(joining("\n")));
-        });
-        fields.put("guarentorSignatures", signatureBlocks.stream().collect(joining(NEWLINE + NEWLINE)));
-    }
-
-    private void extractTenantSignatureblock(ModelTenancy tenancy, Map<String, Object> fields) {
-        List<String> signatureBlocks = new ArrayList<>();
-        int index = 1;
-        for (Person tenant : tenancy.getTenants()) {
-            List<String> parts = new ArrayList<String>();
-            addAll(parts,
-                    format("Tenant %d Full Name: %s", index, tenant.getName()),
-                    format("Tenant %d Address:%s%s",
-                            index, NEWLINE, addressFieldsMultipleLines(tenant.getAddress())),
-                    format("Tenant %d Signature:", index),
-                    format("Date:"),
-                    NEWLINE);
-            signatureBlocks.add(parts.stream().collect(joining(NEWLINE)));
-            index++;
-        }
-
-        fields.put("tenantSignatures", signatureBlocks.stream().collect(joining(NEWLINE)));
-    }
-
-    private void extractLandlordSignatureblock(ModelTenancy tenancy, Map<String, Object> fields) {
-        List<String> signatureBlocks = new ArrayList<>();
-        int index = 1;
-        for (AgentOrLandLord landLord : tenancy.getLandlords()) {
-            List<String> parts = new ArrayList<String>();
-            addAll(parts,
-                    format("Landlord %d Full Name: %s", index, landLord.getName()),
-                    format("Landlord %d Address:%s%s",
-                            index, NEWLINE, addressFieldsMultipleLines(landLord.getAddress())),
-                    format("Landlord %d Signature:", index),
-                    format("Date:"),
-                    NEWLINE);
-            signatureBlocks.add(parts.stream().collect(joining(NEWLINE)));
-            index++;
-        }
-        fields.put("landlordSignatures", signatureBlocks.stream().collect(joining(NEWLINE)));
     }
 
     private String regNumber(AgentOrLandLord landlord) {

@@ -8,21 +8,24 @@ import com.aspose.words.ParagraphFormat;
 import com.aspose.words.Section;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
+import scot.mygov.housing.forms.FieldExtractorUtils;
 import scot.mygov.housing.forms.InitialisationFailedException;
+import scot.mygov.housing.forms.modeltenancy.model.Guarantor;
 import scot.mygov.housing.forms.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.forms.modeltenancy.model.OptionalTerms;
+import scot.mygov.housing.forms.modeltenancy.model.Person;
 import scot.mygov.housing.forms.modeltenancy.model.Term;
 
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.addAll;
 import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
 import static scot.mygov.housing.forms.modeltenancy.ModelTenancyFieldExtractor.NEWLINE;
 
 public class ModelTenancyMergingCallback implements IFieldMergingCallback {
@@ -33,6 +36,7 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
             "or contact the advice groups listed at the end of these Notes.</p>";
 
     private static final String ALTERATIONS = "alterations";
+    private static final String DATE_LABEL = "Date:";
 
     // the name of fields that will cause their section to be removed if they are empty
     private static final Set<String> fieldsToRemoveIfEmpty = fieldsToDeleteIfEmpty();
@@ -61,8 +65,8 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
         placeholders.put("lettingAgentRegistrationNumber", documentBuilder -> writeLines(documentBuilder, 1));
         placeholders.put("lettingAgentServices", documentBuilder -> writeLines(documentBuilder, 3));
         placeholders.put("lettingAgentPointOfContactServices", documentBuilder -> writeLines(documentBuilder, 3));
-        placeholders.put("landlordNames", documentBuilder -> writeNumberedLines(documentBuilder, 2));
-        placeholders.put("landlordAddresses", documentBuilder -> writeNumberedLines(documentBuilder, 6));
+        placeholders.put("landlordNames", documentBuilder -> writeNumberedLines(documentBuilder, "Name ", "\n\n\n", 2));
+        placeholders.put("landlordAddresses", documentBuilder -> writeNumberedLines(documentBuilder, "Address ", "\n\n\n", 2));
         placeholders.put("landlordEmails", documentBuilder -> writeNumberedLines(documentBuilder, 2));
         placeholders.put("landlordPhones", documentBuilder -> writeNumberedLines(documentBuilder, 2));
         placeholders.put("landlordRegNumbers",
@@ -73,12 +77,17 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
         placeholders.put("sharedFacilities", documentBuilder -> writeLines(documentBuilder, 2));
         placeholders.put("excludedAreasFacilities", documentBuilder -> writeLines(documentBuilder, 2));
         placeholders.put("furnishingType",
-                documentBuilder -> writeInlineField(documentBuilder, "[Furnished / Unfurnished]"));
+                documentBuilder -> writeInlineField(documentBuilder, "[Furnished / Unfurnished / Partly furnished]"));
         placeholders.put("hmoString", documentBuilder -> writeInlineField(documentBuilder, "[is / is not]"));
         placeholders.put("hmoContactNumber", documentBuilder -> writeLines(documentBuilder, 2));
         placeholders.put("hmoExpiryDate", documentBuilder -> writeInlineField(documentBuilder, datePlaceholder));
         placeholders.put("tenancyStartDate", documentBuilder -> writeInlineField(documentBuilder, datePlaceholder));
+        placeholders.put("depositAmount", documentBuilder -> writeInlineField(documentBuilder, monetaryPlaceholder));
+        placeholders.put("depositSchemeAdministrator",
+                documentBuilder -> writeInlineField(documentBuilder, "______________________________"));
+        placeholders.put("depositSchemeContactDetails", documentBuilder -> writeLines(documentBuilder, 4));
         placeholders.put("rentAmount", documentBuilder -> writeInlineField(documentBuilder, monetaryPlaceholder));
+        placeholders.put("originalRentAmount", documentBuilder -> writeInlineField(documentBuilder, monetaryPlaceholder));
         placeholders.put("rentPressureZoneString", documentBuilder -> writeInlineField(documentBuilder,
                 "[is / is not]"));
         placeholders.put("rentPaymentFrequency", documentBuilder -> writeInlineField(documentBuilder,
@@ -98,18 +107,227 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
                 documentBuilder -> writeInlineField(documentBuilder,
                         "[day of each week/fortnight/four weekly period/date each calendar month/date each 6-month period]"));
         placeholders.put("rentPaymentMethod", documentBuilder -> writeInlineField(documentBuilder, "__________"));
-        placeholders.put("guarentorSignatures", documentBuilder -> {
-            writeInlineField(documentBuilder, "Guarantor signature(s)");
-            writeLines(documentBuilder, 15);
-        });
-        placeholders.put("tenantSignatures", documentBuilder -> {
-            writeInlineField(documentBuilder, "Tenant signature(s)");
-            writeLines(documentBuilder, 15);
-        });
-        placeholders.put("landlordSignatures", documentBuilder -> {
-            writeInlineField(documentBuilder, "Landlord signature(s)");
-            writeLines(documentBuilder, 15);
-        });
+    }
+
+    @Override
+    public void fieldMerging(FieldMergingArgs fieldMergingArgs) throws Exception {
+
+        String fieldValue = fieldMergingArgs.getFieldValue() == null ?
+                null : fieldMergingArgs.getFieldValue().toString();
+        String fieldName = fieldMergingArgs.getFieldName();
+
+        // do we want to provide a placeholder for an empty value?
+        if (placeholders.containsKey(fieldName) && StringUtils.isEmpty(fieldValue)) {
+            provdePlacholder(fieldMergingArgs);
+        }
+
+        // handle guarentors section:
+        handleSignatureBlocks(fieldName, fieldMergingArgs);
+
+        // special case for terms so that we can insert some html...
+        if ("additionalTerms".equals(fieldName)) {
+            String html =  formatAdditionalTerms(tenancy);
+            DocumentBuilder builder = new DocumentBuilder(fieldMergingArgs.getDocument());
+            builder.moveToMergeField(fieldName);
+            builder.insertHtml("<font face=\"arial\">" + html + "</font>");
+        }
+
+        // if the field is one of the fieldsToRemoveIfEmpty then remove the sections it is contained within from the
+        // document.
+        if (shouldRemoveSection(fieldName, fieldValue, fieldMergingArgs)) {
+            Section section = (Section) fieldMergingArgs.getField().getStart().getAncestor(Section.class);
+            section.remove();
+            return;
+        }
+
+        // For any field ending in EasyreadNotes we need to decide wether to :
+        //
+        // 1/ include the note (if the term has not been changed by the user)
+        // 2/ remove note altogether oif the user removed the term
+        // 3/ put in placeholder text to notify the user fo the change
+        //
+        // In addition the utilities field is handled slightly differently - changes to the list of utilities is not
+        // considered a change in the above logic.
+        if (fieldName.endsWith("EasyreadNotes")) {
+            String termName = StringUtils.substringBeforeLast(fieldName, "EasyreadNotes");
+            String value = BeanUtils.getProperty(tenancy.getOptionalTerms(), termName);
+            String defaultValue = BeanUtils.getProperty(defaultTerms, termName);
+
+            if (StringUtils.isEmpty(value)) {
+                // user removed the term, remove the section
+                Section section = (Section) fieldMergingArgs.getField().getStart().getAncestor(Section.class);
+                section.remove();
+                return;
+            }
+
+            String html = htmlForTerm(termName, value, defaultValue);
+
+            // insert the relevant content into the document.
+            DocumentBuilder builder = new DocumentBuilder(fieldMergingArgs.getDocument());
+            builder.moveToMergeField(fieldName);
+            builder.insertHtml("<font face=\"arial\">" + html + "</font>");
+        }
+    }
+
+    private void handleSignatureBlocks(String fieldName, FieldMergingArgs fieldMergingArgs) throws Exception {
+        if ("guarentorSignatures".equals(fieldName)) {
+            writeGuarentorSignaturesSection(fieldMergingArgs, tenancy);
+        }
+
+        if ("tenantSignatures".equals(fieldName)) {
+            writeSignaturesSection(fieldMergingArgs,
+                    tenancy.getTenants().stream()
+                            .filter(tenant -> !ModelTenancyFieldExtractor.isEmpty(tenant))
+                            .collect(Collectors.toList()), "Tenant");
+        }
+
+        if ("landlordSignatures".equals(fieldName)) {
+            List<Person> landlords = tenancy.getLandlords().stream()
+                    .filter(landlord -> !ModelTenancyFieldExtractor.isEmpty(landlord))
+                    .collect(Collectors.toList());
+            writeSignaturesSection(fieldMergingArgs, landlords, "Landlord");
+        }
+    }
+
+    private void writeGuarentorSignaturesSection(FieldMergingArgs fieldMergingArgs, ModelTenancy tenancy) throws Exception {
+        DocumentBuilder builder = new DocumentBuilder(fieldMergingArgs.getDocument());
+        builder.moveToMergeField(fieldMergingArgs.getFieldName());
+        List<Person> nonEmptyTenants = tenancy.getTenants()
+                .stream()
+                .filter(person -> !ModelTenancyFieldExtractor.isEmpty(person))
+                .collect(toList());
+
+        if (nonEmptyTenants.isEmpty()) {
+            writeGuarentorPlaceholderSignatureSection(builder, tenancy);
+            return;
+        }
+
+        // if there are no tenants that have guarentors then remove the section
+        // cant get this to work.
+//        if (tenancy.getGuarantors().isEmpty()) {
+//            Section section = (Section) fieldMergingArgs.getField().getStart().getAncestor(Section.class);
+//            section.remove();
+//            return;
+//        }
+
+        for (int i = 0; i < tenancy.getGuarantors().size(); i++) {
+            Guarantor guarantor = tenancy.getGuarantors().get(i);
+
+            builder.getFont().setBold(true);
+            builder.writeln("Guarantor " + (i + 1));
+            builder.getFont().setBold(false);
+
+            String tenantNames = guarantor.getTenantNames().stream().collect(joining(", "));
+            builder.writeln("Name(s) of Tenant(s) for whom Guarantor " + i + " will act as Guarantor:");
+            writeIndented(builder, tenantNames);
+            builder.writeln();
+
+            builder.writeln("Full Name (Block  Capitals):");
+
+            writeIndented(builder, toUpper(guarantor.getName()));
+            builder.writeln();
+
+            builder.writeln("Address:");
+            writeIndented(builder, FieldExtractorUtils.addressFieldsMultipleLines(guarantor.getAddress()));
+            builder.writeln();
+
+            builder.writeln("Signature:");
+            writeLines(builder, 2);
+            builder.getParagraphFormat().getShading().setBackgroundPatternColor(Color.WHITE);
+            builder.writeln();
+
+            builder.writeln(DATE_LABEL);
+            writeLines(builder, 2);
+            builder.getParagraphFormat().getShading().setBackgroundPatternColor(Color.WHITE);
+            builder.writeln();
+        }
+    }
+
+    private void writeGuarentorPlaceholderSignatureSection(DocumentBuilder builder, ModelTenancy tenancy) {
+        // fill in blanks for 5 guarentors
+        for (int i = 1; i <= 5; i++) {
+            ParagraphFormat paragraphFormat = builder.getParagraphFormat();
+            paragraphFormat.getShading().setBackgroundPatternColor(Color.LIGHT_GRAY);
+            builder.getFont().setBold(true);
+            builder.writeln("Guarantor " + i);
+            builder.getFont().setBold(false);
+            builder.writeln("Name(s) of Tenant(s) for whom Guarantor " + i + " will act as Guarantor:\n");
+            builder.writeln("Signature:\n");
+            builder.writeln("Full Name (Block  Capitals):\n");
+            builder.writeln("Address:\n\n\n");
+            builder.writeln(DATE_LABEL);
+            paragraphFormat.getShading().setBackgroundPatternColor(Color.WHITE);
+            builder.writeln();
+        }
+    }
+
+    private void writeSignaturesSection(FieldMergingArgs fieldMergingArgs, List<Person> people, String personType) throws Exception {
+
+        DocumentBuilder builder = new DocumentBuilder(fieldMergingArgs.getDocument());
+        builder.moveToMergeField(fieldMergingArgs.getFieldName());
+
+        if (people.isEmpty()) {
+            writePlaceholderSignatureSection(builder, personType);
+            return;
+        }
+
+        for (int i = 0; i < people.size(); i++) {
+            Person person = people.get(i);
+
+            builder.getFont().setBold(true);
+            builder.writeln(personType + " " + (i + 1));
+            builder.getFont().setBold(false);
+
+            builder.writeln("Full Name (Block  Capitals):");
+            writeIndented(builder, toUpper(person.getName()));
+            builder.writeln();
+
+            builder.writeln("Address:");
+            writeIndented(builder, FieldExtractorUtils.addressFieldsMultipleLines(person.getAddress()));
+            builder.writeln();
+
+            builder.writeln("Signature:");
+            writeLines(builder, 2);
+            builder.getParagraphFormat().getShading().setBackgroundPatternColor(Color.WHITE);
+            builder.writeln();
+
+            builder.writeln(DATE_LABEL);
+            writeLines(builder, 2);
+            builder.getParagraphFormat().getShading().setBackgroundPatternColor(Color.WHITE);
+            builder.writeln();
+        }
+    }
+
+    private void writePlaceholderSignatureSection(DocumentBuilder builder, String personType) {
+
+        // fill in blanks for 5 guarentors
+        for (int i = 0; i < 5; i++) {
+            ParagraphFormat paragraphFormat = builder.getParagraphFormat();
+            paragraphFormat.getShading().setBackgroundPatternColor(Color.LIGHT_GRAY);
+            builder.getFont().setBold(true);
+            builder.writeln(personType + (i + 1));
+            builder.getFont().setBold(false);
+            builder.writeln("Full Name (Block  Capitals):\n");
+            builder.writeln("Address:\n\n\n");
+            builder.writeln("Signature:\n");
+            builder.writeln(DATE_LABEL);
+            paragraphFormat.getShading().setBackgroundPatternColor(Color.WHITE);
+            builder.writeln();
+        }
+    }
+
+    private String toUpper(String str) {
+        if (StringUtils.isEmpty(str)) {
+            return "";
+        }
+
+        return str.toUpperCase();
+    }
+
+    private void writeIndented(DocumentBuilder builder, String txt) {
+        builder.getParagraphFormat().setLeftIndent(20);
+        builder.writeln(txt);
+        builder.getParagraphFormat().setLeftIndent(0);
     }
 
     public void writeNumberedLines(DocumentBuilder builder, int n) {
@@ -117,6 +335,14 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
         paragraphFormat.getShading().setBackgroundPatternColor(Color.LIGHT_GRAY);
         for (int i = 1; i <= n; i++) {
             builder.writeln("(" + i + ")\t  \t\t");
+        }
+    }
+
+    public void writeNumberedLines(DocumentBuilder builder, String prefix, String postfix, int n) {
+        ParagraphFormat paragraphFormat = builder.getParagraphFormat();
+        paragraphFormat.getShading().setBackgroundPatternColor(Color.LIGHT_GRAY);
+        for (int i = 1; i <= n; i++) {
+            builder.writeln(prefix + "(" + i + ")\t  \t\t" + postfix);
         }
     }
 
@@ -149,64 +375,6 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
         builder.write(field);
     }
 
-    @Override
-    public void fieldMerging(FieldMergingArgs fieldMergingArgs) throws Exception {
-
-        String fieldValue = fieldMergingArgs.getFieldValue() == null ?
-                null : fieldMergingArgs.getFieldValue().toString();
-        String fieldName = fieldMergingArgs.getFieldName();
-
-        // do we want to provide a placeholder for an empty value?
-        if (placeholders.containsKey(fieldName) && StringUtils.isEmpty(fieldValue)) {
-            provdePlacholder(fieldMergingArgs);
-            return;
-        }
-
-        // if the field is one of the fieldsToRemoveIfEmpty then remove the sections it is contained within from the
-        // document.
-        if (shouldRemoveSection(fieldName, fieldValue, fieldMergingArgs)) {
-            Section section = (Section) fieldMergingArgs.getField().getStart().getAncestor(Section.class);
-            section.remove();
-            return;
-        }
-
-        // special case for terms so that we can insert some html...
-        if ("additionalTerms".equals(fieldName)) {
-            String html =  formatAdditionalTerms(tenancy);
-            DocumentBuilder builder = new DocumentBuilder(fieldMergingArgs.getDocument());
-            builder.moveToMergeField(fieldName);
-            builder.insertHtml("<font face=\"arial\">" + html + "</font>");
-        }
-
-        // For any field ending in EasyreadNotes we need to decide wether to :
-        //
-        // 1/ include the note (if the term has not been changed by the user)
-        // 2/ remove note altogether oif the user removed the term
-        // 3/ put in placeholder text to notify the user fo the change
-        //
-        // In addition the utilities field is handled slightly differently - changes to the list of utilities is not
-        // considered a change in the above logic.
-        if (fieldName.endsWith("EasyreadNotes")) {
-            String termName = StringUtils.substringBeforeLast(fieldName, "EasyreadNotes");
-            String value = BeanUtils.getProperty(tenancy.getOptionalTerms(), termName);
-            String defaultValue = BeanUtils.getProperty(defaultTerms, termName);
-
-            if (StringUtils.isEmpty(value)) {
-                // user removed the term, remove the section
-                Section section = (Section) fieldMergingArgs.getField().getStart().getAncestor(Section.class);
-                section.remove();
-                return;
-            }
-
-            String html = htmlForTerm(termName, value, defaultValue);
-
-            // insert the relevant content into the document.
-            DocumentBuilder builder = new DocumentBuilder(fieldMergingArgs.getDocument());
-            builder.moveToMergeField(fieldName);
-            builder.insertHtml("<font face=\"arial\">" + html + "</font>");
-        }
-    }
-
     private boolean shouldRemoveSection(String fieldName, String fieldValue, FieldMergingArgs fieldMergingArgs) {
         if (fieldsToRemoveIfEmpty.contains(fieldName) && StringUtils.isEmpty(fieldValue)){
             return true;
@@ -215,8 +383,7 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
         // special case for alterations
         if (ALTERATIONS.equals(fieldName)
                 && tenancy.getExcludedTerms().stream().anyMatch(t -> ALTERATIONS.equals(t))  ) {
-            Section section = (Section) fieldMergingArgs.getField().getStart().getAncestor(Section.class);
-            section.remove();
+            return true;
         }
 
         return false;
@@ -284,7 +451,6 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
         try {
             fields.addAll(BeanUtils.describe(new OptionalTerms()).keySet());
             fields.remove(ALTERATIONS);
-
             // other fields with sections
             addAll(fields,
                     "communicationsAgreementType",
