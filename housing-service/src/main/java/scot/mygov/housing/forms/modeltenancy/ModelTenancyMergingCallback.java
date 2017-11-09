@@ -90,8 +90,7 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
         placeholders.put("originalRentAmount", documentBuilder -> writeInlineField(documentBuilder, monetaryPlaceholder));
         placeholders.put("rentPressureZoneString", documentBuilder -> writeInlineField(documentBuilder,
                 "[is / is not]"));
-        placeholders.put("rentPaymentFrequency", documentBuilder -> writeInlineField(documentBuilder,
-                "[week/fortnight/four weeks/calendar month/quarter/year]"));
+
         placeholders.put("servicesIncludedInRent", documentBuilder -> writeLines(documentBuilder, 3));
         placeholders.put("firstPaymentDate", documentBuilder -> writeInlineField(documentBuilder, datePlaceholder));
         placeholders.put("advanceOrArrears",
@@ -102,11 +101,13 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
                 documentBuilder -> writeInlineField(documentBuilder, datePlaceholder));
         placeholders.put("firstPaymentPeriodEnd",
                 documentBuilder -> writeInlineField(documentBuilder, datePlaceholder));
-        placeholders.put("rentPaymentDayOrDate", documentBuilder -> writeInlineField(documentBuilder, "__________"));
+        placeholders.put("rentPaymentFrequencyDayOrDate", documentBuilder -> writeInlineField(documentBuilder, "__________"));
         placeholders.put("rentPaymentSchedule",
                 documentBuilder -> writeInlineField(documentBuilder,
                         "[day of each week/fortnight/four weekly period/date each calendar month/date each 6-month period]"));
         placeholders.put("rentPaymentMethod", documentBuilder -> writeInlineField(documentBuilder, "__________"));
+        placeholders.put("rentPaymentFrequency", documentBuilder -> writeInlineField(documentBuilder,
+                "[week/fortnight/four weeks/calendar month/quarter/year]"));
     }
 
     @Override
