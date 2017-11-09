@@ -127,17 +127,7 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
 
         // special case for additional terms so that we can insert some html...
         if ("additionalTerms".equals(fieldName)) {
-
-            if (tenancy.getAdditionalTerms().isEmpty()) {
-                Section section = (Section) fieldMergingArgs.getField().getStart().getAncestor(Section.class);
-                section.remove();
-                return;
-            }
-
-            String html =  formatAdditionalTerms(tenancy);
-            DocumentBuilder builder = new DocumentBuilder(fieldMergingArgs.getDocument());
-            builder.moveToMergeField(fieldName);
-            builder.insertHtml("<font face=\"arial\">" + html + "</font>");
+            handleAdditionalTerms(fieldMergingArgs, fieldName);
             return;
         }
 
@@ -160,16 +150,7 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
 
         // special case for notificationResidents
         if ("notificationResidents".equals(fieldName)) {
-
-            // if they have changed the term from the deault then add a paragraph break before the altered text.
-            String injectValue = tenancy.getMustIncludeTerms().getNotificationResidents();
-            //StringUtils.difference(TermsUtil.defaultMustIncludeTerms().getNotificationResidents(), )
-            if (!TermsUtil.defaultMustIncludeTerms().getNotificationResidents().equals(injectValue)) {
-                injectValue = "</br></br>" + injectValue;
-            }
-            DocumentBuilder builder = new DocumentBuilder(fieldMergingArgs.getDocument());
-            builder.moveToMergeField(fieldName);
-            builder.insertHtml(injectValue);
+            handleNotificationResidents(fieldMergingArgs, fieldName);
         }
 
         handleEasyreadNotes(fieldName, fieldMergingArgs);
@@ -178,6 +159,30 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
     @Override
     public void imageFieldMerging(ImageFieldMergingArgs imageFieldMergingArgs) throws Exception {
         // no action needed
+    }
+
+    private void handleAdditionalTerms(FieldMergingArgs fieldMergingArgs, String fieldName) throws Exception {
+        if (tenancy.getAdditionalTerms().isEmpty()) {
+            Section section = (Section) fieldMergingArgs.getField().getStart().getAncestor(Section.class);
+            section.remove();
+        } else {
+            String html = formatAdditionalTerms(tenancy);
+            DocumentBuilder builder = new DocumentBuilder(fieldMergingArgs.getDocument());
+            builder.moveToMergeField(fieldName);
+            builder.insertHtml("<font face=\"arial\">" + html + "</font>");
+        }
+    }
+
+    private void handleNotificationResidents(FieldMergingArgs fieldMergingArgs, String fieldName)  throws Exception {
+        // if they have changed the term from the deault then add a paragraph break before the altered text.
+        String injectValue = tenancy.getMustIncludeTerms().getNotificationResidents();
+        //StringUtils.difference(TermsUtil.defaultMustIncludeTerms().getNotificationResidents(), )
+        if (!TermsUtil.defaultMustIncludeTerms().getNotificationResidents().equals(injectValue)) {
+            injectValue = "</br></br>" + injectValue;
+        }
+        DocumentBuilder builder = new DocumentBuilder(fieldMergingArgs.getDocument());
+        builder.moveToMergeField(fieldName);
+        builder.insertHtml(injectValue);
     }
 
     private void handleEasyreadNotes(String fieldName, FieldMergingArgs fieldMergingArgs) throws Exception {
