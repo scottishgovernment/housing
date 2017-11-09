@@ -45,8 +45,6 @@ public class ModelTenancy {
     private String rentPaymentDayOrDate = "";
     private String rentPaymentSchedule = "";
     private String rentPaymentMethod = "";
-    private String altRentAmount;
-    private String altRentPaymentFrequency;
     private List<Service> servicesIncludedInRent = new ArrayList<>();
     private List<Service> servicesProvidedByLettingAgent = new ArrayList<>();
     private List<Service> servicesLettingAgentIsFirstContactFor = new ArrayList<>();
@@ -235,22 +233,6 @@ public class ModelTenancy {
 
     public void setRentPaymentMethod(String rentPaymentMethod) {
         this.rentPaymentMethod = rentPaymentMethod;
-    }
-
-    public String getAltRentAmount() {
-        return altRentAmount;
-    }
-
-    public void setAltRentAmount(String altRentAmount) {
-        this.altRentAmount = altRentAmount;
-    }
-
-    public String getAltRentPaymentFrequency() {
-        return altRentPaymentFrequency;
-    }
-
-    public void setAltRentPaymentFrequency(String altRentPaymentFrequency) {
-        this.altRentPaymentFrequency = altRentPaymentFrequency;
     }
 
     public List<Service> getServicesIncludedInRent() {

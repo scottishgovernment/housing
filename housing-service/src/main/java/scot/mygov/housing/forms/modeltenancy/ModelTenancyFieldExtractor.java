@@ -228,12 +228,6 @@ public class ModelTenancyFieldExtractor {
     public void extractRent(ModelTenancy tenancy, Map<String, Object> fields) {
         String rentAmount = tenancy.getRentAmount();
         String rentPaymentFrequency = RentPaymentFrequency.description(tenancy.getRentPaymentFrequency());
-        if (!StringUtils.isEmpty(tenancy.getAltRentAmount())) {
-            rentAmount = tenancy.getAltRentAmount();
-        }
-        if (!StringUtils.isEmpty(tenancy.getAltRentPaymentFrequency())) {
-            rentPaymentFrequency = tenancy.getAltRentPaymentFrequency();
-        }
         fields.put("rentAmount", rentAmount);
         fields.put("originalRentAmount", tenancy.getRentAmount());
         fields.put("rentPaymentFrequency", rentPaymentFrequency);

@@ -4,6 +4,7 @@ import com.aspose.words.DocumentBuilder;
 import com.aspose.words.FieldMergingArgs;
 import com.aspose.words.IFieldMergingCallback;
 import com.aspose.words.ImageFieldMergingArgs;
+import com.aspose.words.NodeType;
 import com.aspose.words.ParagraphFormat;
 import com.aspose.words.Section;
 import org.apache.commons.beanutils.BeanUtils;
@@ -111,6 +112,9 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
 
     @Override
     public void fieldMerging(FieldMergingArgs fieldMergingArgs) throws Exception {
+
+
+        fieldMergingArgs.getDocument().getChildNodes(NodeType.EDITABLE_RANGE_START, true);
 
         String fieldValue = fieldMergingArgs.getFieldValue() == null ?
                 null : fieldMergingArgs.getFieldValue().toString();
@@ -268,7 +272,7 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
             builder.getFont().setBold(false);
 
             String tenantNames = guarantor.getTenantNames().stream().collect(joining(", "));
-            builder.writeln("Name(s) of Tenant(s) for whom Guarantor " + i + " will act as Guarantor:");
+            builder.writeln("Name(s) of Tenant(s) for whom Guarantor " + (i + 1) + " will act as Guarantor:");
             writeIndented(builder, tenantNames);
             builder.writeln();
 

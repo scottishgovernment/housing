@@ -7,10 +7,7 @@ public enum RentPaymentFrequency {
     WEEKLY("week", "day of each week"),
     FORTNIGHTLY("fortnight", "day of each fortnight"),
     EVERY_FOUR_WEEKS("four weeks", "day of each four weekly period"),
-    CALENDAR_MONTH("calendar month", "date each calendar month"),
-    QUARTERLY("quarter", "date each quarter"),
-    EVERY_SIX_MONTHS("six months", "date each 6-month period"),
-    YEARLY("yearly", "date each year");
+    CALENDAR_MONTH("calendar month", "date each calendar month");
 
     private final String description;
     private final String dayOrDate;
