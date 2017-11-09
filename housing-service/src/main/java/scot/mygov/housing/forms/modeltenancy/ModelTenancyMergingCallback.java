@@ -4,7 +4,6 @@ import com.aspose.words.DocumentBuilder;
 import com.aspose.words.FieldMergingArgs;
 import com.aspose.words.IFieldMergingCallback;
 import com.aspose.words.ImageFieldMergingArgs;
-import com.aspose.words.NodeType;
 import com.aspose.words.ParagraphFormat;
 import com.aspose.words.Section;
 import org.apache.commons.beanutils.BeanUtils;
