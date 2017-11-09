@@ -113,9 +113,6 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
     @Override
     public void fieldMerging(FieldMergingArgs fieldMergingArgs) throws Exception {
 
-
-        fieldMergingArgs.getDocument().getChildNodes(NodeType.EDITABLE_RANGE_START, true);
-
         String fieldValue = fieldMergingArgs.getFieldValue() == null ?
                 null : fieldMergingArgs.getFieldValue().toString();
         String fieldName = fieldMergingArgs.getFieldName();
