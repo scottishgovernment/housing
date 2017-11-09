@@ -165,6 +165,10 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
             builder.insertHtml(injectValue);
         }
 
+        handleEasyreadNotes(fieldName, fieldMergingArgs);
+    }
+
+    private void handleEasyreadNotes(String fieldName, FieldMergingArgs fieldMergingArgs) throws Exception {
         // For any field ending in EasyreadNotes we need to decide wether to :
         //
         // 1/ include the note (if the term has not been changed by the user)
