@@ -62,6 +62,7 @@ public class ModelTenancyFieldExtractor {
         extractRent(tenancy, fields);
         extractDeposit(tenancy, fields);
         extractOptionalTerms(tenancy.getOptionalTerms(), fields);
+        fields.put("endingTheTenancy", tenancy.getMustIncludeTerms().getEndingTheTenancy());
 
         return fields;
     }

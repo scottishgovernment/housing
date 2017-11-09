@@ -140,6 +140,20 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
             return;
         }
 
+        // special case for notificationResidents
+        if ("notificationResidents".equals(fieldName)) {
+
+            // if they have changed the term from the deault then add a paragraph break before the altered text.
+            String injectValue = tenancy.getMustIncludeTerms().getNotificationResidents();
+            //StringUtils.difference(TermsUtil.defaultMustIncludeTerms().getNotificationResidents(), )
+            if (!TermsUtil.defaultMustIncludeTerms().getNotificationResidents().equals(injectValue)) {
+                injectValue = "</br></br>" + injectValue;
+            }
+            DocumentBuilder builder = new DocumentBuilder(fieldMergingArgs.getDocument());
+            builder.moveToMergeField(fieldName);
+            builder.insertHtml(injectValue);
+        }
+
         // For any field ending in EasyreadNotes we need to decide wether to :
         //
         // 1/ include the note (if the term has not been changed by the user)
@@ -172,6 +186,7 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
     private void handleSignatureBlocks(String fieldName, FieldMergingArgs fieldMergingArgs) throws Exception {
         if ("guarentorSignatures".equals(fieldName)) {
             writeGuarentorSignaturesSection(fieldMergingArgs, tenancy);
+            return;
         }
 
         if ("tenantSignatures".equals(fieldName)) {
@@ -179,6 +194,7 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
                     tenancy.getTenants().stream()
                             .filter(tenant -> !ModelTenancyFieldExtractor.isEmpty(tenant))
                             .collect(Collectors.toList()), "Tenant");
+            return;
         }
 
         if ("landlordSignatures".equals(fieldName)) {
@@ -186,21 +202,31 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
                     .filter(landlord -> !ModelTenancyFieldExtractor.isEmpty(landlord))
                     .collect(Collectors.toList());
             writeSignaturesSection(fieldMergingArgs, landlords, "Landlord");
+            return;
         }
     }
 
     private void writeGuarentorSignaturesSection(FieldMergingArgs fieldMergingArgs, ModelTenancy tenancy) throws Exception {
         DocumentBuilder builder = new DocumentBuilder(fieldMergingArgs.getDocument());
-        builder.moveToMergeField(fieldMergingArgs.getFieldName());
+
         List<Person> nonEmptyTenants = tenancy.getTenants()
                 .stream()
                 .filter(person -> !ModelTenancyFieldExtractor.isEmpty(person))
                 .collect(toList());
 
         if (nonEmptyTenants.isEmpty()) {
+            builder.moveToMergeField(fieldMergingArgs.getFieldName());
             writeGuarentorPlaceholderSignatureSection(builder, tenancy);
             return;
         }
+
+        if (tenancy.getGuarantors().isEmpty()) {
+            Section section = (Section) fieldMergingArgs.getField().getStart().getAncestor(Section.class);
+            section.remove();
+            return;
+        }
+
+        builder.moveToMergeField(fieldMergingArgs.getFieldName());
 
         for (int i = 0; i < tenancy.getGuarantors().size(); i++) {
             Guarantor guarantor = tenancy.getGuarantors().get(i);
@@ -396,6 +422,7 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
         // default to using the easytread notes for this field.
         return BeanUtils.getProperty(defaultNotes, termName);
     }
+
     public String formatAdditionalTerms(ModelTenancy tenancy) {
         if (tenancy.getAdditionalTerms().isEmpty()) {
             return "<p>n/a</p>";
