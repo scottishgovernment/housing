@@ -32,7 +32,7 @@ public class ModelTenancyMergingCallbackTest {
         ModelTenancyMergingCallback sut = new ModelTenancyMergingCallback(om.anyTenancy());
         FieldMergingArgs args = mock(FieldMergingArgs.class);
         when(args.getFieldValue()).thenReturn("");
-        when(args.getFieldName()).thenReturn("utilities");
+        when(args.getFieldName()).thenReturn("roof");
         Field field = mock(Field.class);
         FieldStart fieldStart = mock(FieldStart.class);
         Node ancestor = mock(Section.class);
@@ -55,7 +55,7 @@ public class ModelTenancyMergingCallbackTest {
         ModelTenancyMergingCallback sut = new ModelTenancyMergingCallback(om.anyTenancy());
         FieldMergingArgs args = mock(FieldMergingArgs.class);
         when(args.getFieldValue()).thenReturn(null);
-        when(args.getFieldName()).thenReturn("utilities");
+        when(args.getFieldName()).thenReturn("roof");
         Field field = mock(Field.class);
         FieldStart fieldStart = mock(FieldStart.class);
         Node ancestor = mock(Section.class);

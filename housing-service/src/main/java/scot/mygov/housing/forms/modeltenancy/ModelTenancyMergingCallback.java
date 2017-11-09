@@ -30,14 +30,14 @@ import static scot.mygov.housing.forms.modeltenancy.ModelTenancyFieldExtractor.N
 
 public class ModelTenancyMergingCallback implements IFieldMergingCallback {
 
-    private static String PLACEHOLDER_HTML =
+    private static String EASYREAD_PLACEHOLDER_HTML =
             "<p>Your landlord has used their own wording for this clause.</p>" +
             "<p>If you need more information about this clauses you may want to discuss them with your landlord, " +
             "or contact the advice groups listed at the end of these Notes.</p>";
 
     private static final String ALTERATIONS = "alterations";
     private static final String DATE_LABEL = "Date:";
-
+    private static final String UTILITIES_LIST = "[gas/electricity/telephone/TV licence/internet/broadband]";
     // the name of fields that will cause their section to be removed if they are empty
     private static final Set<String> fieldsToRemoveIfEmpty = fieldsToDeleteIfEmpty();
     private static final OptionalTerms defaultTerms = TermsUtil.defaultOptionalTerms();
@@ -119,17 +119,28 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
         // do we want to provide a placeholder for an empty value?
         if (placeholders.containsKey(fieldName) && StringUtils.isEmpty(fieldValue)) {
             provdePlacholder(fieldMergingArgs);
+            return;
         }
 
         // handle guarentors section:
         handleSignatureBlocks(fieldName, fieldMergingArgs);
 
-        // special case for terms so that we can insert some html...
+        // special case for additional terms so that we can insert some html...
         if ("additionalTerms".equals(fieldName)) {
             String html =  formatAdditionalTerms(tenancy);
             DocumentBuilder builder = new DocumentBuilder(fieldMergingArgs.getDocument());
             builder.moveToMergeField(fieldName);
             builder.insertHtml("<font face=\"arial\">" + html + "</font>");
+            return;
+        }
+
+        // special case for utilities - give them a grey background if the user has not edited them...
+        if ("utilities".equals(fieldName) && !StringUtils.isEmpty(fieldValue)) {
+            DocumentBuilder builder = new DocumentBuilder(fieldMergingArgs.getDocument());
+            builder.moveToMergeField(fieldName);
+            String withGreyBackground = "<span style=\"background-color:lightgrey\">" + UTILITIES_LIST + "</span>";
+            String val = fieldValue.replace(UTILITIES_LIST, withGreyBackground);
+            builder.insertHtml(val);
         }
 
         // if the field is one of the fieldsToRemoveIfEmpty then remove the sections it is contained within from the
@@ -174,7 +185,7 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
                 return;
             }
 
-            String html = htmlForTerm(termName, value, defaultValue);
+            String html = htmlEasynoteForTerm(termName, value, defaultValue);
 
             // insert the relevant content into the document.
             DocumentBuilder builder = new DocumentBuilder(fieldMergingArgs.getDocument());
@@ -407,7 +418,7 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
         return false;
     }
 
-    private String htmlForTerm(String termName, String value, String defaultValue)
+    private String htmlEasynoteForTerm(String termName, String value, String defaultValue)
             throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         if ("utilities".equals(termName)) {
             // special case for utilities field.
@@ -416,7 +427,7 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
 
         if (!value.equals(defaultValue)) {
             // they changed the value, use the placeholder html.
-            return PLACEHOLDER_HTML;
+            return EASYREAD_PLACEHOLDER_HTML;
         }
 
         // default to using the easytread notes for this field.
@@ -441,22 +452,20 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
         placeholders.get(fieldMergingArgs.getFieldName()).accept(builder);
     }
 
-
     /**
      * The utilities term contains a placeholder within []'s.
      */
     public static String easyreadNotesForUtilities(String utilitiesTerm, String defaultTerm) {
-        String utilsList = "[gas/electricity/telephone/TV licence/internet/broadband]";
         String defaultUtilitiesTerm = TermsUtil.defaultOptionalTerms().getUtilities();
-        String prefix = org.apache.commons.lang.StringUtils.substringBefore(defaultUtilitiesTerm, utilsList);
-        String postfix = org.apache.commons.lang.StringUtils.substringAfter(defaultUtilitiesTerm, utilsList);
+        String prefix = org.apache.commons.lang.StringUtils.substringBefore(defaultUtilitiesTerm, UTILITIES_LIST);
+        String postfix = org.apache.commons.lang.StringUtils.substringAfter(defaultUtilitiesTerm, UTILITIES_LIST);
         if (utilitiesTerm.startsWith(prefix) && utilitiesTerm.endsWith(postfix)) {
             // inject the utilities from the term into the easyreadnotes
             String utilities = StringUtils.substringBetween(utilitiesTerm, prefix, postfix);
             return defaultTerm.replace("[]", utilities);
         }
 
-        return PLACEHOLDER_HTML;
+        return EASYREAD_PLACEHOLDER_HTML;
     }
 
     @Override

@@ -73,7 +73,7 @@ public class ModelTenancyService {
         //
         // We are counting this so that we can measure if people are correctly changing the list of utilities in
         // square brackets or not.
-        if (tenancy.getOptionalTerms().getUtilities().equals(TermsUtil.defaultOptionalTerms().getUtilities())) {
+        if (TermsUtil.defaultOptionalTerms().getUtilities().equals(tenancy.getOptionalTerms().getUtilities())) {
             unchangedUtilitiesCounter.inc();
         } else {
             changedUtilitiesCounter.inc();
