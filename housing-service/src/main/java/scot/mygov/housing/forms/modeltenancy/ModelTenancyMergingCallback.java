@@ -127,6 +127,13 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
 
         // special case for additional terms so that we can insert some html...
         if ("additionalTerms".equals(fieldName)) {
+
+            if (tenancy.getAdditionalTerms().isEmpty()) {
+                Section section = (Section) fieldMergingArgs.getField().getStart().getAncestor(Section.class);
+                section.remove();
+                return;
+            }
+
             String html =  formatAdditionalTerms(tenancy);
             DocumentBuilder builder = new DocumentBuilder(fieldMergingArgs.getDocument());
             builder.moveToMergeField(fieldName);
@@ -166,6 +173,11 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
         }
 
         handleEasyreadNotes(fieldName, fieldMergingArgs);
+    }
+
+    @Override
+    public void imageFieldMerging(ImageFieldMergingArgs imageFieldMergingArgs) throws Exception {
+        // no action needed
     }
 
     private void handleEasyreadNotes(String fieldName, FieldMergingArgs fieldMergingArgs) throws Exception {
@@ -363,7 +375,7 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
         builder.getParagraphFormat().setLeftIndent(0);
     }
 
-    public void writeNumberedLines(DocumentBuilder builder, int n) {
+    private void writeNumberedLines(DocumentBuilder builder, int n) {
         ParagraphFormat paragraphFormat = builder.getParagraphFormat();
         paragraphFormat.getShading().setBackgroundPatternColor(Color.LIGHT_GRAY);
         for (int i = 1; i <= n; i++) {
@@ -371,7 +383,7 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
         }
     }
 
-    public void writeNumberedLines(DocumentBuilder builder, String prefix, String postfix, int n) {
+    private void writeNumberedLines(DocumentBuilder builder, String prefix, String postfix, int n) {
         ParagraphFormat paragraphFormat = builder.getParagraphFormat();
         paragraphFormat.getShading().setBackgroundPatternColor(Color.LIGHT_GRAY);
         for (int i = 1; i <= n; i++) {
@@ -379,7 +391,7 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
         }
     }
 
-    public void writeNumberedLinesWithLabel(DocumentBuilder builder, String label, int n) {
+    private void writeNumberedLinesWithLabel(DocumentBuilder builder, String label, int n) {
         ParagraphFormat paragraphFormat = builder.getParagraphFormat();
         paragraphFormat.getShading().setBackgroundPatternColor(Color.LIGHT_GRAY);
         for (int i = 1; i <= n; i++) {
@@ -387,7 +399,7 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
         }
     }
 
-    public void writeNumberedDoubleLines(DocumentBuilder builder, int n) {
+    private void writeNumberedDoubleLines(DocumentBuilder builder, int n) {
         ParagraphFormat paragraphFormat = builder.getParagraphFormat();
         paragraphFormat.getShading().setBackgroundPatternColor(Color.LIGHT_GRAY);
         for (int i = 1; i <= n; i++) {
@@ -395,7 +407,7 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
         }
     }
 
-    public void writeLines(DocumentBuilder builder, int n) {
+    private void writeLines(DocumentBuilder builder, int n) {
         ParagraphFormat paragraphFormat = builder.getParagraphFormat();
         paragraphFormat.getShading().setBackgroundPatternColor(Color.LIGHT_GRAY);
         for (int i = 1; i <= n; i++) {
@@ -403,7 +415,7 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
         }
     }
 
-    public void writeInlineField(DocumentBuilder builder, String field) {
+    private void writeInlineField(DocumentBuilder builder, String field) {
         builder.getFont().getShading().setBackgroundPatternColor(Color.LIGHT_GRAY);
         builder.write(field);
     }
@@ -438,7 +450,7 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
         return BeanUtils.getProperty(defaultNotes, termName);
     }
 
-    public String formatAdditionalTerms(ModelTenancy tenancy) {
+    private String formatAdditionalTerms(ModelTenancy tenancy) {
         if (tenancy.getAdditionalTerms().isEmpty()) {
             return "<p>n/a</p>";
         }
@@ -450,7 +462,7 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
         return String.format("<div><strong>%s</strong></div><p>%s</p>", term.getTitle(), term.getContent());
     }
 
-    public void provdePlacholder(FieldMergingArgs fieldMergingArgs) throws Exception {
+    private void provdePlacholder(FieldMergingArgs fieldMergingArgs) throws Exception {
         DocumentBuilder builder = new DocumentBuilder(fieldMergingArgs.getDocument());
         builder.moveToMergeField(fieldMergingArgs.getFieldName());
         placeholders.get(fieldMergingArgs.getFieldName()).accept(builder);
@@ -459,7 +471,7 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
     /**
      * The utilities term contains a placeholder within []'s.
      */
-    public static String easyreadNotesForUtilities(String utilitiesTerm, String defaultTerm) {
+    private static String easyreadNotesForUtilities(String utilitiesTerm, String defaultTerm) {
         String defaultUtilitiesTerm = TermsUtil.defaultOptionalTerms().getUtilities();
         String prefix = org.apache.commons.lang.StringUtils.substringBefore(defaultUtilitiesTerm, UTILITIES_LIST);
         String postfix = org.apache.commons.lang.StringUtils.substringAfter(defaultUtilitiesTerm, UTILITIES_LIST);
@@ -470,11 +482,6 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
         }
 
         return EASYREAD_PLACEHOLDER_HTML;
-    }
-
-    @Override
-    public void imageFieldMerging(ImageFieldMergingArgs imageFieldMergingArgs) throws Exception {
-        // no action needed
     }
 
     private static final Set<String> fieldsToDeleteIfEmpty() {
