@@ -1,0 +1,176 @@
+{
+  "tenants": [
+    {
+      "name": "Some Tennant 2",
+      "email": "some.tennant2@renting.co.uk",
+      "telephone": "0131 987 6543",
+      "address": {
+        "building": "STRUAN",
+        "street": "NEWLAND AVENUE",
+        "town": "BATHGATE",
+        "postcode": "EH48 1EE"
+      }
+    }
+  ],
+  "guarantors": [
+    {
+      "name": "Tennant's Mum",
+      "address": {
+        "postcode": "EH48 1EE"
+      },
+      "tenantNames": [
+        "Some Tennant 2"
+      ]
+    }
+  ],
+  "lettingAgent": {
+    "name": "Letting Agency",
+    "registrationNumber": "1234567890",
+    "email": "letting.agency@imincharge.com",
+    "telephone": "01311111111",
+    "address": {
+      "building": "",
+      "street": "31 LOTHIAN STREET",
+      "town": "EDINBURGH",
+      "postcode": "EH1 1HE"
+    }
+  },
+  "landlords": [
+    {
+      "name": "Ima Landlord 2",
+      "email": "ima.landlord2@myproperty.co.uk",
+      "telephone": "0131 123 4567",
+      "address": {
+        "building": "",
+        "street": "71 WEST MAIN STREET",
+        "town": "BROXBURN",
+        "postcode": "EH52 5LE"
+      },
+      "registrationNumber": "123456/789/01234"
+    }
+  ],
+  "communicationsAgreement": "HARDCOPY",
+  "propertyAddress": "1/8 NEW ASSEMBLY CLOSE\n142 HIGH STREET\nEDINBURGH\nEH1 1QQ",
+  "propertyType": "FLAT",
+  "furnishingType": "UNFURNISHED",
+  "inRentPressureZone": false,
+  "hmoProperty": "false",
+  "hmo24ContactNumber": "",
+  "hmoRegistrationExpiryDate": null,
+  "tenancyStartDate": "2018-01-26",
+  "rentAmount": "950",
+  "rentPaymentFrequency": "CALENDAR_MONTH",
+  "rentPayableInAdvance": "true",
+  "firstPaymentDate": "2018-01-26",
+  "firstPaymentAmount": "1090",
+  "firstPaymentPeriodEnd": "2018-02-28",
+  "rentPaymentDayOrDate": "",
+  "rentPaymentSchedule": "the 1st of the month",
+  "rentPaymentMethod": "Direct debit",
+  "servicesIncludedInRent": [
+    {
+      "name": "stair maintenenance",
+      "value": "20"
+    },
+    {
+      "name": "garden maintenance",
+      "value": "50"
+    }
+  ],
+  "servicesProvidedByLettingAgent": [
+    {
+      "name": "Stair maintenance",
+      "lettingAgentIsFirstContact": "YES",
+      "lettingAgentIsFirstContact_options_nodisplay": [
+        {
+          "displayName": "Yes",
+          "value": "YES"
+        },
+        {
+          "displayName": "No",
+          "value": "NO"
+        }
+      ],
+      "slug_nodisplay": "lettingAgentIsFirstContact"
+    },
+    {
+      "name": "Garden maintnenance",
+      "lettingAgentIsFirstContact": "YES",
+      "lettingAgentIsFirstContact_options_nodisplay": [
+        {
+          "displayName": "Yes",
+          "value": "YES"
+        },
+        {
+          "displayName": "No",
+          "value": "NO"
+        }
+      ],
+      "slug_nodisplay": "lettingAgentIsFirstContact"
+    }
+  ],
+  "servicesLettingAgentIsFirstContactFor": [],
+  "includedAreasOrFacilities": [
+    "Shared Garden"
+  ],
+  "excludedAreasFacilities": [],
+  "sharedFacilities": [],
+  "depositAmount": "1500",
+  "tenancyDepositSchemeAdministrator": "Letting Protection Service Scotland",
+  "optionalTerms": {
+    "contentsAndConditions": "The Tenant agrees that the signed Inventory and Record of Condition, [attached as Schedule 1 to this Agreement/ which will be supplied to the Tenant no later than the start date of the tenancy] is a full and accurate record of the contents and condition of the Let Property at the start date of the tenancy.  The Tenant has a period of 7 days from the start date of the tenancy (set out above in the 'start date of the tenancy' section) to ensure that the Inventory and Record of Condition is correct and either 1) to tell the Landlord of any discrepancies in writing, after which the Inventory and Record of Condition will be amended as appropriate or 2) to take no action and, after the 7-day period has expired, the Tenant shall be deemed to be fully satisfied with the terms.\n\nThe Tenant agrees to replace or repair (or, at the option of the Landlord, to pay the reasonable cost of repairing or replacing) any of the contents which are destroyed, damaged, removed or lost during the tenancy, fair wear and tear excepted, where this was caused wilfully or negligently by the Tenant, anyone living with the Tenant or an invited visitor to the Let Property (see clause above on 'Reasonable care').  Items to be replaced by the Tenant will be replaced by items of equivalent value and quality. ",
+    "localAuthorityTaxesAndCharges": "The Tenant will notify the local authority that the Tenant is responsible for paying the council tax and any other associated charges.\n\nUnless exempt, the Tenant will be responsible for payment of any council tax and water and sewerage charges, or any local tax which may replace this.  The Tenant will advise the local authority of the start date and end date of the tenancy and apply for any exemptions or discounts that they may be eligible for. ",
+    "utilities": "The Tenant undertakes to ensure that the accounts for the supply to the Let Property of [gas/electricity/telephone/TV licence/internet/broadband] are entered in his or her name with the relevant supplier. The Tenant agrees to pay promptly all sums that become due for these supplies relative to the period of the tenancy.\n\nThe Tenant agrees to make the necessary arrangements with the suppliers to settle all accounts for these services at the end of the tenancy.\n\nThe Tenant has the right to change supplier if he or she pays the energy supplier directly for gas or electricity. This includes if the Tenant has a prepayment meter. The Tenant agrees to inform the Landlord if they choose to change the utilities supplier, and to provide the Landlord with details of the new supplier.\n\nIf the Tenant allows the meter to be changed from or to a pre-payment meter during the tenancy, the Tenant is responsible for the reasonable cost of changing the meter back over at the end of the tenancy, unless the Landlord wishes it to remain. ",
+    "alterations": "The Tenant agrees not to make any alteration to the Let Property, its fixtures or fittings, nor to carry out any internal or external decoration without the prior written consent of the Landlord. ",
+    "roof": "The Tenant is not permitted to access the roof without the Landlord's written consent, except in the case of an emergency. ",
+    "binsAndRecycling": "The Tenant agrees to dispose of or recycle all rubbish in an appropriate manner and at the appropriate time. Rubbish must not be placed anywhere in the common stair at any time.  The Tenant must take reasonable care to ensure that the rubbish is properly bagged or recycled in the appropriate container.  If rubbish is normally collected from the street, on the day of collection it should be put out by the time specified by the local authority.  Rubbish and recycling containers should be returned to their normal storage places as soon as possible after it has been collected.  The Tenant must comply with any local arrangements for the disposal of large items. ",
+    "storage": "Nothing belonging to the Tenant or anyone living with the Tenant or a visitor may be left or stored in the common stair if it causes a fire or safety hazard, or nuisance or annoyance to neighbours. ",
+    "dangerousSubstances": "The Tenant agrees to the normal and safe storage of any petroleum and/or gas, including liquid petroleum gas, for garden appliances (mowers etc.), barbecues or other commonly used household goods or appliances.  The Tenant must not store, keep or bring into the Let Property or any store, shed or garage any other flammable liquids, explosives or explosive gases which might reasonably be considered to be a fire hazard or otherwise dangerous to the Let Property or its occupants or the neighbours or the neighbour’s property. ",
+    "pets": "The Tenant will not keep any animals or pets in the Let Property without the prior written consent of the Landlord. Any pet (where permitted) will be kept under supervision and control to ensure that it does not cause deterioration in the condition of the Let Property or common areas, nuisance either to neighbours or in the locality of the Let Property. ",
+    "smoking": "The Tenant agrees not to smoke, or to permit visitors to smoke tobacco or any other substance, in the Let Property, without the prior written consent of the Landlord.\n\nThe Tenant will not smoke in stairwells or any other common parts. ",
+    "commonParts": "In the case of a flatted Let Property, or any other Let Property having common parts the Tenant agrees, in conjunction with the other proprietors / occupiers, to sweep and clean the common stairway and to co-operate with other proprietors/properties in keeping the garden, back green or other communal areas clean and tidy. ",
+    "privateGarden": "The Tenant will maintain the garden in a reasonable manner. "
+  },
+  "additionalTerms": [
+    {
+      "title": "",
+      "content": ""
+    }
+  ],
+  "facilities": [
+    {
+      "name": "Shared Garden",
+      "type": "INCLUDED",
+      "type_options_nodisplay": [
+        {
+          "displayName": "",
+          "value": ""
+        },
+        {
+          "displayName": "Included",
+          "value": "INCLUDED"
+        },
+        {
+          "displayName": "Excluded",
+          "value": "EXCLUDED"
+        },
+        {
+          "displayName": "Shared",
+          "value": "SHARED"
+        }
+      ],
+      "slug_nodisplay": "type"
+    }
+  ],
+  "propertyType_text": "Flat",
+  "furnishingType_text": "Unfurnished",
+  "hmoProperty_text": "No",
+  "rentPaymentMethod_text": "Direct debit",
+  "rentPaymentFrequency_text": "Monthly",
+  "rentPayableInAdvance_text": "Advance\n(This means you're paid for the period coming up,\ni.e. the month ahead)",
+  "tenancyDepositSchemeAdministrator_text": "Letting Protection Service Scotland",
+  "communicationsAgreement_text": "Post",
+  "hasLettingAgent": "letting-agent-no",
+  "hasLettingAgent_text": "No",
+  "excludedTerms": {}
+}
