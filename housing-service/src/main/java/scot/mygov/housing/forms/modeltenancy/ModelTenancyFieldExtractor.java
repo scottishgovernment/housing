@@ -114,6 +114,14 @@ public class ModelTenancyFieldExtractor {
     }
 
     private void extractLettingAgent(ModelTenancy tenancy, Map<String, Object> fields) {
+
+        // if they chose no letting agent explicitly then remove the section
+        if ("letting-agent-no".equals(tenancy.getHasLettingAgent())) {
+            fields.put("showLettingAgentService", "");
+        } else {
+            fields.put("showLettingAgentService", " ");
+        }
+
         // letting agent is optional
         if (tenancy.getLettingAgent() == null) {
             return;

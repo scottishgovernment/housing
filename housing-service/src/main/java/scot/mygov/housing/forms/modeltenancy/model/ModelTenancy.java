@@ -18,6 +18,7 @@ public class ModelTenancy {
     private List<Person> tenants = new ArrayList<>();
     private List<Guarantor> guarantors = new ArrayList<>();
     private AgentOrLandLord lettingAgent;
+    private String hasLettingAgent = "";
     private List<AgentOrLandLord> landlords = new ArrayList<>();
     private String communicationsAgreement;
     private String propertyAddress;
@@ -81,6 +82,14 @@ public class ModelTenancy {
 
     public void setLettingAgent(AgentOrLandLord lettingAgent) {
         this.lettingAgent = lettingAgent;
+    }
+
+    public String getHasLettingAgent() {
+        return hasLettingAgent;
+    }
+
+    public void setHasLettingAgent(String hasLettingAgent) {
+        this.hasLettingAgent = hasLettingAgent;
     }
 
     public List<AgentOrLandLord> getLandlords() {

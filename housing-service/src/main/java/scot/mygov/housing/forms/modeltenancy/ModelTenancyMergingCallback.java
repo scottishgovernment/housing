@@ -501,7 +501,8 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
                     "communicationsAgreementType",
                     "showHmoNotification",
                     "showHmoFields",
-                    "showEmailParagraphs");
+                    "showEmailParagraphs",
+                    "showLettingAgentService");
             return fields;
         } catch (Exception e) {
             throw new InitialisationFailedException("Failed to extract optional section fields", e);
