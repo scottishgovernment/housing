@@ -2,7 +2,6 @@ package scot.mygov.documents;
 
 import com.aspose.words.Document;
 import org.junit.Test;
-import scot.mygov.housing.forms.modeltenancy.ModelTenancyService;
 
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;

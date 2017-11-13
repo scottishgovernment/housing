@@ -3,13 +3,11 @@ package scot.mygov.documents;
 import com.aspose.words.Document;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.junit.Test;
-import scot.mygov.housing.forms.modeltenancy.ModelTenancyService;
 
 import java.io.ByteArrayInputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import static java.util.Collections.emptySet;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 

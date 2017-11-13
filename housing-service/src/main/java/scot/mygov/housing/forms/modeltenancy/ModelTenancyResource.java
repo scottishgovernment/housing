@@ -2,6 +2,8 @@ package scot.mygov.housing.forms.modeltenancy;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import scot.mygov.documents.DocumentType;
+import scot.mygov.housing.forms.DocumentGenerationService;
+import scot.mygov.housing.forms.DocumentGenerationServiceException;
 import scot.mygov.housing.forms.RecaptchaCheck;
 import scot.mygov.housing.forms.modeltenancy.model.ModelTenancy;
 import scot.mygov.validation.Validator;
@@ -24,7 +26,7 @@ public class ModelTenancyResource {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Inject
-    ModelTenancyService modelTenancyService;
+    DocumentGenerationService<ModelTenancy> modelTenancyService;
 
     @Inject
     Validator<ModelTenancy> modelTenancyValidator;
@@ -49,19 +51,19 @@ public class ModelTenancyResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response modelTenancyMultipart(ModelTenancy modelTenancy, @QueryParam("type") String typeParam)
-            throws ModelTenancyServiceException {
+            throws DocumentGenerationServiceException {
         return modelTenancyResponse(modelTenancy, typeParam);
     }
 
     @POST
     @Path("form")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response modelTenancyMultipart(Map<String, String> params) throws ModelTenancyServiceException {
+    public Response modelTenancyMultipart(Map<String, String> params) throws DocumentGenerationServiceException {
         ModelTenancy modelTenancy = parseModel(params.get("data"));
         return modelTenancyResponse(modelTenancy, params.get("type"));
     }
 
-    private Response modelTenancyResponse(ModelTenancy modelTenancy, String typeParam) throws ModelTenancyServiceException {
+    private Response modelTenancyResponse(ModelTenancy modelTenancy, String typeParam) throws DocumentGenerationServiceException {
 
         if (!recaptchaCheck.verify(modelTenancy.getRecaptcha())) {
             // reject it ... what is the right response to send?
@@ -81,11 +83,11 @@ public class ModelTenancyResource {
         return String.format("attachment; filename=\"tenancy.%s\"", type.getExtension());
     }
 
-    private ModelTenancy parseModel(String data) throws ModelTenancyServiceException {
+    private ModelTenancy parseModel(String data) throws DocumentGenerationServiceException {
         try {
             return objectMapper.readValue(data, ModelTenancy.class);
         } catch (IOException ex) {
-            throw new ModelTenancyServiceException("Could not parse model data", ex);
+            throw new DocumentGenerationServiceException("Could not parse model data", ex);
         }
     }
 }

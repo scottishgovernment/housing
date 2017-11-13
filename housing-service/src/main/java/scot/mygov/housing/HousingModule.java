@@ -18,6 +18,7 @@ import scot.mygov.housing.forms.DocumentGeneratorServiceListener;
 import scot.mygov.housing.forms.DocumentGeneratorServiceListenerAdaptor;
 import scot.mygov.housing.forms.FieldExtractor;
 import scot.mygov.housing.forms.modeltenancy.ModelTenancyFieldExtractor;
+import scot.mygov.housing.forms.modeltenancy.ModelTenancyMergingCallback;
 import scot.mygov.housing.forms.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.forms.nonprovisionofdocumentation.NonProvisionOfDocumentationFieldExtractor;
 import scot.mygov.housing.forms.nonprovisionofdocumentation.model.NonProvisionOfDocumentation;
@@ -25,7 +26,6 @@ import scot.mygov.housing.forms.rentadjudication.RentAdjudicationFieldExtractor;
 import scot.mygov.housing.forms.rentadjudication.model.RentAdjudication;
 import scot.mygov.housing.mapcloud.Mapcloud;
 import scot.mygov.housing.forms.modeltenancy.validation.ModelTenancyValidatorFactory;
-import scot.mygov.housing.forms.modeltenancy.ModelTenancyService;
 import scot.mygov.housing.postcode.PostcodeService;
 import scot.mygov.housing.postcode.MapcloudPostcodeService;
 import scot.mygov.housing.rpz.ElasticSearchRPZService;
@@ -48,11 +48,6 @@ public class HousingModule {
     public static final String ES_RPZ_HEALTH_TARGET = "esRPZHealthTarget";
 
     private static final String APP_NAME = "housing";
-
-    private static final String MODEL_TENANCY_TEMPLATE_LOADER = "modelTenancyTemplateLoader";
-
-
-
 
     @Provides
     @Singleton
@@ -178,37 +173,35 @@ public class HousingModule {
                 metricRegistry);
     }
 
-    @Provides
-    @Named(MODEL_TENANCY_TEMPLATE_LOADER)
-    @Singleton
-    DocumentTemplateLoader modelTenancyTemplateLoader(AsposeLicense asposeLicense) {
-        return new DocumentTemplateLoader(scot.mygov.housing.forms.modeltenancy.ModelTenancyService.DOCUMENT_TEMPLATE_PATH, asposeLicense);
-    }
+//
+//    @Provides
+//    @Singleton
+//    ModelTenancyService modelTenancyService(
+//            @Named(MODEL_TENANCY_TEMPLATE_LOADER) DocumentTemplateLoader templateLoader,
+//            MetricRegistry metricRegistry) {
+//        ModelTenancyFieldExtractor fieldExtractor = new ModelTenancyFieldExtractor();
+//        DocumentGenerator documentGenerator = new DocumentGenerator(templateLoader);
+//        return new ModelTenancyService(documentGenerator, fieldExtractor, metricRegistry);
+//    }
+
 
     @Provides
     @Singleton
-    ModelTenancyService modelTenancyService(
-            @Named(MODEL_TENANCY_TEMPLATE_LOADER) DocumentTemplateLoader templateLoader,
-            MetricRegistry metricRegistry) {
-        ModelTenancyFieldExtractor fieldExtractor = new ModelTenancyFieldExtractor();
+    DocumentGenerationService<ModelTenancy> modelTenancyDocumentGenerationService(AsposeLicense asposeLicense,
+                                                                                  MetricRegistry metricRegistry) {
+        String templatePath = "/templates/model-tenancy-agreement-with-notes.docx";
+        DocumentTemplateLoader templateLoader = new DocumentTemplateLoader(templatePath, asposeLicense);
+        FieldExtractor<ModelTenancy> fieldExtractor = new ModelTenancyFieldExtractor();
         DocumentGenerator documentGenerator = new DocumentGenerator(templateLoader);
-        return new ModelTenancyService(documentGenerator, fieldExtractor, metricRegistry);
-    }
+        DocumentGeneratorServiceListener<ModelTenancy> listener = new DocumentGeneratorServiceListenerAdaptor<>();
+        IFieldMergingCallback fieldMergingCallback = new ModelTenancyMergingCallback(null);
 
-<<<<<<< 21d1bc08e11e27c7f3eebb913e0e5b0eaeab5366
-    @Provides
-    @Named(RENT_ADJUDICATION_TEMPLATE_LOADER)
-    @Singleton
-    DocumentTemplateLoader rentAdjudicationTemplateLoader(AsposeLicense asposeLicense) {
-        return new DocumentTemplateLoader(RentAdjudicationService.DOCUMENT_TEMPLATE_PATH, asposeLicense);
-    }
-
-    @Provides
-    @Singleton
-    RentAdjudicationService rentAdjudicationService(
-            @Named(RENT_ADJUDICATION_TEMPLATE_LOADER) DocumentTemplateLoader templateLoader) {
-        RentAdjudicationFieldExtractor fieldExtractor = new RentAdjudicationFieldExtractor();
-        return new RentAdjudicationService(templateLoader, fieldExtractor);
+        return  new DocumentGenerationService<>(
+                documentGenerator,
+                listener,
+                fieldExtractor,
+                fieldMergingCallback,
+                metricRegistry);
     }
 
     @Provides
@@ -221,6 +214,4 @@ public class HousingModule {
                 recaptchaConfig.getSecret());
     }
 
-=======
->>>>>>> refactoring in progress
 }

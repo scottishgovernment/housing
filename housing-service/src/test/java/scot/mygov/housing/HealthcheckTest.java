@@ -20,7 +20,6 @@ import scot.mygov.housing.cpi.CPIService;
 import scot.mygov.housing.cpi.CPIServiceException;
 import scot.mygov.housing.cpi.model.CPIData;
 import scot.mygov.housing.forms.modeltenancy.ModelTenancyFieldExtractor;
-import scot.mygov.housing.forms.modeltenancy.ModelTenancyService;
 import scot.mygov.housing.mapcloud.Mapcloud;
 
 import javax.ws.rs.client.Invocation;

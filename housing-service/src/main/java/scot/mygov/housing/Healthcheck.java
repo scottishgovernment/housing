@@ -15,7 +15,10 @@ import org.slf4j.LoggerFactory;
 import scot.mygov.housing.cpi.CPIService;
 import scot.mygov.housing.cpi.CPIServiceException;
 import scot.mygov.housing.cpi.model.CPIData;
-import scot.mygov.housing.forms.modeltenancy.ModelTenancyService;
+import scot.mygov.housing.forms.DocumentGenerationService;
+import scot.mygov.housing.forms.modeltenancy.model.ModelTenancy;
+import scot.mygov.housing.forms.nonprovisionofdocumentation.model.NonProvisionOfDocumentation;
+import scot.mygov.housing.forms.rentadjudication.model.RentAdjudication;
 import scot.mygov.housing.mapcloud.Mapcloud;
 
 import javax.inject.Inject;
@@ -67,7 +70,13 @@ public class Healthcheck {
     WebTarget esRPZHealthTarget;
 
     @Inject
-    ModelTenancyService modelTenancyService;
+    DocumentGenerationService<ModelTenancy> modelTenancyService;
+
+    @Inject
+    DocumentGenerationService<RentAdjudication> rentAdjudicationDocumentGenerationService;
+
+    @Inject
+    DocumentGenerationService<NonProvisionOfDocumentation> nonProvisionOfDocumentationDocumentGenerationService;
 
     @GET
     public Response health(
