@@ -1,6 +1,8 @@
 package scot.mygov.housing;
 
+import com.aspose.words.FieldMergingArgs;
 import com.aspose.words.IFieldMergingCallback;
+import com.aspose.words.ImageFieldMergingArgs;
 import com.codahale.metrics.MetricRegistry;
 import dagger.Module;
 import dagger.Provides;
@@ -12,6 +14,7 @@ import scot.mygov.documents.DocumentGenerator;
 import scot.mygov.documents.DocumentTemplateLoader;
 import scot.mygov.housing.cpi.CPIService;
 
+import scot.mygov.housing.forms.IFieldMergingCallbackFactory;
 import scot.mygov.housing.forms.RecaptchaCheck;
 import scot.mygov.housing.forms.DocumentGenerationService;
 import scot.mygov.housing.forms.DocumentGeneratorServiceListener;
@@ -144,15 +147,17 @@ public class HousingModule {
         FieldExtractor<RentAdjudication> fieldExtractor = new RentAdjudicationFieldExtractor();
         DocumentGenerator documentGenerator = new DocumentGenerator(templateLoader);
         DocumentGeneratorServiceListener<RentAdjudication> listener = new DocumentGeneratorServiceListenerAdaptor<>();
-        IFieldMergingCallback fieldMergingCallback = null;
+        IFieldMergingCallbackFactory<RentAdjudication> callbackFactory = form -> new DoNothingCallback();
 
         return  new DocumentGenerationService<>(
                 documentGenerator,
                 listener,
                 fieldExtractor,
-                fieldMergingCallback,
+                callbackFactory,
                 metricRegistry);
     }
+
+
 
     @Provides
     DocumentGenerationService<NonProvisionOfDocumentation> nonProvisionOfDocumentationDocumentGenerationService(
@@ -164,26 +169,16 @@ public class HousingModule {
         FieldExtractor<NonProvisionOfDocumentation> fieldExtractor = new NonProvisionOfDocumentationFieldExtractor();
         DocumentGenerator documentGenerator = new DocumentGenerator(templateLoader);
         DocumentGeneratorServiceListener<RentAdjudication> listener = new DocumentGeneratorServiceListenerAdaptor<>();
-        IFieldMergingCallback fieldMergingCallback = null;
+
+        IFieldMergingCallbackFactory<NonProvisionOfDocumentation> callbackFactory = form -> new DoNothingCallback();
+
         return  new DocumentGenerationService<>(
                 documentGenerator,
                 listener,
                 fieldExtractor,
-                fieldMergingCallback,
+                callbackFactory,
                 metricRegistry);
     }
-
-//
-//    @Provides
-//    @Singleton
-//    ModelTenancyService modelTenancyService(
-//            @Named(MODEL_TENANCY_TEMPLATE_LOADER) DocumentTemplateLoader templateLoader,
-//            MetricRegistry metricRegistry) {
-//        ModelTenancyFieldExtractor fieldExtractor = new ModelTenancyFieldExtractor();
-//        DocumentGenerator documentGenerator = new DocumentGenerator(templateLoader);
-//        return new ModelTenancyService(documentGenerator, fieldExtractor, metricRegistry);
-//    }
-
 
     @Provides
     @Singleton
@@ -194,7 +189,7 @@ public class HousingModule {
         FieldExtractor<ModelTenancy> fieldExtractor = new ModelTenancyFieldExtractor();
         DocumentGenerator documentGenerator = new DocumentGenerator(templateLoader);
         DocumentGeneratorServiceListener<ModelTenancy> listener = new DocumentGeneratorServiceListenerAdaptor<>();
-        IFieldMergingCallback fieldMergingCallback = new ModelTenancyMergingCallback(null);
+        IFieldMergingCallbackFactory<ModelTenancy> fieldMergingCallback = form -> new ModelTenancyMergingCallback(form);
 
         return  new DocumentGenerationService<>(
                 documentGenerator,
@@ -212,6 +207,18 @@ public class HousingModule {
                 recaptchaConfig.isEnabled(),
                 verifyTarget,
                 recaptchaConfig.getSecret());
+    }
+
+    private class DoNothingCallback implements IFieldMergingCallback {
+        @Override
+        public void fieldMerging(FieldMergingArgs var1) throws Exception {
+            // do nothing
+        }
+
+        @Override
+        public void imageFieldMerging(ImageFieldMergingArgs var1) throws Exception {
+            // do nothing
+        }
     }
 
 }

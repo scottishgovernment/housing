@@ -3,6 +3,8 @@ package scot.mygov.housing.forms.modeltenancy;
 import org.junit.Assert;
 import org.junit.Test;
 import scot.mygov.documents.DocumentGeneratorException;
+import scot.mygov.housing.forms.DocumentGenerationService;
+import scot.mygov.housing.forms.DocumentGenerationServiceException;
 import scot.mygov.housing.forms.RecaptchaCheck;
 import scot.mygov.housing.forms.modeltenancy.model.ModelTenancy;
 import scot.mygov.validation.Validator;
@@ -23,11 +25,11 @@ public class ModelTenancyResourceTest {
 
     @Test
     public void modelTenancyMultipartJSONVersionReturnsPDFForValidTenancyWithNoTypeParam()
-            throws ModelTenancyServiceException, DocumentGeneratorException {
+            throws DocumentGenerationServiceException {
 
         // ARRANGE
         ModelTenancyResource sut = new ModelTenancyResource();
-        sut.modelTenancyService = mock(ModelTenancyService.class);
+        sut.modelTenancyService = mock(DocumentGenerationService.class);
         sut.modelTenancyValidator = mock(Validator.class);
         sut.recaptchaCheck = passingRecaptcheCheck();
         when(sut.modelTenancyService.save(any(), any())).thenReturn(new byte[]{1});
@@ -44,10 +46,11 @@ public class ModelTenancyResourceTest {
 
     @Test
     public void modelTenancyMultipartReturnsPDFForValidTenancyWithNoTypeParam()
-            throws ModelTenancyServiceException, DocumentGeneratorException {
+            throws DocumentGenerationServiceException {
+
         // ARRANGE
         ModelTenancyResource sut = new ModelTenancyResource();
-        sut.modelTenancyService = mock(ModelTenancyService.class);
+        sut.modelTenancyService = mock(DocumentGenerationService.class);
         sut.modelTenancyValidator = mock(Validator.class);
         sut.recaptchaCheck = passingRecaptcheCheck();
         when(sut.modelTenancyService.save(any(), any())).thenReturn(new byte[]{1});
@@ -64,11 +67,11 @@ public class ModelTenancyResourceTest {
     }
 
     @Test
-    public void modelTenancyMultipartReturnsDocIfTypeParamIsSetToWord()
-            throws ModelTenancyServiceException, DocumentGeneratorException {
+    public void modelTenancyMultipartReturnsDocIfTypeParamIsSetToWord() throws DocumentGenerationServiceException {
+
         // ARRANGE
         ModelTenancyResource sut = new ModelTenancyResource();
-        sut.modelTenancyService = mock(ModelTenancyService.class);
+        sut.modelTenancyService = mock(DocumentGenerationService.class);
         sut.modelTenancyValidator = mock(Validator.class);
         sut.recaptchaCheck = passingRecaptcheCheck();
         when(sut.modelTenancyService.save(any(), any())).thenReturn(new byte[]{1});
@@ -87,11 +90,11 @@ public class ModelTenancyResourceTest {
     }
 
     @Test
-    public void modelTenancyMultipartReturnsPDFIfTypeParamIsSetToPDF()
-            throws ModelTenancyServiceException, DocumentGeneratorException {
+    public void modelTenancyMultipartReturnsPDFIfTypeParamIsSetToPDF() throws DocumentGenerationServiceException {
+
         // ARRANGE
         ModelTenancyResource sut = new ModelTenancyResource();
-        sut.modelTenancyService = mock(ModelTenancyService.class);
+        sut.modelTenancyService = mock(DocumentGenerationService.class);
         sut.modelTenancyValidator = mock(Validator.class);
         sut.recaptchaCheck = passingRecaptcheCheck();
         when(sut.modelTenancyService.save(any(), any())).thenReturn(new byte[]{1});
@@ -111,10 +114,11 @@ public class ModelTenancyResourceTest {
 
     @Test
     public void modelTenancyMultipartReturnsPDFIfTypeParamIsNoRecognised()
-            throws ModelTenancyServiceException, DocumentGeneratorException {
+            throws DocumentGenerationServiceException {
+
         // ARRANGE
         ModelTenancyResource sut = new ModelTenancyResource();
-        sut.modelTenancyService = mock(ModelTenancyService.class);
+        sut.modelTenancyService = mock(DocumentGenerationService.class);
         sut.modelTenancyValidator = mock(Validator.class);
         sut.recaptchaCheck = passingRecaptcheCheck();
         when(sut.modelTenancyService.save(any(), any())).thenReturn(new byte[]{1});
@@ -132,9 +136,8 @@ public class ModelTenancyResourceTest {
         assertEquals(response.getHeaders().getFirst("Content-Disposition"), "attachment; filename=\"tenancy.pdf\"");
     }
 
-    @Test(expected = ModelTenancyServiceException.class)
-    public void shouldReturnErrorIfInvalidJSON()
-            throws ModelTenancyServiceException, DocumentGeneratorException {
+    @Test(expected = DocumentGenerationServiceException.class)
+    public void shouldReturnErrorIfInvalidJSON() throws DocumentGenerationServiceException {
 
         // ARRANGE
         ModelTenancyResource sut = new ModelTenancyResource();
@@ -149,9 +152,7 @@ public class ModelTenancyResourceTest {
     }
 
     @Test
-    public void failingrecaptcheReturnsClientError()
-            throws ModelTenancyServiceException, DocumentGeneratorException {
-
+    public void failingrecaptcheReturnsClientError() throws DocumentGenerationServiceException {
         // ARRANGE
         ModelTenancyResource sut = new ModelTenancyResource();
         sut.recaptchaCheck = failingRecaptcheCheck();

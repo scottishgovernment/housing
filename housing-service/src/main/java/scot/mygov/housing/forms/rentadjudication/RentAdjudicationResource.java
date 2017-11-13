@@ -1,8 +1,6 @@
 package scot.mygov.housing.forms.rentadjudication;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import scot.mygov.documents.DocumentGeneratorException;
 import scot.mygov.documents.DocumentType;
 import scot.mygov.housing.forms.DocumentGenerationService;
 import scot.mygov.housing.forms.DocumentGenerationServiceException;

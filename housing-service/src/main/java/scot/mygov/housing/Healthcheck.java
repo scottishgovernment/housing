@@ -78,6 +78,9 @@ public class Healthcheck {
     @Inject
     DocumentGenerationService<NonProvisionOfDocumentation> nonProvisionOfDocumentationDocumentGenerationService;
 
+
+    // TODO: add metrics for all model form generation
+
     @GET
     public Response health(
             @QueryParam("licenseDays") @DefaultValue("10") int licenseDays
@@ -93,6 +96,7 @@ public class Healthcheck {
         addCPIInfo(result, errors, data);
         addMapcloudLookupMetricsInfo(result, errors, data);
         addModelTenancyMetricsInfo(result, errors, data);
+
         addRPZElasticsearchInfo(result, errors, data);
 
         boolean ok = errors.size() == 0;
@@ -206,6 +210,28 @@ public class Healthcheck {
         Meter errorRate = metricRegistry.getMeters().get(MetricName.ERROR_RATE.name(modelTenancyService));
         Timer timer = metricRegistry.getTimers().get(MetricName.RESPONSE_TIMES.name(modelTenancyService));
 
+        data.put("modelTenancyErrorRate", formatMeter(errorRate));
+        data.put("modelTenancyTimer", formatMeter(timer));
+
+        // collect all of the metrics for modelTenancyService and add them to the data
+        MetricFilter filter = forClass(modelTenancyService.getClass());
+        for (Map.Entry<String, Timer> entry : metricRegistry.getTimers(filter).entrySet()) {
+            data.put(entry.getKey(), formatSnapshot(entry.getValue().getSnapshot()));
+        }
+
+        for (Map.Entry<String, Meter> entry : metricRegistry.getMeters(filter).entrySet()) {
+            data.put(entry.getKey(), formatMeter(entry.getValue()));
+        }
+
+        for (Map.Entry<String, Counter> entry : metricRegistry.getCounters(filter).entrySet()) {
+            data.put(entry.getKey(), entry.getValue().getCount());
+        }
+    }
+
+    private void addDocumentGenerationMetricsInfo(ObjectNode result, ArrayNode errors, ObjectNode data) {
+
+        Meter errorRate = metricRegistry.getMeters().get(MetricName.ERROR_RATE.name(modelTenancyService));
+        Timer timer = metricRegistry.getTimers().get(MetricName.RESPONSE_TIMES.name(modelTenancyService));
 
         data.put("modelTenancyErrorRate", formatMeter(errorRate));
         data.put("modelTenancyTimer", formatMeter(timer));
@@ -224,6 +250,8 @@ public class Healthcheck {
             data.put(entry.getKey(), entry.getValue().getCount());
         }
     }
+
+
 
     private String formatSnapshot(Snapshot ss) {
         return String.format(

@@ -1,6 +1,5 @@
 package scot.mygov.housing.forms;
 
-import com.aspose.words.IFieldMergingCallback;
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
@@ -14,23 +13,17 @@ import java.util.Map;
 
 public class DocumentGenerationService <T> {
 
-    //public static final String DOCUMENT_TEMPLATE_PATH = "/templates/model-tenancy-agreement-with-notes.docx";
-
     private final DocumentGenerator documentGenerator;
 
     private final DocumentGeneratorServiceListener listener;
 
     private final FieldExtractor<T> fieldExtractor;
 
-    private final IFieldMergingCallback fieldMergingCallback;
+    private final IFieldMergingCallbackFactory<T> fieldMergingCallbackFactory;
 
     private final Timer responseTimes;
 
     private final Counter requestCounter;
-
-    private final Counter unchangedUtilitiesCounter;
-
-    private final Counter changedUtilitiesCounter;
 
     private final Counter errorCounter;
 
@@ -42,20 +35,18 @@ public class DocumentGenerationService <T> {
             DocumentGenerator documentGenerator,
             DocumentGeneratorServiceListener listener,
             FieldExtractor<T> fieldExtractor,
-            IFieldMergingCallback fieldMergingCallback,
+            IFieldMergingCallbackFactory<T> fieldMergingCallbackFactory,
             MetricRegistry registry) {
 
         this.fieldExtractor = fieldExtractor;
         this.documentGenerator = documentGenerator;
         this.listener = listener;
-        this.fieldMergingCallback = fieldMergingCallback;
+        this.fieldMergingCallbackFactory = fieldMergingCallbackFactory;
         this.responseTimes = registry.timer(MetricName.RESPONSE_TIMES.name(this));
         this.requestCounter = registry.counter(MetricName.REQUESTS.name(this));
         this.errorCounter = registry.counter(MetricName.ERRORS.name(this));
         this.requestMeter = registry.meter(MetricName.REQUEST_RATE.name(this));
         this.errorMeter = registry.meter(MetricName.ERROR_RATE.name(this));
-        this.unchangedUtilitiesCounter = registry.counter(MetricRegistry.name(this.getClass(), "unchanged-utilities"));
-        this.changedUtilitiesCounter = registry.counter(MetricRegistry.name(this.getClass(), "changed-utilities"));
     }
 
     public byte[] save(T model, DocumentType type) throws DocumentGenerationServiceException {
@@ -67,7 +58,7 @@ public class DocumentGenerationService <T> {
         listener.onGenerateStart(model);
 
         try {
-            byte [] docBytes = documentGenerator.save(fields, type, fieldMergingCallback);
+            byte [] docBytes = documentGenerator.save(fields, type, fieldMergingCallbackFactory.newCallback(model));
             timer.stop();
             listener.onGenerateDone(model, docBytes);
             return docBytes;

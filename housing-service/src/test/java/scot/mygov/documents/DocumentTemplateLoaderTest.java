@@ -10,7 +10,7 @@ public class DocumentTemplateLoaderTest {
 
     @Test
     public void canLoadTemplate() {
-        DocumentTemplateLoader loader = new DocumentTemplateLoader(ModelTenancyService.DOCUMENT_TEMPLATE_PATH, null);
+        DocumentTemplateLoader loader = new DocumentTemplateLoader("/templates/model-tenancy-agreement-with-notes.docx", null);
         Document doc1 = loader.loadDocumentTemplate();
         assertNotNull(doc1);
 
