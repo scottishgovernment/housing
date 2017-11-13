@@ -470,8 +470,9 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
 
     private void provdePlacholder(FieldMergingArgs fieldMergingArgs) throws Exception {
         DocumentBuilder builder = new DocumentBuilder(fieldMergingArgs.getDocument());
-        builder.moveToMergeField(fieldMergingArgs.getFieldName());
-        placeholders.get(fieldMergingArgs.getFieldName()).accept(builder);
+        if (builder.moveToMergeField(fieldMergingArgs.getFieldName())) {
+            placeholders.get(fieldMergingArgs.getFieldName()).accept(builder);
+        }
     }
 
     /**
