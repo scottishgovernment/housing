@@ -316,6 +316,31 @@ public class ModelTenancyMergingCallbackTest {
     }
 
     @Test
+    public void notificationResidents() throws Exception {
+
+        // ARRANGE
+        ModelTenancy tenancy = om.anyTenancy();;
+
+        ModelTenancyMergingCallback sut = new ModelTenancyMergingCallback(tenancy);
+        FieldMergingArgs args = mock(FieldMergingArgs.class);
+        when(args.getFieldValue()).thenReturn("");
+        when(args.getFieldName()).thenReturn("notificationResidents");
+        Field field = mock(Field.class);
+        FieldStart fieldStart = mock(FieldStart.class);
+        Node ancestor = mock(Section.class);
+
+        when(args.getField()).thenReturn(field);
+        when(field.getStart()).thenReturn(fieldStart);
+        when(fieldStart.getAncestor(ArgumentMatchers.any())).thenReturn(ancestor);
+        when(args.getDocument()).thenReturn(new Document());
+
+        //  ACT
+        sut.fieldMerging(args);
+
+        // ASSERT
+    }
+
+    @Test
     public void tenantNamesAndAddresses() throws Exception {
 
         // ARRANGE
