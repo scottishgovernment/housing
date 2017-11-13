@@ -8,6 +8,7 @@ import com.aspose.words.ParagraphFormat;
 import com.aspose.words.Section;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
+
 import scot.mygov.housing.forms.FieldExtractorUtils;
 import scot.mygov.housing.forms.InitialisationFailedException;
 import scot.mygov.housing.forms.modeltenancy.model.Guarantor;
@@ -26,6 +27,8 @@ import java.util.stream.Collectors;
 import static java.util.Collections.addAll;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
+import static scot.mygov.documents.PlaceholderUtils.*;
+
 import static scot.mygov.housing.forms.modeltenancy.ModelTenancyFieldExtractor.NEWLINE;
 
 public class ModelTenancyMergingCallback implements IFieldMergingCallback {
@@ -53,8 +56,6 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
     }
 
     public void populatePlaceholders() {
-        String datePlaceholder = "__/__/__";
-        String monetaryPlaceholder = "____.__";
         placeholders.put("tenantNamesAndAddresses", documentBuilder -> writeNumberedDoubleLines(documentBuilder, 5));
         placeholders.put("tenantEmails", documentBuilder -> writeNumberedLines(documentBuilder, 5));
         placeholders.put("tenantPhoneNumbers", documentBuilder -> writeNumberedLines(documentBuilder, 5));
@@ -80,27 +81,27 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
                 documentBuilder -> writeInlineField(documentBuilder, "[Furnished / Unfurnished / Partly furnished]"));
         placeholders.put("hmoString", documentBuilder -> writeInlineField(documentBuilder, "[is / is not]"));
         placeholders.put("hmoContactNumber", documentBuilder -> writeLines(documentBuilder, 2));
-        placeholders.put("hmoExpiryDate", documentBuilder -> writeInlineField(documentBuilder, datePlaceholder));
-        placeholders.put("tenancyStartDate", documentBuilder -> writeInlineField(documentBuilder, datePlaceholder));
-        placeholders.put("depositAmount", documentBuilder -> writeInlineField(documentBuilder, monetaryPlaceholder));
+        placeholders.put("hmoExpiryDate", documentBuilder -> writeInlineField(documentBuilder, DATE_PLACEHOLDER));
+        placeholders.put("tenancyStartDate", documentBuilder -> writeInlineField(documentBuilder, DATE_PLACEHOLDER));
+        placeholders.put("depositAmount", documentBuilder -> writeInlineField(documentBuilder, MONETARY_PLACEHOLDER));
         placeholders.put("depositSchemeAdministrator",
                 documentBuilder -> writeInlineField(documentBuilder, "______________________________"));
         placeholders.put("depositSchemeContactDetails", documentBuilder -> writeLines(documentBuilder, 4));
-        placeholders.put("rentAmount", documentBuilder -> writeInlineField(documentBuilder, monetaryPlaceholder));
-        placeholders.put("originalRentAmount", documentBuilder -> writeInlineField(documentBuilder, monetaryPlaceholder));
+        placeholders.put("rentAmount", documentBuilder -> writeInlineField(documentBuilder, MONETARY_PLACEHOLDER));
+        placeholders.put("originalRentAmount", documentBuilder -> writeInlineField(documentBuilder, MONETARY_PLACEHOLDER));
         placeholders.put("rentPressureZoneString", documentBuilder -> writeInlineField(documentBuilder,
                 "[is / is not]"));
 
         placeholders.put("servicesIncludedInRent", documentBuilder -> writeLines(documentBuilder, 3));
-        placeholders.put("firstPaymentDate", documentBuilder -> writeInlineField(documentBuilder, datePlaceholder));
+        placeholders.put("firstPaymentDate", documentBuilder -> writeInlineField(documentBuilder, DATE_PLACEHOLDER));
         placeholders.put("advanceOrArrears",
                 documentBuilder -> writeInlineField(documentBuilder, "[advance / arears]"));
         placeholders.put("firstPaymentAmount",
-                documentBuilder -> writeInlineField(documentBuilder, monetaryPlaceholder));
+                documentBuilder -> writeInlineField(documentBuilder, MONETARY_PLACEHOLDER));
         placeholders.put("firstPaymentPeriodStart",
-                documentBuilder -> writeInlineField(documentBuilder, datePlaceholder));
+                documentBuilder -> writeInlineField(documentBuilder, DATE_PLACEHOLDER));
         placeholders.put("firstPaymentPeriodEnd",
-                documentBuilder -> writeInlineField(documentBuilder, datePlaceholder));
+                documentBuilder -> writeInlineField(documentBuilder, DATE_PLACEHOLDER));
         placeholders.put("rentPaymentFrequencyDayOrDate", documentBuilder -> writeInlineField(documentBuilder, "__________"));
         placeholders.put("rentPaymentSchedule",
                 documentBuilder -> writeInlineField(documentBuilder,
@@ -375,56 +376,6 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
         return str.toUpperCase();
     }
 
-    private void writeIndented(DocumentBuilder builder, String txt) {
-        builder.getParagraphFormat().setLeftIndent(20);
-        builder.writeln(txt);
-        builder.getParagraphFormat().setLeftIndent(0);
-    }
-
-    private void writeNumberedLines(DocumentBuilder builder, int n) {
-        ParagraphFormat paragraphFormat = builder.getParagraphFormat();
-        paragraphFormat.getShading().setBackgroundPatternColor(Color.LIGHT_GRAY);
-        for (int i = 1; i <= n; i++) {
-            builder.writeln("(" + i + ")\t  \t\t");
-        }
-    }
-
-    private void writeNumberedLines(DocumentBuilder builder, String prefix, String postfix, int n) {
-        ParagraphFormat paragraphFormat = builder.getParagraphFormat();
-        paragraphFormat.getShading().setBackgroundPatternColor(Color.LIGHT_GRAY);
-        for (int i = 1; i <= n; i++) {
-            builder.writeln(prefix + "(" + i + ")\t  \t\t" + postfix);
-        }
-    }
-
-    private void writeNumberedLinesWithLabel(DocumentBuilder builder, String label, int n) {
-        ParagraphFormat paragraphFormat = builder.getParagraphFormat();
-        paragraphFormat.getShading().setBackgroundPatternColor(Color.LIGHT_GRAY);
-        for (int i = 1; i <= n; i++) {
-            builder.writeln(String.format("%s (%d) \t\t", label, i));
-        }
-    }
-
-    private void writeNumberedDoubleLines(DocumentBuilder builder, int n) {
-        ParagraphFormat paragraphFormat = builder.getParagraphFormat();
-        paragraphFormat.getShading().setBackgroundPatternColor(Color.LIGHT_GRAY);
-        for (int i = 1; i <= n; i++) {
-            builder.writeln("(" + i + ")\t  \t\t\n\t\t");
-        }
-    }
-
-    private void writeLines(DocumentBuilder builder, int n) {
-        ParagraphFormat paragraphFormat = builder.getParagraphFormat();
-        paragraphFormat.getShading().setBackgroundPatternColor(Color.LIGHT_GRAY);
-        for (int i = 1; i <= n; i++) {
-            builder.writeln("\t \t\t");
-        }
-    }
-
-    private void writeInlineField(DocumentBuilder builder, String field) {
-        builder.getFont().getShading().setBackgroundPatternColor(Color.LIGHT_GRAY);
-        builder.write(field);
-    }
 
     private boolean shouldRemoveSection(String fieldName, String fieldValue, FieldMergingArgs fieldMergingArgs) {
         if (fieldsToRemoveIfEmpty.contains(fieldName) && StringUtils.isEmpty(fieldValue)){

@@ -1,49 +1,54 @@
 package scot.mygov.housing.forms.nonprovisionofdocumentation.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import scot.mygov.housing.forms.modeltenancy.model.Address;
 import scot.mygov.housing.forms.modeltenancy.model.AgentOrLandLord;
 import scot.mygov.housing.forms.modeltenancy.model.Person;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class NonProvisionOfDocumentation {
 
-    private AgentOrLandLord landLord;
-    private List<Person> tenants;
-    private Person tenentsAgent;
-    private Address address;
-    private LocalDate intendedReferalDate;
+    private AgentOrLandLord landLordOrAgent = new AgentOrLandLord();
+    private List<String> tenantNames = new ArrayList<>();
+    private Person tenantsAgent = new Person();
+    private Address address = new Address();
+    @JsonDeserialize(using= LocalDateDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate intendedReferalDate = null;
 
-    private boolean section10Failure;
-    private String section10Details;
-    private boolean section11Failure;
-    private String section11Details;
+    private boolean section10Failure = false;
+    private String section10Details = "";
+    private boolean section11Failure = false;
+    private String section11Details = "";
+    private boolean section16Failure = false;
 
-    private boolean booleanSection16Failure;
-
-    public AgentOrLandLord getLandLord() {
-        return landLord;
+    public AgentOrLandLord getLandLordOrAgent() {
+        return landLordOrAgent;
     }
 
-    public void setLandLord(AgentOrLandLord landLord) {
-        this.landLord = landLord;
+    public void setLandLordOrAgent(AgentOrLandLord landLordOrAgent) {
+        this.landLordOrAgent = landLordOrAgent;
     }
 
-    public List<Person> getTenants() {
-        return tenants;
+    public List<String> getTenantNames() {
+        return tenantNames;
     }
 
-    public void setTenants(List<Person> tenants) {
-        this.tenants = tenants;
+    public void setTenantNames(List<String> tenantNames) {
+        this.tenantNames = tenantNames;
     }
 
-    public Person getTenentsAgent() {
-        return tenentsAgent;
+    public Person getTenantsAgent() {
+        return tenantsAgent;
     }
 
-    public void setTenentsAgent(Person tenentsAgent) {
-        this.tenentsAgent = tenentsAgent;
+    public void setTenantsAgent(Person tenantsAgent) {
+        this.tenantsAgent = tenantsAgent;
     }
 
     public Address getAddress() {
@@ -94,11 +99,11 @@ public class NonProvisionOfDocumentation {
         this.section11Details = section11Details;
     }
 
-    public boolean isBooleanSection16Failure() {
-        return booleanSection16Failure;
+    public boolean isSection16Failure() {
+        return section16Failure;
     }
 
-    public void setBooleanSection16Failure(boolean booleanSection16Failure) {
-        this.booleanSection16Failure = booleanSection16Failure;
+    public void setSection16Failure(boolean section16Failure) {
+        this.section16Failure = section16Failure;
     }
 }

@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.Map;
 
+@Path("non-provision-of-documentation")
 public class NonProvisionOfDocumentationResource {
 
     @Inject
@@ -48,7 +49,7 @@ public class NonProvisionOfDocumentationResource {
     }
 
     private String contentDisposition(DocumentType type) {
-        return String.format("attachment; filename=\"adjudication.%s\"", type.getExtension());
+        return String.format("attachment; filename=\"non-provision-of-documentation.%s\"", type.getExtension());
     }
 
     private NonProvisionOfDocumentation parseModel(String data) throws DocumentGenerationServiceException {

@@ -24,6 +24,7 @@ import scot.mygov.housing.forms.modeltenancy.ModelTenancyFieldExtractor;
 import scot.mygov.housing.forms.modeltenancy.ModelTenancyMergingCallback;
 import scot.mygov.housing.forms.modeltenancy.model.ModelTenancy;
 import scot.mygov.housing.forms.nonprovisionofdocumentation.NonProvisionOfDocumentationFieldExtractor;
+import scot.mygov.housing.forms.nonprovisionofdocumentation.NonProvisionOfDocumentationMergingCallback;
 import scot.mygov.housing.forms.nonprovisionofdocumentation.model.NonProvisionOfDocumentation;
 import scot.mygov.housing.forms.rentadjudication.RentAdjudicationFieldExtractor;
 import scot.mygov.housing.forms.rentadjudication.model.RentAdjudication;
@@ -147,7 +148,8 @@ public class HousingModule {
         FieldExtractor<RentAdjudication> fieldExtractor = new RentAdjudicationFieldExtractor();
         DocumentGenerator documentGenerator = new DocumentGenerator(templateLoader);
         DocumentGeneratorServiceListener<RentAdjudication> listener = new DocumentGeneratorServiceListenerAdaptor<>();
-        IFieldMergingCallbackFactory<RentAdjudication> callbackFactory = form -> new DoNothingCallback();
+        IFieldMergingCallbackFactory<RentAdjudication> callbackFactory
+                = form -> new DoNothingCallback();
 
         return  new DocumentGenerationService<>(
                 documentGenerator,
@@ -169,8 +171,8 @@ public class HousingModule {
         FieldExtractor<NonProvisionOfDocumentation> fieldExtractor = new NonProvisionOfDocumentationFieldExtractor();
         DocumentGenerator documentGenerator = new DocumentGenerator(templateLoader);
         DocumentGeneratorServiceListener<RentAdjudication> listener = new DocumentGeneratorServiceListenerAdaptor<>();
-
-        IFieldMergingCallbackFactory<NonProvisionOfDocumentation> callbackFactory = form -> new DoNothingCallback();
+        IFieldMergingCallbackFactory<NonProvisionOfDocumentation> callbackFactory
+                = form -> new NonProvisionOfDocumentationMergingCallback();
 
         return  new DocumentGenerationService<>(
                 documentGenerator,
@@ -189,7 +191,8 @@ public class HousingModule {
         FieldExtractor<ModelTenancy> fieldExtractor = new ModelTenancyFieldExtractor();
         DocumentGenerator documentGenerator = new DocumentGenerator(templateLoader);
         DocumentGeneratorServiceListener<ModelTenancy> listener = new DocumentGeneratorServiceListenerAdaptor<>();
-        IFieldMergingCallbackFactory<ModelTenancy> fieldMergingCallback = form -> new ModelTenancyMergingCallback(form);
+        IFieldMergingCallbackFactory<ModelTenancy> fieldMergingCallback
+                = form -> new ModelTenancyMergingCallback(form);
 
         return  new DocumentGenerationService<>(
                 documentGenerator,

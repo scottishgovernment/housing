@@ -17,8 +17,6 @@ import scot.mygov.housing.cpi.CPIServiceException;
 import scot.mygov.housing.cpi.model.CPIData;
 import scot.mygov.housing.forms.DocumentGenerationService;
 import scot.mygov.housing.forms.modeltenancy.model.ModelTenancy;
-import scot.mygov.housing.forms.nonprovisionofdocumentation.model.NonProvisionOfDocumentation;
-import scot.mygov.housing.forms.rentadjudication.model.RentAdjudication;
 import scot.mygov.housing.mapcloud.Mapcloud;
 
 import javax.inject.Inject;
@@ -72,15 +70,6 @@ public class Healthcheck {
     @Inject
     DocumentGenerationService<ModelTenancy> modelTenancyService;
 
-    @Inject
-    DocumentGenerationService<RentAdjudication> rentAdjudicationDocumentGenerationService;
-
-    @Inject
-    DocumentGenerationService<NonProvisionOfDocumentation> nonProvisionOfDocumentationDocumentGenerationService;
-
-
-    // TODO: add metrics for all model form generation
-
     @GET
     public Response health(
             @QueryParam("licenseDays") @DefaultValue("10") int licenseDays
@@ -98,6 +87,8 @@ public class Healthcheck {
         addModelTenancyMetricsInfo(result, errors, data);
 
         addRPZElasticsearchInfo(result, errors, data);
+
+        addDocumentGenerationMetricsInfo(result, errors, data, modelTenancyService);
 
         boolean ok = errors.size() == 0;
         result.put("ok", ok);
@@ -228,16 +219,18 @@ public class Healthcheck {
         }
     }
 
-    private void addDocumentGenerationMetricsInfo(ObjectNode result, ArrayNode errors, ObjectNode data) {
+    private <T> void addDocumentGenerationMetricsInfo(ObjectNode result, ArrayNode errors, ObjectNode data, DocumentGenerationService<T> service) {
 
-        Meter errorRate = metricRegistry.getMeters().get(MetricName.ERROR_RATE.name(modelTenancyService));
-        Timer timer = metricRegistry.getTimers().get(MetricName.RESPONSE_TIMES.name(modelTenancyService));
+        String errorRateKey = MetricName.ERROR_RATE.name(service);
+        Meter errorRate = metricRegistry.getMeters().get(errorRateKey);
+        data.put(errorRateKey, formatMeter(errorRate));
 
-        data.put("modelTenancyErrorRate", formatMeter(errorRate));
-        data.put("modelTenancyTimer", formatMeter(timer));
+        String timerKey = MetricName.RESPONSE_TIMES.name(service);
+        Timer timer = metricRegistry.getTimers().get(timerKey);
+        data.put(timerKey, formatMeter(timer));
 
         // collect all of the metrics for modelTenancyService and add them to the data
-        MetricFilter filter = forClass(modelTenancyService.getClass());
+        MetricFilter filter = forClass(service.getClass());
         for (Map.Entry<String, Timer> entry : metricRegistry.getTimers(filter).entrySet()) {
             data.put(entry.getKey(), formatSnapshot(entry.getValue().getSnapshot()));
         }

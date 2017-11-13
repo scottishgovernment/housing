@@ -1,11 +1,9 @@
-package scot.mygov.housing.forms.rentadjudication;
+package scot.mygov.housing.forms.nonprovisionofdocumentation;
 
-import org.junit.Assert;
 import org.junit.Test;
-import scot.mygov.documents.DocumentGeneratorException;
 import scot.mygov.housing.forms.DocumentGenerationService;
 import scot.mygov.housing.forms.DocumentGenerationServiceException;
-import scot.mygov.housing.forms.rentadjudication.model.RentAdjudication;
+import scot.mygov.housing.forms.nonprovisionofdocumentation.model.NonProvisionOfDocumentation;
 
 import javax.ws.rs.core.Response;
 import java.util.HashMap;
@@ -17,31 +15,32 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class RentAdjudicationResourceTest {
+public class NonProvisionOfDocumentationResourceTest {
+
     @Test
     public void multipartJSONVersionReturnsPDFForValidTenancyWithNoTypeParam()
             throws DocumentGenerationServiceException {
 
         // ARRANGE
-        RentAdjudicationResource sut = new RentAdjudicationResource();
+        NonProvisionOfDocumentationResource sut = new NonProvisionOfDocumentationResource();
         sut.service = mock(DocumentGenerationService.class);
         when(sut.service.save(any(), any())).thenReturn(new byte[]{1});
 
         // ACT
-        Response response = sut.multipart(new RentAdjudication(), "");
+        Response response = sut.multipart(new NonProvisionOfDocumentation(), "");
         byte[] bytes = (byte[]) response.getEntity();
 
         // ASSERT
         assertEquals(1, bytes[0]);
         assertEquals(response.getHeaders().getFirst("Content-Type"), "application/pdf");
-        assertEquals(response.getHeaders().getFirst("Content-Disposition"), "attachment; filename=\"adjudication.pdf\"");
+        assertEquals(response.getHeaders().getFirst("Content-Disposition"), "attachment; filename=\"non-provision-of-documentation.pdf\"");
     }
 
     @Test
     public void multipartReturnsPDFForValidTenancyWithNoTypeParam()
             throws DocumentGenerationServiceException {
         // ARRANGE
-        RentAdjudicationResource sut = new RentAdjudicationResource();
+        NonProvisionOfDocumentationResource sut = new NonProvisionOfDocumentationResource();
         sut.service = mock(DocumentGenerationService.class);
         when(sut.service.save(any(), any())).thenReturn(new byte[]{1});
         Map<String, String> params = singletonMap("data", "{}");
@@ -53,14 +52,14 @@ public class RentAdjudicationResourceTest {
         // ASSERT
         assertEquals(1, bytes[0]);
         assertEquals(response.getHeaders().getFirst("Content-Type"), "application/pdf");
-        assertEquals(response.getHeaders().getFirst("Content-Disposition"), "attachment; filename=\"adjudication.pdf\"");
+        assertEquals(response.getHeaders().getFirst("Content-Disposition"), "attachment; filename=\"non-provision-of-documentation.pdf\"");
     }
 
     @Test
     public void multipartReturnsDocIfTypeParamIsSetToWord()
             throws DocumentGenerationServiceException {
         // ARRANGE
-        RentAdjudicationResource sut = new RentAdjudicationResource();
+        NonProvisionOfDocumentationResource sut = new NonProvisionOfDocumentationResource();
         sut.service = mock(DocumentGenerationService.class);
         when(sut.service.save(any(), any())).thenReturn(new byte[]{1});
         Map<String, String> params = new HashMap<>();
@@ -74,14 +73,14 @@ public class RentAdjudicationResourceTest {
         // ASSERT
         assertEquals(1, bytes[0]);
         assertEquals(response.getHeaders().getFirst("Content-Type"), "application/docx");
-        assertEquals(response.getHeaders().getFirst("Content-Disposition"), "attachment; filename=\"adjudication.docx\"");
+        assertEquals(response.getHeaders().getFirst("Content-Disposition"), "attachment; filename=\"non-provision-of-documentation.docx\"");
     }
 
     @Test
     public void multipartReturnsPDFIfTypeParamIsSetToPDF()
             throws DocumentGenerationServiceException {
         // ARRANGE
-        RentAdjudicationResource sut = new RentAdjudicationResource();
+        NonProvisionOfDocumentationResource sut = new NonProvisionOfDocumentationResource();
         sut.service = mock(DocumentGenerationService.class);
         when(sut.service.save(any(), any())).thenReturn(new byte[]{1});
         Map<String, String> params = new HashMap<>();
@@ -95,14 +94,14 @@ public class RentAdjudicationResourceTest {
         // ASSERT
         assertEquals(1, bytes[0]);
         assertEquals(response.getHeaders().getFirst("Content-Type"), "application/pdf");
-        assertEquals(response.getHeaders().getFirst("Content-Disposition"), "attachment; filename=\"adjudication.pdf\"");
+        assertEquals(response.getHeaders().getFirst("Content-Disposition"), "attachment; filename=\"non-provision-of-documentation.pdf\"");
     }
 
     @Test
     public void modelTenancyMultipartReturnsPDFIfTypeParamIsNoRecognised()
             throws DocumentGenerationServiceException {
         // ARRANGE
-        RentAdjudicationResource sut = new RentAdjudicationResource();
+        NonProvisionOfDocumentationResource sut = new NonProvisionOfDocumentationResource();
         sut.service = mock(DocumentGenerationService.class);
 
         when(sut.service.save(any(), any())).thenReturn(new byte[]{1});
@@ -117,7 +116,7 @@ public class RentAdjudicationResourceTest {
         // ASSERT
         assertEquals(1, bytes[0]);
         assertEquals(response.getHeaders().getFirst("Content-Type"), "application/pdf");
-        assertEquals(response.getHeaders().getFirst("Content-Disposition"), "attachment; filename=\"adjudication.pdf\"");
+        assertEquals(response.getHeaders().getFirst("Content-Disposition"), "attachment; filename=\"non-provision-of-documentation.pdf\"");
     }
 
     @Test(expected = DocumentGenerationServiceException.class)
@@ -125,7 +124,7 @@ public class RentAdjudicationResourceTest {
             throws DocumentGenerationServiceException {
 
         // ARRANGE
-        RentAdjudicationResource sut = new RentAdjudicationResource();
+        NonProvisionOfDocumentationResource sut = new NonProvisionOfDocumentationResource();
         Map<String, String> params = singletonMap("data", "");
         Response response = sut.multipart(params);
 
