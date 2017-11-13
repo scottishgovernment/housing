@@ -138,7 +138,7 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
             builder.moveToMergeField(fieldName);
             String withGreyBackground = "<span style=\"background-color:lightgrey\">" + UTILITIES_LIST + "</span>";
             String val = fieldValue.replace(UTILITIES_LIST, withGreyBackground);
-            builder.insertHtml(val);
+            insertHtml(val, builder);
         }
 
         // if the field is one of the fieldsToRemoveIfEmpty then remove the sections it is contained within from the
@@ -170,7 +170,7 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
             String html = formatAdditionalTerms(tenancy);
             DocumentBuilder builder = new DocumentBuilder(fieldMergingArgs.getDocument());
             builder.moveToMergeField(fieldName);
-            builder.insertHtml("<font face=\"arial\">" + html + "</font>");
+            insertHtml(html, builder);
         }
     }
 
@@ -183,7 +183,7 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
         }
         DocumentBuilder builder = new DocumentBuilder(fieldMergingArgs.getDocument());
         builder.moveToMergeField(fieldName);
-        builder.insertHtml(injectValue);
+        insertHtml(injectValue, builder);
     }
 
     private void handleEasyreadNotes(String fieldName, FieldMergingArgs fieldMergingArgs) throws Exception {
@@ -212,7 +212,7 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
             // insert the relevant content into the document.
             DocumentBuilder builder = new DocumentBuilder(fieldMergingArgs.getDocument());
             builder.moveToMergeField(fieldName);
-            builder.insertHtml("<font face=\"arial\">" + html + "</font>");
+            insertHtml(html, builder);
         }
     }
 
@@ -507,5 +507,15 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
         } catch (Exception e) {
             throw new InitialisationFailedException("Failed to extract optional section fields", e);
         }
+    }
+
+    private void insertHtml(String html, DocumentBuilder builder) throws Exception {
+        // turn text para breaks into br's
+        String htmlWithBreaks= html.replace("\n\n", "</br></br>");
+
+        // ensure right font
+
+        String htmlWithFont = String.format("<font face=\"arial\">%s</font>", htmlWithBreaks);
+        builder.insertHtml(htmlWithFont);
     }
 }
