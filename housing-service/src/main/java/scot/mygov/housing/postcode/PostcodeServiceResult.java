@@ -12,6 +12,7 @@ public class PostcodeServiceResult {
     private String postcode;
     private String country;
 
+
     public String getUprn() {
         return uprn;
     }

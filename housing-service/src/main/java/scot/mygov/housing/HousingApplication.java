@@ -3,7 +3,10 @@ package scot.mygov.housing;
 import scot.mygov.housing.cpi.CPIResource;
 import scot.mygov.housing.forms.modeltenancy.ModelTenancyResource;
 import scot.mygov.housing.forms.nonprovisionofdocumentation.NonProvisionOfDocumentationResource;
+import scot.mygov.housing.forms.noticetoleave.NoticeToLeaveResource;
+import scot.mygov.housing.forms.noticetoleave.SubtenantNoticeToLeaveResource;
 import scot.mygov.housing.forms.rentadjudication.RentAdjudicationResource;
+import scot.mygov.housing.forms.rentincreasenotice.RentIncreaseResource;
 import scot.mygov.housing.mapcloud.Mapcloud;
 import scot.mygov.housing.postcode.PostcodeResource;
 import scot.mygov.housing.rpz.RentPressureZoneResource;
@@ -27,7 +30,16 @@ public class HousingApplication extends Application {
     RentAdjudicationResource rentAdjudication;
 
     @Inject
+    RentIncreaseResource rentIncrease;
+
+    @Inject
     NonProvisionOfDocumentationResource nonProvisionOfDocumentationResource;
+
+    @Inject
+    NoticeToLeaveResource noticeToLeave;
+
+    @Inject
+    SubtenantNoticeToLeaveResource subtenantNoticeToLeave;
 
     @Inject
     CPIResource cpiResource;
@@ -53,12 +65,17 @@ public class HousingApplication extends Application {
     @Override
     public Set<Object> getSingletons() {
         return new HashSet<>(asList(
-                rentPressureZone,
                 modelTenancy,
                 rentAdjudication,
+                rentIncrease,
                 nonProvisionOfDocumentationResource,
+                noticeToLeave,
+                subtenantNoticeToLeave,
+
+                rentPressureZone,
                 cpiResource,
                 postcodeResource,
+
                 errorHandler,
                 healthcheck,
                 mapcloud,

@@ -15,8 +15,6 @@ public class DocumentGenerationService <T> {
 
     private final DocumentGenerator documentGenerator;
 
-    private final DocumentGeneratorServiceListener listener;
-
     private final FieldExtractor<T> fieldExtractor;
 
     private final IFieldMergingCallbackFactory<T> fieldMergingCallbackFactory;
@@ -33,14 +31,12 @@ public class DocumentGenerationService <T> {
 
     public DocumentGenerationService(
             DocumentGenerator documentGenerator,
-            DocumentGeneratorServiceListener listener,
             FieldExtractor<T> fieldExtractor,
             IFieldMergingCallbackFactory<T> fieldMergingCallbackFactory,
             MetricRegistry registry) {
 
         this.fieldExtractor = fieldExtractor;
         this.documentGenerator = documentGenerator;
-        this.listener = listener;
         this.fieldMergingCallbackFactory = fieldMergingCallbackFactory;
         this.responseTimes = registry.timer(MetricName.RESPONSE_TIMES.name(this));
         this.requestCounter = registry.counter(MetricName.REQUESTS.name(this));
@@ -55,15 +51,12 @@ public class DocumentGenerationService <T> {
         requestMeter.mark();
 
         Map<String, Object> fields = fieldExtractor.extractFields(model);
-        listener.onGenerateStart(model);
 
         try {
             byte [] docBytes = documentGenerator.save(fields, type, fieldMergingCallbackFactory.newCallback(model));
             timer.stop();
-            listener.onGenerateDone(model, docBytes);
             return docBytes;
         } catch (DocumentGeneratorException e) {
-            listener.onGenerateException(model, e);
             errorCounter.inc();
             errorMeter.mark();
             throw new DocumentGenerationServiceException("Failed to generate document", e);

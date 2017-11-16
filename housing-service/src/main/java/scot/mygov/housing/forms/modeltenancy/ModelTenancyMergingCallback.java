@@ -56,59 +56,47 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
     }
 
     public void populatePlaceholders() {
-        placeholders.put("tenantNamesAndAddresses", documentBuilder -> writeNumberedDoubleLines(documentBuilder, 5));
-        placeholders.put("tenantEmails", documentBuilder -> writeNumberedLines(documentBuilder, 5));
-        placeholders.put("tenantPhoneNumbers", documentBuilder -> writeNumberedLines(documentBuilder, 5));
-        placeholders.put("lettingAgentName", documentBuilder -> writeLines(documentBuilder, 1));
-        placeholders.put("lettingAgentAddress", documentBuilder -> writeLines(documentBuilder, 3));
-        placeholders.put("lettingAgentEmail", documentBuilder -> writeLines(documentBuilder, 1));
-        placeholders.put("lettingAgentPhone", documentBuilder -> writeLines(documentBuilder, 1));
-        placeholders.put("lettingAgentRegistrationNumber", documentBuilder -> writeLines(documentBuilder, 1));
-        placeholders.put("lettingAgentServices", documentBuilder -> writeLines(documentBuilder, 3));
-        placeholders.put("lettingAgentPointOfContactServices", documentBuilder -> writeLines(documentBuilder, 3));
-        placeholders.put("landlordNames", documentBuilder -> writeNumberedLines(documentBuilder, "Name ", "\n\n\n", 2));
-        placeholders.put("landlordAddresses", documentBuilder -> writeNumberedLines(documentBuilder, "Address ", "\n\n\n", 2));
-        placeholders.put("landlordEmails", documentBuilder -> writeNumberedLines(documentBuilder, 2));
-        placeholders.put("landlordPhones", documentBuilder -> writeNumberedLines(documentBuilder, 2));
-        placeholders.put("landlordRegNumbers",
-                documentBuilder -> writeNumberedLinesWithLabel(documentBuilder, "Landlord Registration number ", 2));
-        placeholders.put("propertyAddress", documentBuilder -> writeLines(documentBuilder, 3));
-        placeholders.put("propertyType", documentBuilder -> writeLines(documentBuilder, 1));
-        placeholders.put("includedAreasOrFacilities", documentBuilder -> writeLines(documentBuilder, 2));
-        placeholders.put("sharedFacilities", documentBuilder -> writeLines(documentBuilder, 2));
-        placeholders.put("excludedAreasFacilities", documentBuilder -> writeLines(documentBuilder, 2));
-        placeholders.put("furnishingType",
-                documentBuilder -> writeInlineField(documentBuilder, "[Furnished / Unfurnished / Partly furnished]"));
-        placeholders.put("hmoString", documentBuilder -> writeInlineField(documentBuilder, "[is / is not]"));
-        placeholders.put("hmoContactNumber", documentBuilder -> writeLines(documentBuilder, 2));
-        placeholders.put("hmoExpiryDate", documentBuilder -> writeInlineField(documentBuilder, DATE_PLACEHOLDER));
-        placeholders.put("tenancyStartDate", documentBuilder -> writeInlineField(documentBuilder, DATE_PLACEHOLDER));
-        placeholders.put("depositAmount", documentBuilder -> writeInlineField(documentBuilder, MONETARY_PLACEHOLDER));
-        placeholders.put("depositSchemeAdministrator",
-                documentBuilder -> writeInlineField(documentBuilder, "______________________________"));
-        placeholders.put("depositSchemeContactDetails", documentBuilder -> writeLines(documentBuilder, 4));
-        placeholders.put("rentAmount", documentBuilder -> writeInlineField(documentBuilder, MONETARY_PLACEHOLDER));
-        placeholders.put("originalRentAmount", documentBuilder -> writeInlineField(documentBuilder, MONETARY_PLACEHOLDER));
-        placeholders.put("rentPressureZoneString", documentBuilder -> writeInlineField(documentBuilder,
-                "[is / is not]"));
-
-        placeholders.put("servicesIncludedInRent", documentBuilder -> writeLines(documentBuilder, 3));
-        placeholders.put("firstPaymentDate", documentBuilder -> writeInlineField(documentBuilder, DATE_PLACEHOLDER));
-        placeholders.put("advanceOrArrears",
-                documentBuilder -> writeInlineField(documentBuilder, "[advance / arears]"));
-        placeholders.put("firstPaymentAmount",
-                documentBuilder -> writeInlineField(documentBuilder, MONETARY_PLACEHOLDER));
-        placeholders.put("firstPaymentPeriodStart",
-                documentBuilder -> writeInlineField(documentBuilder, DATE_PLACEHOLDER));
-        placeholders.put("firstPaymentPeriodEnd",
-                documentBuilder -> writeInlineField(documentBuilder, DATE_PLACEHOLDER));
-        placeholders.put("rentPaymentFrequencyDayOrDate", documentBuilder -> writeInlineField(documentBuilder, "__________"));
-        placeholders.put("rentPaymentSchedule",
-                documentBuilder -> writeInlineField(documentBuilder,
-                        "[day of each week/fortnight/four weekly period/date each calendar month/date each 6-month period]"));
-        placeholders.put("rentPaymentMethod", documentBuilder -> writeInlineField(documentBuilder, "__________"));
-        placeholders.put("rentPaymentFrequency", documentBuilder -> writeInlineField(documentBuilder,
-                "[week/fortnight/four weeks/calendar month/quarter/year]"));
+        placeholders.put("tenantNamesAndAddresses", numberedDoubleLines(5));
+        placeholders.put("tenantEmails", numberedLines(5));
+        placeholders.put("tenantPhoneNumbers", numberedLines(5));
+        placeholders.put("lettingAgentName", lines(1));
+        placeholders.put("lettingAgentAddress", lines(3));
+        placeholders.put("lettingAgentEmail", lines(1));
+        placeholders.put("lettingAgentPhone", lines(1));
+        placeholders.put("lettingAgentRegistrationNumber", lines(1));
+        placeholders.put("lettingAgentServices", lines(3));
+        placeholders.put("lettingAgentPointOfContactServices", lines(3));
+        placeholders.put("landlordNames", numberedLines("Name ", "\n\n\n", 2));
+        placeholders.put("landlordAddresses", numberedLines("Address ", "\n\n\n", 2));
+        placeholders.put("landlordEmails", numberedLines(2));
+        placeholders.put("landlordPhones", numberedLines(2));
+        placeholders.put("landlordRegNumbers", numberedLinesWithLabel("Landlord Registration number ", 2));
+        placeholders.put("propertyAddress", lines(3));
+        placeholders.put("propertyType", lines(1));
+        placeholders.put("includedAreasOrFacilities",lines(2));
+        placeholders.put("sharedFacilities", lines(2));
+        placeholders.put("excludedAreasFacilities", lines(2));
+        placeholders.put("furnishingType", inline("[Furnished / Unfurnished / Partly furnished]"));
+        placeholders.put("hmoString", inline("[is / is not]"));
+        placeholders.put("hmoContactNumber", lines(2));
+        placeholders.put("hmoExpiryDate", inlineDate());
+        placeholders.put("tenancyStartDate", inlineDate());
+        placeholders.put("depositAmount", inlineMonetaryValue());
+        placeholders.put("depositSchemeAdministrator", inline("______________________________"));
+        placeholders.put("depositSchemeContactDetails", lines(4));
+        placeholders.put("rentAmount", inlineMonetaryValue());
+        placeholders.put("originalRentAmount", inlineMonetaryValue());
+        placeholders.put("rentPressureZoneString", inline("[is / is not]"));
+        placeholders.put("servicesIncludedInRent", lines(3));
+        placeholders.put("firstPaymentDate", inlineDate());
+        placeholders.put("advanceOrArrears", inline("[advance / arears]"));
+        placeholders.put("firstPaymentAmount", inlineMonetaryValue());
+        placeholders.put("firstPaymentPeriodStart", inlineDate());
+        placeholders.put("firstPaymentPeriodEnd", inlineDate());
+        placeholders.put("rentPaymentFrequencyDayOrDate", inline("__________"));
+        placeholders.put("rentPaymentSchedule", inline("[day of each week/fortnight/four weekly period/date each calendar month/date each 6-month period]"));
+        placeholders.put("rentPaymentMethod", inline("__________"));
+        placeholders.put("rentPaymentFrequency", inline("[week/fortnight/four weeks/calendar month/quarter/year]"));
     }
 
     @Override

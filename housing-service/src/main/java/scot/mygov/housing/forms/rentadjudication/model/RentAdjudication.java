@@ -1,18 +1,19 @@
 package scot.mygov.housing.forms.rentadjudication.model;
 
+import scot.mygov.housing.forms.AbstractFormModel;
 import scot.mygov.housing.forms.modeltenancy.model.Person;
-import scot.mygov.housing.forms.modeltenancy.model.RentPaymentFrequency;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class RentAdjudication {
+public class RentAdjudication extends AbstractFormModel {
 
-    private List<Person> tenants;
+    private List<Person> tenants = new ArrayList<>();
     private Person tenantAgent;
-    private List<Person> landlords;
+    private List<Person> landlords = new ArrayList<>();
     private Person landlordAgent;
     private String propertyType;
-    private List<Room> rooms;
+    private List<Room> rooms = new ArrayList<>();
     private String sharedAreas;
     private String included;
     private String heating;
@@ -24,9 +25,10 @@ public class RentAdjudication {
     private String improvementsLandlord;
     private String damage;
     private String currentRentAmount;
-    private RentPaymentFrequency currentRentFrequency;
+    private String currentRentFrequency;
     private String newRentAmount;
-    private RentPaymentFrequency newRentFrequency;
+    private String newRentFrequency;
+    private String notAvailableForInspection;
 
     public List<Person> getTenants() {
         return tenants;
@@ -164,12 +166,20 @@ public class RentAdjudication {
         this.currentRentAmount = currentRentAmount;
     }
 
-    public RentPaymentFrequency getCurrentRentFrequency() {
+    public String getCurrentRentFrequency() {
         return currentRentFrequency;
     }
 
-    public void setCurrentRentFrequency(RentPaymentFrequency currentRentFrequency) {
+    public void setCurrentRentFrequency(String currentRentFrequency) {
         this.currentRentFrequency = currentRentFrequency;
+    }
+
+    public String getNewRentFrequency() {
+        return newRentFrequency;
+    }
+
+    public void setNewRentFrequency(String newRentFrequency) {
+        this.newRentFrequency = newRentFrequency;
     }
 
     public String getNewRentAmount() {
@@ -180,11 +190,11 @@ public class RentAdjudication {
         this.newRentAmount = newRentAmount;
     }
 
-    public RentPaymentFrequency getNewRentFrequency() {
-        return newRentFrequency;
+    public String getNotAvailableForInspection() {
+        return notAvailableForInspection;
     }
 
-    public void setNewRentFrequency(RentPaymentFrequency newRentFrequency) {
-        this.newRentFrequency = newRentFrequency;
+    public void setNotAvailableForInspection(String notAvailableForInspection) {
+        this.notAvailableForInspection = notAvailableForInspection;
     }
 }

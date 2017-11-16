@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import scot.mygov.housing.forms.AbstractFormModel;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.List;
  * POJO for model tenancy data
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ModelTenancy {
+public class ModelTenancy extends AbstractFormModel {
 
     private List<Person> tenants = new ArrayList<>();
     private List<Guarantor> guarantors = new ArrayList<>();
@@ -58,7 +59,6 @@ public class ModelTenancy {
     private MustIncludeTerms mustIncludeTerms = new MustIncludeTerms();
     private List<Term> additionalTerms = new ArrayList<>();
     private List<String> excludedTerms = new ArrayList<>();
-    private String recaptcha;
 
     public List<Person> getTenants() {
         return tenants;
@@ -340,11 +340,4 @@ public class ModelTenancy {
         this.excludedTerms = excludedTerms;
     }
 
-    public String getRecaptcha() {
-        return recaptcha;
-    }
-
-    public void setRecaptcha(String recaptcha) {
-        this.recaptcha = recaptcha;
-    }
 }

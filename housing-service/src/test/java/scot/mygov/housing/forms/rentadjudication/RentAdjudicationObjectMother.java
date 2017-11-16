@@ -32,9 +32,9 @@ public class RentAdjudicationObjectMother {
         rentAdjudication.setImprovementsLandlord("landlordImprovements");
         rentAdjudication.setDamage("damage");
         rentAdjudication.setCurrentRentAmount("100");
-        rentAdjudication.setCurrentRentFrequency(RentPaymentFrequency.WEEKLY);
+        rentAdjudication.setCurrentRentFrequency("WEEKLY");
         rentAdjudication.setNewRentAmount("100");
-        rentAdjudication.setNewRentFrequency(RentPaymentFrequency.CALENDAR_MONTH);
+        rentAdjudication.setNewRentFrequency("CALENDAR_MONTH");
         return rentAdjudication;
     }
 

@@ -21,9 +21,9 @@ public class HousingConfiguration {
 
     private URI mapcloudURI = URI.create("https://api.themapcloud.com/");
 
-    private String mapcloudUser = "";
+    private String mapcloudUser = "osma_scottishgovernment";
 
-    private String mapcloudPassword = "";
+    private String mapcloudPassword = "Im9zbWFfc2NvdHRpc2hnb3Zlcm5tZW50Ig.C8ANOQ.6slIkjefnELHXUnAp4MwHT-723s";
 
     // once per 5 minutes
     private long mapcloudMonitoringInterval = 5;

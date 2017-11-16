@@ -6,18 +6,22 @@ import scot.mygov.housing.forms.RecaptchaCheck;
 import scot.mygov.housing.forms.noticetoleave.model.NoticeToLeave;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.ws.rs.Path;
 
-@Path("notice-to-leave")
-public class NoticeToLeaveResource extends AbstractDocumentGenerationResource<NoticeToLeave> {
+@Path("subtenant-notice-to-leave")
+public class SubtenantNoticeToLeaveResource extends AbstractDocumentGenerationResource<NoticeToLeave> {
 
     @Inject
-    public NoticeToLeaveResource(DocumentGenerationService<NoticeToLeave> service, RecaptchaCheck recaptchaCheck) {
+    public SubtenantNoticeToLeaveResource(
+            @Named("subtenantNoticeToLeaveDocumentGenerationService")
+            DocumentGenerationService<NoticeToLeave> service,
+            RecaptchaCheck recaptchaCheck) {
         super(service, recaptchaCheck);
     }
 
     protected String contentDispositionFilenameStem() {
-        return "notice-to-leave";
+        return "subtenant-notice-to-leave";
     }
 
     protected Class getModelClass() {

@@ -3,6 +3,7 @@ package scot.mygov.housing.forms.nonprovisionofdocumentation.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import scot.mygov.housing.forms.AbstractFormModel;
 import scot.mygov.housing.forms.modeltenancy.model.Address;
 import scot.mygov.housing.forms.modeltenancy.model.AgentOrLandLord;
 import scot.mygov.housing.forms.modeltenancy.model.Person;
@@ -11,7 +12,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NonProvisionOfDocumentation {
+public class NonProvisionOfDocumentation extends AbstractFormModel {
 
     private AgentOrLandLord landLordOrAgent = new AgentOrLandLord();
     private List<String> tenantNames = new ArrayList<>();

@@ -23,19 +23,16 @@ public class FieldExtractorUtils {
         // prevent instantiation
     }
 
-    public static List<String> addressParts(Address address) {
-        if (address == null) {
-            return Collections.emptyList();
-        }
+    public static String naForEmpty(String value) {
+        return defaultForEmpty(value, NOT_APPLICABLE);
+    }
 
-        List<String> parts = new ArrayList<>();
-        addAll(parts,
-                address.getBuilding(),
-                address.getStreet(),
-                address.getRegion(),
-                address.getTown(),
-                address.getPostcode());
-        return parts.stream().filter(part -> isNotEmpty(part)).collect(toList());
+    public static String defaultForEmpty(String value, String defaultValue) {
+        if (isEmpty(value)) {
+            return defaultValue;
+        } else {
+            return value;
+        }
     }
 
     public static String addressFieldsMultipleLines(Address address) {
@@ -56,23 +53,30 @@ public class FieldExtractorUtils {
         return format("(%d) %s", i, naForEmpty(val));
     }
 
-    public static String naForEmpty(String value) {
-        return defaultForEmpty(value, NOT_APPLICABLE);
-    }
-
-    public static String defaultForEmpty(String value, String defaultValue) {
-        if (isEmpty(value)) {
-            return defaultValue;
-        } else {
-            return value;
-        }
-    }
-
     public static Object defaultForNull(Object value, String defaultValue) {
         if (isNull(value)) {
             return defaultValue;
         } else {
             return value;
         }
+    }
+
+    public static List<String> addressParts(Address address) {
+        if (address == null) {
+            return Collections.emptyList();
+        }
+
+        List<String> parts = new ArrayList<>();
+        addAll(parts,
+                address.getBuilding(),
+                address.getStreet(),
+                address.getRegion(),
+                address.getTown(),
+                address.getPostcode());
+        return parts.stream().filter(part -> isNotEmpty(part)).collect(toList());
+    }
+
+    public static <T extends Person> String peopleNames(List<T> people) {
+        return people.stream().map(Person::getName).collect(joining(", "));
     }
 }

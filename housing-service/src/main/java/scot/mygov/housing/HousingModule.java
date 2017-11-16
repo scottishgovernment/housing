@@ -1,8 +1,5 @@
 package scot.mygov.housing;
 
-import com.aspose.words.FieldMergingArgs;
-import com.aspose.words.IFieldMergingCallback;
-import com.aspose.words.ImageFieldMergingArgs;
 import com.codahale.metrics.MetricRegistry;
 import dagger.Module;
 import dagger.Provides;
@@ -14,20 +11,30 @@ import scot.mygov.documents.DocumentGenerator;
 import scot.mygov.documents.DocumentTemplateLoader;
 import scot.mygov.housing.cpi.CPIService;
 
-import scot.mygov.housing.forms.IFieldMergingCallbackFactory;
+import scot.mygov.housing.forms.PlaceholderProvidingMergingCallback;
 import scot.mygov.housing.forms.RecaptchaCheck;
 import scot.mygov.housing.forms.DocumentGenerationService;
-import scot.mygov.housing.forms.DocumentGeneratorServiceListener;
-import scot.mygov.housing.forms.DocumentGeneratorServiceListenerAdaptor;
-import scot.mygov.housing.forms.FieldExtractor;
+
 import scot.mygov.housing.forms.modeltenancy.ModelTenancyFieldExtractor;
 import scot.mygov.housing.forms.modeltenancy.ModelTenancyMergingCallback;
 import scot.mygov.housing.forms.modeltenancy.model.ModelTenancy;
+
 import scot.mygov.housing.forms.nonprovisionofdocumentation.NonProvisionOfDocumentationFieldExtractor;
-import scot.mygov.housing.forms.nonprovisionofdocumentation.NonProvisionOfDocumentationMergingCallback;
+import scot.mygov.housing.forms.nonprovisionofdocumentation.NonProvisionOfDocumentationPlaceholders;
 import scot.mygov.housing.forms.nonprovisionofdocumentation.model.NonProvisionOfDocumentation;
+
+import scot.mygov.housing.forms.noticetoleave.NoticeToLeaveFieldExtractor;
+import scot.mygov.housing.forms.noticetoleave.NoticeToLeavePlaceholders;
+import scot.mygov.housing.forms.noticetoleave.model.NoticeToLeave;
+
 import scot.mygov.housing.forms.rentadjudication.RentAdjudicationFieldExtractor;
+import scot.mygov.housing.forms.rentadjudication.RentAdjudicationPlaceholders;
 import scot.mygov.housing.forms.rentadjudication.model.RentAdjudication;
+
+import scot.mygov.housing.forms.rentincreasenotice.RentIncreaseFieldExtractor;
+import scot.mygov.housing.forms.rentincreasenotice.RentIncreasePlaceholders;
+import scot.mygov.housing.forms.rentincreasenotice.model.RentIncrease;
+
 import scot.mygov.housing.mapcloud.Mapcloud;
 import scot.mygov.housing.forms.modeltenancy.validation.ModelTenancyValidatorFactory;
 import scot.mygov.housing.postcode.PostcodeService;
@@ -41,6 +48,8 @@ import javax.inject.Singleton;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 import java.net.MalformedURLException;
+
+import static java.util.Collections.emptyList;
 
 @Module(injects = Housing.class)
 public class HousingModule {
@@ -133,72 +142,86 @@ public class HousingModule {
     }
 
     @Provides
-    Validator<ModelTenancy> modelTenancyValidator() {
-        return new ModelTenancyValidatorFactory().validator(false);
+    @Singleton
+    DocumentGenerationService<ModelTenancy> modelTenancyDocumentGenerationService(AsposeLicense asposeLicense,
+                                                                                  MetricRegistry metricRegistry) {
+        DocumentTemplateLoader templateLoader
+                = new DocumentTemplateLoader("/templates/model-tenancy-agreement-with-notes.docx", asposeLicense);
+        return  new DocumentGenerationService<>(
+                new DocumentGenerator(templateLoader),
+                new ModelTenancyFieldExtractor(),
+                form -> new ModelTenancyMergingCallback(form),
+                metricRegistry);
     }
-
 
     @Provides
     DocumentGenerationService<RentAdjudication> rentAdjudicationDocumentGenerationService(
             AsposeLicense asposeLicense,
             MetricRegistry metricRegistry) {
 
-        String templatePath = "/templates/rent-adjudication.docx";
-        DocumentTemplateLoader templateLoader = new DocumentTemplateLoader(templatePath, asposeLicense);
-        FieldExtractor<RentAdjudication> fieldExtractor = new RentAdjudicationFieldExtractor();
-        DocumentGenerator documentGenerator = new DocumentGenerator(templateLoader);
-        DocumentGeneratorServiceListener<RentAdjudication> listener = new DocumentGeneratorServiceListenerAdaptor<>();
-        IFieldMergingCallbackFactory<RentAdjudication> callbackFactory
-                = form -> new DoNothingCallback();
-
-        return  new DocumentGenerationService<>(
-                documentGenerator,
-                listener,
-                fieldExtractor,
-                callbackFactory,
-                metricRegistry);
+        DocumentTemplateLoader templateLoader
+                = new DocumentTemplateLoader("/templates/rent-adjudication.docx", asposeLicense);
+        return new DocumentGenerationService<>(
+                    new DocumentGenerator(templateLoader),
+                    new RentAdjudicationFieldExtractor(),
+                    form -> new PlaceholderProvidingMergingCallback(RentAdjudicationPlaceholders.placeholders()),
+                    metricRegistry);
     }
 
+    @Provides
+    DocumentGenerationService<RentIncrease> rentIncreaseDocumentGenerationService(
+            AsposeLicense asposeLicense,
+            MetricRegistry metricRegistry) {
 
+        DocumentTemplateLoader templateLoader
+                = new DocumentTemplateLoader("/templates/rent-increase.docx", asposeLicense);
+        return  new DocumentGenerationService<>(
+                new DocumentGenerator(templateLoader),
+                new RentIncreaseFieldExtractor(),
+                form -> new PlaceholderProvidingMergingCallback(RentIncreasePlaceholders.placeholders()),
+                metricRegistry);
+    }
 
     @Provides
     DocumentGenerationService<NonProvisionOfDocumentation> nonProvisionOfDocumentationDocumentGenerationService(
             AsposeLicense asposeLicense,
             MetricRegistry metricRegistry) {
 
-        String templatePath = "/templates/non-provision-of-documentation.docx";
-        DocumentTemplateLoader templateLoader = new DocumentTemplateLoader(templatePath, asposeLicense);
-        FieldExtractor<NonProvisionOfDocumentation> fieldExtractor = new NonProvisionOfDocumentationFieldExtractor();
-        DocumentGenerator documentGenerator = new DocumentGenerator(templateLoader);
-        DocumentGeneratorServiceListener<RentAdjudication> listener = new DocumentGeneratorServiceListenerAdaptor<>();
-        IFieldMergingCallbackFactory<NonProvisionOfDocumentation> callbackFactory
-                = form -> new NonProvisionOfDocumentationMergingCallback();
-
+        DocumentTemplateLoader templateLoader
+                = new DocumentTemplateLoader("/templates/non-provision-of-documentation.docx", asposeLicense);
         return  new DocumentGenerationService<>(
-                documentGenerator,
-                listener,
-                fieldExtractor,
-                callbackFactory,
-                metricRegistry);
+                    new DocumentGenerator(templateLoader),
+                    new NonProvisionOfDocumentationFieldExtractor(),
+                    form -> new PlaceholderProvidingMergingCallback(NonProvisionOfDocumentationPlaceholders.placeholders()),
+                    metricRegistry);
     }
 
     @Provides
-    @Singleton
-    DocumentGenerationService<ModelTenancy> modelTenancyDocumentGenerationService(AsposeLicense asposeLicense,
-                                                                                  MetricRegistry metricRegistry) {
-        String templatePath = "/templates/model-tenancy-agreement-with-notes.docx";
-        DocumentTemplateLoader templateLoader = new DocumentTemplateLoader(templatePath, asposeLicense);
-        FieldExtractor<ModelTenancy> fieldExtractor = new ModelTenancyFieldExtractor();
-        DocumentGenerator documentGenerator = new DocumentGenerator(templateLoader);
-        DocumentGeneratorServiceListener<ModelTenancy> listener = new DocumentGeneratorServiceListenerAdaptor<>();
-        IFieldMergingCallbackFactory<ModelTenancy> fieldMergingCallback
-                = form -> new ModelTenancyMergingCallback(form);
+    DocumentGenerationService<NoticeToLeave> noticeToLeaveDocumentGenerationService(
+            AsposeLicense asposeLicense,
+            MetricRegistry metricRegistry) {
 
+        DocumentTemplateLoader templateLoader
+                = new DocumentTemplateLoader("/templates/notice-to-leave.docx", asposeLicense);
         return  new DocumentGenerationService<>(
-                documentGenerator,
-                listener,
-                fieldExtractor,
-                fieldMergingCallback,
+                new DocumentGenerator(templateLoader),
+                new NoticeToLeaveFieldExtractor(),
+                form -> new PlaceholderProvidingMergingCallback(NoticeToLeavePlaceholders.placeholders()),
+                metricRegistry);
+    }
+
+    @Named("subtenantNoticeToLeaveDocumentGenerationService")
+    @Provides
+    DocumentGenerationService<NoticeToLeave> subtenantNoticeToLeaveDocumentGenerationService(
+            AsposeLicense asposeLicense,
+            MetricRegistry metricRegistry) {
+
+        DocumentTemplateLoader templateLoader
+                = new DocumentTemplateLoader("/templates/subtenant-notice-to-leave.docx", asposeLicense);
+        return  new DocumentGenerationService<>(
+                new DocumentGenerator(templateLoader),
+                new NoticeToLeaveFieldExtractor(),
+                form -> new PlaceholderProvidingMergingCallback(NoticeToLeavePlaceholders.placeholders()),
                 metricRegistry);
     }
 
@@ -212,16 +235,9 @@ public class HousingModule {
                 recaptchaConfig.getSecret());
     }
 
-    private class DoNothingCallback implements IFieldMergingCallback {
-        @Override
-        public void fieldMerging(FieldMergingArgs var1) throws Exception {
-            // do nothing
-        }
-
-        @Override
-        public void imageFieldMerging(ImageFieldMergingArgs var1) throws Exception {
-            // do nothing
-        }
+    @Provides
+    Validator<ModelTenancy> modelTenancyValidator() {
+        return new ModelTenancyValidatorFactory().validator(false);
     }
 
 }

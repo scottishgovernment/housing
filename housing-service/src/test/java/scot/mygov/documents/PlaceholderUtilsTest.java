@@ -10,11 +10,11 @@ public class PlaceholderUtilsTest {
         // this is a non-test just to get coverage.
         DocumentBuilder documentBuilder = new DocumentBuilder();
         PlaceholderUtils.writeIndented(documentBuilder, "");
-        PlaceholderUtils.writeNumberedLines(documentBuilder, 2);
-        PlaceholderUtils.writeNumberedLines(documentBuilder, 2);
-        PlaceholderUtils.writeNumberedLinesWithLabel(documentBuilder, "", 2);
-        PlaceholderUtils.writeNumberedDoubleLines(documentBuilder, 2);
+        PlaceholderUtils.numberedLines(2).accept(documentBuilder);
+
+        PlaceholderUtils.numberedLinesWithLabel("", 2).accept(documentBuilder);
+        PlaceholderUtils.numberedDoubleLines(2).accept(documentBuilder);
         PlaceholderUtils.writeLines(documentBuilder, 2);
-        PlaceholderUtils.writeInlineField(documentBuilder, "");
+        PlaceholderUtils.inline("").accept(documentBuilder);
     }
 }

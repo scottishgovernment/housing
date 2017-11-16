@@ -1,62 +1,26 @@
 package scot.mygov.housing.forms.rentadjudication;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import scot.mygov.documents.DocumentType;
+import scot.mygov.housing.forms.AbstractDocumentGenerationResource;
 import scot.mygov.housing.forms.DocumentGenerationService;
-import scot.mygov.housing.forms.DocumentGenerationServiceException;
+import scot.mygov.housing.forms.RecaptchaCheck;
 import scot.mygov.housing.forms.rentadjudication.model.RentAdjudication;
 
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.util.Map;
 
 @Path("rent-adjudication")
-public class RentAdjudicationResource {
+public class RentAdjudicationResource extends AbstractDocumentGenerationResource<RentAdjudication> {
 
     @Inject
-    DocumentGenerationService<RentAdjudication> service;
-
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response multipart(RentAdjudication model, @QueryParam("type") String typeParam)
-            throws DocumentGenerationServiceException {
-        return response(model, typeParam);
+    public RentAdjudicationResource(DocumentGenerationService<RentAdjudication> service, RecaptchaCheck recaptchaCheck) {
+        super(service, recaptchaCheck);
     }
 
-    @POST
-    @Path("form")
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response multipart(Map<String, String> params)
-            throws DocumentGenerationServiceException {
-        RentAdjudication model = parseModel(params.get("data"));
-        return response(model, params.get("type"));
+    protected String contentDispositionFilenameStem() {
+        return "adjudication";
     }
 
-    private Response response(RentAdjudication model, String typeParam)
-            throws DocumentGenerationServiceException {
-        DocumentType type = DocumentType.determineDocumentType(typeParam);
-        byte[] tenancyBytes = service.save(model, type);
-        return Response.ok(tenancyBytes)
-                .header("Content-Type", type.getContentType() )
-                .header("Content-Disposition", contentDisposition(type))
-                .build();
-    }
-
-    private String contentDisposition(DocumentType type) {
-        return String.format("attachment; filename=\"adjudication.%s\"", type.getExtension());
-    }
-
-    private RentAdjudication parseModel(String data) throws DocumentGenerationServiceException {
-        try {
-            return new ObjectMapper().readValue(data, RentAdjudication.class);
-        } catch (IOException ex) {
-            throw new DocumentGenerationServiceException("Could not parse model data", ex);
-        }
+    protected Class getModelClass() {
+        return RentAdjudication.class;
     }
 }

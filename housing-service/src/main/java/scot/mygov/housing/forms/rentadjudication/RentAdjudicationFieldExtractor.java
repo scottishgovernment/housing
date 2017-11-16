@@ -3,6 +3,7 @@ package scot.mygov.housing.forms.rentadjudication;
 import org.apache.commons.lang3.StringUtils;
 import scot.mygov.housing.forms.FieldExtractor;
 import scot.mygov.housing.forms.modeltenancy.model.Person;
+import scot.mygov.housing.forms.modeltenancy.model.RentPaymentFrequency;
 import scot.mygov.housing.forms.rentadjudication.model.RentAdjudication;
 import scot.mygov.housing.forms.rentadjudication.model.Room;
 
@@ -43,6 +44,7 @@ public class RentAdjudicationFieldExtractor implements FieldExtractor<RentAdjudi
         extractImprovements(model, fields);
         extractDamages(model, fields);
         extractRentDetails(model, fields);
+        fields.put("notAvailableForInspection", model.getNotAvailableForInspection());
         return fields;
     }
 
@@ -104,8 +106,9 @@ public class RentAdjudicationFieldExtractor implements FieldExtractor<RentAdjudi
 
     private void extractRentDetails(RentAdjudication model, Map<String, Object> fields) {
         fields.put("currentRentAmount", model.getCurrentRentAmount());
-        fields.put("currentRentFrequency", model.getCurrentRentFrequency().getDescription());
+        fields.put("currentRentFrequency", RentPaymentFrequency.description(model.getCurrentRentFrequency()));
         fields.put("newRentAmount", model.getNewRentAmount());
-        fields.put("newRentFrequency", model.getNewRentFrequency().getDescription());
+        fields.put("newRentFrequency", RentPaymentFrequency.description(model.getNewRentFrequency()));
+
     }
 }
