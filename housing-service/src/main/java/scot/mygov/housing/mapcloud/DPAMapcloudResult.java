@@ -18,6 +18,7 @@ public class DPAMapcloudResult {
     private String postTown;
     @JsonProperty("address_org")
     private String addressOrg;
+    private String country;
 
     public String getUprn() {
         return uprn;
@@ -73,5 +74,13 @@ public class DPAMapcloudResult {
 
     public void setAddressOrg(String addressOrg) {
         this.addressOrg = addressOrg;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 }

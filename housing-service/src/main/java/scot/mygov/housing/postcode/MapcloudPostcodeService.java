@@ -50,6 +50,7 @@ public class MapcloudPostcodeService implements PostcodeService {
         to.setLocality(from.getAddressLocality());
         to.setTown(from.getPostTown());
         to.setPostcode(from.getPostcode());
+        to.setCountry(from.getCountry());
         return to;
     }
 

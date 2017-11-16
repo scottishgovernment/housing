@@ -21,6 +21,7 @@ public class LGGMapcloudResult {
     private String addressLine3;
     private String town;
     private String postcode;
+    private String country;
 
     public String getUprn() {
         return uprn;
@@ -76,5 +77,13 @@ public class LGGMapcloudResult {
 
     public void setPostcode(String postcode) {
         this.postcode = postcode;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 }

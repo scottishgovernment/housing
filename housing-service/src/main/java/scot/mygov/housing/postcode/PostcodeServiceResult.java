@@ -10,6 +10,7 @@ public class PostcodeServiceResult {
     private String locality;
     private String town;
     private String postcode;
+    private String country;
 
     public String getUprn() {
         return uprn;
@@ -65,5 +66,13 @@ public class PostcodeServiceResult {
 
     public void setPostcode(String postcode) {
         this.postcode = postcode;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 }
