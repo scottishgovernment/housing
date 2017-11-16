@@ -14,11 +14,10 @@ import static scot.mygov.documents.PlaceholderUtils.DATE_PLACEHOLDER;
 import static scot.mygov.documents.PlaceholderUtils.writeInlineField;
 import static scot.mygov.documents.PlaceholderUtils.writeLines;
 
-public class NonProvisionOfDocumentationMergingCallback implements IFieldMergingCallback {
+public class NonProvisionOfDocumentationPlaceholders {
 
-    private Map<String, Consumer<DocumentBuilder>> placeholders = new HashMap<>();
-
-    public NonProvisionOfDocumentationMergingCallback() {
+    public static Map<String, Consumer<DocumentBuilder>> placeholders() {
+        Map<String, Consumer<DocumentBuilder>> placeholders = new HashMap<>();
         placeholders.put("nameOfLandlordOrAgent", documentBuilder -> writeLines(documentBuilder, 1));
         placeholders.put("addressOfLandlordOrAgent", documentBuilder -> writeLines(documentBuilder, 5));
         placeholders.put("tenantNames", documentBuilder -> writeLines(documentBuilder, 4));
@@ -27,24 +26,7 @@ public class NonProvisionOfDocumentationMergingCallback implements IFieldMerging
         placeholders.put("tenantAgentAddress", documentBuilder -> writeLines(documentBuilder, 5));
         placeholders.put("section10Details", documentBuilder -> writeLines(documentBuilder, 1));
         placeholders.put("section11Details", documentBuilder -> writeLines(documentBuilder, 1));
+        return placeholders;
     }
 
-    @Override
-    public void fieldMerging(FieldMergingArgs fieldMergingArgs) throws Exception {
-        String fieldValue = fieldMergingArgs.getFieldValue() == null ?
-                null : fieldMergingArgs.getFieldValue().toString();
-        String fieldName = fieldMergingArgs.getFieldName();
-
-        // do we want to provide a placeholder for an empty value?
-        if (placeholders.containsKey(fieldName) && StringUtils.isEmpty(fieldValue)) {
-            DocumentBuilder builder = new DocumentBuilder(fieldMergingArgs.getDocument());
-            placeholders.get(fieldMergingArgs.getFieldName()).accept(builder);
-            return;
-        }
-    }
-
-    @Override
-    public void imageFieldMerging(ImageFieldMergingArgs var1) throws Exception {
-        // no nothing
-    }
 }
