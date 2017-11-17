@@ -28,7 +28,6 @@ import scot.mygov.housing.forms.noticetoleave.NoticeToLeavePlaceholders;
 import scot.mygov.housing.forms.noticetoleave.model.NoticeToLeave;
 
 import scot.mygov.housing.forms.rentadjudication.RentAdjudicationFieldExtractor;
-import scot.mygov.housing.forms.rentadjudication.RentAdjudicationPlaceholders;
 import scot.mygov.housing.forms.rentadjudication.model.RentAdjudication;
 
 import scot.mygov.housing.forms.rentincreaseforimprovementsnotice.RentIncreaseForImprovementsFieldExtractor;
