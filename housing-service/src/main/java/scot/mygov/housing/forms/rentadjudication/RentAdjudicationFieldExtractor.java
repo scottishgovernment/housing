@@ -2,6 +2,7 @@ package scot.mygov.housing.forms.rentadjudication;
 
 import org.apache.commons.lang3.StringUtils;
 import scot.mygov.housing.forms.FieldExtractor;
+import scot.mygov.housing.forms.FieldExtractorUtils;
 import scot.mygov.housing.forms.modeltenancy.model.Person;
 import scot.mygov.housing.forms.modeltenancy.model.RentPaymentFrequency;
 import scot.mygov.housing.forms.rentadjudication.model.RentAdjudication;
@@ -20,6 +21,7 @@ import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static scot.mygov.housing.forms.FieldExtractorUtils.addressParts;
 import static scot.mygov.housing.forms.FieldExtractorUtils.defaultForEmpty;
+import static scot.mygov.housing.forms.FieldExtractorUtils.naForEmpty;
 
 public class RentAdjudicationFieldExtractor implements FieldExtractor<RentAdjudication> {
 
@@ -30,9 +32,19 @@ public class RentAdjudicationFieldExtractor implements FieldExtractor<RentAdjudi
         // the order we extract the fields will not change the behaviour of this code, but for clarity we extract
         // them in the order they apear in the documents template.
         extractPeople("tenants", fields, model.getTenants());
-        extractPeople("tenantsAgent", fields, singleton(model.getTenantAgent()));
+        if (!FieldExtractorUtils.isEmpty(model.getTenantAgent())) {
+            extractPeople("tenantsAgent", fields, singleton(model.getTenantAgent()));
+        } else {
+            fields.put("tenantsAgent", FieldExtractorUtils.NOT_APPLICABLE);
+        }
+
         extractPeople("landlords", fields, model.getLandlords());
-        extractPeople("landlordsAgent", fields, singleton(model.getLandlordAgent()));
+        if (!FieldExtractorUtils.isEmpty(model.getLandlordAgent())) {
+            extractPeople("landlordsAgent", fields, singleton(model.getLandlordAgent()));
+        } else {
+            fields.put("landlordsAgent", FieldExtractorUtils.NOT_APPLICABLE);
+        }
+
         fields.put("propertyType", model.getPropertyType());
         extractRooms(model, fields);
         extractSharedAreas(model, fields);
@@ -78,30 +90,30 @@ public class RentAdjudicationFieldExtractor implements FieldExtractor<RentAdjudi
 
     private void extractSharedAreas(RentAdjudication model, Map<String, Object> fields) {
         fields.put("hasSharedAreas", isNotEmpty(model.getSharedAreas()) ? "Yes" : "No");
-        fields.put("sharedAreas", defaultForEmpty(model.getSharedAreas(), ""));
+        fields.put("sharedAreas", naForEmpty(model.getSharedAreas()));
     }
 
     private void extractIncluded(RentAdjudication model, Map<String, Object> fields) {
         fields.put("hasIncluded", isNotEmpty(model.getIncluded()) ? "Yes" : "No");
-        fields.put("included", defaultForEmpty(model.getIncluded(), ""));
+        fields.put("included", naForEmpty(model.getIncluded()));
     }
 
     private void extractServices(RentAdjudication model, Map<String, Object> fields) {
         fields.put("hasServices", isNotEmpty(model.getServicesDetails()) ? "Yes" : "No");
-        fields.put("servicesDetails", model.getServicesDetails());
-        fields.put("servicesCostDetails", model.getServicesCostDetails());
+        fields.put("servicesDetails", naForEmpty(model.getServicesDetails()));
+        fields.put("servicesCostDetails", naForEmpty(model.getServicesCostDetails()));
     }
 
     private void extractImprovements(RentAdjudication model, Map<String, Object> fields) {
         fields.put("hasTenantImprovements", isNotEmpty(model.getImprovementsTenant()) ? "Yes" : "No");
-        fields.put("tenantImprovements", defaultForEmpty(model.getImprovementsTenant(), ""));
+        fields.put("tenantImprovements", naForEmpty(model.getImprovementsTenant()));
         fields.put("hasLandlordImprovements", isNotEmpty(model.getImprovementsLandlord()) ? "Yes" : "No");
-        fields.put("landlordImprovements", defaultForEmpty(model.getImprovementsLandlord(), ""));
+        fields.put("landlordImprovements", naForEmpty(model.getImprovementsLandlord()));
     }
 
     private void extractDamages(RentAdjudication model, Map<String, Object> fields) {
         fields.put("hasDamages", isNotEmpty(model.getDamage()) ? "Yes" : "No");
-        fields.put("damages", defaultForEmpty(model.getDamage(), ""));
+        fields.put("damages", naForEmpty(model.getDamage()));
     }
 
     private void extractRentDetails(RentAdjudication model, Map<String, Object> fields) {

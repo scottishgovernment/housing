@@ -2,6 +2,7 @@ package scot.mygov.housing.forms.rentadjudication;
 
 import org.junit.Assert;
 import org.junit.Test;
+import scot.mygov.housing.forms.FieldExtractorUtils;
 import scot.mygov.housing.forms.rentadjudication.model.RentAdjudication;
 
 import java.util.Collections;
@@ -11,6 +12,7 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static scot.mygov.housing.forms.FieldExtractorUtils.NOT_APPLICABLE;
 
 public class RentAdjudicationFieldExtractorTest {
 
@@ -52,7 +54,7 @@ public class RentAdjudicationFieldExtractorTest {
 
         // ASSERT
         assertEquals(fields.get("hasSharedAreas"), "No");
-        assertEquals(fields.get("sharedAreas"), "");
+        assertEquals(fields.get("sharedAreas"), NOT_APPLICABLE);
     }
 
     @Test
@@ -65,7 +67,7 @@ public class RentAdjudicationFieldExtractorTest {
 
         // ASSERT
         assertEquals(fields.get("hasSharedAreas"), "No");
-        assertEquals(fields.get("sharedAreas"), "");
+        assertEquals(fields.get("sharedAreas"), NOT_APPLICABLE);
     }
 
     @Test
@@ -78,7 +80,7 @@ public class RentAdjudicationFieldExtractorTest {
 
         // ASSERT
         assertEquals(fields.get("hasIncluded"), "No");
-        assertEquals(fields.get("included"), "");
+        assertEquals(fields.get("included"), NOT_APPLICABLE);
     }
 
     @Test
@@ -91,7 +93,7 @@ public class RentAdjudicationFieldExtractorTest {
 
         // ASSERT
         assertEquals(fields.get("hasIncluded"), "No");
-        assertEquals(fields.get("included"), "");
+        assertEquals(fields.get("included"), NOT_APPLICABLE);
     }
 
     @Test

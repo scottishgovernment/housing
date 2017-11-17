@@ -163,10 +163,7 @@ public class HousingModule {
         DocumentTemplateLoader templateLoader
                 = new DocumentTemplateLoader("/templates/rent-adjudication.docx", asposeLicense);
         return new DocumentGenerationService<>(
-                    new DocumentGenerator(templateLoader),
-                    new RentAdjudicationFieldExtractor(),
-                    form -> new PlaceholderProvidingMergingCallback(RentAdjudicationPlaceholders.placeholders()),
-                    metricRegistry);
+                new DocumentGenerator(templateLoader), new RentAdjudicationFieldExtractor(),metricRegistry);
     }
 
     @Provides

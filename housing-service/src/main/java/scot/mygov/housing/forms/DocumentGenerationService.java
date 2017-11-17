@@ -1,5 +1,6 @@
 package scot.mygov.housing.forms;
 
+import com.aspose.words.IFieldMergingCallback;
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
@@ -32,6 +33,13 @@ public class DocumentGenerationService <T> {
     public DocumentGenerationService(
             DocumentGenerator documentGenerator,
             FieldExtractor<T> fieldExtractor,
+            MetricRegistry registry) {
+        this(documentGenerator, fieldExtractor, null, registry);
+    }
+
+    public DocumentGenerationService(
+            DocumentGenerator documentGenerator,
+            FieldExtractor<T> fieldExtractor,
             IFieldMergingCallbackFactory<T> fieldMergingCallbackFactory,
             MetricRegistry registry) {
 
@@ -53,7 +61,9 @@ public class DocumentGenerationService <T> {
         Map<String, Object> fields = fieldExtractor.extractFields(model);
 
         try {
-            byte [] docBytes = documentGenerator.save(fields, type, fieldMergingCallbackFactory.newCallback(model));
+            IFieldMergingCallback callback
+                    = fieldMergingCallbackFactory == null ? null : fieldMergingCallbackFactory.newCallback(model);
+            byte [] docBytes = documentGenerator.save(fields, type, callback);
             timer.stop();
             return docBytes;
         } catch (DocumentGeneratorException e) {
