@@ -5,7 +5,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import scot.mygov.housing.forms.modeltenancy.model.Address;
 import scot.mygov.housing.forms.FieldExtractor;
 import scot.mygov.housing.forms.modeltenancy.model.AgentOrLandLord;
 import scot.mygov.housing.forms.modeltenancy.model.CommunicationsAgreement;
@@ -90,29 +89,6 @@ public class ModelTenancyFieldExtractor implements FieldExtractor<ModelTenancy> 
         fields.put("tenantNamesAndAddresses", namesAndAddresses.stream().collect(joining(NEWLINE)));
         fields.put("tenantEmails", emails.stream().collect(joining(NEWLINE)));
         fields.put("tenantPhoneNumbers", phones.stream().collect(joining(NEWLINE)));
-    }
-
-    public static boolean isEmpty(Person person) {
-        return allEmpty(person.getName(), person.getTelephone(), person.getEmail()) &&
-                isEmpty(person.getAddress());
-    }
-
-    public static boolean isEmpty(Address address) {
-        return allEmpty(
-                address.getBuilding(),
-                address.getPostcode(),
-                address.getRegion(),
-                address.getStreet(),
-                address.getTown());
-    }
-
-    public static boolean allEmpty(String ...values) {
-        for (String value : values) {
-            if (!StringUtils.isEmpty(value)) {
-                return false;
-            }
-        }
-        return true;
     }
 
     private void extractLettingAgent(ModelTenancy tenancy, Map<String, Object> fields) {

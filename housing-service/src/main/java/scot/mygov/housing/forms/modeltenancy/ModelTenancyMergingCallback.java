@@ -214,14 +214,14 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
         if ("tenantSignatures".equals(fieldName)) {
             writeSignaturesSection(fieldMergingArgs,
                     tenancy.getTenants().stream()
-                            .filter(tenant -> !ModelTenancyFieldExtractor.isEmpty(tenant))
+                            .filter(tenant -> !FieldExtractorUtils.isEmpty(tenant))
                             .collect(Collectors.toList()), "Tenant");
             return;
         }
 
         if ("landlordSignatures".equals(fieldName)) {
             List<Person> landlords = tenancy.getLandlords().stream()
-                    .filter(landlord -> !ModelTenancyFieldExtractor.isEmpty(landlord))
+                    .filter(landlord -> !FieldExtractorUtils.isEmpty(landlord))
                     .collect(Collectors.toList());
             writeSignaturesSection(fieldMergingArgs, landlords, "Landlord");
             return;
@@ -233,7 +233,7 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
 
         List<Person> nonEmptyTenants = tenancy.getTenants()
                 .stream()
-                .filter(person -> !ModelTenancyFieldExtractor.isEmpty(person))
+                .filter(person -> !FieldExtractorUtils.isEmpty(person))
                 .collect(toList());
 
         if (nonEmptyTenants.isEmpty()) {

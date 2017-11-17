@@ -1,7 +1,6 @@
 package scot.mygov.housing.forms.rentincreasenotice;
 
 import org.junit.Test;
-import scot.mygov.housing.forms.nonprovisionofdocumentation.model.NonProvisionOfDocumentation;
 import scot.mygov.housing.forms.rentincreasenotice.model.RentIncrease;
 
 import java.util.Map;

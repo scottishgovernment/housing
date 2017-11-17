@@ -1,5 +1,6 @@
 package scot.mygov.housing.forms;
 
+import org.apache.commons.lang3.StringUtils;
 import scot.mygov.housing.forms.modeltenancy.model.Address;
 import scot.mygov.housing.forms.modeltenancy.model.Person;
 
@@ -12,8 +13,6 @@ import static java.util.Collections.addAll;
 import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 public class FieldExtractorUtils {
 
@@ -28,16 +27,30 @@ public class FieldExtractorUtils {
     }
 
     public static String defaultForEmpty(String value, String defaultValue) {
-        if (isEmpty(value)) {
+        if (StringUtils.isEmpty(value)) {
             return defaultValue;
         } else {
             return value;
         }
     }
 
+    public static String nameAndAddressFieldsMultipleLines(Person person) {
+        List<String> fields = new ArrayList<>();
+        fields.add(person.getName());
+        fields.addAll(addressParts(person.getAddress()));
+        return fields.stream().collect(joining(",\n"));
+    }
+
     public static String addressFieldsMultipleLines(Address address) {
         return addressParts(address).stream().collect(joining(",\n"));
     }
+
+    public static String nameAndAddressMultipleLines(Person person, int i) {
+        String address = addressFieldsMultipleLines(person.getAddress());
+        String nameAndAddress = format("%s, %s", person.getName(), address);
+        return numberedValue(nameAndAddress, i);
+    }
+
 
     public static String addressFieldsSingleLine(Address address) {
         return addressParts(address).stream().collect(joining(", "));
@@ -73,10 +86,37 @@ public class FieldExtractorUtils {
                 address.getRegion(),
                 address.getTown(),
                 address.getPostcode());
-        return parts.stream().filter(part -> isNotEmpty(part)).collect(toList());
+        return parts.stream().filter(part -> StringUtils.isNotEmpty(part)).collect(toList());
     }
 
     public static <T extends Person> String peopleNames(List<T> people) {
         return people.stream().map(Person::getName).collect(joining(", "));
+    }
+
+    public static boolean isEmpty(Person person) {
+        return allEmpty(person.getName(), person.getTelephone(), person.getEmail()) &&
+                isEmpty(person.getAddress());
+    }
+
+    public static boolean isNotEmpty(Person person) {
+        return !isEmpty(person);
+    }
+
+    public static boolean isEmpty(Address address) {
+        return allEmpty(
+                address.getBuilding(),
+                address.getPostcode(),
+                address.getRegion(),
+                address.getStreet(),
+                address.getTown());
+    }
+
+    public static boolean allEmpty(String ...values) {
+        for (String value : values) {
+            if (!StringUtils.isEmpty(value)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

@@ -31,6 +31,9 @@ import scot.mygov.housing.forms.rentadjudication.RentAdjudicationFieldExtractor;
 import scot.mygov.housing.forms.rentadjudication.RentAdjudicationPlaceholders;
 import scot.mygov.housing.forms.rentadjudication.model.RentAdjudication;
 
+import scot.mygov.housing.forms.rentincreaseforimprovementsnotice.RentIncreaseForImprovementsFieldExtractor;
+import scot.mygov.housing.forms.rentincreaseforimprovementsnotice.RentIncreaseForImprovementsPlaceholders;
+import scot.mygov.housing.forms.rentincreaseforimprovementsnotice.model.RentIncreaseForImprovements;
 import scot.mygov.housing.forms.rentincreasenotice.RentIncreaseFieldExtractor;
 import scot.mygov.housing.forms.rentincreasenotice.RentIncreasePlaceholders;
 import scot.mygov.housing.forms.rentincreasenotice.model.RentIncrease;
@@ -48,8 +51,6 @@ import javax.inject.Singleton;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 import java.net.MalformedURLException;
-
-import static java.util.Collections.emptyList;
 
 @Module(injects = Housing.class)
 public class HousingModule {
@@ -179,6 +180,20 @@ public class HousingModule {
                 new DocumentGenerator(templateLoader),
                 new RentIncreaseFieldExtractor(),
                 form -> new PlaceholderProvidingMergingCallback(RentIncreasePlaceholders.placeholders()),
+                metricRegistry);
+    }
+
+    @Provides
+    DocumentGenerationService<RentIncreaseForImprovements> rentIncreaseForImprovementsDocumentGenerationService(
+            AsposeLicense asposeLicense,
+            MetricRegistry metricRegistry) {
+
+        DocumentTemplateLoader templateLoader
+                = new DocumentTemplateLoader("/templates/rent-increase-for-improvements.docx", asposeLicense);
+        return  new DocumentGenerationService<>(
+                new DocumentGenerator(templateLoader),
+                new RentIncreaseForImprovementsFieldExtractor(),
+                form -> new PlaceholderProvidingMergingCallback(RentIncreaseForImprovementsPlaceholders.placeholders()),
                 metricRegistry);
     }
 

@@ -14,7 +14,8 @@ import java.util.List;
 
 public class NonProvisionOfDocumentation extends AbstractFormModel {
 
-    private AgentOrLandLord landLordOrAgent = new AgentOrLandLord();
+    private List<AgentOrLandLord> landlords = new ArrayList<>();
+    private AgentOrLandLord landlordsAgent = new AgentOrLandLord();
     private List<String> tenantNames = new ArrayList<>();
     private Person tenantsAgent = new Person();
     private Address address = new Address();
@@ -28,12 +29,20 @@ public class NonProvisionOfDocumentation extends AbstractFormModel {
     private String section11Details = "";
     private boolean section16Failure = false;
 
-    public AgentOrLandLord getLandLordOrAgent() {
-        return landLordOrAgent;
+    public List<AgentOrLandLord> getLandlords() {
+        return landlords;
     }
 
-    public void setLandLordOrAgent(AgentOrLandLord landLordOrAgent) {
-        this.landLordOrAgent = landLordOrAgent;
+    public void setLandlords(List<AgentOrLandLord> landlords) {
+        this.landlords = landlords;
+    }
+
+    public AgentOrLandLord getLandlordsAgent() {
+        return landlordsAgent;
+    }
+
+    public void setLandlordsAgent(AgentOrLandLord landlordsAgent) {
+        this.landlordsAgent = landlordsAgent;
     }
 
     public List<String> getTenantNames() {

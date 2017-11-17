@@ -6,6 +6,7 @@ import scot.mygov.housing.forms.nonprovisionofdocumentation.NonProvisionOfDocume
 import scot.mygov.housing.forms.noticetoleave.NoticeToLeaveResource;
 import scot.mygov.housing.forms.noticetoleave.SubtenantNoticeToLeaveResource;
 import scot.mygov.housing.forms.rentadjudication.RentAdjudicationResource;
+import scot.mygov.housing.forms.rentincreaseforimprovementsnotice.RentIncreaseForImprovementsResource;
 import scot.mygov.housing.forms.rentincreasenotice.RentIncreaseResource;
 import scot.mygov.housing.mapcloud.Mapcloud;
 import scot.mygov.housing.postcode.PostcodeResource;
@@ -31,6 +32,9 @@ public class HousingApplication extends Application {
 
     @Inject
     RentIncreaseResource rentIncrease;
+
+    @Inject
+    RentIncreaseForImprovementsResource rentIncreaseForImprovements;
 
     @Inject
     NonProvisionOfDocumentationResource nonProvisionOfDocumentationResource;
@@ -68,6 +72,7 @@ public class HousingApplication extends Application {
                 modelTenancy,
                 rentAdjudication,
                 rentIncrease,
+                rentIncreaseForImprovements,
                 nonProvisionOfDocumentationResource,
                 noticeToLeave,
                 subtenantNoticeToLeave,
