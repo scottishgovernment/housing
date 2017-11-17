@@ -94,8 +94,9 @@ public class FieldExtractorUtils {
     }
 
     public static boolean isEmpty(Person person) {
-        return allEmpty(person.getName(), person.getTelephone(), person.getEmail()) &&
-                isEmpty(person.getAddress());
+
+        return person == null || (allEmpty(person.getName(), person.getTelephone(), person.getEmail()) &&
+                isEmpty(person.getAddress()));
     }
 
     public static boolean isNotEmpty(Person person) {
@@ -103,12 +104,13 @@ public class FieldExtractorUtils {
     }
 
     public static boolean isEmpty(Address address) {
-        return allEmpty(
-                address.getBuilding(),
-                address.getPostcode(),
-                address.getRegion(),
-                address.getStreet(),
-                address.getTown());
+        return address == null ||
+                allEmpty(
+                    address.getBuilding(),
+                    address.getPostcode(),
+                    address.getRegion(),
+                    address.getStreet(),
+                    address.getTown());
     }
 
     public static boolean allEmpty(String ...values) {
