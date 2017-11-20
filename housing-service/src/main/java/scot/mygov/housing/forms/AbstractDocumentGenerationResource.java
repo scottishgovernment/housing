@@ -5,6 +5,7 @@ import scot.mygov.documents.DocumentType;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
+import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -29,6 +30,7 @@ public abstract class AbstractDocumentGenerationResource<T extends AbstractFormM
         return response(model, typeParam);
     }
 
+    @Path("form")
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response multipart(Map<String, String> params)
@@ -58,7 +60,7 @@ public abstract class AbstractDocumentGenerationResource<T extends AbstractFormM
     }
 
     protected void validate(T model) {
-        // by defaukt do not perform any validation
+        // by default do not perform any validation
     }
 
     protected abstract String contentDispositionFilenameStem();

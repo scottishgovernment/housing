@@ -23,6 +23,9 @@ public class RentIncreaseFieldExtractor implements FieldExtractor<RentIncrease> 
         fields.put("landlordAddresses", peopleAddresses(model.getLandlords()));
         //how should this work?  should it be the agent in some cases?
         fields.put("landlordOrAgentName", peopleNames(model.getLandlords()));
+
+
+
         String inRentPressureZoneCheckbox = "_";
         String notInRentPressureZoneCheckbox = "_";
         if ("true".equals(model.getInRentPressureZone())) {
