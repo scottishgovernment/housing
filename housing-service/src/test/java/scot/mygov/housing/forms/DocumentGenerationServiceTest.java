@@ -5,7 +5,6 @@ import org.junit.Test;
 import scot.mygov.documents.DocumentGenerator;
 import scot.mygov.documents.DocumentTemplateLoader;
 import scot.mygov.documents.DocumentType;
-import scot.mygov.housing.AsposeLicense;
 import scot.mygov.housing.forms.modeltenancy.ModelTenancyFieldExtractor;
 import scot.mygov.housing.forms.modeltenancy.ModelTenancyMergingCallback;
 import scot.mygov.housing.forms.modeltenancy.model.ModelTenancy;

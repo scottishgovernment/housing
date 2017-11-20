@@ -2,7 +2,6 @@ package scot.mygov.housing.forms.rentadjudication;
 
 import org.apache.commons.lang3.StringUtils;
 import scot.mygov.housing.forms.FieldExtractor;
-import scot.mygov.housing.forms.FieldExtractorUtils;
 import scot.mygov.housing.forms.modeltenancy.model.Person;
 import scot.mygov.housing.forms.modeltenancy.model.RentPaymentFrequency;
 import scot.mygov.housing.forms.rentadjudication.model.RentAdjudication;
@@ -20,7 +19,6 @@ import static java.util.Collections.singleton;
 import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static scot.mygov.housing.forms.FieldExtractorUtils.addressParts;
-import static scot.mygov.housing.forms.FieldExtractorUtils.defaultForEmpty;
 import static scot.mygov.housing.forms.FieldExtractorUtils.naForEmpty;
 
 public class RentAdjudicationFieldExtractor implements FieldExtractor<RentAdjudication> {
@@ -32,19 +30,9 @@ public class RentAdjudicationFieldExtractor implements FieldExtractor<RentAdjudi
         // the order we extract the fields will not change the behaviour of this code, but for clarity we extract
         // them in the order they apear in the documents template.
         extractPeople("tenants", fields, model.getTenants());
-        if (!FieldExtractorUtils.isEmpty(model.getTenantAgent())) {
-            extractPeople("tenantsAgent", fields, singleton(model.getTenantAgent()));
-        } else {
-            fields.put("tenantsAgent", FieldExtractorUtils.NOT_APPLICABLE);
-        }
-
+        extractPeople("tenantsAgent", fields, singleton(model.getTenantAgent()));
         extractPeople("landlords", fields, model.getLandlords());
-        if (!FieldExtractorUtils.isEmpty(model.getLandlordAgent())) {
-            extractPeople("landlordsAgent", fields, singleton(model.getLandlordAgent()));
-        } else {
-            fields.put("landlordsAgent", FieldExtractorUtils.NOT_APPLICABLE);
-        }
-
+        extractPeople("landlordsAgent", fields, singleton(model.getLandlordAgent()));
         fields.put("propertyType", model.getPropertyType());
         extractRooms(model, fields);
         extractSharedAreas(model, fields);
@@ -61,7 +49,9 @@ public class RentAdjudicationFieldExtractor implements FieldExtractor<RentAdjudi
     }
 
     private void extractPeople(String field,  Map<String, Object> fields, Collection<Person> people ) {
-        fields.put(field, people.stream().filter(Objects::nonNull).map(this::personString).collect(joining("\n\n")));
+        fields.put(field,
+                naForEmpty(people.stream().filter(Objects::nonNull).map(this::personString).collect(joining("\n\n")))
+        );
     }
 
     private String personString(Person person) {
