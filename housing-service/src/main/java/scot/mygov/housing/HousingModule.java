@@ -20,7 +20,6 @@ import scot.mygov.housing.forms.modeltenancy.ModelTenancyMergingCallback;
 import scot.mygov.housing.forms.modeltenancy.model.ModelTenancy;
 
 import scot.mygov.housing.forms.nonprovisionofdocumentation.NonProvisionOfDocumentationFieldExtractor;
-import scot.mygov.housing.forms.nonprovisionofdocumentation.NonProvisionOfDocumentationPlaceholders;
 import scot.mygov.housing.forms.nonprovisionofdocumentation.model.NonProvisionOfDocumentation;
 
 import scot.mygov.housing.forms.noticetoleave.NoticeToLeaveFieldExtractor;
@@ -33,8 +32,8 @@ import scot.mygov.housing.forms.rentadjudication.model.RentAdjudication;
 import scot.mygov.housing.forms.rentincreaseforimprovementsnotice.RentIncreaseForImprovementsFieldExtractor;
 import scot.mygov.housing.forms.rentincreaseforimprovementsnotice.RentIncreaseForImprovementsPlaceholders;
 import scot.mygov.housing.forms.rentincreaseforimprovementsnotice.model.RentIncreaseForImprovements;
+
 import scot.mygov.housing.forms.rentincreasenotice.RentIncreaseFieldExtractor;
-import scot.mygov.housing.forms.rentincreasenotice.RentIncreasePlaceholders;
 import scot.mygov.housing.forms.rentincreasenotice.model.RentIncrease;
 
 import scot.mygov.housing.mapcloud.Mapcloud;
@@ -175,7 +174,6 @@ public class HousingModule {
         return  new DocumentGenerationService<>(
                 new DocumentGenerator(templateLoader),
                 new RentIncreaseFieldExtractor(),
-                form -> new PlaceholderProvidingMergingCallback(RentIncreasePlaceholders.placeholders()),
                 metricRegistry);
     }
 
@@ -203,7 +201,6 @@ public class HousingModule {
         return  new DocumentGenerationService<>(
                     new DocumentGenerator(templateLoader),
                     new NonProvisionOfDocumentationFieldExtractor(),
-                    form -> new PlaceholderProvidingMergingCallback(NonProvisionOfDocumentationPlaceholders.placeholders()),
                     metricRegistry);
     }
 
