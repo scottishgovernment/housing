@@ -6,6 +6,7 @@ import scot.mygov.housing.mapcloud.MapcloudException;
 import scot.mygov.housing.mapcloud.MapcloudResults;
 
 import javax.inject.Inject;
+import java.util.Comparator;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -31,14 +32,18 @@ public class MapcloudPostcodeService implements PostcodeService {
     }
 
     private PostcodeServiceResults toResults(MapcloudResults from) {
-        List<PostcodeServiceResult> to
-                = from.getResults()
-                .stream()
-                .map(this::toResult)
-                .collect(toList());
+        List<PostcodeServiceResult> to = from.getResults()
+                .stream().map(this::toResult).sorted(comparator()).collect(toList());
         PostcodeServiceResults res = new PostcodeServiceResults();
         res.setResults(to);
         return res;
+    }
+
+    private Comparator<PostcodeServiceResult> comparator() {
+        return Comparator
+                .comparing(PostcodeServiceResult::getStreetName)
+                .thenComparing(PostcodeServiceResult::getHouseNumber)
+                .thenComparing(PostcodeServiceResult::getBuilding);
     }
 
     private PostcodeServiceResult toResult(DPAMapcloudResult from) {

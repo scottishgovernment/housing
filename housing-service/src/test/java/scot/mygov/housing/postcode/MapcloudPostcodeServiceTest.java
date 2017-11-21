@@ -50,15 +50,11 @@ public class MapcloudPostcodeServiceTest {
         // ASSERT
         assertFalse(actual.getResults().isEmpty());
 
-        PostcodeServiceResult result1 = actual.getResults().get(0);
-        assertEquals(result1.getPostcode(), results.getResults().get(0).getPostcode(), scottishPostcode());
-        assertEquals(results.getResults().get(0).getUprn(), result1.getUprn());
-        assertEquals(results.getResults().get(0).getPostcode(), result1.getPostcode());
-        assertEquals(results.getResults().get(0).getAddressBuilding(), result1.getBuilding());
-        assertEquals(results.getResults().get(0).getAddressStreet(), result1.getStreet());
-        assertEquals(results.getResults().get(0).getAddressLocality(), result1.getLocality());
-        assertEquals(results.getResults().get(0).getPostTown(), result1.getTown());
-        assertEquals(results.getResults().get(0).getAddressOrg(), result1.getOrg());
+        // the results should have been sorted correctly
+        assertEquals(actual.getResults().get(0).getStreet(), results.getResults().get(3).getAddressStreet());
+        assertEquals(actual.getResults().get(1).getStreet(), results.getResults().get(2).getAddressStreet());
+        assertEquals(actual.getResults().get(2).getStreet(), results.getResults().get(1).getAddressStreet());
+        assertEquals(actual.getResults().get(3).getStreet(), results.getResults().get(0).getAddressStreet());
     }
 
     private String scottishPostcode() {
@@ -103,14 +99,25 @@ public class MapcloudPostcodeServiceTest {
     private MapcloudResults greenpathMapcloudResults() {
         MapcloudResults res = new MapcloudResults();
         List<DPAMapcloudResult> resultsList = new ArrayList<>();
-        resultsList.add(anyResult());
+        DPAMapcloudResult one = anyResult();
+        DPAMapcloudResult two = anyResult();
+        DPAMapcloudResult three = anyResult();
+        DPAMapcloudResult four = anyResult();
+        one.setAddressStreet("111 Some street");
+        two.setAddressStreet("11 Some street");
+        three.setAddressStreet("1 Some street");
+        four.setAddressStreet("Some street");
+        resultsList.add(one);
+        resultsList.add(two);
+        resultsList.add(three);
+        resultsList.add(four);
         res.setResults(resultsList);
         return res;
     }
 
     private DPAMapcloudResult anyResult() {
         DPAMapcloudResult result = new DPAMapcloudResult();
-        result.setUprn(RandomStringUtils.random(6));
+        result.setUprn(RandomStringUtils.randomAlphabetic(6));
         result.setPostcode("EH10 4AX");
         result.setAddressBuilding("address building");
         result.setAddressStreet("address street");
