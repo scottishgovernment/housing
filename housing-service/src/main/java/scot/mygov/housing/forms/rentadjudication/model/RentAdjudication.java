@@ -1,11 +1,13 @@
 package scot.mygov.housing.forms.rentadjudication.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import scot.mygov.housing.forms.AbstractFormModel;
 import scot.mygov.housing.forms.modeltenancy.model.Person;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RentAdjudication extends AbstractFormModel {
 
     private List<Person> tenants = new ArrayList<>();
