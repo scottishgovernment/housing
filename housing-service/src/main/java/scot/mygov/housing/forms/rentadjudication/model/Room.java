@@ -2,7 +2,7 @@ package scot.mygov.housing.forms.rentadjudication.model;
 
 public class Room {
     private String name;
-    private int quantity;
+    private String quantity;
 
     public String getName() {
         return name;
@@ -12,11 +12,11 @@ public class Room {
         this.name = name;
     }
 
-    public int getQuantity() {
+    public String getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(String quantity) {
         this.quantity = quantity;
     }
 }

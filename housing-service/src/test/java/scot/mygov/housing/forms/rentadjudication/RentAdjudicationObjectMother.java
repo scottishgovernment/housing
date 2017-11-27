@@ -57,13 +57,13 @@ public class RentAdjudicationObjectMother {
     public static List<Room> someRooms() {
         List<Room> rooms = new ArrayList<>();
         Collections.addAll(rooms,
-                room("Bedroom", 3),
-                room("Kitchen", 1),
-                room("Bathroom", 2));
+                room("Bedroom", "3"),
+                room("Kitchen", "1"),
+                room("Bathroom", "2"));
         return rooms;
     }
 
-    public static Room room(String name, int quantity) {
+    public static Room room(String name, String quantity) {
         Room room = new Room();
         room.setName(name);
         room.setQuantity(quantity);

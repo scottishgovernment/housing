@@ -72,10 +72,7 @@ public class RentAdjudicationFieldExtractor implements FieldExtractor<RentAdjudi
     }
 
     private String roomString(Room room) {
-        if (room.getQuantity() == 1) {
-            return room.getName();
-        }
-        return String.format("%s (%d)", room.getName(), room.getQuantity());
+        return String.format("%s (%s)", room.getName(), room.getQuantity());
     }
 
     private void extractSharedAreas(RentAdjudication model, Map<String, Object> fields) {
