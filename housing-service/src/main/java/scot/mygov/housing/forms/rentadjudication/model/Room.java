@@ -1,5 +1,9 @@
 package scot.mygov.housing.forms.rentadjudication.model;
 
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Room {
     private String name;
     private String quantity;
