@@ -16,6 +16,9 @@ import static scot.mygov.housing.forms.FieldExtractorUtils.addressFieldsMultiple
 
 public class NonProvisionOfDocumentationFieldExtractor implements FieldExtractor<NonProvisionOfDocumentation> {
 
+    public static final String CHECKED = "_X_";
+    public static final String UNCHECKED = "___";
+
     public Map<String, Object> extractFields(NonProvisionOfDocumentation model) {
 
         Map<String, Object> fields = new HashMap<>();
@@ -25,25 +28,25 @@ public class NonProvisionOfDocumentationFieldExtractor implements FieldExtractor
         fields.put("intendedReferralDate", model.getIntendedReferralDate());
 
         if (model.isSection10Failure()) {
-            fields.put("section10Failure", "X");
+            fields.put("section10Failure", CHECKED);
             fields.put("section10Details", model.getSection10Details());
         } else {
-            fields.put("section10Failure", "_");
+            fields.put("section10Failure", UNCHECKED);
             fields.put("section10Details", "");
         }
 
         if (model.isSection11Failure()) {
-            fields.put("section11Failure", "X");
+            fields.put("section11Failure", CHECKED);
             fields.put("section11Details", model.getSection11Details());
         } else {
-            fields.put("section11Failure", "_");
+            fields.put("section11Failure", UNCHECKED);
             fields.put("section11Details", "");
         }
 
         if (model.isSection16Failure()) {
-            fields.put("section16Failure", "X");
+            fields.put("section16Failure", CHECKED);
         } else {
-            fields.put("section16Failure", "_");
+            fields.put("section16Failure", UNCHECKED);
         }
 
         fields.put("tenantAgentName", model.getTenantsAgent().getName());
