@@ -94,9 +94,10 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
         placeholders.put("firstPaymentPeriodStart", inlineDate());
         placeholders.put("firstPaymentPeriodEnd", inlineDate());
         placeholders.put("rentPaymentFrequencyDayOrDate", inline("__________"));
-        placeholders.put("rentPaymentSchedule", inline("[day of each week/fortnight/four weekly period/date each calendar month/date each 6-month period]"));
+        placeholders.put("rentPaymentSchedule", inline("[day of each week/fortnight/four weekly period/date each calendar month/date each 3-month period/date each 6-month period]"));
+
         placeholders.put("rentPaymentMethod", inline("__________"));
-        placeholders.put("rentPaymentFrequency", inline("[week/fortnight/four weeks/calendar month/quarter/year]"));
+        placeholders.put("rentPaymentFrequency", inline("[week/fortnight/four weeks/calendar month/quarter/six months]"));
     }
 
     @Override
