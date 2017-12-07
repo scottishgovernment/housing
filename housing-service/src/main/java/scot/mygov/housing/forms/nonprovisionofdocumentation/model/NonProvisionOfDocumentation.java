@@ -23,7 +23,7 @@ public class NonProvisionOfDocumentation extends AbstractFormModel {
     private Address address = new Address();
     @JsonDeserialize(using= LocalDateDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate intendedReferalDate = null;
+    private LocalDate intendedReferralDate = null;
 
     private boolean section10Failure = false;
     private String section10Details = "";
@@ -71,12 +71,12 @@ public class NonProvisionOfDocumentation extends AbstractFormModel {
         this.address = address;
     }
 
-    public LocalDate getIntendedReferalDate() {
-        return intendedReferalDate;
+    public LocalDate getIntendedReferralDate() {
+        return intendedReferralDate;
     }
 
-    public void setIntendedReferalDate(LocalDate intendedReferalDate) {
-        this.intendedReferalDate = intendedReferalDate;
+    public void setIntendedReferralDate(LocalDate intendedReferralDate) {
+        this.intendedReferralDate = intendedReferralDate;
     }
 
     public boolean isSection10Failure() {

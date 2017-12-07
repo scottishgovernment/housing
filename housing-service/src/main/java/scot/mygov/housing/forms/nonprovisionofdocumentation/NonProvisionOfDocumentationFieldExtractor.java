@@ -22,7 +22,7 @@ public class NonProvisionOfDocumentationFieldExtractor implements FieldExtractor
         fields.put("landlordsOrAgentNamesAndAddresses", landlordsOrAgentNamesAndAddresses(model));
         fields.put("tenantNames", model.getTenantNames().stream().collect(joining(", ")));
         fields.put("address", addressFieldsMultipleLines(model.getAddress()));
-        fields.put("intendedReferralDate", model.getIntendedReferalDate());
+        fields.put("intendedReferralDate", model.getIntendedReferralDate());
 
         if (model.isSection10Failure()) {
             fields.put("section10Failure", "X");
@@ -54,6 +54,7 @@ public class NonProvisionOfDocumentationFieldExtractor implements FieldExtractor
 
     private String landlordsOrAgentNamesAndAddresses(NonProvisionOfDocumentation model) {
         List<AgentOrLandLord> all = new ArrayList<>(model.getLandlords());
+        all.add(model.getLandlordsAgent());
         return all.stream()
                 .filter(Objects::nonNull)
                 .filter(FieldExtractorUtils::isNotEmpty)
