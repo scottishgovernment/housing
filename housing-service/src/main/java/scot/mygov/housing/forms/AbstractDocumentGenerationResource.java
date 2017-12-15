@@ -1,7 +1,6 @@
 package scot.mygov.housing.forms;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.undertow.util.MultipartParser;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import scot.mygov.documents.DocumentType;
 
