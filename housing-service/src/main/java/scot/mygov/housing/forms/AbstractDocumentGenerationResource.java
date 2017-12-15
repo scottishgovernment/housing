@@ -1,15 +1,20 @@
 package scot.mygov.housing.forms;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.undertow.util.MultipartParser;
+import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import scot.mygov.documents.DocumentType;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.Encoded;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public abstract class AbstractDocumentGenerationResource<T extends AbstractFormModel> {
@@ -32,12 +37,14 @@ public abstract class AbstractDocumentGenerationResource<T extends AbstractFormM
 
     @Path("form")
     @POST
+    @Encoded
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response multipart(Map<String, String> params)
+    public Response multipart(@MultipartForm Map<String, String> params)
             throws DocumentGenerationServiceException {
         T model = parseModel(params.get("data"));
         return response(model, params.get("type"));
     }
+
 
     private Response response(T model, String typeParam)
             throws DocumentGenerationServiceException {
@@ -69,7 +76,8 @@ public abstract class AbstractDocumentGenerationResource<T extends AbstractFormM
 
     private T parseModel(String data) throws DocumentGenerationServiceException {
         try {
-            return new ObjectMapper().<T>readValue(data, getModelClass());
+            final String decoded = URLDecoder.decode(data, StandardCharsets.UTF_8.name());
+            return new ObjectMapper().<T>readValue(decoded, getModelClass());
         } catch (IOException ex) {
             throw new DocumentGenerationServiceException("Could not parse model data", ex);
         }
