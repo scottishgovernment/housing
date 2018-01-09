@@ -54,7 +54,7 @@ public class RentAdjudicationFieldExtractorTest {
 
         // ASSERT
         assertEquals(fields.get("hasSharedAreas"), "No");
-        assertEquals(fields.get("sharedAreas"), NOT_APPLICABLE);
+        assertEquals(fields.get("sharedAreas"), "");
     }
 
     @Test
@@ -67,7 +67,7 @@ public class RentAdjudicationFieldExtractorTest {
 
         // ASSERT
         assertEquals(fields.get("hasSharedAreas"), "No");
-        assertEquals(fields.get("sharedAreas"), NOT_APPLICABLE);
+        assertEquals(fields.get("sharedAreas"), "");
     }
 
     @Test
@@ -80,7 +80,7 @@ public class RentAdjudicationFieldExtractorTest {
 
         // ASSERT
         assertEquals(fields.get("hasIncluded"), "No");
-        assertEquals(fields.get("included"), NOT_APPLICABLE);
+        assertEquals(fields.get("included"), "");
     }
 
     @Test
@@ -93,7 +93,7 @@ public class RentAdjudicationFieldExtractorTest {
 
         // ASSERT
         assertEquals(fields.get("hasIncluded"), "No");
-        assertEquals(fields.get("included"), NOT_APPLICABLE);
+        assertEquals(fields.get("included"), "");
     }
 
     @Test
