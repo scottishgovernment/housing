@@ -20,6 +20,7 @@ import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static scot.mygov.housing.forms.FieldExtractorUtils.addressParts;
 import static scot.mygov.housing.forms.FieldExtractorUtils.naForEmpty;
+import static scot.mygov.housing.forms.FieldExtractorUtils.defaultForEmpty;
 
 public class RentAdjudicationFieldExtractor implements FieldExtractor<RentAdjudication> {
 
@@ -77,30 +78,30 @@ public class RentAdjudicationFieldExtractor implements FieldExtractor<RentAdjudi
 
     private void extractSharedAreas(RentAdjudication model, Map<String, Object> fields) {
         fields.put("hasSharedAreas", isNotEmpty(model.getSharedAreas()) ? "Yes" : "No");
-        fields.put("sharedAreas", naForEmpty(model.getSharedAreas()));
+        fields.put("sharedAreas", defaultForEmpty(model.getSharedAreas(), ""));
     }
 
     private void extractIncluded(RentAdjudication model, Map<String, Object> fields) {
         fields.put("hasIncluded", isNotEmpty(model.getIncluded()) ? "Yes" : "No");
-        fields.put("included", naForEmpty(model.getIncluded()));
+        fields.put("included", defaultForEmpty(model.getIncluded(), ""));
     }
 
     private void extractServices(RentAdjudication model, Map<String, Object> fields) {
         fields.put("hasServices", isNotEmpty(model.getServicesDetails()) ? "Yes" : "No");
-        fields.put("servicesDetails", naForEmpty(model.getServicesDetails()));
-        fields.put("servicesCostDetails", naForEmpty(model.getServicesCostDetails()));
+        fields.put("servicesDetails", defaultForEmpty(model.getServicesDetails(), ""));
+        fields.put("servicesCostDetails", defaultForEmpty(model.getServicesCostDetails(), ""));
     }
 
     private void extractImprovements(RentAdjudication model, Map<String, Object> fields) {
         fields.put("hasTenantImprovements", isNotEmpty(model.getImprovementsTenant()) ? "Yes" : "No");
-        fields.put("tenantImprovements", naForEmpty(model.getImprovementsTenant()));
+        fields.put("tenantImprovements", defaultForEmpty(model.getImprovementsTenant(), ""));
         fields.put("hasLandlordImprovements", isNotEmpty(model.getImprovementsLandlord()) ? "Yes" : "No");
-        fields.put("landlordImprovements", naForEmpty(model.getImprovementsLandlord()));
+        fields.put("landlordImprovements", defaultForEmpty(model.getImprovementsLandlord(), ""));
     }
 
     private void extractDamages(RentAdjudication model, Map<String, Object> fields) {
         fields.put("hasDamages", isNotEmpty(model.getDamage()) ? "Yes" : "No");
-        fields.put("damages", naForEmpty(model.getDamage()));
+        fields.put("damages", defaultForEmpty(model.getDamage(), ""));
     }
 
     private void extractRentDetails(RentAdjudication model, Map<String, Object> fields) {
@@ -108,6 +109,5 @@ public class RentAdjudicationFieldExtractor implements FieldExtractor<RentAdjudi
         fields.put("currentRentFrequency", RentPaymentFrequency.description(model.getCurrentRentFrequency()));
         fields.put("newRentAmount", model.getNewRentAmount());
         fields.put("newRentFrequency", RentPaymentFrequency.description(model.getNewRentFrequency()));
-
     }
 }
