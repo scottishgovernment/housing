@@ -1,6 +1,7 @@
 package scot.mygov.housing.forms.rentadjudication;
 
 import scot.mygov.housing.forms.modeltenancy.model.Address;
+import scot.mygov.housing.forms.modeltenancy.model.AgentOrLandLord;
 import scot.mygov.housing.forms.modeltenancy.model.Person;
 import scot.mygov.housing.forms.modeltenancy.model.RentPaymentFrequency;
 import scot.mygov.housing.forms.modeltenancy.validation.ModelTenancyObjectMother;
@@ -17,7 +18,7 @@ public class RentAdjudicationObjectMother {
         RentAdjudication rentAdjudication = new RentAdjudication();
         rentAdjudication.setTenants(somePeople("tenant", 3));
         rentAdjudication.setTenantAgent(person("tenantAgent"));
-        rentAdjudication.setLandlords(somePeople("landlord", 2));
+        rentAdjudication.setLandlords(someLandlords("landlord", 2));
         rentAdjudication.setLandlordAgent(person("landlordAgent"));
         rentAdjudication.setPropertyType("Flat");
         rentAdjudication.setRooms(someRooms());
@@ -46,11 +47,28 @@ public class RentAdjudicationObjectMother {
         return people;
     }
 
+    public static List<AgentOrLandLord> someLandlords(String prefix, int count) {
+        List<AgentOrLandLord> people = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            people.add(landlord(prefix + i));
+        }
+        return people;
+    }
+
     public static Person person(String prefix) {
         Person p = new Person();
         p.setName(prefix + "anyTenant");
         p.setAddress(new ModelTenancyObjectMother().validAddress(prefix));
         p.setEmail(prefix + "@ddd.com");
+        return p;
+    }
+
+    public static AgentOrLandLord landlord(String prefix) {
+        AgentOrLandLord p = new AgentOrLandLord();
+        p.setName(prefix + "anyTenant");
+        p.setAddress(new ModelTenancyObjectMother().validAddress(prefix));
+        p.setEmail(prefix + "@ddd.com");
+        p.setRegistrationNumber("111111/111/11111");
         return p;
     }
 

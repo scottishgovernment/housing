@@ -2,6 +2,7 @@ package scot.mygov.housing.forms.rentadjudication.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import scot.mygov.housing.forms.AbstractFormModel;
+import scot.mygov.housing.forms.modeltenancy.model.AgentOrLandLord;
 import scot.mygov.housing.forms.modeltenancy.model.Person;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ public class RentAdjudication extends AbstractFormModel {
 
     private List<Person> tenants = new ArrayList<>();
     private Person tenantAgent;
-    private List<Person> landlords = new ArrayList<>();
+    private List<AgentOrLandLord> landlords = new ArrayList<>();
     private Person landlordAgent;
     private String propertyType;
     private List<Room> rooms = new ArrayList<>();
@@ -48,11 +49,11 @@ public class RentAdjudication extends AbstractFormModel {
         this.tenantAgent = tenantAgent;
     }
 
-    public List<Person> getLandlords() {
+    public List<AgentOrLandLord> getLandlords() {
         return landlords;
     }
 
-    public void setLandlords(List<Person> landlords) {
+    public void setLandlords(List<AgentOrLandLord> landlords) {
         this.landlords = landlords;
     }
 

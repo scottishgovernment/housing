@@ -2,6 +2,7 @@ package scot.mygov.housing.forms.rentadjudication;
 
 import org.apache.commons.lang3.StringUtils;
 import scot.mygov.housing.forms.FieldExtractor;
+import scot.mygov.housing.forms.modeltenancy.model.AgentOrLandLord;
 import scot.mygov.housing.forms.modeltenancy.model.Person;
 import scot.mygov.housing.forms.modeltenancy.model.RentPaymentFrequency;
 import scot.mygov.housing.forms.rentadjudication.model.RentAdjudication;
@@ -32,7 +33,7 @@ public class RentAdjudicationFieldExtractor implements FieldExtractor<RentAdjudi
         // them in the order they apear in the documents template.
         extractPeople("tenants", fields, model.getTenants());
         extractPeople("tenantsAgent", fields, singleton(model.getTenantAgent()));
-        extractPeople("landlords", fields, model.getLandlords());
+        extractLandlords(fields, model.getLandlords());
         extractPeople("landlordsAgent", fields, singleton(model.getLandlordAgent()));
         fields.put("propertyType", model.getPropertyType());
         extractRooms(model, fields);
@@ -55,6 +56,12 @@ public class RentAdjudicationFieldExtractor implements FieldExtractor<RentAdjudi
         );
     }
 
+    private void extractLandlords(Map<String, Object> fields, Collection<AgentOrLandLord> landlords ) {
+        fields.put("landlords",
+                naForEmpty(landlords.stream().filter(Objects::nonNull).map(this::agentOrLandlordString).collect(joining("\n\n")))
+        );
+    }
+
     private String personString(Person person) {
         List<String> parts = new ArrayList<String>();
         parts.add(person.getName());
@@ -62,6 +69,14 @@ public class RentAdjudicationFieldExtractor implements FieldExtractor<RentAdjudi
         parts.add(person.getEmail());
         parts.add(person.getTelephone());
         return parts.stream().filter(StringUtils::isNotEmpty).collect(Collectors.joining("\n"));
+    }
+
+    private String agentOrLandlordString(AgentOrLandLord agentOrLandLord) {
+        String personString = personString(agentOrLandLord);
+        if (isNotEmpty(agentOrLandLord.getRegistrationNumber())) {
+            personString += "\n" + "Registration Number: " + agentOrLandLord.getRegistrationNumber();
+        }
+        return personString;
     }
 
     private void extractRooms(RentAdjudication model, Map<String, Object> fields) {
