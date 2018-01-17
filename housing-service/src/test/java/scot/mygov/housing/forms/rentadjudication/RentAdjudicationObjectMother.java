@@ -1,9 +1,7 @@
 package scot.mygov.housing.forms.rentadjudication;
 
-import scot.mygov.housing.forms.modeltenancy.model.Address;
 import scot.mygov.housing.forms.modeltenancy.model.AgentOrLandLord;
 import scot.mygov.housing.forms.modeltenancy.model.Person;
-import scot.mygov.housing.forms.modeltenancy.model.RentPaymentFrequency;
 import scot.mygov.housing.forms.modeltenancy.validation.ModelTenancyObjectMother;
 import scot.mygov.housing.forms.rentadjudication.model.RentAdjudication;
 import scot.mygov.housing.forms.rentadjudication.model.Room;
@@ -19,7 +17,7 @@ public class RentAdjudicationObjectMother {
         rentAdjudication.setTenants(somePeople("tenant", 3));
         rentAdjudication.setTenantAgent(person("tenantAgent"));
         rentAdjudication.setLandlords(someLandlords("landlord", 2));
-        rentAdjudication.setLandlordAgent(person("landlordAgent"));
+        rentAdjudication.setLettingAgent(person("landlordAgent"));
         rentAdjudication.setPropertyType("Flat");
         rentAdjudication.setRooms(someRooms());
         rentAdjudication.setSharedAreas("sharedAreas");

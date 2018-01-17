@@ -34,7 +34,7 @@ public class RentAdjudicationFieldExtractor implements FieldExtractor<RentAdjudi
         extractPeople("tenants", fields, model.getTenants());
         extractPeople("tenantsAgent", fields, singleton(model.getTenantAgent()));
         extractLandlords(fields, model.getLandlords());
-        extractPeople("landlordsAgent", fields, singleton(model.getLandlordAgent()));
+        extractPeople("landlordsAgent", fields, singleton(model.getLettingAgent()));
         fields.put("propertyType", model.getPropertyType());
         extractRooms(model, fields);
         extractSharedAreas(model, fields);

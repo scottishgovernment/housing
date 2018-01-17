@@ -14,7 +14,7 @@ public class RentAdjudication extends AbstractFormModel {
     private List<Person> tenants = new ArrayList<>();
     private Person tenantAgent;
     private List<AgentOrLandLord> landlords = new ArrayList<>();
-    private Person landlordAgent;
+    private Person lettingAgent;
     private String propertyType;
     private List<Room> rooms = new ArrayList<>();
     private String sharedAreas;
@@ -57,12 +57,12 @@ public class RentAdjudication extends AbstractFormModel {
         this.landlords = landlords;
     }
 
-    public Person getLandlordAgent() {
-        return landlordAgent;
+    public Person getLettingAgent() {
+        return lettingAgent;
     }
 
-    public void setLandlordAgent(Person landlordAgent) {
-        this.landlordAgent = landlordAgent;
+    public void setLettingAgent(Person lettingAgent) {
+        this.lettingAgent = lettingAgent;
     }
 
     public String getPropertyType() {
