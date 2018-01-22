@@ -42,7 +42,7 @@ public class RentAdjudicationFieldExtractor implements FieldExtractor<RentAdjudi
         fields.put("heating", model.getHeating());
         fields.put("doubleGlazing", model.getDoubleGlazing());
         extractServices(model, fields);
-        fields.put("furnished", model.getFurnished());
+        extractFurnished(model, fields);
         extractImprovements(model, fields);
         extractDamages(model, fields);
         extractRentDetails(model, fields);
@@ -105,6 +105,10 @@ public class RentAdjudicationFieldExtractor implements FieldExtractor<RentAdjudi
         fields.put("hasServices", isNotEmpty(model.getServicesDetails()) ? "Yes" : "No");
         fields.put("servicesDetails", defaultForEmpty(model.getServicesDetails(), ""));
         fields.put("servicesCostDetails", defaultForEmpty(model.getServicesCostDetails(), ""));
+    }
+
+    private void extractFurnished(RentAdjudication model, Map<String, Object> fields) {
+        fields.put("hasFurnished", isNotEmpty(model.getFurnished()) ? "Yes" : "No");
     }
 
     private void extractImprovements(RentAdjudication model, Map<String, Object> fields) {

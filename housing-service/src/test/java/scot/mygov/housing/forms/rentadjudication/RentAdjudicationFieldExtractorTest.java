@@ -121,6 +121,18 @@ public class RentAdjudicationFieldExtractorTest {
     }
 
     @Test
+    public void furnishedNullEmptyAsExpected() {
+        // ARRANGE
+        RentAdjudication input = RentAdjudicationObjectMother.anyRentAdjudication();
+        input.setFurnished(null);
+        // ACT
+        Map<String, Object> fields = sut.extractFields(input);
+
+        // ASSERT
+        assertEquals(fields.get("hasFurnished"), "No");
+    }
+
+    @Test
     public void tenantImprovementsNullExtractedAsExpected() {
         // ARRANGE
         RentAdjudication input = RentAdjudicationObjectMother.anyRentAdjudication();
