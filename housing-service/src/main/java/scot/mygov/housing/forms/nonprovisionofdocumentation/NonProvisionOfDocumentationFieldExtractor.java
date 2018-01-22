@@ -13,6 +13,7 @@ import java.util.Objects;
 
 import static java.util.stream.Collectors.joining;
 import static scot.mygov.housing.forms.FieldExtractorUtils.addressFieldsMultipleLines;
+import static scot.mygov.housing.forms.FieldExtractorUtils.formatDate;
 
 public class NonProvisionOfDocumentationFieldExtractor implements FieldExtractor<NonProvisionOfDocumentation> {
 
@@ -25,7 +26,7 @@ public class NonProvisionOfDocumentationFieldExtractor implements FieldExtractor
         fields.put("landlordsOrAgentNamesAndAddresses", landlordsOrAgentNamesAndAddresses(model));
         fields.put("tenantNames", model.getTenantNames().stream().collect(joining(", ")));
         fields.put("address", addressFieldsMultipleLines(model.getAddress()));
-        fields.put("intendedReferralDate", model.getIntendedReferralDate());
+        fields.put("intendedReferralDate", formatDate(model.getIntendedReferralDate()));
 
         if (model.isSection10Failure()) {
             fields.put("section10Failure", CHECKED);

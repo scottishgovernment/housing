@@ -42,7 +42,7 @@ public class RentAdjudicationFieldExtractor implements FieldExtractor<RentAdjudi
         fields.put("heating", model.getHeating());
         fields.put("doubleGlazing", model.getDoubleGlazing());
         extractServices(model, fields);
-        fields.put("furnished", model.getFurnished());
+        fields.put("furnished", isNotEmpty(model.getFurnished()) ? "Yes" : "No");
         extractImprovements(model, fields);
         extractDamages(model, fields);
         extractRentDetails(model, fields);

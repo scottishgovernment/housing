@@ -18,8 +18,6 @@ import scot.mygov.housing.forms.modeltenancy.model.RentPaymentFrequency;
 import scot.mygov.housing.forms.modeltenancy.model.Service;
 
 import javax.inject.Inject;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,8 +38,6 @@ public class ModelTenancyFieldExtractor implements FieldExtractor<ModelTenancy> 
     private static final Logger LOG = LoggerFactory.getLogger(ModelTenancyFieldExtractor.class);
 
     public static final String NEWLINE = "\n";
-
-    private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
 
     private DepositSchemeAdministrators depositScemeAdministrators = new DepositSchemeAdministrators();
 
@@ -306,13 +302,6 @@ public class ModelTenancyFieldExtractor implements FieldExtractor<ModelTenancy> 
         return parts.stream()
                 .filter(StringUtils::isNotEmpty)
                 .collect(joining("\n"));
-    }
-
-    private String formatDate(LocalDate date) {
-        if (date == null) {
-            return "";
-        }
-        return dateFormatter.format(date);
     }
 
     private boolean isTrue(String str) {

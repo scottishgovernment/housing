@@ -4,6 +4,8 @@ import org.apache.commons.lang3.StringUtils;
 import scot.mygov.housing.forms.modeltenancy.model.Address;
 import scot.mygov.housing.forms.modeltenancy.model.Person;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -17,6 +19,8 @@ import static java.util.stream.Collectors.toList;
 public class FieldExtractorUtils {
 
     public static final String NOT_APPLICABLE = "n/a";
+
+    private static DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd MMMM yyyy");
 
     private FieldExtractorUtils() {
         // prevent instantiation
@@ -121,4 +125,12 @@ public class FieldExtractorUtils {
         }
         return true;
     }
+
+    public static String formatDate(LocalDate date) {
+        if (date == null) {
+            return "";
+        }
+        return DATE_FORMATTER.format(date);
+    }
+
 }
