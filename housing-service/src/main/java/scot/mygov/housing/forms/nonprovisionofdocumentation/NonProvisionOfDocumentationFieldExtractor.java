@@ -62,7 +62,7 @@ public class NonProvisionOfDocumentationFieldExtractor implements FieldExtractor
         return all.stream()
                 .filter(Objects::nonNull)
                 .filter(FieldExtractorUtils::isNotEmpty)
-                .map(t -> FieldExtractorUtils.nameAndAddressFieldsMultipleLines(t, true))
+                .map(FieldExtractorUtils::nameAndAddressFieldsMultipleLines)
                 .collect(joining("\n\n"));
     }
 }
