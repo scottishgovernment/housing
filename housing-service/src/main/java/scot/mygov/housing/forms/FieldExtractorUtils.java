@@ -39,11 +39,19 @@ public class FieldExtractorUtils {
     }
 
     public static String nameAndAddressFieldsMultipleLines(Person person) {
+        return nameAndAddressFieldsMultipleLines(person, false);
+    }
+
+    public static String nameAndAddressFieldsMultipleLines(Person person, boolean includeAt) {
         List<String> fields = new ArrayList<>();
         fields.add(person.getName());
+        if (includeAt) {
+            fields.add("At:");
+        }
         fields.addAll(addressParts(person.getAddress()));
         return fields.stream().collect(joining(",\n"));
     }
+
 
     public static String addressFieldsMultipleLines(Address address) {
         return addressParts(address).stream().collect(joining(",\n"));
