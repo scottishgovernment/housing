@@ -41,6 +41,7 @@ public class FieldExtractorUtils {
     public static String nameAndAddressFieldsMultipleLines(Person person) {
         List<String> lines = new ArrayList<>();
         lines.add(person.getName());
+        lines.add("\n");
         lines.add("At:");
         lines.addAll(addressParts(person.getAddress()).stream().map(part -> part + ",").collect(toList()));
         return lines.stream().collect(joining("\n"));
