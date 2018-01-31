@@ -14,6 +14,7 @@ import java.util.Objects;
 import static java.util.stream.Collectors.joining;
 import static scot.mygov.housing.forms.FieldExtractorUtils.addressFieldsMultipleLines;
 import static scot.mygov.housing.forms.FieldExtractorUtils.formatDate;
+import static scot.mygov.housing.forms.FieldExtractorUtils.isEmpty;
 
 public class NonProvisionOfDocumentationFieldExtractor implements FieldExtractor<NonProvisionOfDocumentation> {
 
@@ -27,9 +28,6 @@ public class NonProvisionOfDocumentationFieldExtractor implements FieldExtractor
         fields.put("tenantNames", model.getTenantNames().stream().collect(joining(", ")));
         fields.put("address", addressFieldsMultipleLines(model.getAddress()));
         fields.put("intendedReferralDate", formatDate(model.getIntendedReferralDate()));
-
-        String tenantOrTenantsAgent = model.getTenantsAgent().getAddress() == null ? "Tenant" : "TenantsAgent";
-        fields.put("tenantOrTenantsAgent", tenantOrTenantsAgent);
 
         if (model.isSection10Failure()) {
             fields.put("section10Failure", CHECKED);
@@ -53,8 +51,18 @@ public class NonProvisionOfDocumentationFieldExtractor implements FieldExtractor
             fields.put("section16Failure", UNCHECKED);
         }
 
+
+        boolean hasTenantsAgent = isEmpty(model.getTenantsAgent());
+        String tenantOrTenantsAgent = hasTenantsAgent ? "Tenant" : "Tenant's Agent";
+        fields.put("tenantOrTenantsAgent", tenantOrTenantsAgent);
         fields.put("tenantAgentName", model.getTenantsAgent().getName());
-        fields.put("tenantAgentAddress", addressFieldsMultipleLines(model.getTenantsAgent().getAddress()));
+        if (hasTenantsAgent) {
+            fields.put("tenantAgentAddress",
+                    "Address of Tenant's agent:\n" +
+                    addressFieldsMultipleLines(model.getTenantsAgent().getAddress()));
+        } else {
+            fields.put("tenantAgentAddress", "");
+        }
 
         return fields;
     }
