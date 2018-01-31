@@ -28,6 +28,9 @@ public class NonProvisionOfDocumentationFieldExtractor implements FieldExtractor
         fields.put("address", addressFieldsMultipleLines(model.getAddress()));
         fields.put("intendedReferralDate", formatDate(model.getIntendedReferralDate()));
 
+        String tenantOrTenantsAgent = model.getTenantsAgent().getAddress() == null ? "Tenant" : "TenantsAgent";
+        fields.put("tenantOrTenantsAgent", tenantOrTenantsAgent);
+
         if (model.isSection10Failure()) {
             fields.put("section10Failure", CHECKED);
             fields.put("section10Details", model.getSection10Details());
