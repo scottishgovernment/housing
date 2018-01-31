@@ -52,8 +52,8 @@ public class NonProvisionOfDocumentationFieldExtractor implements FieldExtractor
         }
 
 
-        boolean hasTenantsAgent = isEmpty(model.getTenantsAgent());
-        String tenantOrTenantsAgent = hasTenantsAgent ? "Tenant" : "Tenant's Agent";
+        boolean hasTenantsAgent = !isEmpty(model.getTenantsAgent());
+        String tenantOrTenantsAgent = hasTenantsAgent ? "Tenant's Agent" : "Tenant";
         fields.put("tenantOrTenantsAgent", tenantOrTenantsAgent);
         fields.put("tenantAgentName", model.getTenantsAgent().getName());
         if (hasTenantsAgent) {
