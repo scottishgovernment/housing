@@ -1,28 +1,19 @@
 package scot.mygov.housing.forms.rentadjudication;
 
-import org.apache.commons.lang3.StringUtils;
+
 import scot.mygov.housing.forms.FieldExtractor;
 import scot.mygov.housing.forms.FieldExtractorUtils;
-import scot.mygov.housing.forms.modeltenancy.model.AgentOrLandLord;
-import scot.mygov.housing.forms.modeltenancy.model.Person;
 import scot.mygov.housing.forms.modeltenancy.model.RentPaymentFrequency;
 import scot.mygov.housing.forms.rentadjudication.model.RentAdjudication;
 import scot.mygov.housing.forms.rentadjudication.model.Room;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static java.util.Collections.singleton;
 import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
-import static scot.mygov.housing.forms.FieldExtractorUtils.addressParts;
 import static scot.mygov.housing.forms.FieldExtractorUtils.extractPeople;
-import static scot.mygov.housing.forms.FieldExtractorUtils.naForEmpty;
 import static scot.mygov.housing.forms.FieldExtractorUtils.defaultForEmpty;
 
 public class RentAdjudicationFieldExtractor implements FieldExtractor<RentAdjudication> {
