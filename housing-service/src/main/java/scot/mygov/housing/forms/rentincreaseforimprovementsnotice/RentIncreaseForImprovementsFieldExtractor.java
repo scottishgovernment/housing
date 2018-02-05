@@ -5,7 +5,6 @@ import scot.mygov.housing.forms.FieldExtractorUtils;
 import scot.mygov.housing.forms.modeltenancy.model.RentPaymentFrequency;
 import scot.mygov.housing.forms.rentincreaseforimprovementsnotice.model.RentIncreaseForImprovements;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
