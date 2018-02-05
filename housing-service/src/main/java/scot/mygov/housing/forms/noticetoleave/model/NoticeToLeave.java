@@ -18,14 +18,14 @@ public class NoticeToLeave extends AbstractFormModel {
     @JsonDeserialize(using= LocalDateDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate entryDate;
-    private List<AgentOrLandLord> landLords = new ArrayList<>();
+    private List<AgentOrLandLord> landlords = new ArrayList<>();
     private AgentOrLandLord landlordsAgent = null;
     private List<String> reasons = new ArrayList<>();
     private String reasonDetails = "";
     private String supportingEvidence = "";
     @JsonDeserialize(using= LocalDateDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate earliestTribunualDate;
+    private LocalDate earliestTribunalDate;
 
     public List<String> getTenantNames() {
         return tenantNames;
@@ -51,12 +51,12 @@ public class NoticeToLeave extends AbstractFormModel {
         this.entryDate = entryDate;
     }
 
-    public List<AgentOrLandLord> getLandLords() {
-        return landLords;
+    public List<AgentOrLandLord> getLandlords() {
+        return landlords;
     }
 
-    public void setLandLords(List<AgentOrLandLord> landLords) {
-        this.landLords = landLords;
+    public void setLandlords(List<AgentOrLandLord> landlords) {
+        this.landlords = landlords;
     }
 
     public AgentOrLandLord getLandlordsAgent() {
@@ -91,11 +91,11 @@ public class NoticeToLeave extends AbstractFormModel {
         this.supportingEvidence = supportingEvidence;
     }
 
-    public LocalDate getEarliestTribunualDate() {
-        return earliestTribunualDate;
+    public LocalDate getEarliestTribunalDate() {
+        return earliestTribunalDate;
     }
 
-    public void setEarliestTribunualDate(LocalDate earliestTribunualDate) {
-        this.earliestTribunualDate = earliestTribunualDate;
+    public void setEarliestTribunalDate(LocalDate earliestTribunalDate) {
+        this.earliestTribunalDate = earliestTribunalDate;
     }
 }

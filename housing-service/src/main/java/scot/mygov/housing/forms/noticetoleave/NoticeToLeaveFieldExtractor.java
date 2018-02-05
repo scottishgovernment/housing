@@ -31,7 +31,7 @@ public class NoticeToLeaveFieldExtractor implements FieldExtractor<NoticeToLeave
         extractReasons(fields, model);
         fields.put("reasonDetails", naForEmpty(model.getReasonDetails()));
         fields.put("supportingEvidence", naForEmpty(model.getSupportingEvidence()));
-        fields.put("earliestTribunualDate", formatDate(model.getEarliestTribunualDate()));
+        fields.put("earliestTribunualDate", formatDate(model.getEarliestTribunalDate()));
         return fields;
     }
 
@@ -55,11 +55,11 @@ public class NoticeToLeaveFieldExtractor implements FieldExtractor<NoticeToLeave
         }
 
         fields.put("landlordsOrAgentNamesAndAddresses",
-                model.getLandLords().stream()
+                model.getLandlords().stream()
                         .map(this::formatNamesAndAddress)
                         .collect(joining("\n\n")));
 
-        if (model.getLandLords().size() > 1) {
+        if (model.getLandlords().size() > 1) {
             fields.put(I_OR_WE_FIELD, "We");
             fields.put(I_OR_WE_INLINE_FIELD, "we");
             fields.put(ARE_OR_AM_FIELD, "are");

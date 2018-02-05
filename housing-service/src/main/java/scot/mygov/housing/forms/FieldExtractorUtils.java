@@ -2,19 +2,25 @@ package scot.mygov.housing.forms;
 
 import org.apache.commons.lang3.StringUtils;
 import scot.mygov.housing.forms.modeltenancy.model.Address;
+import scot.mygov.housing.forms.modeltenancy.model.AgentOrLandLord;
 import scot.mygov.housing.forms.modeltenancy.model.Person;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.util.Collections.addAll;
 import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 public class FieldExtractorUtils {
 
@@ -136,4 +142,35 @@ public class FieldExtractorUtils {
         return DATE_FORMATTER.format(date);
     }
 
+    public static void extractLandlords(Map<String, Object> fields, Collection<AgentOrLandLord> landlords ) {
+        fields.put("landlords",
+                naForEmpty(landlords.stream()
+                        .filter(Objects::nonNull)
+                        .map(FieldExtractorUtils::agentOrLandlordString)
+                        .collect(joining("\n\n")))
+        );
+    }
+
+    public static String personString(Person person) {
+        List<String> parts = new ArrayList<String>();
+        parts.add(person.getName());
+        parts.addAll(addressParts(person.getAddress()));
+        parts.add(person.getEmail());
+        parts.add(person.getTelephone());
+        return parts.stream().filter(StringUtils::isNotEmpty).collect(Collectors.joining("\n"));
+    }
+
+    public static String agentOrLandlordString(AgentOrLandLord agentOrLandLord) {
+        String personString = personString(agentOrLandLord);
+        if (StringUtils.isNotEmpty(agentOrLandLord.getRegistrationNumber())) {
+            personString += "\n" + "Registration Number: " + agentOrLandLord.getRegistrationNumber();
+        }
+        return personString;
+    }
+
+    public static void extractPeople(String field,  Map<String, Object> fields, Collection<Person> people ) {
+        fields.put(field,
+                naForEmpty(people.stream().filter(Objects::nonNull).map(FieldExtractorUtils::personString).collect(joining("\n\n")))
+        );
+    }
 }

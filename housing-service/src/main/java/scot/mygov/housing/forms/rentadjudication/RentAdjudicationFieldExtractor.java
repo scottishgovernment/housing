@@ -2,6 +2,7 @@ package scot.mygov.housing.forms.rentadjudication;
 
 import org.apache.commons.lang3.StringUtils;
 import scot.mygov.housing.forms.FieldExtractor;
+import scot.mygov.housing.forms.FieldExtractorUtils;
 import scot.mygov.housing.forms.modeltenancy.model.AgentOrLandLord;
 import scot.mygov.housing.forms.modeltenancy.model.Person;
 import scot.mygov.housing.forms.modeltenancy.model.RentPaymentFrequency;
@@ -20,6 +21,7 @@ import static java.util.Collections.singleton;
 import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static scot.mygov.housing.forms.FieldExtractorUtils.addressParts;
+import static scot.mygov.housing.forms.FieldExtractorUtils.extractPeople;
 import static scot.mygov.housing.forms.FieldExtractorUtils.naForEmpty;
 import static scot.mygov.housing.forms.FieldExtractorUtils.defaultForEmpty;
 
@@ -33,7 +35,7 @@ public class RentAdjudicationFieldExtractor implements FieldExtractor<RentAdjudi
         // them in the order they apear in the documents template.
         extractPeople("tenants", fields, model.getTenants());
         extractPeople("tenantsAgent", fields, singleton(model.getTenantAgent()));
-        extractLandlords(fields, model.getLandlords());
+        FieldExtractorUtils.extractLandlords(fields, model.getLandlords());
         extractPeople("landlordsAgent", fields, singleton(model.getLettingAgent()));
         fields.put("propertyType", model.getPropertyType());
         extractRooms(model, fields);
@@ -48,35 +50,6 @@ public class RentAdjudicationFieldExtractor implements FieldExtractor<RentAdjudi
         extractRentDetails(model, fields);
         fields.put("notAvailableForInspection", model.getNotAvailableForInspection());
         return fields;
-    }
-
-    private void extractPeople(String field,  Map<String, Object> fields, Collection<Person> people ) {
-        fields.put(field,
-                naForEmpty(people.stream().filter(Objects::nonNull).map(this::personString).collect(joining("\n\n")))
-        );
-    }
-
-    private void extractLandlords(Map<String, Object> fields, Collection<AgentOrLandLord> landlords ) {
-        fields.put("landlords",
-                naForEmpty(landlords.stream().filter(Objects::nonNull).map(this::agentOrLandlordString).collect(joining("\n\n")))
-        );
-    }
-
-    private String personString(Person person) {
-        List<String> parts = new ArrayList<String>();
-        parts.add(person.getName());
-        parts.addAll(addressParts(person.getAddress()));
-        parts.add(person.getEmail());
-        parts.add(person.getTelephone());
-        return parts.stream().filter(StringUtils::isNotEmpty).collect(Collectors.joining("\n"));
-    }
-
-    private String agentOrLandlordString(AgentOrLandLord agentOrLandLord) {
-        String personString = personString(agentOrLandLord);
-        if (isNotEmpty(agentOrLandLord.getRegistrationNumber())) {
-            personString += "\n" + "Registration Number: " + agentOrLandLord.getRegistrationNumber();
-        }
-        return personString;
     }
 
     private void extractRooms(RentAdjudication model, Map<String, Object> fields) {
