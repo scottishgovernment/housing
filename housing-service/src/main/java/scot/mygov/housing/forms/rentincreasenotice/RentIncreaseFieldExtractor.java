@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.stream.Collectors.joining;
+import static scot.mygov.housing.forms.FieldExtractorUtils.addressFieldsMultipleLines;
 import static scot.mygov.housing.forms.FieldExtractorUtils.peopleNames;
 
 public class RentIncreaseFieldExtractor implements FieldExtractor<RentIncrease> {
@@ -17,8 +18,8 @@ public class RentIncreaseFieldExtractor implements FieldExtractor<RentIncrease> 
     public Map<String, Object> extractFields(RentIncrease model) {
 
         Map<String, Object> fields = new HashMap<>();
-        fields.put("tenantNames", peopleNames(model.getTenants()));
-        fields.put("tenantAddresses", peopleAddresses(model.getTenants()));
+        fields.put("tenantNames", model.getTenantNames().stream().collect(joining(", ")));
+        fields.put("address", addressFieldsMultipleLines(model.getAddress()));
         fields.put("landlordNames", peopleNames(model.getLandlords()));
         fields.put("landlordAddresses", peopleAddresses(model.getLandlords()));
         fields.put("landlordOrAgentName", peopleNames(model.getLandlords()));

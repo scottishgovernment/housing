@@ -1,19 +1,22 @@
 package scot.mygov.housing.forms.rentincreasenotice.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import scot.mygov.housing.forms.AbstractFormModel;
+import scot.mygov.housing.forms.modeltenancy.model.Address;
 import scot.mygov.housing.forms.modeltenancy.model.AgentOrLandLord;
-import scot.mygov.housing.forms.modeltenancy.model.Person;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RentIncrease extends AbstractFormModel {
 
-    private List<Person> tenants = new ArrayList<>();
+    private List<String> tenantNames = new ArrayList<>();
+    private Address address;
     private String inRentPressureZone;
     private List<AgentOrLandLord> landlords = new ArrayList<>();
     private AgentOrLandLord landlordsAgent = new AgentOrLandLord();
@@ -34,12 +37,20 @@ public class RentIncrease extends AbstractFormModel {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate capToDate;
 
-    public List<Person> getTenants() {
-        return tenants;
+    public List<String> getTenantNames() {
+        return tenantNames;
     }
 
-    public void setTenants(List<Person> tenants) {
-        this.tenants = tenants;
+    public void setTenantNames(List<String> tenantNames) {
+        this.tenantNames = tenantNames;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     public String getInRentPressureZone() {
