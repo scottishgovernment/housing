@@ -3,6 +3,7 @@ package scot.mygov.housing.forms.rentincreasenotice;
 import scot.mygov.housing.forms.FieldExtractor;
 import scot.mygov.housing.forms.FieldExtractorUtils;
 import scot.mygov.housing.forms.modeltenancy.model.Person;
+import scot.mygov.housing.forms.modeltenancy.model.RentPaymentFrequency;
 import scot.mygov.housing.forms.rentincreasenotice.model.RentIncrease;
 
 import java.util.HashMap;
@@ -41,9 +42,9 @@ public class RentIncreaseFieldExtractor implements FieldExtractor<RentIncrease> 
         fields.put("capToDate", model.getCapToDate());
 
         fields.put("oldRentAmount", model.getOldRentAmount());
-        fields.put("oldRentPeriod", model.getNewRentPeriod());
+        fields.put("oldRentPeriod", RentPaymentFrequency.description(model.getOldRentPeriod()));
         fields.put("newRentAmount", model.getNewRentAmount());
-        fields.put("newRentPeriod", model.getNewRentPeriod());
+        fields.put("newRentPeriod", RentPaymentFrequency.description(model.getNewRentPeriod()));
 
         return fields;
     }
