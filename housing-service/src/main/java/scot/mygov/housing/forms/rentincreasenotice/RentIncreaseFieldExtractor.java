@@ -26,8 +26,11 @@ public class RentIncreaseFieldExtractor implements FieldExtractor<RentIncrease> 
         fields.put("landlordNames", peopleNames(model.getLandlords()));
         fields.put("landlordAddresses", peopleAddresses(model.getLandlords()));
         fields.put("landlordOrAgentName", peopleNames(model.getLandlords()));
-        fields.put("landlordsAgentAddress", addressFieldsMultipleLines(model.getLandlordsAgent().getAddress()));
-
+        if (model.getLandlordsAgent() != null) {
+            fields.put("landlordsAgentAddress", addressFieldsMultipleLines(model.getLandlordsAgent().getAddress()));
+        } else {
+            fields.put("landlordsAgentAddress", "n/a");
+        }
         String inRentPressureZoneCheckbox = "_";
         String notInRentPressureZoneCheckbox = "_";
         if ("true".equals(model.getInRentPressureZone())) {
