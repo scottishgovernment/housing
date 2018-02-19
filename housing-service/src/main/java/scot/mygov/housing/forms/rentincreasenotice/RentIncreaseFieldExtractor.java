@@ -4,6 +4,7 @@ import scot.mygov.housing.forms.FieldExtractor;
 import scot.mygov.housing.forms.FieldExtractorUtils;
 import scot.mygov.housing.forms.modeltenancy.model.Person;
 import scot.mygov.housing.forms.modeltenancy.model.RentPaymentFrequency;
+import scot.mygov.housing.forms.rentincreasenotice.model.Calculation;
 import scot.mygov.housing.forms.rentincreasenotice.model.RentIncrease;
 
 import java.util.HashMap;
@@ -47,7 +48,16 @@ public class RentIncreaseFieldExtractor implements FieldExtractor<RentIncrease> 
         fields.put("newRentAmount", model.getNewRentAmount());
         fields.put("newRentPeriod", RentPaymentFrequency.description(model.getNewRentPeriod()));
 
+        extractCalculation(fields, model.getCalculation());
+
         return fields;
+    }
+
+    private void extractCalculation(Map<String, Object> fields, Calculation calculation) {
+        fields.put("calcCpi", calculation.getCpi());
+        fields.put("calcR", calculation.getR());
+        fields.put("calcX", calculation.getX());
+        fields.put("calcY", calculation.getY());
     }
 
     private <T extends Person> String peopleAddresses(List<T> people) {

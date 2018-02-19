@@ -37,6 +37,8 @@ public class RentIncrease extends AbstractFormModel {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate capToDate;
 
+    private Calculation calculation = new Calculation();
+
     public List<String> getTenantNames() {
         return tenantNames;
     }
@@ -139,5 +141,13 @@ public class RentIncrease extends AbstractFormModel {
 
     public void setCapToDate(LocalDate capToDate) {
         this.capToDate = capToDate;
+    }
+
+    public Calculation getCalculation() {
+        return calculation;
+    }
+
+    public void setCalculation(Calculation calculation) {
+        this.calculation = calculation;
     }
 }
