@@ -2,21 +2,11 @@ package scot.mygov.housing.forms.rentincreasenotice.model;
 
 public class Calculation {
 
-    private String r;
-
     private String cpi;
 
     private String x;
 
     private String y;
-
-    public String getR() {
-        return r;
-    }
-
-    public void setR(String r) {
-        this.r = r;
-    }
 
     public String getCpi() {
         return cpi;
