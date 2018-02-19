@@ -43,7 +43,7 @@ public class RentIncreaseFieldExtractor implements FieldExtractor<RentIncrease> 
         fields.put("notInRentPressureZoneCheckbox", notInRentPressureZoneCheckbox);
 
         fields.put("rentIncreaseDate", formatDate(model.getRentIncreaseDate()));
-        fields.put("lastRentIncreaseDate", formatDate(model.getLastRentIncreaseDate()));
+        fields.put("lastRentIncreaseDate", formatDate(model.getLastRentIncreaseDate(), "n/a"));
         fields.put("capFromDate", formatDate(model.getCapFromDate()));
         fields.put("capToDate", formatDate(model.getCapToDate()));
         fields.put("notificationDate", formatDate(model.getNotificationDate()));
