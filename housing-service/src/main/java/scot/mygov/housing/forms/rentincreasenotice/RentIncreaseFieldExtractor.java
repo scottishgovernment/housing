@@ -13,6 +13,7 @@ import java.util.Map;
 
 import static java.util.stream.Collectors.joining;
 import static scot.mygov.housing.forms.FieldExtractorUtils.addressFieldsMultipleLines;
+import static scot.mygov.housing.forms.FieldExtractorUtils.formatDate;
 import static scot.mygov.housing.forms.FieldExtractorUtils.peopleNames;
 
 public class RentIncreaseFieldExtractor implements FieldExtractor<RentIncrease> {
@@ -38,10 +39,10 @@ public class RentIncreaseFieldExtractor implements FieldExtractor<RentIncrease> 
         fields.put("inRentPressureZoneCheckbox", inRentPressureZoneCheckbox);
         fields.put("notInRentPressureZoneCheckbox", notInRentPressureZoneCheckbox);
 
-        fields.put("rentIncreaseDate", model.getRentIncreaseDate());
-        fields.put("lastRentIncreaseDate", model.getLastRentIncreaseDate());
-        fields.put("capFromDate", model.getCapFromDate());
-        fields.put("capToDate", model.getCapToDate());
+        fields.put("rentIncreaseDate", formatDate(model.getRentIncreaseDate()));
+        fields.put("lastRentIncreaseDate", formatDate(model.getLastRentIncreaseDate()));
+        fields.put("capFromDate", formatDate(model.getCapFromDate()));
+        fields.put("capToDate", formatDate(model.getCapToDate()));
 
         fields.put("oldRentAmount", model.getOldRentAmount());
         fields.put("oldRentPeriod", RentPaymentFrequency.description(model.getOldRentPeriod()));
