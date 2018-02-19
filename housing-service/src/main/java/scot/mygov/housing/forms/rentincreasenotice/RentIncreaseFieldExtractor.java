@@ -43,6 +43,7 @@ public class RentIncreaseFieldExtractor implements FieldExtractor<RentIncrease> 
         fields.put("lastRentIncreaseDate", formatDate(model.getLastRentIncreaseDate()));
         fields.put("capFromDate", formatDate(model.getCapFromDate()));
         fields.put("capToDate", formatDate(model.getCapToDate()));
+        fields.put("notificationDate", formatDate(model.getNotificationDate()));
 
         fields.put("oldRentAmount", model.getOldRentAmount());
         fields.put("oldRentPeriod", RentPaymentFrequency.description(model.getOldRentPeriod()));
@@ -56,7 +57,6 @@ public class RentIncreaseFieldExtractor implements FieldExtractor<RentIncrease> 
 
     private void extractCalculation(Map<String, Object> fields, Calculation calculation) {
         fields.put("calcCpi", calculation.getCpi());
-        fields.put("calcR", calculation.getR());
         fields.put("calcX", calculation.getX());
         fields.put("calcY", calculation.getY());
     }

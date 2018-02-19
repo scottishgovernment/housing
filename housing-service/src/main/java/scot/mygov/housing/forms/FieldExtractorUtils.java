@@ -136,8 +136,12 @@ public class FieldExtractorUtils {
     }
 
     public static String formatDate(LocalDate date) {
+        return formatDate(date, "");
+    }
+
+    public static String formatDate(LocalDate date, String defaultString) {
         if (date == null) {
-            return "";
+            return defaultString;
         }
         return DATE_FORMATTER.format(date);
     }
