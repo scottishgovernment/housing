@@ -18,6 +18,8 @@ import static scot.mygov.housing.forms.FieldExtractorUtils.peopleNames;
 
 public class RentIncreaseFieldExtractor implements FieldExtractor<RentIncrease> {
 
+    public static final String CAP_TO_AND_FROM_SENTENCE = "capToAndFromSentence";
+
     public Map<String, Object> extractFields(RentIncrease model) {
 
         Map<String, Object> fields = new HashMap<>();
@@ -64,15 +66,15 @@ public class RentIncreaseFieldExtractor implements FieldExtractor<RentIncrease> 
 
     private void extractCapSentence(Map<String, Object> fields, RentIncrease model) {
         if (model.getCapFromDate() == null) {
-            fields.put("capToAndFromSentence", "");
+            fields.put(CAP_TO_AND_FROM_SENTENCE, "");
             return;
         }
         if (model.getCapToDate() == null) {
-            fields.put("capToAndFromSentence", "");
+            fields.put(CAP_TO_AND_FROM_SENTENCE, "");
             return;
         }
 
-        fields.put("capToAndFromSentence",
+        fields.put(CAP_TO_AND_FROM_SENTENCE,
                 String.format("The above cap is in force from %s to %s",
                     formatDate(model.getCapFromDate()),
                     formatDate(model.getCapToDate())));
