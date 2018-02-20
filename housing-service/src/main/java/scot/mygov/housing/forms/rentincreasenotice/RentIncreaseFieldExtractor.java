@@ -44,16 +44,14 @@ public class RentIncreaseFieldExtractor implements FieldExtractor<RentIncrease> 
 
         fields.put("rentIncreaseDate", formatDate(model.getRentIncreaseDate()));
         fields.put("lastRentIncreaseDate", formatDate(model.getLastRentIncreaseDate(), "n/a"));
-        fields.put("capFromDate", formatDate(model.getCapFromDate()));
-        fields.put("capToDate", formatDate(model.getCapToDate()));
         fields.put("notificationDate", formatDate(model.getNotificationDate()));
-
         fields.put("oldRentAmount", model.getOldRentAmount());
         fields.put("oldRentPeriod", RentPaymentFrequency.description(model.getOldRentPeriod()));
         fields.put("newRentAmount", model.getNewRentAmount());
         fields.put("newRentPeriod", RentPaymentFrequency.description(model.getNewRentPeriod()));
 
         extractCalculation(fields, model.getCalculation());
+        extractCapSentence(fields, model);
 
         return fields;
     }
@@ -62,6 +60,22 @@ public class RentIncreaseFieldExtractor implements FieldExtractor<RentIncrease> 
         fields.put("calcCpi", calculation.getCpi());
         fields.put("calcX", calculation.getX());
         fields.put("calcY", calculation.getY());
+    }
+
+    private void extractCapSentence(Map<String, Object> fields, RentIncrease model) {
+        if (model.getCapFromDate() == null) {
+            fields.put("capToAndFromSentence", "");
+            return;
+        }
+        if (model.getCapToDate() == null) {
+            fields.put("capToAndFromSentence", "");
+            return;
+        }
+
+        fields.put("capToAndFromSentence",
+                String.format("The above cap is in force from %s to %s",
+                    formatDate(model.getCapFromDate()),
+                    formatDate(model.getCapToDate())));
     }
 
     private <T extends Person> String peopleAddresses(List<T> people) {
