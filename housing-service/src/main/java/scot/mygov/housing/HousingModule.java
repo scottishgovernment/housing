@@ -34,6 +34,7 @@ import scot.mygov.housing.forms.rentincreaseforimprovementsnotice.RentIncreaseFo
 import scot.mygov.housing.forms.rentincreaseforimprovementsnotice.model.RentIncreaseForImprovements;
 
 import scot.mygov.housing.forms.rentincreasenotice.RentIncreaseFieldExtractor;
+import scot.mygov.housing.forms.rentincreasenotice.RentIncreaseRPZSectionRemovingCallback;
 import scot.mygov.housing.forms.rentincreasenotice.model.RentIncrease;
 
 import scot.mygov.housing.mapcloud.Mapcloud;
@@ -174,6 +175,7 @@ public class HousingModule {
         return  new DocumentGenerationService<>(
                 new DocumentGenerator(templateLoader),
                 new RentIncreaseFieldExtractor(),
+                form -> new RentIncreaseRPZSectionRemovingCallback(),
                 metricRegistry);
     }
 

@@ -55,6 +55,18 @@ public class RentIncreaseFieldExtractor implements FieldExtractor<RentIncrease> 
         extractCalculation(fields, model.getCalculation());
         extractCapSentence(fields, model);
 
+
+
+        boolean inRPZ = "true".equals(model.getInRentPressureZone());
+        if (inRPZ) {
+            fields.put("inRPZ", "in");
+            fields.put("section2BIntro", "The Let Property is in an area which has been designated by the Scottish" +
+                    " Ministers as a Rent Pressure Zone.");
+        } else {
+            fields.put("inRPZ", "not in");
+            fields.put("section2BIntro", "The Let Property is not in a Rent Pressure Zone.");
+        }
+
         return fields;
     }
 
