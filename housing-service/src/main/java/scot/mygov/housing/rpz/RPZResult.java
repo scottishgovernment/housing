@@ -4,14 +4,20 @@ public class RPZResult {
 
     private boolean inRentPressureZone;
     private String rentPressureZoneTitle;
+    private String dateFrom;
+    private String dateTo;
     private double maxIncrease;
 
     private RPZResult(
             boolean inRentPressureZone,
             String rentPressureZoneTitle,
+            String dateFrom,
+            String dateTo,
             double maxIncrease) {
         this.inRentPressureZone = inRentPressureZone;
         this.rentPressureZoneTitle = rentPressureZoneTitle;
+        this.dateFrom = dateFrom;
+        this.dateTo = dateTo;
         this.maxIncrease = maxIncrease;
     }
 
@@ -23,6 +29,22 @@ public class RPZResult {
         return rentPressureZoneTitle;
     }
 
+    public String getDateFrom() {
+        return dateFrom;
+    }
+
+    public void setDateFrom(String dateFrom) {
+        this.dateFrom = dateFrom;
+    }
+
+    public String getDateTo() {
+        return dateTo;
+    }
+
+    public void setDateTo(String dateTo) {
+        this.dateTo = dateTo;
+    }
+
     public double getMaxIncrease() {
         return maxIncrease;
     }
@@ -30,6 +52,8 @@ public class RPZResult {
     public static class Builder {
         private boolean inRentPressureZone;
         private String rentPressureZoneTitle;
+        private String dateFrom;
+        private String dateTo;
         private double maxIncrease;
 
         public Builder inRentPressureZone(boolean inRentPressureZone) {
@@ -42,6 +66,16 @@ public class RPZResult {
             return this;
         }
 
+        public Builder dateFrom(String dateFrom) {
+            this.dateFrom = dateFrom;
+            return this;
+        }
+
+        public Builder dateTo(String dateFrom) {
+            this.dateTo = dateTo;
+            return this;
+        }
+
         public Builder maxIncrease(double maxIncrease) {
             this.maxIncrease = maxIncrease;
             return this;
@@ -49,7 +83,7 @@ public class RPZResult {
 
 
         public RPZResult build() {
-            return new RPZResult(inRentPressureZone, rentPressureZoneTitle, maxIncrease);
+            return new RPZResult(inRentPressureZone, rentPressureZoneTitle, dateFrom, dateTo, maxIncrease);
         }
     }
 

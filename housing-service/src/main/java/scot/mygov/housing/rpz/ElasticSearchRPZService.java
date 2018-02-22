@@ -45,16 +45,22 @@ public class ElasticSearchRPZService implements RPZService {
         JsonNode hits = result.get("hits");
         int hitCount = hits.get("total").asInt();
         if (hitCount == 0) {
-            return new RPZResult.Builder().inRentPressureZone(false).build();
+            return new RPZResult.Builder()
+                    .inRentPressureZone(false)
+                    .build();
         }
 
         JsonNode source = hits.get("hits").get(0).get("_source");
         String name = source.get("name").asText();
+        String fromDate = source.get("fromDate").asText();
+        String toDate = source.get("toDate").asText();
         double maxIncrease = source.get("maxIncrease").asDouble();
 
         return new RPZResult.Builder()
                 .inRentPressureZone(true)
                 .title(name)
+                .dateFrom(fromDate)
+                .dateTo(toDate)
                 .maxIncrease(maxIncrease).build();
     }
 
