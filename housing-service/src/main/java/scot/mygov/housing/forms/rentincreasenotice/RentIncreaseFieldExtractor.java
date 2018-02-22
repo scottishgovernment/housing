@@ -55,8 +55,6 @@ public class RentIncreaseFieldExtractor implements FieldExtractor<RentIncrease> 
         extractCalculation(fields, model.getCalculation());
         extractCapSentence(fields, model);
 
-
-
         boolean inRPZ = "true".equals(model.getInRentPressureZone());
         if (inRPZ) {
             fields.put("inRPZ", "in");
