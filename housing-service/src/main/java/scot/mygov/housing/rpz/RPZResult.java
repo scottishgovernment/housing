@@ -71,7 +71,7 @@ public class RPZResult {
             return this;
         }
 
-        public Builder dateTo(String dateFrom) {
+        public Builder dateTo(String dateTo) {
             this.dateTo = dateTo;
             return this;
         }
