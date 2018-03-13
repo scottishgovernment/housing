@@ -1,5 +1,6 @@
 package scot.mygov.housing.forms.noticetoleave;
 
+import org.apache.commons.lang3.StringUtils;
 import scot.mygov.housing.forms.FieldExtractor;
 import scot.mygov.housing.forms.modeltenancy.model.AgentOrLandLord;
 import scot.mygov.housing.forms.noticetoleave.model.NoticeToLeave;
@@ -25,7 +26,8 @@ public class NoticeToLeaveFieldExtractor implements FieldExtractor<NoticeToLeave
 
         Map<String, Object> fields = new HashMap<>();
         describeLandlordsOrAgent(model, fields);
-        fields.put("tenantNames", model.getTenantNames().stream().collect(joining(", ")));
+        fields.put("tenantNames",
+                model.getTenantNames().stream().filter(StringUtils::isNotBlank).collect(joining(", ")));
         fields.put("address", addressFieldsMultipleLines(model.getAddress()));
         fields.put("entryDate", formatDate(model.getEntryDate()));
         extractReasons(fields, model);
@@ -74,7 +76,7 @@ public class NoticeToLeaveFieldExtractor implements FieldExtractor<NoticeToLeave
     }
 
     private String formatNamesAndAddress(AgentOrLandLord person) {
-        return String.format("%s Of\n%s", person.getName(), addressFieldsMultipleLines(person.getAddress()));
+        return String.format("%s\nOf\n%s", person.getName(), addressFieldsMultipleLines(person.getAddress()));
     }
 
 }
