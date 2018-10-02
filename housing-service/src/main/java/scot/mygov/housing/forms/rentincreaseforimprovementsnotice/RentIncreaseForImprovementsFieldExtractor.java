@@ -5,7 +5,6 @@ import scot.mygov.housing.forms.FieldExtractorUtils;
 import scot.mygov.housing.forms.modeltenancy.model.RentPaymentFrequency;
 import scot.mygov.housing.forms.rentincreaseforimprovementsnotice.model.RentIncreaseForImprovements;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +19,7 @@ public class RentIncreaseForImprovementsFieldExtractor implements FieldExtractor
         FieldExtractorUtils.extractLandlords(fields, model.getLandlords());
         extractPeople("landlordsAgent", fields, singleton(model.getLandlordsAgent()));
         extractPeople("tenantDetails", fields, model.getTenants());
-        fields.put("address", FieldExtractorUtils.addressFieldsMultipleLines(model.getAddress()));
+        fields.put("address", model.getAddress());
         fields.put("improvements", model.getImprovements());
         fields.put("rentIncreaseAmount", model.getRentIncreaseAmount());
         fields.put("rentIncreaseFrequency", RentPaymentFrequency.description(model.getRentIncreaseFrequency()));

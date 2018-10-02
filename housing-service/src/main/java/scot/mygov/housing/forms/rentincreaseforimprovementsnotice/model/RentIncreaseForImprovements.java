@@ -1,7 +1,6 @@
 package scot.mygov.housing.forms.rentincreaseforimprovementsnotice.model;
 
 import scot.mygov.housing.forms.AbstractFormModel;
-import scot.mygov.housing.forms.modeltenancy.model.Address;
 import scot.mygov.housing.forms.modeltenancy.model.AgentOrLandLord;
 import scot.mygov.housing.forms.modeltenancy.model.Person;
 
@@ -10,7 +9,7 @@ import java.util.List;
 
 public class RentIncreaseForImprovements extends AbstractFormModel {
 
-    private Address address = new Address();
+    private String address;
 
     private List<AgentOrLandLord> landlords = new ArrayList<>();
 
@@ -28,11 +27,11 @@ public class RentIncreaseForImprovements extends AbstractFormModel {
 
     private boolean includesBeforeAndAfterPictures;
 
-    public Address getAddress() {
+    public String getAddress() {
         return address;
     }
 
-    public void setAddress(Address address) {
+    public void setAddress(String address) {
         this.address = address;
     }
 

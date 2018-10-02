@@ -1,19 +1,22 @@
 package scot.mygov.housing.forms.rentincreasenotice.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import scot.mygov.housing.forms.AbstractFormModel;
+import scot.mygov.housing.forms.modeltenancy.model.Address;
 import scot.mygov.housing.forms.modeltenancy.model.AgentOrLandLord;
-import scot.mygov.housing.forms.modeltenancy.model.Person;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RentIncrease extends AbstractFormModel {
 
-    private List<Person> tenants = new ArrayList<>();
+    private List<String> tenantNames = new ArrayList<>();
+    private Address address;
     private String inRentPressureZone;
     private List<AgentOrLandLord> landlords = new ArrayList<>();
     private AgentOrLandLord landlordsAgent = new AgentOrLandLord();
@@ -33,13 +36,25 @@ public class RentIncrease extends AbstractFormModel {
     @JsonDeserialize(using= LocalDateDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate capToDate;
+    @JsonDeserialize(using= LocalDateDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate notificationDate;
+    private Calculation calculation = new Calculation();
 
-    public List<Person> getTenants() {
-        return tenants;
+    public List<String> getTenantNames() {
+        return tenantNames;
     }
 
-    public void setTenants(List<Person> tenants) {
-        this.tenants = tenants;
+    public void setTenantNames(List<String> tenantNames) {
+        this.tenantNames = tenantNames;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     public String getInRentPressureZone() {
@@ -128,5 +143,21 @@ public class RentIncrease extends AbstractFormModel {
 
     public void setCapToDate(LocalDate capToDate) {
         this.capToDate = capToDate;
+    }
+
+    public Calculation getCalculation() {
+        return calculation;
+    }
+
+    public void setCalculation(Calculation calculation) {
+        this.calculation = calculation;
+    }
+
+    public LocalDate getNotificationDate() {
+        return notificationDate;
+    }
+
+    public void setNotificationDate(LocalDate notificationDate) {
+        this.notificationDate = notificationDate;
     }
 }
