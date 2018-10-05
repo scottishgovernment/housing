@@ -180,7 +180,7 @@ public class ModelTenancyFieldExtractor implements FieldExtractor<ModelTenancy> 
         String hmoString = "";
         String hmoContactNumber = "";
         String hmoExpiryDate = "";
-        Boolean hmoRenewalApplicationSubmitted = false;
+        boolean hmoRenewalApplicationSubmitted = false;
         String showHmoNotification = " ";
         String showHmoFields = " ";
 
