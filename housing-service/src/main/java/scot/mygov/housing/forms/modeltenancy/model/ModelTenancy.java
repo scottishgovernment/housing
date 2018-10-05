@@ -28,7 +28,7 @@ public class ModelTenancy extends AbstractFormModel {
     private String inRentPressureZone;
     private String hmoProperty;
     private String hmo24ContactNumber = "";
-    private Boolean hmoRenewalApplicationSubmitted;
+    private boolean hmoRenewalApplicationSubmitted;
     @JsonDeserialize(using= LocalDateDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate hmoRegistrationExpiryDate;
@@ -157,11 +157,11 @@ public class ModelTenancy extends AbstractFormModel {
         this.hmo24ContactNumber = hmo24ContactNumber;
     }
 
-    public Boolean getHmoRenewalApplicationSubmitted() {
+    public boolean getHmoRenewalApplicationSubmitted() {
         return hmoRenewalApplicationSubmitted;
     }
 
-    public void setHmoRenewalApplicationSubmitted(Boolean hmoRenewalApplicationSubmitted) {
+    public void setHmoRenewalApplicationSubmitted(boolean hmoRenewalApplicationSubmitted) {
         this.hmoRenewalApplicationSubmitted = hmoRenewalApplicationSubmitted;
     }
 
