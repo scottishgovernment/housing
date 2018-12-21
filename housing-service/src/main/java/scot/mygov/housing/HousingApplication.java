@@ -1,6 +1,7 @@
 package scot.mygov.housing;
 
 import scot.mygov.housing.cpi.CPIResource;
+import scot.mygov.housing.europa.Europa;
 import scot.mygov.housing.forms.modeltenancy.ModelTenancyResource;
 import scot.mygov.housing.forms.nonprovisionofdocumentation.NonProvisionOfDocumentationResource;
 import scot.mygov.housing.forms.noticetoleave.NoticeToLeaveResource;
@@ -8,7 +9,6 @@ import scot.mygov.housing.forms.noticetoleave.SubtenantNoticeToLeaveResource;
 import scot.mygov.housing.forms.rentadjudication.RentAdjudicationResource;
 import scot.mygov.housing.forms.rentincreaseforimprovementsnotice.RentIncreaseForImprovementsResource;
 import scot.mygov.housing.forms.rentincreasenotice.RentIncreaseResource;
-import scot.mygov.housing.mapcloud.Mapcloud;
 import scot.mygov.housing.postcode.PostcodeResource;
 import scot.mygov.housing.rpz.RentPressureZoneResource;
 
@@ -64,7 +64,7 @@ public class HousingApplication extends Application {
     RequestLogger requestLogger;
 
     @Inject
-    Mapcloud mapcloud;
+    Europa europa;
 
     @Override
     public Set<Object> getSingletons() {
@@ -83,7 +83,7 @@ public class HousingApplication extends Application {
 
                 errorHandler,
                 healthcheck,
-                mapcloud,
+                europa,
                 responseLogger,
                 requestLogger
         ));

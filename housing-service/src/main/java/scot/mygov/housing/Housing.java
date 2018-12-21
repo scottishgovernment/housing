@@ -6,8 +6,8 @@ import org.jboss.resteasy.plugins.server.undertow.UndertowJaxrsServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
-import scot.mygov.housing.mapcloud.Heartbeat;
-import scot.mygov.housing.mapcloud.Mapcloud;
+import scot.mygov.housing.europa.Europa;
+import scot.mygov.housing.postcode.Heartbeat;
 
 import javax.inject.Inject;
 import java.net.InetSocketAddress;
@@ -23,7 +23,7 @@ public class Housing {
     HousingConfiguration config;
 
     @Inject
-    Mapcloud mapcloud;
+    Europa europa;
 
     @Inject
     HousingApplication app;
@@ -43,10 +43,10 @@ public class Housing {
         server.start(Undertow.builder().addHttpListener(config.getPort(), "::"));
         LOG.info("Listening on port {}", server.port());
 
-        // schedule the mapcloud heartbeat
-        Heartbeat heartbeat = new Heartbeat(mapcloud);
+        // schedule the postcode lookup heartbeat
+        Heartbeat heartbeat = new Heartbeat(europa);
         ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
-        scheduledExecutorService.scheduleAtFixedRate(heartbeat, 1, config.getMapcloudMonitoringInterval(), TimeUnit.MINUTES);
+        scheduledExecutorService.scheduleAtFixedRate(heartbeat, 1, config.getHeartbeatMonitoringInterval(), TimeUnit.MINUTES);
     }
 
     public static class Server extends UndertowJaxrsServer {

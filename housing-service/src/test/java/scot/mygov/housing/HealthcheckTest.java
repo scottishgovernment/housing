@@ -19,10 +19,8 @@ import scot.mygov.documents.DocumentTemplateLoader;
 import scot.mygov.housing.cpi.CPIService;
 import scot.mygov.housing.cpi.CPIServiceException;
 import scot.mygov.housing.cpi.model.CPIData;
+import scot.mygov.housing.europa.Europa;
 import scot.mygov.housing.forms.DocumentGenerationService;
-import scot.mygov.housing.forms.modeltenancy.ModelTenancyFieldExtractor;
-import scot.mygov.housing.forms.modeltenancy.model.ModelTenancy;
-import scot.mygov.housing.mapcloud.Mapcloud;
 
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
@@ -56,7 +54,7 @@ public class HealthcheckTest {
         mapper = new ObjectMapper();
         healthcheck = new Healthcheck();
         healthcheck.metricRegistry = new MetricRegistry();
-        healthcheck.mapcloud = new Mapcloud(mock(WebTarget.class), "", "", healthcheck.metricRegistry);
+        healthcheck.europa = new Europa(mock(WebTarget.class), healthcheck.metricRegistry);
         healthcheck.housingConfiguration = new HousingConfiguration();
         healthcheck.asposeLicense = anyValidLicense();
         healthcheck.cpiService = validCPIService();
@@ -157,7 +155,7 @@ public class HealthcheckTest {
         dispatcher.invoke(request, response);
 
         JsonNode health = mapper.readTree(response.getContentAsString());
-        assertEquals("postcode not as expected", false, health.get("Mapcloud lookups").asBoolean());
+        assertEquals("postcode not as expected", false, health.get("Postcode lookups").asBoolean());
         assertEquals(503, response.getStatus());
     }
 
@@ -169,7 +167,7 @@ public class HealthcheckTest {
         dispatcher.invoke(request, response);
 
         JsonNode health = mapper.readTree(response.getContentAsString());
-        assertEquals("postcode not as expected", false, health.get("Mapcloud lookups").asBoolean());
+        assertEquals("postcode not as expected", false, health.get("Postcode lookups").asBoolean());
         assertEquals(503, response.getStatus());
     }
 
@@ -192,7 +190,7 @@ public class HealthcheckTest {
         SortedMap<String, Meter> meters = new TreeMap<>();
         Meter errorRate = mock(Meter.class);
         when(errorRate.getFiveMinuteRate()).thenReturn(errorFiveMinRate);
-        meters.put(MetricName.ERROR_RATE.name(healthcheck.mapcloud), errorRate);
+        meters.put(MetricName.ERROR_RATE.name(healthcheck.europa), errorRate);
         when(registry.getMeters()).thenReturn(meters);
         when(registry.getMeters(Mockito.any())).thenReturn(meters);
 
@@ -201,14 +199,14 @@ public class HealthcheckTest {
         Timer responseTimes = mock(Timer.class);
         when(responseTimes.getSnapshot()).thenReturn(snapshot);
         when(responseTimes.getFiveMinuteRate()).thenReturn(responseTimesFiveMinuteRate);
-        timers.put(MetricName.RESPONSE_TIMES.name(healthcheck.mapcloud), responseTimes);
+        timers.put(MetricName.RESPONSE_TIMES.name(healthcheck.europa), responseTimes);
         when(registry.getTimers()).thenReturn(timers);
         when(registry.getTimers(Mockito.any())).thenReturn(timers);
 
         SortedMap<String, Counter> counters = new TreeMap<>();
         Counter errorCounter = mock(Counter.class);
         when(errorCounter.getCount()).thenReturn(0L);
-        counters.put(MetricName.ERRORS.name(healthcheck.mapcloud), errorCounter);
+        counters.put(MetricName.ERRORS.name(healthcheck.europa), errorCounter);
         when(registry.getCounters()).thenReturn(counters);
         when(registry.getCounters(Mockito.any())).thenReturn(counters);
 

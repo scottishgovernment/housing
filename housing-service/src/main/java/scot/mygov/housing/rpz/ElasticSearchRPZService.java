@@ -3,10 +3,10 @@ package scot.mygov.housing.rpz;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.io.IOUtils;
-import scot.mygov.housing.mapcloud.DPAMapcloudResult;
-import scot.mygov.housing.mapcloud.Mapcloud;
-import scot.mygov.housing.mapcloud.MapcloudException;
-import scot.mygov.housing.mapcloud.MapcloudResults;
+import scot.mygov.housing.europa.Europa;
+import scot.mygov.housing.europa.EuropaAddress;
+import scot.mygov.housing.europa.EuropaException;
+import scot.mygov.housing.europa.EuropaResults;
 import scot.mygov.housing.rpz.model.ESTemplateQuery;
 
 import javax.ws.rs.ProcessingException;
@@ -28,11 +28,11 @@ import static java.util.Objects.isNull;
  */
 public class ElasticSearchRPZService implements RPZService {
 
-    private final Mapcloud mapcloud;
+    private final Europa europa;
     private final WebTarget target;
 
-    public ElasticSearchRPZService(Mapcloud mapcloud, WebTarget target) {
-        this.mapcloud = mapcloud;
+    public ElasticSearchRPZService(Europa europa, WebTarget target) {
+        this.europa = europa;
         this.target = target;
     }
 
@@ -105,14 +105,14 @@ public class ElasticSearchRPZService implements RPZService {
 
     private String postcodeForUprn(String uprn) throws RPZServiceException {
         try {
-            MapcloudResults results = mapcloud.lookupUprn(uprn);
-            if (results.getResults().size() != 1) {
+            EuropaResults results = europa.lookupUprn(uprn);
+            if (!results.hasResults()) {
                 throw new RPZServiceException("Expected one postcode for uprn " + uprn);
             }
 
-            DPAMapcloudResult result = results.getResults().get(0);
+            EuropaAddress result = results.getResults().get(0).getAddress().get(0);
             return result.getPostcode();
-        } catch (MapcloudException e) {
+        } catch (EuropaException e) {
             if ("Failed to lookup uprn".equals(e.getMessage())) {
                 throw new RPZServiceClientException(Collections.singletonMap("uprn", "Invalid UPRN"));
             } else {

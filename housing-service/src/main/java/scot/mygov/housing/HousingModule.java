@@ -11,6 +11,7 @@ import scot.mygov.documents.DocumentGenerator;
 import scot.mygov.documents.DocumentTemplateLoader;
 import scot.mygov.housing.cpi.CPIService;
 
+import scot.mygov.housing.europa.Europa;
 import scot.mygov.housing.forms.PlaceholderProvidingMergingCallback;
 import scot.mygov.housing.forms.RecaptchaCheck;
 import scot.mygov.housing.forms.DocumentGenerationService;
@@ -37,10 +38,9 @@ import scot.mygov.housing.forms.rentincreasenotice.RentIncreaseFieldExtractor;
 import scot.mygov.housing.forms.rentincreasenotice.RentIncreaseRPZSectionRemovingCallback;
 import scot.mygov.housing.forms.rentincreasenotice.model.RentIncrease;
 
-import scot.mygov.housing.mapcloud.Mapcloud;
 import scot.mygov.housing.forms.modeltenancy.validation.ModelTenancyValidatorFactory;
+import scot.mygov.housing.postcode.EuropaPostcodeService;
 import scot.mygov.housing.postcode.PostcodeService;
-import scot.mygov.housing.postcode.MapcloudPostcodeService;
 import scot.mygov.housing.rpz.ElasticSearchRPZService;
 import scot.mygov.housing.rpz.RPZService;
 import scot.mygov.validation.Validator;
@@ -56,7 +56,7 @@ public class HousingModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(HousingConfiguration.class);
 
-    public static final String MAPCLOUD_TARGET = "mapcloudTarget";
+    public static final String EUROPA_TARGET = "europaTarget";
     public static final String ELASTICSEARCH_TARGET = "esTarget";
     public static final String ES_RPZ_HEALTH_TARGET = "esRPZHealthTarget";
 
@@ -73,9 +73,10 @@ public class HousingModule {
     }
 
     @Provides
-    @Named(MAPCLOUD_TARGET)
-    WebTarget mapcloudTarget(Client client, HousingConfiguration configuration) {
-        return client.target(configuration.getMapcloudURI());
+    @Named(EUROPA_TARGET)
+    WebTarget europaTarget(Client client, HousingConfiguration configuration) {
+        String path = String.format("/%s/os/abpr/address", configuration.getEuropaId());
+        return client.target(configuration.getEuropaURI()).path(path);
     }
 
     @Provides
@@ -98,8 +99,8 @@ public class HousingModule {
 
 
     @Provides
-    RPZService rpzService(Mapcloud mapcloud, @Named(ELASTICSEARCH_TARGET) WebTarget esTarget) {
-        return new ElasticSearchRPZService(mapcloud, esTarget);
+    RPZService rpzService(Europa europa, @Named(ELASTICSEARCH_TARGET) WebTarget esTarget) {
+        return new ElasticSearchRPZService(europa, esTarget);
     }
 
     @Provides
@@ -120,19 +121,13 @@ public class HousingModule {
 
     @Provides
     @Singleton
-    Mapcloud mapcloud(
-            HousingConfiguration config,
-            MetricRegistry registry,
-            @Named(MAPCLOUD_TARGET) WebTarget mapcloudTarget) {
-        return new Mapcloud(mapcloudTarget,
-                config.getMapcloudUser(),
-                config.getMapcloudPassword(),
-                registry);
+    Europa europa(MetricRegistry registry, @Named(EUROPA_TARGET) WebTarget europaTarget) {
+        return new Europa(europaTarget, registry);
     }
 
     @Provides
-    PostcodeService postcodeService(Mapcloud mapcloud) {
-        return new MapcloudPostcodeService(mapcloud);
+    PostcodeService postcodeService(Europa europa) {
+        return new EuropaPostcodeService(europa);
     }
 
     @Provides

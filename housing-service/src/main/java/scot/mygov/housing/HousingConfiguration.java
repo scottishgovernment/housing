@@ -19,14 +19,12 @@ public class HousingConfiguration {
 
     private URI rpzHealthURI = URI.create("http://localhost:9200/housing-data/rpz/_search");
 
-    private URI mapcloudURI = URI.create("https://api.themapcloud.com/");
+    private String europaId;
 
-    private String mapcloudUser = "osma_scottishgovernment";
-
-    private String mapcloudPassword = "Im9zbWFfc2NvdHRpc2hnb3Zlcm5tZW50Ig.C8ANOQ.6slIkjefnELHXUnAp4MwHT-723s";
+    private URI europaURI = URI.create("https://api.viaeuropa.uk.com/");
 
     // once per 5 minutes
-    private long mapcloudMonitoringInterval = 5;
+    private long heartbeatMonitoringInterval = 5;
 
     private String cpiGracePeriod = "PT12H";
 
@@ -34,7 +32,7 @@ public class HousingConfiguration {
         return port;
     }
 
-    public double getMapcloudResponseTimeThreshold() {
+    public double getPostcodeLookupResponseTimeThreshold() {
         return 500;
     }
 
@@ -62,20 +60,24 @@ public class HousingConfiguration {
         return rpzHealthURI;
     }
 
-    public URI getMapcloudURI() {
-        return mapcloudURI;
+    public String getEuropaId() {
+        return europaId;
     }
 
-    public String getMapcloudUser() {
-        return mapcloudUser;
+    public void setEuropaId(String europaId) {
+        this.europaId = europaId;
     }
 
-    public String getMapcloudPassword() {
-        return mapcloudPassword;
+    public URI getEuropaURI() {
+        return europaURI;
     }
 
-    public long getMapcloudMonitoringInterval() {
-        return mapcloudMonitoringInterval;
+    public void setEuropaURI(URI europaURI) {
+        this.europaURI = europaURI;
+    }
+
+    public long getHeartbeatMonitoringInterval() {
+        return heartbeatMonitoringInterval;
     }
 
     public static class Aspose {

@@ -5,11 +5,11 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.Test;
 
-import scot.mygov.housing.mapcloud.DPAMapcloudResult;
-import scot.mygov.housing.mapcloud.Mapcloud;
-import scot.mygov.housing.mapcloud.MapcloudException;
-import scot.mygov.housing.mapcloud.LGGMapcloudResult;
-import scot.mygov.housing.mapcloud.MapcloudResults;
+import scot.mygov.housing.europa.AddressResultWrapper;
+import scot.mygov.housing.europa.Europa;
+import scot.mygov.housing.europa.EuropaAddress;
+import scot.mygov.housing.europa.EuropaException;
+import scot.mygov.housing.europa.EuropaResults;
 
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.WebApplicationException;
@@ -20,6 +20,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Collections;
 
 
 import static java.time.LocalDate.now;
@@ -30,9 +31,9 @@ import static org.mockito.Mockito.*;
 public class ElasticSearchRPZServiceTest {
 
     @Test(expected = RPZServiceException.class)
-    public void mapCloudNotFoundExceptionWrappedAsExpected() throws RPZServiceException, MapcloudException, IOException {
+    public void europaNotFoundExceptionWrappedAsExpected() throws RPZServiceException, EuropaException, IOException {
         // ARRANGE
-        RPZService service = new ElasticSearchRPZService(exceptionThrowingMapcloud(), anyTarget());
+        RPZService service = new ElasticSearchRPZService(exceptionThrowingEuropa(), anyTarget());
 
         // ACT
         RPZResult actual = service.rpz("anyUprn", now().plusDays(1000));
@@ -42,9 +43,9 @@ public class ElasticSearchRPZServiceTest {
     }
 
     @Test(expected = RPZServiceException.class)
-    public void mapCloudExceptionWrappedAsExpected() throws RPZServiceException, MapcloudException, IOException {
+    public void europaExceptionWrappedAsExpected() throws RPZServiceException, EuropaException, IOException {
         // ARRANGE
-        RPZService service = new ElasticSearchRPZService(exceptionThrowingMapcloudUnexpectedError(), anyTarget());
+        RPZService service = new ElasticSearchRPZService(exceptionThrowingEuropaUnexpectedError(), anyTarget());
 
         // ACT
         RPZResult actual = service.rpz("anyUprn", now().plusDays(1000));
@@ -54,9 +55,9 @@ public class ElasticSearchRPZServiceTest {
     }
 
     @Test(expected = RPZServiceException.class)
-    public void mapCloudWithNoResultsThrowsException() throws RPZServiceException, MapcloudException, IOException {
+    public void europaWithNoResultsThrowsException() throws RPZServiceException, EuropaException, IOException {
         // ARRANGE
-        RPZService service = new ElasticSearchRPZService(noResultsMapcloud(), anyTarget());
+        RPZService service = new ElasticSearchRPZService(noResultsEuropa(), anyTarget());
 
         // ACT
         RPZResult actual = service.rpz("anyUprn", now().plusDays(1000));
@@ -66,9 +67,9 @@ public class ElasticSearchRPZServiceTest {
     }
 
     @Test(expected = RPZServiceException.class)
-    public void processingExceptionFromTargetWrappedAsExpected() throws RPZServiceException, MapcloudException, IOException {
+    public void processingExceptionFromTargetWrappedAsExpected() throws RPZServiceException, EuropaException, IOException {
         // ARRANGE
-        RPZService service = new ElasticSearchRPZService(validMapcloud(), exceptionThrowingTarget(new ProcessingException("blah")));
+        RPZService service = new ElasticSearchRPZService(validEuropa(), exceptionThrowingTarget(new ProcessingException("blah")));
 
         // ACT
         RPZResult actual = service.rpz("anyUprn", anyDate());
@@ -78,9 +79,9 @@ public class ElasticSearchRPZServiceTest {
     }
 
     @Test(expected = RPZServiceException.class)
-    public void webApplicationExceptionExceptionFromTargetWrappedAsExpected() throws RPZServiceException, MapcloudException, IOException {
+    public void webApplicationExceptionExceptionFromTargetWrappedAsExpected() throws RPZServiceException, EuropaException, IOException {
         // ARRANGE
-        RPZService service = new ElasticSearchRPZService(validMapcloud(), exceptionThrowingTarget(new WebApplicationException("blah")));
+        RPZService service = new ElasticSearchRPZService(validEuropa(), exceptionThrowingTarget(new WebApplicationException("blah")));
 
         // ACT
         RPZResult actual = service.rpz("anyUprn", anyDate());
@@ -90,9 +91,9 @@ public class ElasticSearchRPZServiceTest {
     }
 
     @Test(expected = RPZServiceException.class)
-    public void nullResultFromElasticsearchThrownAsException() throws RPZServiceException, MapcloudException, IOException {
+    public void nullResultFromElasticsearchThrownAsException() throws RPZServiceException, EuropaException, IOException {
         // ARRANGE
-        RPZService service = new ElasticSearchRPZService(validMapcloud(), targetWithObjectNode(null));
+        RPZService service = new ElasticSearchRPZService(validEuropa(), targetWithObjectNode(null));
 
         // ACT
         RPZResult actual = service.rpz("anyUprn", anyDate());
@@ -101,9 +102,9 @@ public class ElasticSearchRPZServiceTest {
     }
 
     @Test(expected = RPZServiceException.class)
-    public void resultWithNoHitsFromElasticsearchThrownAsException() throws RPZServiceException, MapcloudException, IOException {
+    public void resultWithNoHitsFromElasticsearchThrownAsException() throws RPZServiceException, EuropaException, IOException {
         // ARRANGE
-        RPZService service = new ElasticSearchRPZService(validMapcloud(), targetWithObjectNode(JsonNodeFactory.instance.objectNode()));
+        RPZService service = new ElasticSearchRPZService(validEuropa(), targetWithObjectNode(JsonNodeFactory.instance.objectNode()));
 
         // ACT
         RPZResult actual = service.rpz("anyUprn", anyDate());
@@ -112,9 +113,9 @@ public class ElasticSearchRPZServiceTest {
     }
 
     @Test
-    public void notHitsReturnsExpectedResult() throws RPZServiceException, MapcloudException, IOException {
+    public void notHitsReturnsExpectedResult() throws RPZServiceException, EuropaException, IOException {
         // ARRANGE
-        RPZService service = new ElasticSearchRPZService(validMapcloud(), noHitTarget());
+        RPZService service = new ElasticSearchRPZService(validEuropa(), noHitTarget());
 
         // ACT
         RPZResult actual = service.rpz("anyUprn", anyDate());
@@ -124,11 +125,11 @@ public class ElasticSearchRPZServiceTest {
     }
 
     @Test
-    public void hitReturnsExpectedResult() throws RPZServiceException, MapcloudException, IOException {
+    public void hitReturnsExpectedResult() throws RPZServiceException, EuropaException, IOException {
         // ARRANGE
         double expectedMaxIncrease = 1.5;
         String expectedTitle = "title";
-        RPZService service = new ElasticSearchRPZService(validMapcloud(), hitTarget(expectedMaxIncrease, expectedTitle));
+        RPZService service = new ElasticSearchRPZService(validEuropa(), hitTarget(expectedMaxIncrease, expectedTitle));
 
         // ACT
         RPZResult actual = service.rpz("anyUprn", anyDate());
@@ -139,49 +140,49 @@ public class ElasticSearchRPZServiceTest {
         assertEquals(expectedTitle, actual.getRentPressureZoneTitle());
     }
 
-    private Mapcloud noResultsMapcloud() throws MapcloudException, RPZServiceException {
-        Mapcloud mapcloud = mock(Mapcloud.class);
-        when(mapcloud.lookupUprn(any())).thenReturn(emptyResults());
-        return mapcloud;
+    private Europa noResultsEuropa() throws EuropaException, RPZServiceException {
+        Europa europa = mock(Europa.class);
+        when(europa.lookupUprn(any())).thenReturn(emptyResults());
+        return europa;
     }
 
-    private Mapcloud validMapcloud() throws MapcloudException, RPZServiceException {
-        Mapcloud mapcloud = mock(Mapcloud.class);
-        when(mapcloud.lookupUprn(any())).thenReturn(validResults());
-        return mapcloud;
+    private Europa validEuropa() throws EuropaException, RPZServiceException {
+        Europa europa = mock(Europa.class);
+        when(europa.lookupUprn(any())).thenReturn(validResults());
+        return europa;
     }
 
-    private MapcloudResults validResults() {
-        return mapcloudResults("uprn", "EH112SW");
+    private EuropaResults validResults() {
+        return europaResults("uprn", "EH112SW");
     }
 
-    private MapcloudResults mapcloudResults(String uprn, String postcode) {
-        MapcloudResults results = new MapcloudResults();
-        DPAMapcloudResult result = new DPAMapcloudResult();
-        result.setUprn(uprn);
-        result.setPostcode(postcode);
-        results.setResults(singletonList(result));
+    private EuropaResults europaResults(String uprn, String postcode) {
+        EuropaResults results = new EuropaResults();
+        AddressResultWrapper addressResultWrapper = new AddressResultWrapper();
+        EuropaAddress address = new EuropaAddress();
+        addressResultWrapper.setAddress(Collections.singletonList(address));
+        results.getResults().add(addressResultWrapper);
         return results;
     }
 
-    private MapcloudResults emptyResults() {
-        MapcloudResults results = new MapcloudResults();
+    private EuropaResults emptyResults() {
+        EuropaResults results = new EuropaResults();
         results.setResults(emptyList());
         return results;
     }
 
-    private Mapcloud exceptionThrowingMapcloud() throws MapcloudException {
-        Mapcloud mapcloud = mock(Mapcloud.class);
-        when(mapcloud.lookupUprn(any())).thenThrow(new MapcloudException("Failed to lookup uprn", new RuntimeException("")));
-        when(mapcloud.lookupPostcode(any())).thenThrow(new MapcloudException("Failed to lookup postcode", new RuntimeException("")));
-        return mapcloud;
+    private Europa exceptionThrowingEuropa() throws EuropaException {
+        Europa europa = mock(Europa.class);
+        when(europa.lookupUprn(any())).thenThrow(new EuropaException("Failed to lookup uprn", new RuntimeException("")));
+        when(europa.lookupPostcode(any())).thenThrow(new EuropaException("Failed to lookup postcode", new RuntimeException("")));
+        return europa;
     }
 
-    private Mapcloud exceptionThrowingMapcloudUnexpectedError() throws MapcloudException {
-        Mapcloud mapcloud = mock(Mapcloud.class);
-        when(mapcloud.lookupUprn(any())).thenThrow(new MapcloudException("Unexpected error", new RuntimeException("")));
-        when(mapcloud.lookupPostcode(any())).thenThrow(new MapcloudException("Unexpected error", new RuntimeException("")));
-        return mapcloud;
+    private Europa exceptionThrowingEuropaUnexpectedError() throws EuropaException {
+        Europa europa = mock(Europa.class);
+        when(europa.lookupUprn(any())).thenThrow(new EuropaException("Unexpected error", new RuntimeException("")));
+        when(europa.lookupPostcode(any())).thenThrow(new EuropaException("Unexpected error", new RuntimeException("")));
+        return europa;
     }
 
     private WebTarget anyTarget() {

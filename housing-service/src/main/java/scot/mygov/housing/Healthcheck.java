@@ -15,9 +15,9 @@ import org.slf4j.LoggerFactory;
 import scot.mygov.housing.cpi.CPIService;
 import scot.mygov.housing.cpi.CPIServiceException;
 import scot.mygov.housing.cpi.model.CPIData;
+import scot.mygov.housing.europa.Europa;
 import scot.mygov.housing.forms.DocumentGenerationService;
 import scot.mygov.housing.forms.modeltenancy.model.ModelTenancy;
-import scot.mygov.housing.mapcloud.Mapcloud;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -58,7 +58,7 @@ public class Healthcheck {
     CPIService cpiService;
 
     @Inject
-    Mapcloud mapcloud;
+    Europa europa;
 
     @Inject
     MetricRegistry metricRegistry;
@@ -83,11 +83,9 @@ public class Healthcheck {
 
         addLicenseInfo(result, errors, warnings, data, licenseDays);
         addCPIInfo(result, errors, data);
-        addMapcloudLookupMetricsInfo(result, errors, data);
+        addPostcodeLookupMetricsInfo(result, errors, data);
         addModelTenancyMetricsInfo(result, errors, data);
-
         addRPZElasticsearchInfo(result, errors, data);
-
         addDocumentGenerationMetricsInfo(result, errors, data, modelTenancyService);
 
         boolean ok = errors.size() == 0;
@@ -164,23 +162,23 @@ public class Healthcheck {
         result.put("cpi", ok);
     }
 
-    private void addMapcloudLookupMetricsInfo(ObjectNode result, ArrayNode errors, ObjectNode data) {
+    private void addPostcodeLookupMetricsInfo(ObjectNode result, ArrayNode errors, ObjectNode data) {
 
-        Meter errorRate = metricRegistry.getMeters().get(MetricName.ERROR_RATE.name(mapcloud));
-        Timer timer = metricRegistry.getTimers().get(MetricName.RESPONSE_TIMES.name(mapcloud));
-        double responseTimeThreshold = housingConfiguration.getMapcloudResponseTimeThreshold();
+        Meter errorRate = metricRegistry.getMeters().get(MetricName.ERROR_RATE.name(europa));
+        Timer timer = metricRegistry.getTimers().get(MetricName.RESPONSE_TIMES.name(europa));
+        double responseTimeThreshold = housingConfiguration.getPostcodeLookupResponseTimeThreshold();
         boolean ok = errorRate.getFiveMinuteRate() == 0 && timer.getFiveMinuteRate() < responseTimeThreshold;
 
         if (errorRate.getFiveMinuteRate() > EPSILON) {
-            errors.add("Mapcloud lookup errors in the last 5 minutes");
+            errors.add("Postcode lookup errors in the last 5 minutes");
         }
 
         if (timer.getFiveMinuteRate() > responseTimeThreshold) {
-            errors.add("Slow Mapcloud lookups in the last 5 minutes");
+            errors.add("Slow Postcode lookups in the last 5 minutes");
         }
 
-        // collect all of the metrics for mapcloud and add them to the data
-        MetricFilter filter = forClass(mapcloud.getClass());
+        // collect all of the metrics for europa and add them to the data
+        MetricFilter filter = forClass(europa.getClass());
         for (Map.Entry<String, Timer> entry : metricRegistry.getTimers(filter).entrySet()) {
             data.put(entry.getKey(), formatSnapshot(entry.getValue().getSnapshot()));
         }
@@ -193,7 +191,7 @@ public class Healthcheck {
             data.put(entry.getKey(), entry.getValue().getCount());
         }
 
-        result.put("Mapcloud lookups", ok);
+        result.put("Postcode lookups", ok);
     }
 
     private void addModelTenancyMetricsInfo(ObjectNode result, ArrayNode errors, ObjectNode data) {
@@ -243,8 +241,6 @@ public class Healthcheck {
             data.put(entry.getKey(), entry.getValue().getCount());
         }
     }
-
-
 
     private String formatSnapshot(Snapshot ss) {
         return String.format(
