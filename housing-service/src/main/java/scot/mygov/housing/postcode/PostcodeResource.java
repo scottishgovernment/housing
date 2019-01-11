@@ -55,7 +55,7 @@ public class PostcodeResource {
                     .build();
 
         } catch (PostcodeServiceException e) {
-            LOG.error("Failed to get postcode", e);
+            LOG.error("Failed to get postcode {}", postcode, e);
             return Response
                     .status(503)
                     .entity("Postcode data not available")
