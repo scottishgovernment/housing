@@ -4,11 +4,15 @@ import com.codahale.metrics.Counter;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import scot.mygov.housing.MetricName;
 
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.WebTarget;
+import java.util.Collections;
 
 public class Europa {
 
@@ -47,18 +51,32 @@ public class Europa {
         requestCounter.inc();
         requestMeter.mark();
         try {
-            EuropaResults results = target
+
+            JsonNode results = target
                     .queryParam(paramName, paramValue)
                     .queryParam("fieldset", "all")
                     .queryParam("addresstype", "dpa")
                     .request()
-                    .get(EuropaResults.class);
+                    .get(JsonNode.class);
+
+            ObjectMapper mapper = new ObjectMapper();
+            EuropaMetadata metadata = mapper.treeToValue(results.get("metadata"), EuropaMetadata.class);
+            if (metadata.getCount() == 0) {
+                return emptyResults(metadata);
+            }
             timer.stop();
-            return results;
-        } catch (ProcessingException | WebApplicationException ex) {
+            return mapper.treeToValue(results, EuropaResults.class);
+        } catch (JsonProcessingException | ProcessingException | WebApplicationException ex) {
             errorCounter.inc();
             errorMeter.mark();
             throw new EuropaException("Failed to lookup postcode", ex);
         }
+    }
+
+    private EuropaResults emptyResults(EuropaMetadata metadata) {
+        EuropaResults results = new EuropaResults();
+        results.setResults(Collections.emptyList());
+        results.setMetadata(metadata);
+        return results;
     }
 }

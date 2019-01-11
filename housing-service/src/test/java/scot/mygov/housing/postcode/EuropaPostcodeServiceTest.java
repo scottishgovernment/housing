@@ -6,6 +6,7 @@ import scot.mygov.housing.europa.AddressResultWrapper;
 import scot.mygov.housing.europa.Europa;
 import scot.mygov.housing.europa.EuropaAddress;
 import scot.mygov.housing.europa.EuropaException;
+import scot.mygov.housing.europa.EuropaMetadata;
 import scot.mygov.housing.europa.EuropaResults;
 
 import static org.junit.Assert.assertEquals;
@@ -15,6 +16,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class EuropaPostcodeServiceTest {
+
     @Test(expected = PostcodeServiceException.class)
     public void mapcloudExceptionHandledCorrectly() throws PostcodeServiceException, EuropaException {
 
@@ -32,7 +34,7 @@ public class EuropaPostcodeServiceTest {
 
         // ARRANGE
         EuropaResults results = greenpathMapcloudResults();
-        PostcodeService sut = new EuropaPostcodeService(mapcloudWithResults(results));
+        PostcodeService sut = new EuropaPostcodeService(europaWithResults(results));
 
         // ACT
         PostcodeServiceResults actual = sut.lookup(scottishPostcode());
@@ -72,14 +74,16 @@ public class EuropaPostcodeServiceTest {
         return mapcloud;
     }
 
-    private Europa mapcloudWithResults(EuropaResults results) throws EuropaException {
-        Europa mapcloud = mock(Europa.class);
-        when(mapcloud.lookupPostcode(any())).thenReturn(results);
-        return mapcloud;
+    private Europa europaWithResults(EuropaResults results) throws EuropaException {
+        Europa europa = mock(Europa.class);
+        when(europa.lookupPostcode(any())).thenReturn(results);
+        return europa;
     }
 
     private EuropaResults greenpathMapcloudResults() {
         EuropaResults res = new EuropaResults();
+        res.setMetadata(new EuropaMetadata());
+        res.getMetadata().setCount(4);
         AddressResultWrapper wrapper = new AddressResultWrapper();
         res.getResults().add(wrapper);
         EuropaAddress one = anyResult();
