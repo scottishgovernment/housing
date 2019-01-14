@@ -3,6 +3,7 @@ package scot.mygov.housing.rpz;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import scot.mygov.housing.europa.Europa;
 import scot.mygov.housing.europa.EuropaAddress;
 import scot.mygov.housing.europa.EuropaException;
@@ -106,12 +107,13 @@ public class ElasticSearchRPZService implements RPZService {
     private String postcodeForUprn(String uprn) throws RPZServiceException {
         try {
             EuropaResults results = europa.lookupUprn(uprn);
+
             if (!results.hasResults()) {
                 throw new RPZServiceException("Expected one postcode for uprn " + uprn);
             }
 
             EuropaAddress result = results.getResults().get(0).getAddress().get(0);
-            return result.getPostcode();
+            return ensureNoSpaces(result.getPostcode());
         } catch (EuropaException e) {
             if ("Failed to lookup uprn".equals(e.getMessage())) {
                 throw new RPZServiceClientException(Collections.singletonMap("uprn", "Invalid UPRN"));
@@ -121,4 +123,10 @@ public class ElasticSearchRPZService implements RPZService {
         }
     }
 
+    private String ensureNoSpaces(String postcode) {
+        if (StringUtils.isEmpty(postcode)) {
+            return postcode;
+        }
+        return postcode.replaceAll("\\s+","");
+    }
 }
