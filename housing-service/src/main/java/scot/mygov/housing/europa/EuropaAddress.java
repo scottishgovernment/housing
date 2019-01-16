@@ -44,6 +44,8 @@ public class EuropaAddress {
     @JsonProperty("dpa_postcode")
     private String postcode;
 
+    private String country;
+
     private int matchScore;
 
     public String getUprn() {
@@ -156,5 +158,13 @@ public class EuropaAddress {
 
     public void setMatchScore(int matchScore) {
         this.matchScore = matchScore;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 }

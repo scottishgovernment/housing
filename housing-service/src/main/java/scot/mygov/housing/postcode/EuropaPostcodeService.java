@@ -9,7 +9,9 @@ import scot.mygov.housing.europa.EuropaResults;
 import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
@@ -17,6 +19,16 @@ import static java.util.stream.Collectors.toList;
 public class EuropaPostcodeService implements PostcodeService {
 
     private final Europa europa;
+
+
+    private static final Map<String, String> COUNTRY_MAP;
+
+    static {
+        COUNTRY_MAP = new HashMap<>();
+        COUNTRY_MAP.put("E", "England");
+        COUNTRY_MAP.put("S", "Scotland");
+        COUNTRY_MAP.put("W", "Wales");
+    }
 
     @Inject
     public EuropaPostcodeService(Europa europa) {
@@ -49,7 +61,7 @@ public class EuropaPostcodeService implements PostcodeService {
         to.setLocality(locality(from));
         to.setTown(from.getTown());
         to.setPostcode(from.getPostcode());
-        to.setCountry(PostcodeUtils.country(from.getPostcode()));
+        to.setCountry(COUNTRY_MAP.getOrDefault(from.getCountry(), from.getCountry()));
         return to;
     }
 

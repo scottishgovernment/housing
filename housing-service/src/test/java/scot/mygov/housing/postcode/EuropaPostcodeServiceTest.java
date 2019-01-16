@@ -33,7 +33,7 @@ public class EuropaPostcodeServiceTest {
     public void greenpathResultsParsedCorrectly() throws PostcodeServiceException, EuropaException {
 
         // ARRANGE
-        EuropaResults results = greenpathMapcloudResults();
+        EuropaResults results = greenpathEuropaResults();
         PostcodeService sut = new EuropaPostcodeService(europaWithResults(results));
 
         // ACT
@@ -41,6 +41,24 @@ public class EuropaPostcodeServiceTest {
 
         // ASSERT
         assertFalse(actual.getResults().isEmpty());
+    }
+
+    @Test
+    public void countriesMappedCorrectly() throws Exception {
+
+        // ARRANGE
+        EuropaResults results = greenpathEuropaResults();
+        PostcodeService sut = new EuropaPostcodeService(europaWithResults(results));
+
+        // ACT
+        PostcodeServiceResults actual = sut.lookup(scottishPostcode());
+
+        // ASSERT
+        assertEquals(actual.getResults().get(0).getCountry(), "England");
+        assertEquals(actual.getResults().get(1).getCountry(), "Wales");
+        assertEquals(actual.getResults().get(2).getCountry(), "Scotland");
+        assertEquals(actual.getResults().get(3).getCountry(), "France");
+
     }
 
     @Test
@@ -80,7 +98,7 @@ public class EuropaPostcodeServiceTest {
         return europa;
     }
 
-    private EuropaResults greenpathMapcloudResults() {
+    private EuropaResults greenpathEuropaResults() {
         EuropaResults res = new EuropaResults();
         res.setMetadata(new EuropaMetadata());
         res.getMetadata().setCount(4);
@@ -91,9 +109,13 @@ public class EuropaPostcodeServiceTest {
         EuropaAddress three = anyResult();
         EuropaAddress four = anyResult();
         one.setThoroughfare("111 Some street");
+        one.setCountry("S");
         two.setThoroughfare("11 Some street");
+        two.setCountry("W");
         three.setThoroughfare("1 Some street");
+        three.setCountry("E");
         four.setThoroughfare("Some street");
+        four.setCountry("France");
         wrapper.getAddress().add(one);
         wrapper.getAddress().add(two);
         wrapper.getAddress().add(three);
