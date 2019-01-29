@@ -47,6 +47,7 @@ public class RentIncreaseFieldExtractor implements FieldExtractor<RentIncrease> 
         fields.put("rentIncreaseDate", formatDate(model.getRentIncreaseDate()));
         fields.put("lastRentIncreaseDate", formatDate(model.getLastRentIncreaseDate(), "n/a"));
         fields.put("notificationDate", formatDate(model.getNotificationDate()));
+        fields.put("notificationSendDate", formatDate(model.getNotificationSendDate()));
         fields.put("oldRentAmount", model.getOldRentAmount());
         fields.put("oldRentPeriod", RentPaymentFrequency.description(model.getOldRentPeriod()));
         fields.put("newRentAmount", model.getNewRentAmount());

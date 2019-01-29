@@ -39,6 +39,9 @@ public class RentIncrease extends AbstractFormModel {
     @JsonDeserialize(using= LocalDateDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate notificationDate;
+    @JsonDeserialize(using= LocalDateDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate notificationSendDate;
     private Calculation calculation = new Calculation();
 
     public List<String> getTenantNames() {
@@ -159,5 +162,13 @@ public class RentIncrease extends AbstractFormModel {
 
     public void setNotificationDate(LocalDate notificationDate) {
         this.notificationDate = notificationDate;
+    }
+
+    public LocalDate getNotificationSendDate() {
+        return notificationSendDate;
+    }
+
+    public void setNotificationSendDate(LocalDate notificationSendDate) {
+        this.notificationSendDate = notificationSendDate;
     }
 }
