@@ -1,9 +1,5 @@
-
-<p>
 If the property is a flat or has common parts that are shared with other tenants, the tenant must, along
 with the other owners and occupiers:
-</p>
-
 <ul>
     <li>
         sweep and clean the common stairway; and
@@ -12,8 +8,5 @@ with the other owners and occupiers:
         keep the garden, back green or any other shared areas clean and tidy.
     </li>
 </ul>
-
-<p>
 If the tenant does not do this, then the landlord can arrange for those things to be done and ask the tenant
 to pay back the costs.  The landlord should supply the tenant with copies of the receipts for such costs.
-</p>

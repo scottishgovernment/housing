@@ -1,30 +1,20 @@
-<p>
 The tenant must make sure that the accounts for []
 are all in the tenant's name with the companies which supply those services. All of these services are generally
 known as utilities.
-</p>
 
-<p>
 The tenant must pay, when due, all charges for utilities and services supplied during the tenancy. The tenant
 also has to settle up at the end of the tenancy for all outstanding amounts.
-</p>
 
-<p>
 If there are any bills for utilities left unpaid at the end of the tenancy, the landlord may be able to use
 money held in the deposit to settle these bills.
-</p>
 
-<p>
 The tenant can change supplier for gas or electricity if they are paying the supplier and not paying the
 landlord for utility costs.    If the tenant has a pre-payment meter, the tenant is still allowed to change
 supplier and there is no need to get the landlord's consent first.  The tenant must tell the landlord if
 the tenant changes supplier and give the landlord the details of the new supplier - including its name.
-</p>
 
-<p>
 If the tenant permits any electricity or gas meter to be changed from or to a pre-payment meter, then
 the tenant also has to pay the direct cost of changing the meter back at the end of the tenancy (unless
 the landlord wants to keep the meter the tenant had put in).   So, although the landlord's permission is
 not needed to change the meter, the tenant might need to pay the cost of changing it back if the landlord
 wants this done.
-</p>
