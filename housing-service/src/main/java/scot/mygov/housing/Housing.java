@@ -28,7 +28,7 @@ public class Housing {
     @Inject
     HousingApplication app;
 
-    public static final void main(String[] args) throws Exception{
+    public static final void main(String[] args) {
         SLF4JBridgeHandler.removeHandlersForRootLogger();
         SLF4JBridgeHandler.install();
         ObjectGraph graph = ObjectGraph.create(new HousingModule());
