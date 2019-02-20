@@ -33,7 +33,7 @@ import static scot.mygov.housing.forms.modeltenancy.ModelTenancyFieldExtractor.N
 
 public class ModelTenancyMergingCallback implements IFieldMergingCallback {
 
-    private static String EASYREAD_PLACEHOLDER_HTML =
+    private static final String EASYREAD_PLACEHOLDER_HTML =
             "<p>Your landlord has used their own wording for this clause.</p>" +
             "<p>If you need more information about this clauses you may want to discuss them with your landlord, " +
             "or contact the advice groups listed at the end of these Notes.</p>";
@@ -133,7 +133,7 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
 
         // if the field is one of the fieldsToRemoveIfEmpty then remove the sections it is contained within from the
         // document.
-        if (shouldRemoveSection(fieldName, fieldValue, fieldMergingArgs)) {
+        if (shouldRemoveSection(fieldName, fieldValue)) {
             Section section = (Section) fieldMergingArgs.getField().getStart().getAncestor(Section.class);
             section.remove();
             return;
@@ -225,7 +225,6 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
                     .filter(landlord -> !FieldExtractorUtils.isEmpty(landlord))
                     .collect(Collectors.toList());
             writeSignaturesSection(fieldMergingArgs, landlords, "Landlord");
-            return;
         }
     }
 
@@ -239,7 +238,7 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
 
         if (nonEmptyTenants.isEmpty()) {
             builder.moveToMergeField(fieldMergingArgs.getFieldName());
-            writeGuarentorPlaceholderSignatureSection(builder, tenancy);
+            writeGuarentorPlaceholderSignatureSection(builder);
             return;
         }
 
@@ -284,8 +283,8 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
         }
     }
 
-    private void writeGuarentorPlaceholderSignatureSection(DocumentBuilder builder, ModelTenancy tenancy) {
-        // fill in blanks for 5 guarentors
+    private void writeGuarentorPlaceholderSignatureSection(DocumentBuilder builder) {
+        // fill in blanks for 5 guarantors
         for (int i = 1; i <= 5; i++) {
             ParagraphFormat paragraphFormat = builder.getParagraphFormat();
             paragraphFormat.getShading().setBackgroundPatternColor(Color.LIGHT_GRAY);
@@ -366,18 +365,13 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
     }
 
 
-    private boolean shouldRemoveSection(String fieldName, String fieldValue, FieldMergingArgs fieldMergingArgs) {
+    private boolean shouldRemoveSection(String fieldName, String fieldValue) {
         if (fieldsToRemoveIfEmpty.contains(fieldName) && StringUtils.isEmpty(fieldValue)){
             return true;
         }
 
         // special case for alterations
-        if (ALTERATIONS.equals(fieldName)
-                && tenancy.getExcludedTerms().stream().anyMatch(t -> ALTERATIONS.equals(t))  ) {
-            return true;
-        }
-
-        return false;
+        return ALTERATIONS.equals(fieldName) && tenancy.getExcludedTerms().stream().anyMatch(t -> ALTERATIONS.equals(t));
     }
 
     private String htmlEasynoteForTerm(String termName, String value, String defaultValue)
