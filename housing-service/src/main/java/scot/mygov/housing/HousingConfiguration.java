@@ -13,6 +13,8 @@ public class HousingConfiguration {
 
     private Recaptcha recaptcha = new Recaptcha();
 
+    private FairRentRegister fairRentRegister = new FairRentRegister();
+
     private URI cpiDataURI = URI.create("http://localhost:9200/housing-data/cpi/cpi/_source");
 
     private URI rpzDataURI = URI.create("http://localhost:9200/housing-data/rpz/_search/template");
@@ -46,6 +48,14 @@ public class HousingConfiguration {
 
     public Recaptcha getRecaptcha() {
         return recaptcha;
+    }
+
+    public FairRentRegister getFairRentRegister() {
+        return fairRentRegister;
+    }
+
+    public void setFairRentRegister(FairRentRegister fairRentRegister) {
+        this.fairRentRegister = fairRentRegister;
     }
 
     public String getCpiGracePeriod() {
@@ -102,6 +112,58 @@ public class HousingConfiguration {
 
         public String getSecret() {
             return secret;
+        }
+    }
+
+    public static class FairRentRegister {
+        private URI uri = URI.create("https://publications.api.gov.scot/");
+
+        private String username;
+
+        private String password;
+
+        int connectTimeoutSeconds = 1;
+
+        int readTimeoutSeconds = 10;
+
+        public URI getUri() {
+            return uri;
+        }
+
+        public void setUri(URI uri) {
+            this.uri = uri;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
+
+        public int getConnectTimeoutSeconds() {
+            return connectTimeoutSeconds;
+        }
+
+        public void setConnectTimeoutSeconds(int connectTimeoutSeconds) {
+            this.connectTimeoutSeconds = connectTimeoutSeconds;
+        }
+
+        public int getReadTimeoutSeconds() {
+            return readTimeoutSeconds;
+        }
+
+        public void setReadTimeoutSeconds(int readTimeoutSeconds) {
+            this.readTimeoutSeconds = readTimeoutSeconds;
         }
     }
 }

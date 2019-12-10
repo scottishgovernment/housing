@@ -1,6 +1,6 @@
 package scot.mygov.housing;
 
-import dagger.ObjectGraph;
+import dagger.Component;
 import io.undertow.Undertow;
 import org.jboss.resteasy.plugins.server.undertow.UndertowJaxrsServer;
 import org.slf4j.Logger;
@@ -10,6 +10,7 @@ import scot.mygov.housing.europa.Europa;
 import scot.mygov.housing.postcode.Heartbeat;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -18,6 +19,11 @@ import java.util.concurrent.TimeUnit;
 public class Housing {
 
     private static final Logger LOG = LoggerFactory.getLogger(Housing.class);
+
+    @Inject
+    public Housing() {
+        // Default constructor
+    }
 
     @Inject
     HousingConfiguration config;
@@ -31,10 +37,10 @@ public class Housing {
     public static final void main(String[] args) {
         SLF4JBridgeHandler.removeHandlersForRootLogger();
         SLF4JBridgeHandler.install();
-        ObjectGraph graph = ObjectGraph.create(new HousingModule());
+        Housing housing = DaggerHousing_Main.create().main();
 
         // start the app
-        graph.get(Housing.class).run();
+        housing.run();
     }
 
     public void run() {
@@ -57,6 +63,12 @@ public class Housing {
                     .getAddress();
             return address.getPort();
         }
+    }
+
+    @Singleton
+    @Component(modules = HousingModule.class)
+    interface Main {
+        Housing main();
     }
 
 }

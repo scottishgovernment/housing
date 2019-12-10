@@ -2,6 +2,7 @@ package scot.mygov.housing;
 
 import scot.mygov.housing.cpi.CPIResource;
 import scot.mygov.housing.europa.Europa;
+import scot.mygov.housing.fairrentregister.FairRentResource;
 import scot.mygov.housing.forms.modeltenancy.ModelTenancyResource;
 import scot.mygov.housing.forms.nonprovisionofdocumentation.NonProvisionOfDocumentationResource;
 import scot.mygov.housing.forms.noticetoleave.NoticeToLeaveResource;
@@ -20,6 +21,11 @@ import java.util.Set;
 import static java.util.Arrays.asList;
 
 public class HousingApplication extends Application {
+
+    @Inject
+    HousingApplication() {
+        //Default constructor
+    }
 
     @Inject
     RentPressureZoneResource rentPressureZone;
@@ -41,6 +47,9 @@ public class HousingApplication extends Application {
 
     @Inject
     NoticeToLeaveResource noticeToLeave;
+
+    @Inject
+    FairRentResource fairRent;
 
     @Inject
     SubtenantNoticeToLeaveResource subtenantNoticeToLeave;
@@ -75,6 +84,7 @@ public class HousingApplication extends Application {
                 rentIncreaseForImprovements,
                 nonProvisionOfDocumentationResource,
                 noticeToLeave,
+                fairRent,
                 subtenantNoticeToLeave,
 
                 rentPressureZone,

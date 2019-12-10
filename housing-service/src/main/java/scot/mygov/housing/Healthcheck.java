@@ -16,6 +16,7 @@ import scot.mygov.housing.cpi.CPIService;
 import scot.mygov.housing.cpi.CPIServiceException;
 import scot.mygov.housing.cpi.model.CPIData;
 import scot.mygov.housing.europa.Europa;
+import scot.mygov.housing.fairrentregister.FairRentResource;
 import scot.mygov.housing.forms.DocumentGenerationService;
 import scot.mygov.housing.forms.modeltenancy.model.ModelTenancy;
 
@@ -49,6 +50,11 @@ public class Healthcheck {
     private static final double EPSILON = 0.00001;
 
     @Inject
+    Healthcheck() {
+        //Default constructor
+    }
+
+    @Inject
     HousingConfiguration housingConfiguration;
 
     @Inject
@@ -70,6 +76,9 @@ public class Healthcheck {
     @Inject
     DocumentGenerationService<ModelTenancy> modelTenancyService;
 
+    @Inject
+    FairRentResource fairRentResource;
+
     @GET
     public Response health(
             @QueryParam("licenseDays") @DefaultValue("10") int licenseDays
@@ -87,6 +96,7 @@ public class Healthcheck {
         addModelTenancyMetricsInfo(result, errors, data);
         addRPZElasticsearchInfo(result, errors, data);
         addDocumentGenerationMetricsInfo(result, errors, data, modelTenancyService);
+        addFairRentMetricsInfo(result, warnings, data);
 
         boolean ok = errors.size() == 0;
         result.put("ok", ok);
@@ -229,6 +239,33 @@ public class Healthcheck {
 
         // collect all of the metrics for modelTenancyService and add them to the data
         MetricFilter filter = forClass(service.getClass());
+        for (Map.Entry<String, Timer> entry : metricRegistry.getTimers(filter).entrySet()) {
+            data.put(entry.getKey(), formatSnapshot(entry.getValue().getSnapshot()));
+        }
+
+        for (Map.Entry<String, Meter> entry : metricRegistry.getMeters(filter).entrySet()) {
+            data.put(entry.getKey(), formatMeter(entry.getValue()));
+        }
+
+        for (Map.Entry<String, Counter> entry : metricRegistry.getCounters(filter).entrySet()) {
+            data.put(entry.getKey(), entry.getValue().getCount());
+        }
+    }
+
+    private void addFairRentMetricsInfo(ObjectNode result, ArrayNode warnings, ObjectNode data) {
+
+        Meter errorRate = metricRegistry.getMeters().get(MetricName.ERROR_RATE.name(fairRentResource));
+        Timer timer = metricRegistry.getTimers().get(MetricName.RESPONSE_TIMES.name(fairRentResource));
+
+        if (errorRate.getFiveMinuteRate() > EPSILON) {
+            warnings.add("Fair rent exceptions in the last 5 minutes");
+        }
+
+        data.put("fairRentErrorRate", formatMeter(errorRate));
+        data.put("fairRentTimer", formatMeter(timer));
+
+        // collect all of the metrics for fairRentRegister and add them to the data
+        MetricFilter filter = forClass(fairRentResource.getClass());
         for (Map.Entry<String, Timer> entry : metricRegistry.getTimers(filter).entrySet()) {
             data.put(entry.getKey(), formatSnapshot(entry.getValue().getSnapshot()));
         }
