@@ -56,17 +56,15 @@ public class FairRentResource {
     public void search(
             @Suspended AsyncResponse response,
             @QueryParam("query") String query,
-            @DefaultValue("0") @QueryParam("page") int from,
+            @DefaultValue("0") @QueryParam("from") int from,
             @DefaultValue("10") @QueryParam("size") int size) {
 
-        // We currently only search by townOrCity since the api currently AND's terms together.
-        // This is being changed to OR them together at which stage we will add calls to
-        // add streetName and postcode.
+        // we convert the incoming param "from" to "index" and "size" to "numberOfRecords"
         WebTarget target = fairRentTarget
-                .path("/FairRent/API/cases/search")
-                .queryParam("townOrCity", query)
-                .queryParam("index", from)
-                .queryParam("numberOfRecords", 10);
+                .path("/FairRent/API/cases/singleSearch")
+                .queryParam("searchTerm", query)
+                .queryParam("numberOfRecords", size)
+                .queryParam("index", from);
         request(response, target);
     }
 
