@@ -11,6 +11,7 @@ import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -20,6 +21,7 @@ import scot.mygov.housing.cpi.CPIService;
 import scot.mygov.housing.cpi.CPIServiceException;
 import scot.mygov.housing.cpi.model.CPIData;
 import scot.mygov.housing.europa.Europa;
+import scot.mygov.housing.fairrentregister.FairRentResource;
 import scot.mygov.housing.forms.DocumentGenerationService;
 
 import javax.ws.rs.client.Invocation;
@@ -31,9 +33,7 @@ import java.time.LocalDate;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -67,6 +67,7 @@ public class HealthcheckTest {
         DocumentTemplateLoader templateLoader = new DocumentTemplateLoader("", healthcheck.asposeLicense);
         DocumentGenerator documentGenerator = new DocumentGenerator(templateLoader);
         healthcheck.modelTenancyService = Mockito.mock(DocumentGenerationService.class);
+        healthcheck.fairRentResource = new FairRentResource(healthcheck.metricRegistry);
     }
 
     @Test
@@ -150,7 +151,7 @@ public class HealthcheckTest {
     @Test
     public void notOkPostcodeServiceHasErrors() throws CPIServiceException, IOException, InterruptedException {
 
-        this.healthcheck.metricRegistry = mockMetricsRegistry(10, 0);
+        this.healthcheck.metricRegistry = mockMetricsRegistryEuropa(10, 0);
 
         dispatcher.invoke(request, response);
 
@@ -162,7 +163,7 @@ public class HealthcheckTest {
     @Test
     public void notOkPostcodeServiceResponseTimeIsSlow() throws CPIServiceException, IOException, InterruptedException {
 
-        this.healthcheck.metricRegistry = mockMetricsRegistry(0, 501);
+        this.healthcheck.metricRegistry = mockMetricsRegistryEuropa(0, 501);
 
         dispatcher.invoke(request, response);
 
@@ -183,30 +184,70 @@ public class HealthcheckTest {
         assertEquals(503, response.getStatus());
     }
 
-    private MetricRegistry mockMetricsRegistry(double errorFiveMinRate, double responseTimesFiveMinuteRate) {
+    @Test
+    public void warningAddedIfFairRentResponseRateNotZero() throws CPIServiceException, IOException, InterruptedException {
+        this.healthcheck.metricRegistry = mockMetricsRegistryFairRent(10, 0);
+        dispatcher.invoke(request, response);
+        JsonNode health = mapper.readTree(response.getContentAsString());
+        assertTrue(health.get("warnings").size() > 0);
+    }
+
+    @Test
+    public void noWarningAddedIfFairRentResponseRateNotZero() throws CPIServiceException, IOException, InterruptedException {
+        this.healthcheck.metricRegistry = mockMetricsRegistryFairRent(0, 0);
+        dispatcher.invoke(request, response);
+        JsonNode health = mapper.readTree(response.getContentAsString());
+        assertNull(health.get("warnings"));
+    }
+    private MetricRegistry mockMetricsRegistryEuropa(double errorFiveMinRate, double responseTimesFiveMinuteRate) {
+        return mockMetricsRegistry(errorFiveMinRate, responseTimesFiveMinuteRate, 0, 0);
+    }
+
+    private MetricRegistry mockMetricsRegistryFairRent(double errorFiveMinRate, double responseTimesFiveMinuteRate) {
+       return mockMetricsRegistry(0, 0, errorFiveMinRate, responseTimesFiveMinuteRate);
+    }
+
+    private MetricRegistry mockMetricsRegistry(double errorFiveMinRateEuropa,
+                                               double responseTimesFiveMinuteRateEuropa,
+                                               double errorFiveMinRateFairRent,
+                                               double responseTimesFiveMinuteRateFairRent) {
 
         MetricRegistry registry = mock(MetricRegistry.class);
 
         SortedMap<String, Meter> meters = new TreeMap<>();
-        Meter errorRate = mock(Meter.class);
-        when(errorRate.getFiveMinuteRate()).thenReturn(errorFiveMinRate);
-        meters.put(MetricName.ERROR_RATE.name(healthcheck.europa), errorRate);
+        Meter errorRateEuropa = mock(Meter.class);
+        when(errorRateEuropa.getFiveMinuteRate()).thenReturn(errorFiveMinRateEuropa);
+        meters.put(MetricName.ERROR_RATE.name(healthcheck.europa), errorRateEuropa);
+        Meter errorRateFairRent = mock(Meter.class);
+        when(errorRateFairRent.getFiveMinuteRate()).thenReturn(errorFiveMinRateFairRent);
+        meters.put(MetricName.ERROR_RATE.name(healthcheck.fairRentResource), errorRateFairRent);
         when(registry.getMeters()).thenReturn(meters);
         when(registry.getMeters(Mockito.any())).thenReturn(meters);
 
         SortedMap<String, Timer> timers = new TreeMap<>();
         Snapshot snapshot = mock(Snapshot.class);
-        Timer responseTimes = mock(Timer.class);
-        when(responseTimes.getSnapshot()).thenReturn(snapshot);
-        when(responseTimes.getFiveMinuteRate()).thenReturn(responseTimesFiveMinuteRate);
-        timers.put(MetricName.RESPONSE_TIMES.name(healthcheck.europa), responseTimes);
+        Timer responseTimesEuropa = mock(Timer.class);
+        when(responseTimesEuropa.getSnapshot()).thenReturn(snapshot);
+        when(responseTimesEuropa.getFiveMinuteRate()).thenReturn(responseTimesFiveMinuteRateEuropa);
+        timers.put(MetricName.RESPONSE_TIMES.name(healthcheck.europa), responseTimesEuropa);
+
+        Timer responseTimesFairRent = mock(Timer.class);
+        when(responseTimesFairRent.getSnapshot()).thenReturn(snapshot);
+        when(responseTimesFairRent.getFiveMinuteRate()).thenReturn(responseTimesFiveMinuteRateFairRent);
+        timers.put(MetricName.RESPONSE_TIMES.name(healthcheck.fairRentResource), responseTimesFairRent);
+
         when(registry.getTimers()).thenReturn(timers);
         when(registry.getTimers(Mockito.any())).thenReturn(timers);
 
         SortedMap<String, Counter> counters = new TreeMap<>();
-        Counter errorCounter = mock(Counter.class);
-        when(errorCounter.getCount()).thenReturn(0L);
-        counters.put(MetricName.ERRORS.name(healthcheck.europa), errorCounter);
+        Counter errorCounterEuropa = mock(Counter.class);
+        when(errorCounterEuropa.getCount()).thenReturn(0L);
+        counters.put(MetricName.ERRORS.name(healthcheck.europa), errorCounterEuropa);
+
+        Counter errorCounterFairRent = mock(Counter.class);
+        when(errorCounterFairRent.getCount()).thenReturn(0L);
+        counters.put(MetricName.ERRORS.name(healthcheck.fairRentResource), errorCounterFairRent);
+
         when(registry.getCounters()).thenReturn(counters);
         when(registry.getCounters(Mockito.any())).thenReturn(counters);
 
