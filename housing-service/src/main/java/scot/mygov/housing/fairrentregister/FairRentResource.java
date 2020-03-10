@@ -4,6 +4,8 @@ import com.codahale.metrics.Counter;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import scot.mygov.housing.HousingConfiguration;
 import scot.mygov.housing.HousingModule;
 import scot.mygov.housing.MetricName;
@@ -20,6 +22,8 @@ import javax.ws.rs.core.Response;
 
 @Path("fairrent")
 public class FairRentResource {
+
+    private static final Logger LOG = LoggerFactory.getLogger(FairRentResource.class);
 
     @Inject
     HousingConfiguration configuration;
@@ -91,6 +95,7 @@ public class FairRentResource {
             public void failed(Throwable throwable) {
                 errorCounter.inc();
                 errorMeter.mark();
+                LOG.error("Failed to get fair rent data, path is {}", target.getUri().getPath(), throwable);
                 response.resume(Response.status(500).entity("Failed to get fair rent data").build());
                 timer.stop();
             }
