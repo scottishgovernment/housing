@@ -76,7 +76,7 @@ public class NoticeToLeaveFieldExtractor implements FieldExtractor<NoticeToLeave
     }
 
     private String formatNamesAndAddress(AgentOrLandLord person) {
-        return String.format("%s\nOf\n%s", person.getName(), addressFieldsMultipleLines(person.getAddress()));
+        return String.format("%s\nOf\n%s\n%s", person.getName(), addressFieldsMultipleLines(person.getAddress()), person.getTelephone());
     }
 
 }
