@@ -15,11 +15,11 @@ public class HousingConfiguration {
 
     private FairRentRegister fairRentRegister = new FairRentRegister();
 
-    private URI cpiDataURI = URI.create("http://localhost:9200/housing-data/cpi/cpi/_source");
+    private URI cpiDataURI = URI.create("http://localhost:9200/housing-data/_doc/cpi/_source");
 
-    private URI rpzDataURI = URI.create("http://localhost:9200/housing-data/rpz/_search/template");
+    private URI rpzDataURI = URI.create("http://localhost:9200/housing-data/_search/template");
 
-    private URI rpzHealthURI = URI.create("http://localhost:9200/housing-data/rpz/_search");
+    private URI rpzHealthURI = URI.create("http://localhost:9200/housing-data/_search?type=rpz");
 
     private String europaId;
 
