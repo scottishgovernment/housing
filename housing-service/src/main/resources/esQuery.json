@@ -8,9 +8,9 @@
         "bool":{
           "must":[
             {
-            "type": {
-            "value": "rpz"
-            }
+              "term": {
+                "type": "rpz"
+              }
             },
             {
               "range":{

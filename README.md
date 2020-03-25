@@ -32,7 +32,7 @@ This application provides endpoints for:
 * `cpiDataURI`
   * URI to use to fetch CPI data
   * Type: URI
-  * Default: `http://localhost:9200/housing-data/cpi/cpi/_source`
+  * Default: `http://localhost:9200/housing-data/_doc/cpi/_source`
 
 * `recaptcha_enabled`
   * should we check the recaptcha sent by the client.  Diabling this is useful when testing the api through postman.
