@@ -173,7 +173,7 @@ public class HousingModule {
         DateSwitchingDocumentTemplateLoader templateLoader = new DateSwitchingDocumentTemplateLoader();
         LocalDate covidChangeDate = LocalDate.parse(config.getCovidChangeDate());
         templateLoader.addDocument(
-                LocalDate.of(2010, 01, 01),
+                LocalDate.of(2010, 1, 1),
                 new DocumentTemplateLoaderBasicImpl("/templates/model-tenancy-agreement-with-notes.docx", asposeLicense));
         templateLoader.addDocument(
                 covidChangeDate,
@@ -246,7 +246,7 @@ public class HousingModule {
         DateSwitchingDocumentTemplateLoader templateLoader = new DateSwitchingDocumentTemplateLoader();
         LocalDate covidChangeDate = LocalDate.parse(config.getCovidChangeDate());
         templateLoader.addDocument(
-                LocalDate.of(2010, 01, 01),
+                LocalDate.of(2010, 1, 1),
                 new DocumentTemplateLoaderBasicImpl("/templates/notice-to-leave.docx", asposeLicense));
         templateLoader.addDocument(
                 covidChangeDate,
