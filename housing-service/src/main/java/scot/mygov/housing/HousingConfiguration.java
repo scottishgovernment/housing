@@ -2,7 +2,6 @@ package scot.mygov.housing;
 
 import java.io.File;
 import java.net.URI;
-import java.time.LocalDate;
 
 public class HousingConfiguration {
 
