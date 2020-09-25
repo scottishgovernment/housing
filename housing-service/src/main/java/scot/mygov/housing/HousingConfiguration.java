@@ -2,6 +2,7 @@ package scot.mygov.housing;
 
 import java.io.File;
 import java.net.URI;
+import java.time.LocalDate;
 
 public class HousingConfiguration {
 
@@ -29,6 +30,10 @@ public class HousingConfiguration {
     private long heartbeatMonitoringInterval = 5;
 
     private String cpiGracePeriod = "PT12H";
+
+    // the date on which the new covid legislation comes into force.
+    // this is used to switch the templates that are used for mta and notice to leave forms.
+    private String covidChangeDate = "2020-10-01";
 
     public int getPort() {
         return port;
@@ -88,6 +93,14 @@ public class HousingConfiguration {
 
     public long getHeartbeatMonitoringInterval() {
         return heartbeatMonitoringInterval;
+    }
+
+    public String getCovidChangeDate() {
+        return covidChangeDate;
+    }
+
+    public void setCovidChangeDate(String covidChangeDate) {
+        this.covidChangeDate = covidChangeDate;
     }
 
     public static class Aspose {

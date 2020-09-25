@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import scot.mygov.documents.DocumentGenerator;
 import scot.mygov.documents.DocumentTemplateLoader;
+import scot.mygov.documents.DocumentTemplateLoaderBasicImpl;
 import scot.mygov.housing.cpi.CPIService;
 import scot.mygov.housing.cpi.CPIServiceException;
 import scot.mygov.housing.cpi.model.CPIData;
@@ -64,7 +65,7 @@ public class HealthcheckTest {
         request = MockHttpRequest.get("health");
         request.accept(MediaType.APPLICATION_JSON_TYPE);
         response = new MockHttpResponse();
-        DocumentTemplateLoader templateLoader = new DocumentTemplateLoader("", healthcheck.asposeLicense);
+        DocumentTemplateLoader templateLoader = new DocumentTemplateLoaderBasicImpl("", healthcheck.asposeLicense);
         DocumentGenerator documentGenerator = new DocumentGenerator(templateLoader);
         healthcheck.modelTenancyService = Mockito.mock(DocumentGenerationService.class);
         healthcheck.fairRentResource = new FairRentResource(healthcheck.metricRegistry);

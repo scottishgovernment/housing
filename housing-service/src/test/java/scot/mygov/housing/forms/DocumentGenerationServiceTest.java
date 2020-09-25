@@ -4,6 +4,7 @@ import com.codahale.metrics.MetricRegistry;
 import org.junit.Test;
 import scot.mygov.documents.DocumentGenerator;
 import scot.mygov.documents.DocumentTemplateLoader;
+import scot.mygov.documents.DocumentTemplateLoaderBasicImpl;
 import scot.mygov.documents.DocumentType;
 import scot.mygov.housing.forms.modeltenancy.ModelTenancyFieldExtractor;
 import scot.mygov.housing.forms.modeltenancy.ModelTenancyMergingCallback;
@@ -18,7 +19,7 @@ public class DocumentGenerationServiceTest {
     public void canSaveWithNoMergingCallback()  throws Exception{
 
         DocumentTemplateLoader templateLoader
-                = new DocumentTemplateLoader("/templates/model-tenancy-agreement-with-notes.docx", null);
+                = new DocumentTemplateLoaderBasicImpl("/templates/model-tenancy-agreement-with-notes.docx", null);
         DocumentGenerationService sut
                 = new DocumentGenerationService<ModelTenancy>(
                 new DocumentGenerator(templateLoader), new ModelTenancyFieldExtractor(), new MetricRegistry());
@@ -30,7 +31,7 @@ public class DocumentGenerationServiceTest {
     public void canSaveWithMergingCallback()  throws Exception{
 
         DocumentTemplateLoader templateLoader
-                = new DocumentTemplateLoader("/templates/model-tenancy-agreement-with-notes.docx", null);
+                = new DocumentTemplateLoaderBasicImpl("/templates/model-tenancy-agreement-with-notes.docx", null);
         DocumentGenerationService sut
                 = new DocumentGenerationService<ModelTenancy>(
                 new DocumentGenerator(templateLoader), new ModelTenancyFieldExtractor(),
