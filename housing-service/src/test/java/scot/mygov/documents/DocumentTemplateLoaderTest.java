@@ -10,7 +10,7 @@ public class DocumentTemplateLoaderTest {
 
     @Test
     public void canLoadTemplate() {
-        DocumentTemplateLoader loader = new DocumentTemplateLoader("/templates/model-tenancy-agreement-with-notes.docx", null);
+        DocumentTemplateLoader loader = new DocumentTemplateLoaderBasicImpl("/templates/model-tenancy-agreement-with-notes.docx", null);
         Document doc1 = loader.loadDocumentTemplate();
         assertNotNull(doc1);
 
@@ -22,7 +22,7 @@ public class DocumentTemplateLoaderTest {
     // exception thrown for non existant template
     @Test(expected = RuntimeException.class)
     public void expectedExceptionForNonExsitantPath() throws RuntimeException {
-        new DocumentTemplateLoader("nonexistanttemplate", null).loadDocumentTemplate();
+        new DocumentTemplateLoaderBasicImpl("nonexistanttemplate", null).loadDocumentTemplate();
     }
 
 }
