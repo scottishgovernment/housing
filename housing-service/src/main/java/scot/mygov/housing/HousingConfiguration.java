@@ -118,12 +118,18 @@ public class HousingConfiguration {
 
         private String secret = "";
 
+        private String sitekey = "";
+
         public boolean isEnabled() {
             return enabled;
         }
 
         public String getSecret() {
             return secret;
+        }
+
+        public String getSitekey() {
+            return sitekey;
         }
     }
 

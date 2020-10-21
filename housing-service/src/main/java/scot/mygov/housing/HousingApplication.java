@@ -75,6 +75,9 @@ public class HousingApplication extends Application {
     @Inject
     Europa europa;
 
+    @Inject
+    ConfigResource configResource;
+
     @Override
     public Set<Object> getSingletons() {
         return new HashSet<>(asList(
@@ -95,7 +98,8 @@ public class HousingApplication extends Application {
                 healthcheck,
                 europa,
                 responseLogger,
-                requestLogger
+                requestLogger,
+                configResource
         ));
     }
 
