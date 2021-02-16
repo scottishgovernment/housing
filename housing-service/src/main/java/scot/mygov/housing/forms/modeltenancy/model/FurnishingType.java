@@ -1,5 +1,6 @@
 package scot.mygov.housing.forms.modeltenancy.model;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +20,10 @@ public enum FurnishingType {
     }
 
     public static String describe(String type) {
+
+        if (StringUtils.isBlank(type)) {
+            return "";
+        }
 
         try {
             FurnishingType furnishingType = FurnishingType.valueOf(type);
