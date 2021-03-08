@@ -17,6 +17,8 @@ import scot.mygov.housing.europa.Europa;
 import scot.mygov.housing.forms.DocumentGenerationService;
 import scot.mygov.housing.forms.PlaceholderProvidingMergingCallback;
 import scot.mygov.housing.forms.RecaptchaCheck;
+import scot.mygov.housing.forms.foreigntraveldeclaration.ForeignTravelDeclarationFieldExtractor;
+import scot.mygov.housing.forms.foreigntraveldeclaration.model.ForeignTravelDeclaration;
 import scot.mygov.housing.forms.modeltenancy.ModelTenancyFieldExtractor;
 import scot.mygov.housing.forms.modeltenancy.ModelTenancyMergingCallback;
 import scot.mygov.housing.forms.modeltenancy.model.ModelTenancy;
@@ -194,6 +196,17 @@ public class HousingModule {
                 = new DocumentTemplateLoaderBasicImpl("/templates/rent-adjudication.docx", asposeLicense);
         return new DocumentGenerationService<>(
                 new DocumentGenerator(templateLoader), new RentAdjudicationFieldExtractor(),metricRegistry);
+    }
+
+    @Provides
+    DocumentGenerationService<ForeignTravelDeclaration> foreignTravelDeclarationDocumentGenerationService(
+            AsposeLicense asposeLicense,
+            MetricRegistry metricRegistry) {
+
+        DocumentTemplateLoader templateLoader
+                = new DocumentTemplateLoaderBasicImpl("/templates/foreign-travel-declaration.docx", asposeLicense);
+        return new DocumentGenerationService<>(
+                new DocumentGenerator(templateLoader), new ForeignTravelDeclarationFieldExtractor(), metricRegistry);
     }
 
     @Provides

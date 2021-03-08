@@ -3,6 +3,7 @@ package scot.mygov.housing;
 import scot.mygov.housing.cpi.CPIResource;
 import scot.mygov.housing.europa.Europa;
 import scot.mygov.housing.fairrentregister.FairRentResource;
+import scot.mygov.housing.forms.foreigntraveldeclaration.ForeignTravelDeclarationResource;
 import scot.mygov.housing.forms.modeltenancy.ModelTenancyResource;
 import scot.mygov.housing.forms.nonprovisionofdocumentation.NonProvisionOfDocumentationResource;
 import scot.mygov.housing.forms.noticetoleave.NoticeToLeaveResource;
@@ -55,6 +56,9 @@ public class HousingApplication extends Application {
     SubtenantNoticeToLeaveResource subtenantNoticeToLeave;
 
     @Inject
+    ForeignTravelDeclarationResource foreignTravelDeclarationResource;
+
+    @Inject
     CPIResource cpiResource;
 
     @Inject
@@ -89,6 +93,7 @@ public class HousingApplication extends Application {
                 noticeToLeave,
                 fairRent,
                 subtenantNoticeToLeave,
+                foreignTravelDeclarationResource,
 
                 rentPressureZone,
                 cpiResource,
