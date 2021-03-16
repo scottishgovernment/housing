@@ -17,9 +17,9 @@ public class DateSwitchingDocumentTemplateLoader implements DocumentTemplateLoad
 
     private static final Logger LOG = LoggerFactory.getLogger(DateSwitchingDocumentTemplateLoader.class);
 
-    SortedMap<LocalDate, DocumentTemplateLoader> loaders = new TreeMap<>();
+    NavigableMap<LocalDate, DocumentTemplateLoader> loaders = new TreeMap<>();
 
-     Supplier<LocalDate> localDateSuplier = () -> LocalDate.now();
+    Supplier<LocalDate> localDateSupplier = () -> LocalDate.now();
 
     public void addDocument(LocalDate fromDate, DocumentTemplateLoader loader) {
         loaders.put(fromDate, loader);
@@ -27,22 +27,16 @@ public class DateSwitchingDocumentTemplateLoader implements DocumentTemplateLoad
 
     @Override
     public Document loadDocumentTemplate() {
-        DocumentTemplateLoader loader = null;
-        LocalDate dateUsed = null;
-        LOG.info("loadDocumentTemplate, date is {}", localDateSuplier.get());
-        for (Map.Entry<LocalDate, DocumentTemplateLoader> entry : loaders.entrySet()) {
-            if (todayOrAfter(entry.getKey())) {
-                dateUsed = entry.getKey();
-                loader = entry.getValue();
-            }
+        LocalDate today = localDateSupplier.get();
+        LOG.info("loadDocumentTemplate, date is {}", today);
+        Map.Entry<LocalDate, DocumentTemplateLoader> entry = loaders.floorEntry(today);
+        if (entry == null) {
+            return null;
         }
+        LocalDate dateUsed = entry.getKey();
+        DocumentTemplateLoader loader = entry.getValue();
         LOG.info("Using version for date {}", dateUsed);
-        return loader == null ? null : loader.loadDocumentTemplate();
-    }
-
-    boolean todayOrAfter(LocalDate date) {
-        LocalDate today = localDateSuplier.get();
-        return date.equals(today) || today.isAfter(date);
+        return loader.loadDocumentTemplate();
     }
 
 }
