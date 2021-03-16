@@ -5,7 +5,9 @@ After=network.target
 [Service]
 User=housing
 WorkingDirectory=/opt/housing
+EnvironmentFile=-/etc/default/housing
 ExecStart=/opt/housing/run
+SyslogIdentifier=housing
 Restart=on-failure
 
 [Install]
