@@ -2,13 +2,10 @@
 . /etc/profile
 set -eu
 JAVA=${JAVA_HOME:-/usr}/bin/java
+JAVA_OPTS=${JAVA_OPTS--XX:+UseParallelGC -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -XX:GCTimeRatio=10 -XX:AdaptiveSizePolicyWeight=90}
 
 exec "$JAVA" \
-  -XX:+UseParallelGC \
-  -XX:MinHeapFreeRatio=20 \
-  -XX:MaxHeapFreeRatio=40 \
-  -XX:GCTimeRatio=10 \
-  -XX:AdaptiveSizePolicyWeight=90 \
+  $JAVA_OPTS \
   -Djava.awt.headless=true \
   -Dlogback.configurationFile=/opt/housing/logback.xml \
   -jar /opt/housing/housing.jar \
