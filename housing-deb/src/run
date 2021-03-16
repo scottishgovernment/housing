@@ -1,7 +1,9 @@
 #!/bin/sh
-set -e
 . /etc/profile
-exec /usr/bin/java \
+set -eu
+JAVA=${JAVA_HOME:-/usr}/bin/java
+
+exec "$JAVA" \
   -XX:+UseParallelGC \
   -XX:MinHeapFreeRatio=20 \
   -XX:MaxHeapFreeRatio=40 \
