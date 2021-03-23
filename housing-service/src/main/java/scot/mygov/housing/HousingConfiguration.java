@@ -34,7 +34,6 @@ public class HousingConfiguration {
     // this is used to switch the templates that are used for mta and notice to leave forms.
     private String covidChangeDate = "2020-10-01";
 
-    // new version of mta
     private String changeDate2021 = "2021-04-01";
 
     public int getPort() {
