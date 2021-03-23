@@ -174,12 +174,18 @@ public class HousingModule {
                                                                                   MetricRegistry metricRegistry) {
         DateSwitchingDocumentTemplateLoader templateLoader = new DateSwitchingDocumentTemplateLoader();
         LocalDate covidChangeDate = LocalDate.parse(config.getCovidChangeDate());
+        LocalDate changeDate2021 = LocalDate.parse(config.getChangeDate2021());
+
         templateLoader.addDocument(
                 LocalDate.of(2010, 1, 1),
                 new DocumentTemplateLoaderBasicImpl("/templates/model-tenancy-agreement-with-notes.docx", asposeLicense));
         templateLoader.addDocument(
                 covidChangeDate,
                 new DocumentTemplateLoaderBasicImpl("/templates/model-tenancy-agreement-with-notes-post-covid-change.docx", asposeLicense));
+        templateLoader.addDocument(
+                changeDate2021,
+                new DocumentTemplateLoaderBasicImpl("/templates/model-tenancy-agreement-2021.docx", asposeLicense));
+
         return  new DocumentGenerationService<>(
                 new DocumentGenerator(templateLoader),
                 new ModelTenancyFieldExtractor(),
@@ -258,13 +264,16 @@ public class HousingModule {
 
         DateSwitchingDocumentTemplateLoader templateLoader = new DateSwitchingDocumentTemplateLoader();
         LocalDate covidChangeDate = LocalDate.parse(config.getCovidChangeDate());
+        LocalDate changeDate2021 = LocalDate.parse(config.getChangeDate2021());
         templateLoader.addDocument(
                 LocalDate.of(2010, 1, 1),
                 new DocumentTemplateLoaderBasicImpl("/templates/notice-to-leave.docx", asposeLicense));
         templateLoader.addDocument(
                 covidChangeDate,
                 new DocumentTemplateLoaderBasicImpl("/templates/notice-to-leave-post-covid-change.docx", asposeLicense));
-
+        templateLoader.addDocument(
+                changeDate2021,
+                new DocumentTemplateLoaderBasicImpl("/templates/notice-to-leave-2021.docx", asposeLicense));
         return  new DocumentGenerationService<>(
                 new DocumentGenerator(templateLoader),
                 new NoticeToLeaveFieldExtractor(),

@@ -34,6 +34,9 @@ public class HousingConfiguration {
     // this is used to switch the templates that are used for mta and notice to leave forms.
     private String covidChangeDate = "2020-10-01";
 
+    // new version of mta
+    private String changeDate2021 = "2021-04-01";
+
     public int getPort() {
         return port;
     }
@@ -100,6 +103,14 @@ public class HousingConfiguration {
 
     public void setCovidChangeDate(String covidChangeDate) {
         this.covidChangeDate = covidChangeDate;
+    }
+
+    public String getChangeDate2021() {
+        return changeDate2021;
+    }
+
+    public void setChangeDate2021(String changeDate2021) {
+        this.changeDate2021 = changeDate2021;
     }
 
     public static class Aspose {
