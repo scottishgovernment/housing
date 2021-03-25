@@ -189,7 +189,7 @@ public class HousingModule {
         return  new DocumentGenerationService<>(
                 new DocumentGenerator(templateLoader),
                 new ModelTenancyFieldExtractor(),
-                form -> new ModelTenancyMergingCallback(form),
+                ModelTenancyMergingCallback::new,
                 metricRegistry);
     }
 
@@ -210,7 +210,7 @@ public class HousingModule {
             MetricRegistry metricRegistry) {
 
         DocumentTemplateLoader templateLoader
-                = new DocumentTemplateLoaderBasicImpl("/templates/foreign-travel-declaration.docx", asposeLicense);
+                = new DocumentTemplateLoaderBasicImpl("/templates/travel-declaration.docx", asposeLicense);
         return new DocumentGenerationService<>(
                 new DocumentGenerator(templateLoader), new ForeignTravelDeclarationFieldExtractor(), metricRegistry);
     }
@@ -299,7 +299,7 @@ public class HousingModule {
     @Provides
     RecaptchaCheck recaptchaCheck(HousingConfiguration configuration, @Named(STANDARD_CLIENT) Client client) {
         HousingConfiguration.Recaptcha recaptchaConfig = configuration.getRecaptcha();
-        WebTarget verifyTarget = client.target(recaptchaConfig.RECAPTCHA_VERIFY_URL);
+        WebTarget verifyTarget = client.target(HousingConfiguration.Recaptcha.RECAPTCHA_VERIFY_URL);
         return new RecaptchaCheck(
                 recaptchaConfig.isEnabled(),
                 verifyTarget,

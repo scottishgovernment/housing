@@ -4,9 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Created by z418868 on 08/03/2021.
- */
 public enum TravelReason {
 
     WORK("work"),

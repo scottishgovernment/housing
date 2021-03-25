@@ -31,6 +31,8 @@ public class ForeignTravelDeclaration extends AbstractFormModel {
 
     private String otherReason = "";
 
+    private String personCompletingForm = "";
+
     private String signature = "";
 
     @JsonDeserialize(using= LocalDateDeserializer.class)
@@ -131,5 +133,13 @@ public class ForeignTravelDeclaration extends AbstractFormModel {
 
     public void setSignedDate(LocalDate signedDate) {
         this.signedDate = signedDate;
+    }
+
+    public String getPersonCompletingForm() {
+        return personCompletingForm;
+    }
+
+    public void setPersonCompletingForm(String personCompletingForm) {
+        this.personCompletingForm = personCompletingForm;
     }
 }
