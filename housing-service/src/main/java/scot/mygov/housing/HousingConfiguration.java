@@ -124,7 +124,7 @@ public class HousingConfiguration {
     public static class Recaptcha {
         public static final String RECAPTCHA_VERIFY_URL = "https://www.google.com/recaptcha/api/siteverify";
 
-        private boolean enabled = true;
+        private boolean enabled = false;
 
         private String secret = "";
 

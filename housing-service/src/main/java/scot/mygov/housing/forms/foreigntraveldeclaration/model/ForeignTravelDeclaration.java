@@ -4,16 +4,13 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import scot.mygov.housing.forms.AbstractFormModel;
+import scot.mygov.housing.forms.modeltenancy.model.Address;
 
 import java.time.LocalDate;
 
 public class ForeignTravelDeclaration extends AbstractFormModel {
 
-    private String title = "";
-
     private String name = "";
-
-    private String surname  = "";
 
     @JsonDeserialize(using= LocalDateDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
@@ -21,31 +18,21 @@ public class ForeignTravelDeclaration extends AbstractFormModel {
 
     private String nationality = "";
 
-    private String address = "";
+    private Address address = new Address();
 
-    private String travelOperator = "";
+    private String passportNumber = "";
 
-    private String namesOfMinors = "";
+    private String destinationCountry;
 
     private String reason;
 
     private String otherReason = "";
 
-    private String personCompletingForm = "";
-
-    private String signature = "";
+    private String signature;
 
     @JsonDeserialize(using= LocalDateDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     LocalDate signedDate;
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
 
     public String getName() {
         return name;
@@ -53,14 +40,6 @@ public class ForeignTravelDeclaration extends AbstractFormModel {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
     }
 
     public LocalDate getDob() {
@@ -79,28 +58,28 @@ public class ForeignTravelDeclaration extends AbstractFormModel {
         this.nationality = nationality;
     }
 
-    public String getAddress() {
+    public Address getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(Address address) {
         this.address = address;
     }
 
-    public String getTravelOperator() {
-        return travelOperator;
+    public String getPassportNumber() {
+        return passportNumber;
     }
 
-    public void setTravelOperator(String travelOperator) {
-        this.travelOperator = travelOperator;
+    public void setPassportNumber(String passportNumber) {
+        this.passportNumber = passportNumber;
     }
 
-    public String getNamesOfMinors() {
-        return namesOfMinors;
+    public String getDestinationCountry() {
+        return destinationCountry;
     }
 
-    public void setNamesOfMinors(String namesOfMinors) {
-        this.namesOfMinors = namesOfMinors;
+    public void setDestinationCountry(String destinationCountry) {
+        this.destinationCountry = destinationCountry;
     }
 
     public String getReason() {
@@ -119,14 +98,6 @@ public class ForeignTravelDeclaration extends AbstractFormModel {
         this.otherReason = otherReason;
     }
 
-    public String getSignature() {
-        return signature;
-    }
-
-    public void setSignature(String signature) {
-        this.signature = signature;
-    }
-
     public LocalDate getSignedDate() {
         return signedDate;
     }
@@ -135,11 +106,11 @@ public class ForeignTravelDeclaration extends AbstractFormModel {
         this.signedDate = signedDate;
     }
 
-    public String getPersonCompletingForm() {
-        return personCompletingForm;
+    public String getSignature() {
+        return signature;
     }
 
-    public void setPersonCompletingForm(String personCompletingForm) {
-        this.personCompletingForm = personCompletingForm;
+    public void setSignature(String signature) {
+        this.signature = signature;
     }
 }
