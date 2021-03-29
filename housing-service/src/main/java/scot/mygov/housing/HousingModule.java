@@ -17,6 +17,8 @@ import scot.mygov.housing.europa.Europa;
 import scot.mygov.housing.forms.DocumentGenerationService;
 import scot.mygov.housing.forms.PlaceholderProvidingMergingCallback;
 import scot.mygov.housing.forms.RecaptchaCheck;
+import scot.mygov.housing.forms.foreigntraveldeclaration.ForeignTravelDeclarationFieldExtractor;
+import scot.mygov.housing.forms.foreigntraveldeclaration.model.ForeignTravelDeclaration;
 import scot.mygov.housing.forms.modeltenancy.ModelTenancyFieldExtractor;
 import scot.mygov.housing.forms.modeltenancy.ModelTenancyMergingCallback;
 import scot.mygov.housing.forms.modeltenancy.model.ModelTenancy;
@@ -187,7 +189,7 @@ public class HousingModule {
         return  new DocumentGenerationService<>(
                 new DocumentGenerator(templateLoader),
                 new ModelTenancyFieldExtractor(),
-                form -> new ModelTenancyMergingCallback(form),
+                ModelTenancyMergingCallback::new,
                 metricRegistry);
     }
 
@@ -200,6 +202,17 @@ public class HousingModule {
                 = new DocumentTemplateLoaderBasicImpl("/templates/rent-adjudication.docx", asposeLicense);
         return new DocumentGenerationService<>(
                 new DocumentGenerator(templateLoader), new RentAdjudicationFieldExtractor(),metricRegistry);
+    }
+
+    @Provides
+    DocumentGenerationService<ForeignTravelDeclaration> foreignTravelDeclarationDocumentGenerationService(
+            AsposeLicense asposeLicense,
+            MetricRegistry metricRegistry) {
+
+        DocumentTemplateLoader templateLoader
+                = new DocumentTemplateLoaderBasicImpl("/templates/travel-declaration.docx", asposeLicense);
+        return new DocumentGenerationService<>(
+                new DocumentGenerator(templateLoader), new ForeignTravelDeclarationFieldExtractor(), metricRegistry);
     }
 
     @Provides
@@ -286,7 +299,7 @@ public class HousingModule {
     @Provides
     RecaptchaCheck recaptchaCheck(HousingConfiguration configuration, @Named(STANDARD_CLIENT) Client client) {
         HousingConfiguration.Recaptcha recaptchaConfig = configuration.getRecaptcha();
-        WebTarget verifyTarget = client.target(recaptchaConfig.RECAPTCHA_VERIFY_URL);
+        WebTarget verifyTarget = client.target(HousingConfiguration.Recaptcha.RECAPTCHA_VERIFY_URL);
         return new RecaptchaCheck(
                 recaptchaConfig.isEnabled(),
                 verifyTarget,
