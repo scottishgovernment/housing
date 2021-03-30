@@ -58,13 +58,6 @@ public class FieldExtractorUtils {
         return addressParts(address).stream().collect(joining(",\n"));
     }
 
-    public static String nameAndAddressMultipleLines(Person person, int i) {
-        String address = addressFieldsMultipleLines(person.getAddress());
-        String nameAndAddress = format("%s, %s", person.getName(), address);
-        return numberedValue(nameAndAddress, i);
-    }
-
-
     public static String addressFieldsSingleLine(Address address) {
         return addressParts(address).stream().collect(joining(", "));
     }

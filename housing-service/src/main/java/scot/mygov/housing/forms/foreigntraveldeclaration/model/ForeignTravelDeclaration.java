@@ -22,13 +22,13 @@ public class ForeignTravelDeclaration extends AbstractFormModel {
 
     private String passportNumber = "";
 
-    private String destinationCountry;
+    private String destinationCountry = "";
 
-    private String reason;
+    private String reason = "";
 
     private String otherReason = "";
 
-    private String signature;
+    private String signature = "";
 
     @JsonDeserialize(using= LocalDateDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
