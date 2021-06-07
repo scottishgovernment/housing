@@ -56,7 +56,7 @@ public class CPIResource {
             LocalDate fromDate = LocalDate.parse(params.getFirst(CPI_PARAM.FROM_DATE.getParam()));
             LocalDate toDate = LocalDate.parse(params.getFirst(CPI_PARAM.TO_DATE.getParam()));
             double cpiDelta = cpiService.cpiDelta(fromDate, toDate);
-            return Response.status(200).entity(new Double(cpiDelta)).build();
+            return Response.status(200).entity(Double.valueOf(cpiDelta)).build();
         } catch (CPIServiceException e) {
             LOG.error("Failed to get cpiDelta", e);
             return Response.status(503).entity("CPI data not available").build();
