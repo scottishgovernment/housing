@@ -144,7 +144,7 @@ public class HousingConfiguration {
     }
 
     public static class FairRentRegister {
-        private URI uri = URI.create("https://publications.api.gov.scot/");
+        private URI uri = URI.create("https://fairrentapi.systems.gov.scot/");
 
         private String username;
 
