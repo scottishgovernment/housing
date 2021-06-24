@@ -21,15 +21,11 @@ import scot.mygov.housing.forms.DocumentGenerationService;
 import scot.mygov.housing.forms.modeltenancy.model.ModelTenancy;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.ProcessingException;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.Duration;
@@ -69,10 +65,6 @@ public class Healthcheck {
     @Inject
     MetricRegistry metricRegistry;
 
-    @Named(HousingModule.ES_RPZ_HEALTH_TARGET)
-    @Inject
-    WebTarget esRPZHealthTarget;
-
     @Inject
     DocumentGenerationService<ModelTenancy> modelTenancyService;
 
@@ -94,7 +86,6 @@ public class Healthcheck {
         addCPIInfo(result, errors, data);
         addPostcodeLookupMetricsInfo(result, errors, data);
         addModelTenancyMetricsInfo(result, errors, data);
-        addRPZElasticsearchInfo(result, errors, data);
         addDocumentGenerationMetricsInfo(result, errors, data, modelTenancyService);
         addFairRentMetricsInfo(result, warnings, data);
 
@@ -313,24 +304,6 @@ public class Healthcheck {
                 m.getCount(), m.getMeanRate(),
                 m.getOneMinuteRate(),  m.getFiveMinuteRate(), m.getFifteenMinuteRate() );
     }
-
-    private void addRPZElasticsearchInfo(ObjectNode result, ArrayNode errors, ObjectNode data) {
-        boolean ok = true;
-        try {
-            Response response = esRPZHealthTarget.request().get();
-
-            if (response.getStatus() != 200) {
-                ok = false;
-                errors.add("Non 200 response code from Elasticsearch RPZ health target: " + response.getStatus());
-            }
-            response.close();
-        } catch (ProcessingException | WebApplicationException e) {
-            ok = false;
-            errors.add("Exception trying to get RPZ data from ES:" + e.getMessage());
-            LOG.error("Failed to get RPZ info from Elasticsearch", e);
-        }
-        result.put("RPZ Elasticsearch Data", ok);
-     }
 
     private MetricFilter forClass(Class clazz) {
         return (name, metric) -> name.startsWith(clazz.getName());

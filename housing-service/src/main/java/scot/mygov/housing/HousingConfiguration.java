@@ -17,10 +17,6 @@ public class HousingConfiguration {
 
     private URI cpiDataURI = URI.create("http://localhost:9200/housing-data/_doc/cpi/_source");
 
-    private URI rpzDataURI = URI.create("http://localhost:9200/housing-data/_search/template");
-
-    private URI rpzHealthURI = URI.create("http://localhost:9200/housing-data/_search?type=rpz");
-
     private String europaId;
 
     private URI europaURI = URI.create("https://api.viaeuropa.uk.com/");
@@ -69,12 +65,6 @@ public class HousingConfiguration {
     }
 
     public URI getCpiDataURI() { return cpiDataURI; }
-
-    public URI getRpzDataURI() { return rpzDataURI; }
-
-    public URI getRpzHealthURI() {
-        return rpzHealthURI;
-    }
 
     public String getEuropaId() {
         return europaId;
