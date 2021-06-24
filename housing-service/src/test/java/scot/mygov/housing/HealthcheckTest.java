@@ -59,7 +59,6 @@ public class HealthcheckTest {
         healthcheck.housingConfiguration = new HousingConfiguration();
         healthcheck.asposeLicense = anyValidLicense();
         healthcheck.cpiService = validCPIService();
-        healthcheck.esRPZHealthTarget = validTarget();
         dispatcher = MockDispatcherFactory.createDispatcher();
         dispatcher.getRegistry().addSingletonResource(healthcheck);
         request = MockHttpRequest.get("health");
@@ -170,18 +169,6 @@ public class HealthcheckTest {
 
         JsonNode health = mapper.readTree(response.getContentAsString());
         assertEquals("postcode not as expected", false, health.get("Postcode lookups").asBoolean());
-        assertEquals(503, response.getStatus());
-    }
-
-    @Test
-    public void notOKIfErrorFromEZRPZ() throws CPIServiceException, IOException, InterruptedException {
-
-        this.healthcheck.esRPZHealthTarget = errorTarget();
-
-        dispatcher.invoke(request, response);
-
-        JsonNode health = mapper.readTree(response.getContentAsString());
-        assertEquals("error from postcode not as expected", false, health.get("RPZ Elasticsearch Data").asBoolean());
         assertEquals(503, response.getStatus());
     }
 

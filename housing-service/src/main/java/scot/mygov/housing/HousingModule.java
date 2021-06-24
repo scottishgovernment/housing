@@ -38,8 +38,8 @@ import scot.mygov.housing.forms.rentincreasenotice.RentIncreaseRPZSectionRemovin
 import scot.mygov.housing.forms.rentincreasenotice.model.RentIncrease;
 import scot.mygov.housing.postcode.EuropaPostcodeService;
 import scot.mygov.housing.postcode.PostcodeService;
-import scot.mygov.housing.rpz.ElasticSearchRPZService;
 import scot.mygov.housing.rpz.RPZService;
+import scot.mygov.housing.rpz.StubRPZService;
 import scot.mygov.validation.Validator;
 
 import javax.inject.Named;
@@ -58,8 +58,6 @@ public class HousingModule {
     private static final Logger LOG = LoggerFactory.getLogger(HousingConfiguration.class);
 
     public static final String EUROPA_TARGET = "europaTarget";
-    public static final String ELASTICSEARCH_TARGET = "esTarget";
-    public static final String ES_RPZ_HEALTH_TARGET = "esRPZHealthTarget";
     public static final String FAIR_RENT_TARGET = "fairRentTarget";
 
     public static final String STANDARD_CLIENT = "standardClient";
@@ -82,18 +80,6 @@ public class HousingModule {
     WebTarget europaTarget(@Named(STANDARD_CLIENT) Client client, HousingConfiguration configuration) {
         String path = String.format("/%s/os/abpr/address", configuration.getEuropaId());
         return client.target(configuration.getEuropaURI()).path(path);
-    }
-
-    @Provides
-    @Named(ELASTICSEARCH_TARGET)
-    WebTarget esTarget(@Named(STANDARD_CLIENT) Client client, HousingConfiguration configuration) {
-        return client.target(configuration.getRpzDataURI());
-    }
-
-    @Provides
-    @Named(ES_RPZ_HEALTH_TARGET)
-    WebTarget rpzHealthTarget(@Named(STANDARD_CLIENT) Client client, HousingConfiguration configuration) {
-        return client.target(configuration.getRpzHealthURI());
     }
 
     @Provides
@@ -129,8 +115,8 @@ public class HousingModule {
     }
 
     @Provides
-    RPZService rpzService(Europa europa, @Named(ELASTICSEARCH_TARGET) WebTarget esTarget) {
-        return new ElasticSearchRPZService(europa, esTarget);
+    RPZService rpzService() {
+        return new StubRPZService();
     }
 
     @Provides
