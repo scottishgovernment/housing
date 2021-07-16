@@ -65,7 +65,7 @@ public class FairRentResource {
 
         // we convert the incoming param "from" to "index" and "size" to "numberOfRecords"
         WebTarget target = fairRentTarget
-                .path("/FairRent/API/cases/singleSearch")
+                .path("/API/cases/singleSearch")
                 .queryParam("searchTerm", query)
                 .queryParam("numberOfRecords", size)
                 .queryParam("index", from);
@@ -76,7 +76,7 @@ public class FairRentResource {
     @Path("cases/{case}")
     @Produces(MediaType.APPLICATION_JSON)
     public void caseDetails(@Suspended final AsyncResponse response, @PathParam("case") String caseId) {
-        WebTarget target = fairRentTarget.path("/FairRent/API/cases/" + caseId);
+        WebTarget target = fairRentTarget.path("/API/cases/" + caseId);
         request(response, target);
     }
 
