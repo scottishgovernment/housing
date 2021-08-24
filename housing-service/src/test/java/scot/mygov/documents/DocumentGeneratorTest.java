@@ -52,7 +52,7 @@ public class DocumentGeneratorTest {
     }
 
     private DocumentTemplateLoader templateLoader() {
-        return new DocumentTemplateLoaderBasicImpl("/templates/model-tenancy-agreement-with-notes.docx", null);
+        return new DocumentTemplateLoaderBasicImpl("/templates/model-tenancy-agreement.docx", null);
     }
 
     private DocumentTemplateLoader exceptionThrowingTemplateLoader() {

@@ -19,7 +19,7 @@ public class DocumentGenerationServiceTest {
     public void canSaveWithNoMergingCallback()  throws Exception{
 
         DocumentTemplateLoader templateLoader
-                = new DocumentTemplateLoaderBasicImpl("/templates/model-tenancy-agreement-with-notes.docx", null);
+                = new DocumentTemplateLoaderBasicImpl("/templates/model-tenancy-agreement.docx", null);
         DocumentGenerationService sut
                 = new DocumentGenerationService<ModelTenancy>(
                 new DocumentGenerator(templateLoader), new ModelTenancyFieldExtractor(), new MetricRegistry());
@@ -31,7 +31,7 @@ public class DocumentGenerationServiceTest {
     public void canSaveWithMergingCallback()  throws Exception{
 
         DocumentTemplateLoader templateLoader
-                = new DocumentTemplateLoaderBasicImpl("/templates/model-tenancy-agreement-with-notes.docx", null);
+                = new DocumentTemplateLoaderBasicImpl("/templates/model-tenancy-agreement.docx", null);
         DocumentGenerationService sut
                 = new DocumentGenerationService<ModelTenancy>(
                 new DocumentGenerator(templateLoader), new ModelTenancyFieldExtractor(),
