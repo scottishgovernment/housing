@@ -26,12 +26,6 @@ public class HousingConfiguration {
 
     private String cpiGracePeriod = "PT12H";
 
-    // the date on which the new covid legislation comes into force.
-    // this is used to switch the templates that are used for mta and notice to leave forms.
-    private String covidChangeDate = "2020-10-01";
-
-    private String changeDate2021 = "2021-03-30";
-
     public int getPort() {
         return port;
     }
@@ -84,22 +78,6 @@ public class HousingConfiguration {
 
     public long getHeartbeatMonitoringInterval() {
         return heartbeatMonitoringInterval;
-    }
-
-    public String getCovidChangeDate() {
-        return covidChangeDate;
-    }
-
-    public void setCovidChangeDate(String covidChangeDate) {
-        this.covidChangeDate = covidChangeDate;
-    }
-
-    public String getChangeDate2021() {
-        return changeDate2021;
-    }
-
-    public void setChangeDate2021(String changeDate2021) {
-        this.changeDate2021 = changeDate2021;
     }
 
     public static class Aspose {

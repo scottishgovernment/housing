@@ -8,7 +8,6 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scot.mygov.config.Configuration;
-import scot.mygov.documents.DateSwitchingDocumentTemplateLoader;
 import scot.mygov.documents.DocumentGenerator;
 import scot.mygov.documents.DocumentTemplateLoader;
 import scot.mygov.documents.DocumentTemplateLoaderBasicImpl;
@@ -48,7 +47,6 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.client.WebTarget;
 import java.net.MalformedURLException;
-import java.time.LocalDate;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 
@@ -155,22 +153,10 @@ public class HousingModule {
 
     @Provides
     @Singleton
-    DocumentGenerationService<ModelTenancy> modelTenancyDocumentGenerationService(HousingConfiguration config,
-                                                                                  AsposeLicense asposeLicense,
+    DocumentGenerationService<ModelTenancy> modelTenancyDocumentGenerationService(AsposeLicense asposeLicense,
                                                                                   MetricRegistry metricRegistry) {
-        DateSwitchingDocumentTemplateLoader templateLoader = new DateSwitchingDocumentTemplateLoader();
-        LocalDate covidChangeDate = LocalDate.parse(config.getCovidChangeDate());
-        LocalDate changeDate2021 = LocalDate.parse(config.getChangeDate2021());
-
-        templateLoader.addDocument(
-                LocalDate.of(2010, 1, 1),
-                new DocumentTemplateLoaderBasicImpl("/templates/model-tenancy-agreement-with-notes.docx", asposeLicense));
-        templateLoader.addDocument(
-                covidChangeDate,
-                new DocumentTemplateLoaderBasicImpl("/templates/model-tenancy-agreement-with-notes-post-covid-change.docx", asposeLicense));
-        templateLoader.addDocument(
-                changeDate2021,
-                new DocumentTemplateLoaderBasicImpl("/templates/model-tenancy-agreement-2021.docx", asposeLicense));
+        DocumentTemplateLoader templateLoader =
+                new DocumentTemplateLoaderBasicImpl("/templates/model-tenancy-agreement.docx", asposeLicense);
 
         return  new DocumentGenerationService<>(
                 new DocumentGenerator(templateLoader),
@@ -244,22 +230,11 @@ public class HousingModule {
 
     @Provides
     DocumentGenerationService<NoticeToLeave> noticeToLeaveDocumentGenerationService(
-            HousingConfiguration config,
             AsposeLicense asposeLicense,
             MetricRegistry metricRegistry) {
 
-        DateSwitchingDocumentTemplateLoader templateLoader = new DateSwitchingDocumentTemplateLoader();
-        LocalDate covidChangeDate = LocalDate.parse(config.getCovidChangeDate());
-        LocalDate changeDate2021 = LocalDate.parse(config.getChangeDate2021());
-        templateLoader.addDocument(
-                LocalDate.of(2010, 1, 1),
-                new DocumentTemplateLoaderBasicImpl("/templates/notice-to-leave.docx", asposeLicense));
-        templateLoader.addDocument(
-                covidChangeDate,
-                new DocumentTemplateLoaderBasicImpl("/templates/notice-to-leave-post-covid-change.docx", asposeLicense));
-        templateLoader.addDocument(
-                changeDate2021,
-                new DocumentTemplateLoaderBasicImpl("/templates/notice-to-leave-2021.docx", asposeLicense));
+        DocumentTemplateLoader templateLoader =
+                new DocumentTemplateLoaderBasicImpl("/templates/notice-to-leave.docx", asposeLicense);
         return  new DocumentGenerationService<>(
                 new DocumentGenerator(templateLoader),
                 new NoticeToLeaveFieldExtractor(),
