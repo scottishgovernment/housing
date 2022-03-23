@@ -26,6 +26,8 @@ public class HousingConfiguration {
 
     private String cpiGracePeriod = "PT12H";
 
+    private String covidChangeDate2022 = "2022-03-30";
+
     public int getPort() {
         return port;
     }
@@ -78,6 +80,10 @@ public class HousingConfiguration {
 
     public long getHeartbeatMonitoringInterval() {
         return heartbeatMonitoringInterval;
+    }
+
+    public String getCovidChangeDate2022() {
+        return covidChangeDate2022;
     }
 
     public static class Aspose {
