@@ -14,7 +14,7 @@
   <name>Housing Service</name>
 
   <properties>
-    <undertow.version>2.0.27.Final</undertow.version>
+    <undertow.version>2.2.19.Final</undertow.version>
     <resteasy.version>3.9.1.Final</resteasy.version>
     <jackson.version>2.9.8</jackson.version>
     <slf4j.version>1.7.25</slf4j.version>
