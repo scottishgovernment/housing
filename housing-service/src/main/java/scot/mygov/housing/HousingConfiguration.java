@@ -7,16 +7,17 @@ public class HousingConfiguration {
 
     private int port = 8096;
 
+    private String region;
+
     private URI geosearch = URI.create("http://localhost:9092/");
 
     private Aspose aspose = new Aspose();
 
+    private CPI cpi = new CPI();
+
     private Recaptcha recaptcha = new Recaptcha();
 
     private FairRentRegister fairRentRegister = new FairRentRegister();
-
-    private URI cpiDataURI = URI.create("http://localhost:9200/housing-data/_doc/cpi/_source");
-
     private String europaId;
 
     private URI europaURI = URI.create("https://api.viaeuropa.uk.com/");
@@ -24,12 +25,18 @@ public class HousingConfiguration {
     // once per 5 minutes
     private long heartbeatMonitoringInterval = 5;
 
-    private String cpiGracePeriod = "PT12H";
-
     private String covidChangeDate2022 = "2022-03-30";
 
     public int getPort() {
         return port;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
     }
 
     public double getPostcodeLookupResponseTimeThreshold() {
@@ -44,6 +51,10 @@ public class HousingConfiguration {
         return aspose;
     }
 
+    public CPI getCpi() {
+        return cpi;
+    }
+
     public Recaptcha getRecaptcha() {
         return recaptcha;
     }
@@ -55,12 +66,6 @@ public class HousingConfiguration {
     public void setFairRentRegister(FairRentRegister fairRentRegister) {
         this.fairRentRegister = fairRentRegister;
     }
-
-    public String getCpiGracePeriod() {
-        return cpiGracePeriod;
-    }
-
-    public URI getCpiDataURI() { return cpiDataURI; }
 
     public String getEuropaId() {
         return europaId;
@@ -93,6 +98,22 @@ public class HousingConfiguration {
         public File getLicense() {
             return license;
         }
+    }
+
+    public static class CPI {
+
+        private URI url = URI.create("http://localhost:9094/cpi");
+
+        private String graceperiod = "PT12H";
+
+        public URI getUrl() {
+            return url;
+        }
+
+        public String getGraceperiod() {
+            return graceperiod;
+        }
+
     }
 
     public static class Recaptcha {

@@ -1,5 +1,6 @@
 package scot.mygov.housing;
 
+import com.amazonaws.services.s3.AmazonS3;
 import dagger.Component;
 import io.undertow.Undertow;
 import org.jboss.resteasy.plugins.server.undertow.UndertowJaxrsServer;
@@ -9,6 +10,7 @@ import org.slf4j.bridge.SLF4JBridgeHandler;
 import scot.mygov.housing.europa.Europa;
 import scot.mygov.housing.postcode.Heartbeat;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.net.InetSocketAddress;
@@ -34,10 +36,16 @@ public class Housing {
     @Inject
     HousingApplication app;
 
+    @Inject
+    @Nullable
+    AmazonS3 s3;
+
     public static final void main(String[] args) {
         SLF4JBridgeHandler.removeHandlersForRootLogger();
         SLF4JBridgeHandler.install();
+        S3URLStreamHandlerFactory.register();
         Housing housing = DaggerHousing_Main.create().main();
+        S3URLStreamHandlerFactory.setS3(housing.s3);
 
         // start the app
         housing.run();

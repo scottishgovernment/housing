@@ -8,6 +8,7 @@
   </appender>
 
   <logger name="scot.mygov.housing" level="INFO"/>
+  <logger name="com.amazonaws" level="INFO"/>
   <logger name="org.xnio" level="WARN"/>
   <logger name="org.jboss.resteasy.resteasy_jaxrs.i18n" level="WARN"/>
   <logger name="org.hibernate.validator.internal.util.Version" level="WARN"/>

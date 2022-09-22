@@ -1,5 +1,7 @@
 package scot.mygov.housing;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.codahale.metrics.MetricRegistry;
 import dagger.Module;
 import dagger.Provides;
@@ -42,12 +44,14 @@ import scot.mygov.housing.rpz.RPZService;
 import scot.mygov.housing.rpz.StubRPZService;
 import scot.mygov.validation.Validator;
 
+import javax.annotation.Nullable;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.client.WebTarget;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.time.LocalDate;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -128,10 +132,11 @@ public class HousingModule {
     @Provides
     @Singleton
     CPIService cpiService(HousingConfiguration configuration) {
+        URI value = configuration.getCpi().getUrl();
         try {
-            return new CPIService(configuration.getCpiDataURI().toURL());
+            return new CPIService(value.toURL());
         } catch (MalformedURLException e) {
-            throw new IllegalStateException("Failed to load CPI data from url"+configuration.getCpiDataURI(), e);
+            throw new IllegalStateException("Failed to load CPI data from url" + value, e);
         }
     }
 
@@ -300,6 +305,20 @@ public class HousingModule {
     @Provides
     Validator<ModelTenancy> modelTenancyValidator() {
         return new ModelTenancyValidatorFactory().validator(false);
+    }
+
+    @Provides
+    @Singleton
+    @Nullable
+    AmazonS3 s3(HousingConfiguration configuration) {
+        String region = configuration.getRegion();
+        if (region == null) {
+            return null;
+        }
+        return AmazonS3ClientBuilder
+            .standard()
+            .withRegion(region)
+            .build();
     }
 
 }

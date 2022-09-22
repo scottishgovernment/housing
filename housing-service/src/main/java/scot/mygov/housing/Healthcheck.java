@@ -146,7 +146,7 @@ public class Healthcheck {
             data.put("cpiNextReleaseDate", nextreleaseDate.toString());
 
             // have we passed the date and time we expect the new data to have been released by?
-            Duration gracePeriod = Duration.parse(housingConfiguration.getCpiGracePeriod());
+            Duration gracePeriod = Duration.parse(housingConfiguration.getCpi().getGraceperiod());
             LocalDateTime latestAcceptableReleaseTime = nextreleaseDate.plus(gracePeriod);
 
             if (LocalDateTime.now().compareTo(latestAcceptableReleaseTime) > 0) {
