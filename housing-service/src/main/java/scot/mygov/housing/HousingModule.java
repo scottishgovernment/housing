@@ -197,11 +197,20 @@ public class HousingModule {
 
     @Provides
     DocumentGenerationService<RentIncrease> rentIncreaseDocumentGenerationService(
+            HousingConfiguration config,
             AsposeLicense asposeLicense,
             MetricRegistry metricRegistry) {
 
-        DocumentTemplateLoader templateLoader
-                = new DocumentTemplateLoaderBasicImpl("/templates/rent-increase.docx", asposeLicense);
+        DateSwitchingDocumentTemplateLoader templateLoader = new DateSwitchingDocumentTemplateLoader();
+        LocalDate legislationChangeDate2023 = LocalDate.parse(config.getLegislationChangeDate2023());
+
+        templateLoader.addDocument(
+            LocalDate.of(2010, 1, 1),
+            new DocumentTemplateLoaderBasicImpl("/templates/rent-increase.docx", asposeLicense));
+        templateLoader.addDocument(
+            legislationChangeDate2023,
+            new DocumentTemplateLoaderBasicImpl("/templates/rent-increase-2023.docx", asposeLicense));
+
         return  new DocumentGenerationService<>(
                 new DocumentGenerator(templateLoader),
                 new RentIncreaseFieldExtractor(),

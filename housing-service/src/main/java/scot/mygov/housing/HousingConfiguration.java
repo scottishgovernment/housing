@@ -27,6 +27,8 @@ public class HousingConfiguration {
 
     private String covidChangeDate2022 = "2022-03-30";
 
+    private String legislationChangeDate2023 = "2023-04-01";
+
     public int getPort() {
         return port;
     }
@@ -89,6 +91,10 @@ public class HousingConfiguration {
 
     public String getCovidChangeDate2022() {
         return covidChangeDate2022;
+    }
+
+    public String getLegislationChangeDate2023() {
+        return legislationChangeDate2023;
     }
 
     public static class Aspose {
