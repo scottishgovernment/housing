@@ -10,6 +10,7 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scot.mygov.config.Configuration;
+import scot.mygov.documents.DateSwitchingDocumentTemplateLoader;
 import scot.mygov.documents.DocumentGenerator;
 import scot.mygov.documents.DocumentTemplateLoader;
 import scot.mygov.documents.DocumentTemplateLoaderBasicImpl;
@@ -51,6 +52,7 @@ import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.client.WebTarget;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.time.LocalDate;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 
