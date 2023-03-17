@@ -20,7 +20,6 @@ import static java.util.Collections.addAll;
 import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 public class FieldExtractorUtils {
 
