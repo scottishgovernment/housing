@@ -8,14 +8,6 @@ import scot.mygov.housing.europa.EuropaException;
 import static org.mockito.ArgumentMatchers.any;
 
 public class HeartbeatTest {
-//    @Override
-//    public void run() {
-//        try {
-//            europa.lookupUprn(KNOWN_UPRN);
-//        } catch (EuropaException e) {
-//            LOG.error("Failed to lookup know uprn " + KNOWN_UPRN, e);
-//        }
-//    }
 
     @Test
     public void greenpath() {

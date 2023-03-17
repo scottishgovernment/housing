@@ -371,7 +371,7 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
         }
 
         // special case for alterations
-        return ALTERATIONS.equals(fieldName) && tenancy.getExcludedTerms().stream().anyMatch(t -> ALTERATIONS.equals(t));
+        return ALTERATIONS.equals(fieldName) && tenancy.getExcludedTerms().stream().anyMatch(ALTERATIONS::equals);
     }
 
     private String htmlEasynoteForTerm(String termName, String value, String defaultValue)
@@ -414,8 +414,8 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
      */
     private static String easyreadNotesForUtilities(String utilitiesTerm, String defaultTerm) {
         String defaultUtilitiesTerm = TermsUtil.defaultOptionalTerms().getUtilities();
-        String prefix = org.apache.commons.lang.StringUtils.substringBefore(defaultUtilitiesTerm, UTILITIES_LIST);
-        String postfix = org.apache.commons.lang.StringUtils.substringAfter(defaultUtilitiesTerm, UTILITIES_LIST);
+        String prefix = org.apache.commons.lang3.StringUtils.substringBefore(defaultUtilitiesTerm, UTILITIES_LIST);
+        String postfix = org.apache.commons.lang3.StringUtils.substringAfter(defaultUtilitiesTerm, UTILITIES_LIST);
         if (utilitiesTerm.startsWith(prefix) && utilitiesTerm.endsWith(postfix)) {
             // inject the utilities from the term into the easyreadnotes
             String utilities = StringUtils.substringBetween(utilitiesTerm, prefix, postfix);
