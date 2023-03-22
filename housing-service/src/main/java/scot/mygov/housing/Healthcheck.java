@@ -71,6 +71,9 @@ public class Healthcheck {
     @Inject
     FairRentResource fairRentResource;
 
+    @Inject
+    ErrorHandler errorHandler;
+
     @GET
     public Response health(
             @QueryParam("licenseDays") @DefaultValue("10") int licenseDays
@@ -88,6 +91,7 @@ public class Healthcheck {
         addModelTenancyMetricsInfo(result, errors, data);
         addDocumentGenerationMetricsInfo(result, errors, data, modelTenancyService);
         addFairRentMetricsInfo(result, warnings, data);
+        addFormSubmissionErrorsInfo(errors);
 
         boolean ok = errors.size() == 0;
         result.put("ok", ok);
@@ -267,6 +271,13 @@ public class Healthcheck {
 
         for (Map.Entry<String, Counter> entry : metricRegistry.getCounters(filter).entrySet()) {
             data.put(entry.getKey(), entry.getValue().getCount());
+        }
+    }
+
+    private void addFormSubmissionErrorsInfo(ArrayNode errors) {
+        Meter errorRate = metricRegistry.getMeters().get(MetricName.ERROR_RATE.name(errorHandler));
+        if (errorRate.getFiveMinuteRate() > 0) {
+            errors.add("Form submission errors in last 5 minutes");
         }
     }
 

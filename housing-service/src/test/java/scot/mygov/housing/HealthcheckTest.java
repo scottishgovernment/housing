@@ -59,6 +59,7 @@ public class HealthcheckTest {
         healthcheck.housingConfiguration = new HousingConfiguration();
         healthcheck.asposeLicense = anyValidLicense();
         healthcheck.cpiService = validCPIService();
+        healthcheck.errorHandler = anyErrorHandler(healthcheck.metricRegistry);
         dispatcher = MockDispatcherFactory.createDispatcher();
         dispatcher.getRegistry().addSingletonResource(healthcheck);
         request = MockHttpRequest.get("health");
@@ -203,6 +204,8 @@ public class HealthcheckTest {
         MetricRegistry registry = mock(MetricRegistry.class);
 
         SortedMap<String, Meter> meters = new TreeMap<>();
+        Meter errorRateErrorMeter = mock(Meter.class);
+        meters.put(MetricName.ERROR_RATE.name(healthcheck.errorHandler), errorRateErrorMeter);
         Meter errorRateEuropa = mock(Meter.class);
         when(errorRateEuropa.getFiveMinuteRate()).thenReturn(errorFiveMinRateEuropa);
         meters.put(MetricName.ERROR_RATE.name(healthcheck.europa), errorRateEuropa);
@@ -279,6 +282,10 @@ public class HealthcheckTest {
 
     private CPIService validCPIService() throws CPIServiceException {
         return cpiServiceWithDates(LocalDate.now().plusDays(1), LocalDate.now().minusDays(1));
+    }
+
+    private ErrorHandler anyErrorHandler(MetricRegistry metricRegistry) throws CPIServiceException {
+        return new ErrorHandler(metricRegistry);
     }
 
     private CPIService exceptionThrowingCPIService() throws CPIServiceException {
