@@ -1,10 +1,12 @@
 package scot.mygov.housing.cpi;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Supplier;
 import scot.mygov.housing.cpi.model.CPIData;
 import scot.mygov.housing.cpi.model.CPIDataPoint;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
@@ -12,10 +14,15 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.concurrent.TimeUnit;
+
+import static com.google.common.base.Suppliers.memoizeWithExpiration;
 
 public class CPIService {
 
     private final URL dataURL;
+
+    private final Supplier<CPIData> cpiDataSupplier = memoizeWithExpiration(this::fetchCPIData, 5, TimeUnit.MINUTES);
 
     public CPIService(URL dataURI) {
         this.dataURL = dataURI;
@@ -30,10 +37,18 @@ public class CPIService {
     }
 
     public CPIData cpiData() throws CPIServiceException {
+        try {
+            return cpiDataSupplier.get();
+        } catch (UncheckedIOException e) {
+            throw new CPIServiceException("Unable to fetch CPI data", e);
+        }
+    }
+
+    private CPIData fetchCPIData() {
         try{
             return new ObjectMapper().readValue(dataURL, CPIData.class);
         } catch (IOException e) {
-            throw new CPIServiceException("Unable to fetch CPI data", e);
+            throw new UncheckedIOException("Unable to fetch CPI data", e);
         }
     }
 
