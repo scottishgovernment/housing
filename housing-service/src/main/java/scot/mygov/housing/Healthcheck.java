@@ -276,7 +276,7 @@ public class Healthcheck {
 
     private void addFormSubmissionErrorsInfo(ArrayNode errors) {
         Meter errorRate = metricRegistry.getMeters().get(MetricName.ERROR_RATE.name(errorHandler));
-        if (errorRate.getFiveMinuteRate() > 0) {
+        if (errorRate.getFiveMinuteRate() > EPSILON) {
             errors.add("Form submission errors in last 5 minutes");
         }
     }
