@@ -83,9 +83,10 @@ public class Healthcheck {
 
         ArrayNode errors = factory.arrayNode();
         ArrayNode warnings = factory.arrayNode();
+        ArrayNode info = factory.arrayNode();
         ObjectNode data = factory.objectNode();
 
-        addLicenseInfo(result, errors, warnings, data, licenseDays);
+        addLicenseInfo(result, errors, warnings, info, data, licenseDays);
         addCPIInfo(result, errors, data);
         addPostcodeLookupMetricsInfo(result, errors, data);
         addModelTenancyMetricsInfo(result, errors, data);
@@ -116,26 +117,23 @@ public class Healthcheck {
                 .build();
     }
 
-    private boolean addLicenseInfo(
+    private void addLicenseInfo(
             ObjectNode result,
             ArrayNode errors,
+            ArrayNode info,
             ArrayNode warnings,
             ObjectNode data,
             int licenseDays) {
-        boolean licensed = asposeLicense.isLicensed();
-        LocalDate expires = asposeLicense.expires();
-        Long daysRemaining = asposeLicense.daysUntilExpiry();
-        result.put("license", licensed);
-        if (expires != null) {
-            data.put("licenseExpires", expires.toString());
-            data.put("daysUntilExpiry", daysRemaining);
+        if (!asposeLicense.hasLicense()) {
+            errors.add("No licence loaded");
+        } else {
+            LocalDate expires = asposeLicense.expires();
+            Long daysRemaining = asposeLicense.daysUntilExpiry();
+            if (expires != null) {
+                data.put("licenseExpires", expires.toString());
+                data.put("daysUntilExpiry", daysRemaining);
+            }
         }
-        if (!licensed) {
-            errors.add("Aspose Words license is not valid");
-        } else if (daysRemaining < licenseDays) {
-            warnings.add(format("License expires in %d days", daysRemaining));
-        }
-        return licensed;
     }
 
     private void addCPIInfo(ObjectNode result, ArrayNode errors, ObjectNode data) {

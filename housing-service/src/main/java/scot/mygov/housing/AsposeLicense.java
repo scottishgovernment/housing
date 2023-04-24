@@ -45,8 +45,12 @@ public class AsposeLicense {
         String dateString = xPath.evaluate("//License/Data/SubscriptionExpiry", source);
         expiryDate = LocalDate.parse(dateString, DateTimeFormatter.ofPattern("yyyyMMdd"));
         license.setLicense(licenseURI.getPath());
+        LOGGER.info("License loaded");
     }
 
+    boolean hasLicense() {
+        return license != null;
+    }
     public LocalDate expires() {
         return expiryDate;
     }
