@@ -21,7 +21,7 @@ public class AsposeLicenseTest {
     @Test
     public void isUnlicensedIfNoLicenseFileExists() throws URISyntaxException {
         AsposeLicense license = new AsposeLicense(null);
-        assertFalse(license.isLicensed());
+        assertFalse(license.hasLicense());
     }
 
     @Test

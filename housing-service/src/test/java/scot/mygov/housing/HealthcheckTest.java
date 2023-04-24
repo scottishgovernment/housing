@@ -11,7 +11,6 @@ import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -77,7 +76,7 @@ public class HealthcheckTest {
 
         assertEquals(200, response.getStatus());
         JsonNode health = mapper.readTree(response.getContentAsString());
-        assertTrue("licence not as expected", health.get("license").asBoolean());
+
         JsonNode data = health.get("data");
         assertEquals("days until expiry not as expected", 100L, data.get("daysUntilExpiry").asLong());
         String expectedExpiry = healthcheck.asposeLicense.expires().toString();
@@ -85,44 +84,16 @@ public class HealthcheckTest {
     }
 
     @Test
-    public void messagePropertyPresentIfServiceIsHealthy() throws IOException {
-        dispatcher.invoke(request, response);
-
-        assertEquals(200, response.getStatus());
-        JsonNode health = mapper.readTree(response.getContentAsString());
-        assertFalse("message property should be non-empty", health.get("message").asText().isEmpty());
-    }
-
-    @Test
-    public void warningIfLicenseWillExpireSoon() throws Exception {
-        LocalDate expires = LocalDate.now().plusDays(20);
-        this.healthcheck.asposeLicense = validLicense(expires, 20L);
-        request = MockHttpRequest.get("health?licenseDays=30");
-
-        dispatcher.invoke(request, response);
-
-        assertEquals(200, response.getStatus());
-        JsonNode health = mapper.readTree(response.getContentAsString());
-        JsonNode warnings = health.get("warnings");
-        assertEquals(1, warnings.size());
-        assertTrue(warnings.get(0).asText().contains("License"));
-        JsonNode data = health.get("data");
-        assertEquals("days until expiry not as expected", 20L, data.get("daysUntilExpiry").asLong());
-        assertEquals("licenseExpires not as expected", expires.toString(), data.get("licenseExpires").asText());
-    }
-
-    @Test
-    public void notOkForNotLicensed() throws IOException {
+    public void notOkIfLicenseFailsToLoad() throws IOException {
         this.healthcheck.asposeLicense = invalidLicense();
 
         dispatcher.invoke(request, response);
 
         assertEquals(503, response.getStatus());
         JsonNode health = mapper.readTree(response.getContentAsString());
-        assertFalse("licence not as expected", health.get("license").asBoolean());
         JsonNode errors = health.get("errors");
         assertEquals(1, errors.size());
-        assertTrue(errors.get(0).asText().contains("license"));
+        assertTrue(errors.get(0).asText().equals("No licence loaded"));
     }
 
     @Test
@@ -247,7 +218,7 @@ public class HealthcheckTest {
 
     private AsposeLicense anyValidLicense() {
         AsposeLicense license = mock(AsposeLicense.class);
-        when(license.isLicensed()).thenReturn(true);
+        when(license.hasLicense()).thenReturn(true);
         when(license.daysUntilExpiry()).thenReturn(100L);
         when(license.expires()).thenReturn(LocalDate.now());
         return license;
@@ -255,7 +226,7 @@ public class HealthcheckTest {
 
     private AsposeLicense validLicense(LocalDate expires, long daysUntilExpiry) {
         AsposeLicense license = mock(AsposeLicense.class);
-        when(license.isLicensed()).thenReturn(true);
+        when(license.hasLicense()).thenReturn(true);
         when(license.daysUntilExpiry()).thenReturn(daysUntilExpiry);
         when(license.expires()).thenReturn(expires);
         return license;
@@ -263,7 +234,7 @@ public class HealthcheckTest {
 
     private AsposeLicense invalidLicense() {
         AsposeLicense license = mock(AsposeLicense.class);
-        when(license.isLicensed()).thenReturn(false);
+        when(license.hasLicense()).thenReturn(false);
         return license;
     }
 

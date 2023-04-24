@@ -20,23 +20,26 @@ public class AsposeLicense {
 
     private License license = new License();
 
+    private boolean loaded = false;
+
     private LocalDate expiryDate;
 
     public AsposeLicense(File licenseFile) {
         if (licenseFile == null) {
-            LOGGER.warn("No Aspose Words license file configured");
+            LOGGER.error("No Aspose Words license file configured");
             return;
         }
         try {
             loadLicense(licenseFile.toURI());
         } catch (Exception ex) {
-            LOGGER.warn("Failed to load aspose license from " + licenseFile, ex);
+            loaded = false;
+            LOGGER.error("Failed to load aspose license from " + licenseFile, ex);
         }
     }
 
     private void loadLicense(URI licenseURI) throws Exception {
         if (!new File(licenseURI).exists()) {
-            LOGGER.warn("License file does not exist: {}", licenseURI);
+            LOGGER.error("License file does not exist: {}", licenseURI);
             return;
         }
         XPathFactory xPathFactory = XPathFactory.newInstance();
@@ -45,11 +48,12 @@ public class AsposeLicense {
         String dateString = xPath.evaluate("//License/Data/SubscriptionExpiry", source);
         expiryDate = LocalDate.parse(dateString, DateTimeFormatter.ofPattern("yyyyMMdd"));
         license.setLicense(licenseURI.getPath());
+        loaded = true;
         LOGGER.info("License loaded");
     }
 
-    boolean hasLicense() {
-        return license != null;
+    public boolean hasLicense() {
+        return loaded;
     }
     public LocalDate expires() {
         return expiryDate;
@@ -60,10 +64,6 @@ public class AsposeLicense {
             return null;
         }
         return DAYS.between(LocalDate.now(), expiryDate);
-    }
-
-    public boolean isLicensed() {
-        return license.getIsLicensed();
     }
 
 }
