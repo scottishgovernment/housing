@@ -1,7 +1,0 @@
-#!/bin/sh
-set -e
-mvn -pl housing-service \
-  build-helper:reserve-network-port \
-  properties:write-project-properties \
-  elasticsearch:runforked \
-  -Des.setAwait
