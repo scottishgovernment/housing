@@ -17,8 +17,8 @@
   <name>Housing</name>
 
   <scm>
-    <connection>scm:git:ssh://git@stash.digital.gov.uk:7999/mgv/housing.git</connection>
-    <url>http://stash.digital.gov.uk/projects/MGV/repos/housing/</url>
+    <connection>scm:git:ssh://git@git.digital.gov.uk/mgv/housing.git</connection>
+    <url>http://git.digital.gov.uk/projects/MGV/repos/housing/</url>
   </scm>
 
   <modules>
