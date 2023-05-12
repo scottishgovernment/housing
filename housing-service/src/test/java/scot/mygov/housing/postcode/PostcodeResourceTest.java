@@ -1,14 +1,14 @@
 package scot.mygov.housing.postcode;
 
-import org.jboss.resteasy.specimpl.ResteasyUriBuilder;
-import org.jboss.resteasy.spi.ResteasyUriInfo;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.core.UriInfo;
+import org.jboss.resteasy.specimpl.ResteasyUriInfo;
+import org.jboss.resteasy.spi.ResteasyUriBuilder;
 import org.junit.Test;
 import scot.mygov.validation.ValidationResults;
 
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import java.net.URI;
-import java.util.Collections;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -157,12 +157,13 @@ public class PostcodeResourceTest {
     }
 
     private UriInfo uriInfoWithNoPostcodeParam() {
-        URI uri = new ResteasyUriBuilder().build();
+        URI uri = UriBuilder.newInstance().build();
         return new ResteasyUriInfo(uri);
     }
 
     private UriInfo uriInfoWithPostcodeParam(String postcode) {
-        URI uri = new ResteasyUriBuilder().queryParam("postcode", postcode).build();
+        URI uri = UriBuilder.newInstance()
+                .queryParam("postcode", postcode).build();
         return new ResteasyUriInfo(uri);
     }
 

@@ -2,11 +2,8 @@ package scot.mygov.housing.forms;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import jakarta.ws.rs.core.Response;
 import org.junit.Test;
-import scot.mygov.validation.Validator;
-
-import javax.ws.rs.core.Response;
 
 import java.util.Collections;
 import java.util.HashMap;

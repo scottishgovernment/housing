@@ -1,5 +1,6 @@
 package scot.mygov.housing;
 
+import jakarta.ws.rs.core.Application;
 import scot.mygov.housing.cpi.CPIResource;
 import scot.mygov.housing.europa.Europa;
 import scot.mygov.housing.fairrentregister.FairRentResource;
@@ -15,7 +16,6 @@ import scot.mygov.housing.postcode.PostcodeResource;
 import scot.mygov.housing.rpz.RentPressureZoneResource;
 
 import javax.inject.Inject;
-import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
 

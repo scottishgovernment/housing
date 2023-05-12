@@ -1,10 +1,10 @@
 package scot.mygov.housing;
 
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.container.ContainerRequestFilter;
 import org.apache.commons.lang3.time.StopWatch;
 
 import javax.inject.Inject;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ContainerRequestFilter;
 import java.io.IOException;
 
 public class RequestLogger implements ContainerRequestFilter {

@@ -1,7 +1,6 @@
 package scot.mygov.housing.cpi;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Supplier;
 import scot.mygov.housing.cpi.model.CPIData;
 import scot.mygov.housing.cpi.model.CPIDataPoint;
 
@@ -15,6 +14,7 @@ import java.time.YearMonth;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 import static com.google.common.base.Suppliers.memoizeWithExpiration;
 

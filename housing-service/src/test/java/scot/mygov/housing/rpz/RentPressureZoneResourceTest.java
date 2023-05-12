@@ -1,22 +1,17 @@
 package scot.mygov.housing.rpz;
 
-import org.jboss.resteasy.specimpl.ResteasyUriBuilder;
-import org.jboss.resteasy.spi.ResteasyUriInfo;
-import org.junit.Assert;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.core.UriInfo;
+import org.jboss.resteasy.specimpl.ResteasyUriInfo;
 import org.junit.Test;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import scot.mygov.validation.ValidationResults;
 
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.time.LocalDate;
-import java.util.Collections;
 
 import static java.util.Collections.emptyMap;
-import static java.util.Collections.emptySet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -30,7 +25,7 @@ public class RentPressureZoneResourceTest {
 
         // ARRANGE
         RentPressureZoneResource sut = new RentPressureZoneResource(exceptionThrowingRpzService());
-        URI uri = new ResteasyUriBuilder()
+        URI uri = UriBuilder.newInstance()
                 .queryParam("uprn", "validuprn")
                 .queryParam("date", "2012-10-10")
                 .build();
@@ -48,7 +43,7 @@ public class RentPressureZoneResourceTest {
 
         // ARRANGE
         RentPressureZoneResource sut = new RentPressureZoneResource(clientExceptionThrowingRpzService());
-        URI uri = new ResteasyUriBuilder()
+        URI uri = UriBuilder.newInstance()
                 .queryParam("uprn", "validuprn")
                 .queryParam("date", "2012-10-10")
                 .build();
@@ -66,7 +61,7 @@ public class RentPressureZoneResourceTest {
 
         // ARRANGE
         RentPressureZoneResource sut = new RentPressureZoneResource(null);
-        URI uri = new ResteasyUriBuilder().queryParam("date", "2010-01-01").build();
+        URI uri = UriBuilder.newInstance().queryParam("date", "2010-01-01").build();
         UriInfo uriInfo = new ResteasyUriInfo(uri);
 
         // ACT
@@ -84,7 +79,7 @@ public class RentPressureZoneResourceTest {
 
         // ARRANGE
         RentPressureZoneResource sut = new RentPressureZoneResource(null);
-        URI uri = new ResteasyUriBuilder().queryParam("uprn", "EH104AX").build();
+        URI uri = UriBuilder.newInstance().queryParam("uprn", "EH104AX").build();
         UriInfo uriInfo = new ResteasyUriInfo(uri);
 
         // ACT
@@ -102,7 +97,7 @@ public class RentPressureZoneResourceTest {
 
         // ARRANGE
         RentPressureZoneResource sut = new RentPressureZoneResource(null);
-        URI uri = new ResteasyUriBuilder()
+        URI uri = UriBuilder.newInstance()
                 .queryParam("uprn", "EH104AX")
                 .queryParam("date", "111")
                 .build();
@@ -130,7 +125,7 @@ public class RentPressureZoneResourceTest {
                 .maxIncrease(expectedMaxIncrease).build();
         RPZService service = rpzService(result);
         RentPressureZoneResource sut = new RentPressureZoneResource(service);
-        URI uri = new ResteasyUriBuilder()
+        URI uri = UriBuilder.newInstance()
                 .queryParam("uprn", "validuprn")
                 .queryParam("date", "2012-10-10")
                 .build();

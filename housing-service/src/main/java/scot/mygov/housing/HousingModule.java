@@ -5,7 +5,11 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.codahale.metrics.MetricRegistry;
 import dagger.Module;
 import dagger.Provides;
-import org.jboss.resteasy.client.jaxrs.BasicAuthentication;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.ClientRequestFilter;
+import jakarta.ws.rs.client.WebTarget;
+import org.jboss.resteasy.client.jaxrs.internal.BasicAuthentication;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,9 +51,6 @@ import scot.mygov.validation.Validator;
 import javax.annotation.Nullable;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientRequestFilter;
-import javax.ws.rs.client.WebTarget;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.time.LocalDate;
@@ -97,7 +98,9 @@ public class HousingModule {
     @Named(STANDARD_CLIENT)
     @Singleton
     Client client() {
-        return new ResteasyClientBuilder().connectionPoolSize(10).build();
+        return ((ResteasyClientBuilder) ClientBuilder.newBuilder())
+                .connectionPoolSize(10)
+                .build();
     }
 
     @Provides

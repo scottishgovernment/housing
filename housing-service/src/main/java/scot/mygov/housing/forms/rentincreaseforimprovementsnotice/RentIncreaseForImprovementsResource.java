@@ -1,12 +1,12 @@
 package scot.mygov.housing.forms.rentincreaseforimprovementsnotice;
 
+import jakarta.ws.rs.Path;
 import scot.mygov.housing.forms.AbstractDocumentGenerationResource;
 import scot.mygov.housing.forms.DocumentGenerationService;
 import scot.mygov.housing.forms.RecaptchaCheck;
 import scot.mygov.housing.forms.rentincreaseforimprovementsnotice.model.RentIncreaseForImprovements;
 
 import javax.inject.Inject;
-import javax.ws.rs.Path;
 
 @Path("rent-increase-for-improvements")
 public class RentIncreaseForImprovementsResource extends AbstractDocumentGenerationResource<RentIncreaseForImprovements> {

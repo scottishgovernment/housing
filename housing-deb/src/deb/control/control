@@ -4,7 +4,7 @@ Section: mygov
 Priority: optional
 Architecture: all
 Maintainer: martin.ellis@gov.scot
-Depends: java8-runtime-headless
+Depends: java11-runtime-headless
 Description: Housing Service
  Provides APIs used by the housing forms on the informational site,
  including:

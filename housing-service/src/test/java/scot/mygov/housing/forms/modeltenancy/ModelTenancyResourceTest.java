@@ -1,23 +1,5 @@
 package scot.mygov.housing.forms.modeltenancy;
 
-import org.junit.Assert;
-import org.junit.Test;
-import scot.mygov.documents.DocumentGeneratorException;
-import scot.mygov.housing.forms.DocumentGenerationService;
-import scot.mygov.housing.forms.DocumentGenerationServiceException;
-import scot.mygov.housing.forms.RecaptchaCheck;
-import scot.mygov.housing.forms.modeltenancy.model.ModelTenancy;
-import scot.mygov.validation.Validator;
-
-import javax.ws.rs.core.Response;
-import java.util.HashMap;
-import java.util.Map;
-
-import static java.util.Collections.singletonMap;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 

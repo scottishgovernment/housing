@@ -1,13 +1,13 @@
 package scot.mygov.housing;
 
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.container.ContainerResponseContext;
+import jakarta.ws.rs.core.Request;
+import jakarta.ws.rs.core.UriInfo;
 import org.apache.commons.lang3.time.StopWatch;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ContainerResponseContext;
-import javax.ws.rs.core.Request;
-import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 
 public class ResponseLoggerTest {

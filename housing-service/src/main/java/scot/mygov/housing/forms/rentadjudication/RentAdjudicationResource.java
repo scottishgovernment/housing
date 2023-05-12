@@ -1,12 +1,12 @@
 package scot.mygov.housing.forms.rentadjudication;
 
+import jakarta.ws.rs.Path;
 import scot.mygov.housing.forms.AbstractDocumentGenerationResource;
 import scot.mygov.housing.forms.DocumentGenerationService;
 import scot.mygov.housing.forms.RecaptchaCheck;
 import scot.mygov.housing.forms.rentadjudication.model.RentAdjudication;
 
 import javax.inject.Inject;
-import javax.ws.rs.Path;
 
 @Path("rent-adjudication")
 public class RentAdjudicationResource extends AbstractDocumentGenerationResource<RentAdjudication> {

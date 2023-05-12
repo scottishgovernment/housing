@@ -1,18 +1,17 @@
 package scot.mygov.housing.cpi;
 
-import org.jboss.resteasy.specimpl.ResteasyUriBuilder;
-import org.jboss.resteasy.spi.ResteasyUriInfo;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.core.UriInfo;
+import org.jboss.resteasy.specimpl.ResteasyUriInfo;
 import org.junit.Test;
 import scot.mygov.validation.ValidationResults;
 
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.time.LocalDate;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.mock;
 
 public class CPIResourceTest {
 
@@ -21,7 +20,7 @@ public class CPIResourceTest {
         // ARRANGE
         CPIService service = cpiService(100.0);
         CPIResource sut = new CPIResource(service);
-        URI uri = new ResteasyUriBuilder()
+        URI uri = UriBuilder.newInstance()
                 .queryParam("from_date", "2010-01-01")
                 .queryParam("to_date", "2010-02-02")
                 .build();
@@ -42,7 +41,7 @@ public class CPIResourceTest {
         // ARRANGE
         CPIService service = cpiService(100.0);
         CPIResource sut = new CPIResource(service);
-        URI uri = new ResteasyUriBuilder()
+        URI uri = UriBuilder.newInstance()
                 .queryParam("to_date", "2010-02-02")
                 .build();
         UriInfo uriInfo = new ResteasyUriInfo(uri);
@@ -60,7 +59,7 @@ public class CPIResourceTest {
         // ARRANGE
         CPIService service = cpiService(100.0);
         CPIResource sut = new CPIResource(service);
-        URI uri = new ResteasyUriBuilder()
+        URI uri = UriBuilder.newInstance()
                 .queryParam("from_date", "2010-02-02")
                 .build();
         UriInfo uriInfo = new ResteasyUriInfo(uri);
@@ -78,7 +77,7 @@ public class CPIResourceTest {
         // ARRANGE
         CPIService service = cpiService(100.0);
         CPIResource sut = new CPIResource(service);
-        URI uri = new ResteasyUriBuilder()
+        URI uri = UriBuilder.newInstance()
                 .queryParam("from_date", "blah")
                 .queryParam("to_date", "2010-02-02")
                 .build();
@@ -97,7 +96,7 @@ public class CPIResourceTest {
         // ARRANGE
         CPIService service = cpiService(100.0);
         CPIResource sut = new CPIResource(service);
-        URI uri = new ResteasyUriBuilder()
+        URI uri = UriBuilder.newInstance()
                 .queryParam("to_date", "blah")
                 .queryParam("from_date", "2010-02-02")
                 .build();
@@ -116,7 +115,7 @@ public class CPIResourceTest {
         // ARRANGE
         CPIService service = cpiService(100.0);
         CPIResource sut = new CPIResource(service);
-        URI uri = new ResteasyUriBuilder()
+        URI uri = UriBuilder.newInstance()
                 .queryParam("to_date", "2000-01-01")
                 .queryParam("from_date", "2010-02-02")
                 .build();
@@ -135,7 +134,7 @@ public class CPIResourceTest {
         // ARRANGE
         CPIService service = exceptionThrowingCpiService();
         CPIResource sut = new CPIResource(service);
-        URI uri = new ResteasyUriBuilder()
+        URI uri = UriBuilder.newInstance()
                 .queryParam("from_date", "2000-01-01")
                 .queryParam("to_date", "2010-02-02")
                 .build();

@@ -1,12 +1,12 @@
 package scot.mygov.housing.forms.foreigntraveldeclaration;
 
+import jakarta.ws.rs.Path;
 import scot.mygov.housing.forms.AbstractDocumentGenerationResource;
 import scot.mygov.housing.forms.DocumentGenerationService;
 import scot.mygov.housing.forms.RecaptchaCheck;
 import scot.mygov.housing.forms.foreigntraveldeclaration.model.ForeignTravelDeclaration;
 
 import javax.inject.Inject;
-import javax.ws.rs.Path;
 
 @Path("foreigntraveldeclaration")
 public class ForeignTravelDeclarationResource extends AbstractDocumentGenerationResource<ForeignTravelDeclaration> {
