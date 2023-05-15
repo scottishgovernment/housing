@@ -25,8 +25,8 @@ public class ResponseLogger implements ContainerResponseFilter {
         String path = request.getUriInfo().getPath();
         int status = response.getStatus();
 
-        if (request.getProperty("stopwatch") != null) {
-            StopWatch stopWatch = (StopWatch) request.getProperty("stopwatch");
+        StopWatch stopWatch = (StopWatch) request.getProperty("stopwatch");
+        if (stopWatch != null && stopWatch.isStarted()) {
             stopWatch.stop();
             LOGGER.info("{} {} {} {}", status, method, path, stopWatch.getTime());
         } else {
