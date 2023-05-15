@@ -25,6 +25,9 @@ import scot.mygov.housing.MetricName;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import static jakarta.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
+import static jakarta.ws.rs.core.Response.Status.OK;
+
 @Path("fairrent")
 public class FairRentResource {
 
@@ -85,24 +88,38 @@ public class FairRentResource {
         request(response, target);
     }
 
-    private void request(final AsyncResponse response, WebTarget target) {
+    private void request(final AsyncResponse asyncResponse, WebTarget target) {
         Timer.Context timer = responseTimes.time();
         requestCounter.inc();
         requestMeter.mark();
         InvocationCallback<Response> callback = new InvocationCallback<Response>() {
             @Override
             public void completed(Response targetResponse) {
-                response.resume(Response.status(200).entity(targetResponse.getEntity()).build());
                 timer.stop();
+
+                if (targetResponse.bufferEntity()) {
+                    Object entity = targetResponse.getEntity();
+                    Response response = Response
+                            .status(OK)
+                            .entity(entity)
+                            .build();
+                    asyncResponse.resume(response);
+                } else {
+                    Response response = Response
+                            .status(INTERNAL_SERVER_ERROR)
+                            .entity("Failed")
+                            .build();
+                    asyncResponse.resume(response);
+                }
             }
 
             @Override
             public void failed(Throwable throwable) {
                 errorCounter.inc();
                 errorMeter.mark();
-                LOG.error("Failed to get fair rent data, path is {}", target.getUri().getPath(), throwable);
-                response.resume(Response.status(500).entity("Failed to get fair rent data").build());
                 timer.stop();
+                LOG.error("Failed to get fair rent data, path is {}", target.getUri().getPath(), throwable);
+                asyncResponse.resume(Response.status(INTERNAL_SERVER_ERROR).entity("Failed to get fair rent data").build());
             }
         };
         target.request().async().get(callback);
