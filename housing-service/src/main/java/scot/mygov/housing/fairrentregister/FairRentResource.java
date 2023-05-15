@@ -95,22 +95,11 @@ public class FairRentResource {
         InvocationCallback<Response> callback = new InvocationCallback<Response>() {
             @Override
             public void completed(Response targetResponse) {
+                targetResponse.bufferEntity();
                 timer.stop();
-
-                if (targetResponse.bufferEntity()) {
-                    Object entity = targetResponse.getEntity();
-                    Response response = Response
-                            .status(OK)
-                            .entity(entity)
-                            .build();
-                    asyncResponse.resume(response);
-                } else {
-                    Response response = Response
-                            .status(INTERNAL_SERVER_ERROR)
-                            .entity("Failed")
-                            .build();
-                    asyncResponse.resume(response);
-                }
+                Object entity = targetResponse.getEntity();
+                Response response = Response.status(OK).entity(entity).build();
+                asyncResponse.resume(response);
             }
 
             @Override
@@ -124,4 +113,5 @@ public class FairRentResource {
         };
         target.request().async().get(callback);
     }
+
 }
