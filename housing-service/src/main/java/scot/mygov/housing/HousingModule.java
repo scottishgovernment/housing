@@ -9,8 +9,8 @@ import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.ClientRequestFilter;
 import jakarta.ws.rs.client.WebTarget;
-import org.jboss.resteasy.client.jaxrs.internal.BasicAuthentication;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
+import org.jboss.resteasy.client.jaxrs.internal.BasicAuthentication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scot.mygov.config.Configuration;
@@ -55,6 +55,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.time.LocalDate;
 
+import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 @Module
@@ -100,6 +101,9 @@ public class HousingModule {
     Client client() {
         return ((ResteasyClientBuilder) ClientBuilder.newBuilder())
                 .connectionPoolSize(10)
+                .connectionTTL(1, MINUTES)
+                .connectTimeout(5, SECONDS)
+                .readTimeout(10, SECONDS)
                 .build();
     }
 
