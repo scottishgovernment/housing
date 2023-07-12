@@ -67,6 +67,8 @@ public class HousingApplication extends Application {
     @Inject
     ErrorHandler errorHandler;
 
+    NotFoundErrorHandler notFoundErrorHandler = new NotFoundErrorHandler();
+
     @Inject
     Healthcheck healthcheck;
 
@@ -100,6 +102,8 @@ public class HousingApplication extends Application {
                 postcodeResource,
 
                 errorHandler,
+                notFoundErrorHandler,
+
                 healthcheck,
                 europa,
                 responseLogger,

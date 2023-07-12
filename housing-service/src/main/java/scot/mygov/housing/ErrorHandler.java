@@ -25,6 +25,9 @@ public class ErrorHandler implements ExceptionMapper<Exception> {
 
     @Override
     public Response toResponse(Exception exception) {
+
+        //
+
         LOGGER.error("Exception thrown", exception);
         errorMeter.mark();
         return Response.status(INTERNAL_SERVER_ERROR)
