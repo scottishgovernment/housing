@@ -70,6 +70,9 @@ public class HousingApplication extends Application {
     NotFoundErrorHandler notFoundErrorHandler = new NotFoundErrorHandler();
 
     @Inject
+    NotAcceptableErrorHandler notAcceptableErrorHandler;
+
+    @Inject
     Healthcheck healthcheck;
 
     @Inject
@@ -103,6 +106,7 @@ public class HousingApplication extends Application {
 
                 errorHandler,
                 notFoundErrorHandler,
+                notAcceptableErrorHandler,
 
                 healthcheck,
                 europa,
