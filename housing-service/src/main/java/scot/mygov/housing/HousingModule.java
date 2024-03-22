@@ -172,8 +172,15 @@ public class HousingModule {
             AsposeLicense asposeLicense,
             MetricRegistry metricRegistry) {
 
-        DocumentTemplateLoader templateLoader
-                = new DocumentTemplateLoaderBasicImpl("/templates/model-tenancy-agreement.docx", asposeLicense);
+        DateSwitchingDocumentTemplateLoader templateLoader = new DateSwitchingDocumentTemplateLoader();
+        LocalDate legislationChangeDate2024 = LocalDate.parse(config.getLegislationChangeDate2024());
+
+        templateLoader.addDocument(
+            LocalDate.of(2010, 1, 1),
+            new DocumentTemplateLoaderBasicImpl("/templates/model-tenancy-agreement.docx", asposeLicense));
+        templateLoader.addDocument(
+            legislationChangeDate2024,
+            new DocumentTemplateLoaderBasicImpl("/templates/model-tenancy-agreement-2024.docx", asposeLicense));
 
         return  new DocumentGenerationService<>(
                 new DocumentGenerator(templateLoader),
@@ -212,6 +219,7 @@ public class HousingModule {
 
         DateSwitchingDocumentTemplateLoader templateLoader = new DateSwitchingDocumentTemplateLoader();
         LocalDate legislationChangeDate2023 = LocalDate.parse(config.getLegislationChangeDate2023());
+        LocalDate legislationChangeDate2024 = LocalDate.parse(config.getLegislationChangeDate2024());
 
         templateLoader.addDocument(
             LocalDate.of(2010, 1, 1),
@@ -219,6 +227,9 @@ public class HousingModule {
         templateLoader.addDocument(
             legislationChangeDate2023,
             new DocumentTemplateLoaderBasicImpl("/templates/rent-increase-2023.docx", asposeLicense));
+        templateLoader.addDocument(
+            legislationChangeDate2024,
+            new DocumentTemplateLoaderBasicImpl("/templates/rent-increase-2024.docx", asposeLicense));
 
         return  new DocumentGenerationService<>(
                 new DocumentGenerator(templateLoader),
@@ -260,8 +271,15 @@ public class HousingModule {
             AsposeLicense asposeLicense,
             MetricRegistry metricRegistry) {
 
-        DocumentTemplateLoader templateLoader
-                = new DocumentTemplateLoaderBasicImpl("/templates/notice-to-leave.docx", asposeLicense);
+        DateSwitchingDocumentTemplateLoader templateLoader = new DateSwitchingDocumentTemplateLoader();
+        LocalDate legislationChangeDate2024 = LocalDate.parse(config.getLegislationChangeDate2024());
+
+        templateLoader.addDocument(
+            LocalDate.of(2010, 1, 1),
+            new DocumentTemplateLoaderBasicImpl("/templates/notice-to-leave.docx", asposeLicense));
+        templateLoader.addDocument(
+            legislationChangeDate2024,
+            new DocumentTemplateLoaderBasicImpl("/templates/notice-to-leave-2024.docx", asposeLicense));
 
         return  new DocumentGenerationService<>(
                 new DocumentGenerator(templateLoader),
@@ -277,8 +295,15 @@ public class HousingModule {
             AsposeLicense asposeLicense,
             MetricRegistry metricRegistry) {
 
-        DocumentTemplateLoader templateLoader
-                = new DocumentTemplateLoaderBasicImpl("/templates/subtenant-notice-to-leave.docx", asposeLicense);
+        DateSwitchingDocumentTemplateLoader templateLoader = new DateSwitchingDocumentTemplateLoader();
+        LocalDate legislationChangeDate2024 = LocalDate.parse(config.getLegislationChangeDate2024());
+
+        templateLoader.addDocument(
+            LocalDate.of(2010, 1, 1),
+            new DocumentTemplateLoaderBasicImpl("/templates/subtenant-notice-to-leave.docx", asposeLicense));
+        templateLoader.addDocument(
+            legislationChangeDate2024,
+            new DocumentTemplateLoaderBasicImpl("/templates/subtenant-notice-to-leave-2024.docx", asposeLicense));
 
         return  new DocumentGenerationService<>(
                 new DocumentGenerator(templateLoader),
