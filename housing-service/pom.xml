@@ -16,7 +16,7 @@
   <description>Form backend for Model Tenancy, Notice to Leave, Fair Rent Register</description>
 
   <properties>
-    <undertow.version>2.3.12.Final</undertow.version>
+    <undertow.version>2.3.14.Final</undertow.version>
     <resteasy.version>6.2.3.Final</resteasy.version>
     <jackson.version>2.15.0</jackson.version>
     <slf4j.version>2.0.7</slf4j.version>
