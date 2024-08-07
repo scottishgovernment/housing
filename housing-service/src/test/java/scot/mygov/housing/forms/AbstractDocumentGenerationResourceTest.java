@@ -3,6 +3,7 @@ package scot.mygov.housing.forms;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.core.Response;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -161,7 +162,7 @@ public class AbstractDocumentGenerationResourceTest {
 
         // ARRANGE
         Map<String, String> params = new HashMap<>();
-        params.put("data", "");
+        params.put("data", "asdfasdf");
 
         DummyDocumentationGenarationResource sut
                 = new DummyDocumentationGenarationResource(
@@ -173,6 +174,25 @@ public class AbstractDocumentGenerationResourceTest {
         byte[] bytes = (byte[]) response.getEntity();
 
         // ASSERT - see expected exception
+    }
+
+    @Test
+    public void shouldReturnErrorIfEmptyJSON() throws DocumentGenerationServiceException {
+
+        // ARRANGE
+        Map<String, String> params = new HashMap<>();
+        params.put("data", "");
+
+        DummyDocumentationGenarationResource sut
+                = new DummyDocumentationGenarationResource(
+                service(new byte[]{1}),
+                passingRecaptchaCheck());
+
+        // ACT
+        Response response = sut.multipart(params);
+
+        // ASSERT
+        Assert.assertEquals(400, response.getStatus());
     }
 
     @Test

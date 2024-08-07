@@ -9,6 +9,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.apache.commons.lang3.StringUtils;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import scot.mygov.documents.DocumentType;
 
@@ -41,13 +42,19 @@ public abstract class AbstractDocumentGenerationResource<T extends AbstractFormM
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response multipart(@MultipartForm Map<String, String> params)
             throws DocumentGenerationServiceException {
+
+        String data = params.get("data");
+        if (StringUtils.isBlank(data)) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Submission contained no data").build();
+        }
+
         T model = parseModel(params.get("data"));
         return response(model, params.get("type"));
     }
 
     /**
-     * We think that some users press refresh after downloading the form causinf a get request.  Without this method
-     * this is caught by the expcetion handler and the service alerts.
+     * We think that some users press refresh after downloading the form causing a get request.  Without this method
+     * this is caught by the exception handler and the service alerts.
      */
     @Path("form")
     @GET
