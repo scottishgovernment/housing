@@ -9,8 +9,6 @@ import javax.inject.Inject;
 
 public class NotSupportedExceptionHandler implements ExceptionMapper<NotSupportedException> {
 
-    private static final String ERROR = "<html><body><h1>406 - Not Acceptable</h1></html></body>";
-
     @Inject
     public NotSupportedExceptionHandler() {
         // Default constructor
@@ -18,10 +16,12 @@ public class NotSupportedExceptionHandler implements ExceptionMapper<NotSupporte
 
     @Override
     public Response toResponse(NotSupportedException e) {
+        Response.Status status = Response.Status.UNSUPPORTED_MEDIA_TYPE;
+        String msg = String.format("<html><body><h1>%d - %s</h1></html></body>", status.getStatusCode(), status.getReasonPhrase());
         return Response
-                .status(Response.Status.UNSUPPORTED_MEDIA_TYPE)
+                .status(status)
                 .type(MediaType.TEXT_HTML)
-                .entity(ERROR)
+                .entity(msg)
                 .build();
     }
 
