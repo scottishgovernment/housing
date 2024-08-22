@@ -73,6 +73,9 @@ public class HousingApplication extends Application {
     NotAcceptableErrorHandler notAcceptableErrorHandler;
 
     @Inject
+    NotSupportedExceptionHandler notSupportedExceptionHandler;
+
+    @Inject
     Healthcheck healthcheck;
 
     @Inject
@@ -107,6 +110,7 @@ public class HousingApplication extends Application {
                 errorHandler,
                 notFoundErrorHandler,
                 notAcceptableErrorHandler,
+                notSupportedExceptionHandler,
 
                 healthcheck,
                 europa,
