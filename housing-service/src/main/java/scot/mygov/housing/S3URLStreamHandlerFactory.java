@@ -1,10 +1,10 @@
 package scot.mygov.housing;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.AmazonS3Exception;
-import com.amazonaws.services.s3.model.S3Object;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.S3Exception;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,7 +18,7 @@ public class S3URLStreamHandlerFactory implements URLStreamHandlerFactory {
     static final S3URLStreamHandlerFactory INSTANCE =
             new S3URLStreamHandlerFactory();
 
-    private static AmazonS3 s3Client;
+    private static S3Client s3Client;
 
     private S3URLStreamHandlerFactory() {
         // Singleton instance
@@ -41,7 +41,7 @@ public class S3URLStreamHandlerFactory implements URLStreamHandlerFactory {
         URL.setURLStreamHandlerFactory(INSTANCE);
     }
 
-    public static void setS3(AmazonS3 s3) {
+    public static void setS3(S3Client s3) {
         s3Client = s3;
     }
 
@@ -69,9 +69,12 @@ public class S3URLStreamHandlerFactory implements URLStreamHandlerFactory {
             String key = this.getURL().getPath().substring(1);
             LOG.info("Fetching s3://{}/{}", bucket, key);
             try {
-                S3Object object = S3URLStreamHandlerFactory.s3Client.getObject(bucket, key);
-                return object.getObjectContent();
-            } catch (AmazonS3Exception ex) {
+                GetObjectRequest req = GetObjectRequest.builder()
+                        .bucket(bucket)
+                        .key(key)
+                        .build();
+                return S3URLStreamHandlerFactory.s3Client.getObject(req);
+            } catch (S3Exception ex) {
                 String url = "s3://" + bucket + "/" + key;
                 throw new IOException("Could not fetch from s3: " + url, ex);
             }

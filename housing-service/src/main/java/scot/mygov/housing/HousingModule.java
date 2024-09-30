@@ -1,7 +1,5 @@
 package scot.mygov.housing;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.codahale.metrics.MetricRegistry;
 import dagger.Module;
 import dagger.Provides;
@@ -47,6 +45,8 @@ import scot.mygov.housing.postcode.PostcodeService;
 import scot.mygov.housing.rpz.RPZService;
 import scot.mygov.housing.rpz.StubRPZService;
 import scot.mygov.validation.Validator;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
 
 import javax.annotation.Nullable;
 import javax.inject.Named;
@@ -330,14 +330,13 @@ public class HousingModule {
     @Provides
     @Singleton
     @Nullable
-    AmazonS3 s3(HousingConfiguration configuration) {
+    S3Client s3(HousingConfiguration configuration) {
         String region = configuration.getRegion();
         if (region == null) {
             return null;
         }
-        return AmazonS3ClientBuilder
-            .standard()
-            .withRegion(region)
+        return S3Client.builder()
+            .region(Region.of(region))
             .build();
     }
 

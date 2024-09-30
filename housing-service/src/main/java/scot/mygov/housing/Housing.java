@@ -1,6 +1,5 @@
 package scot.mygov.housing;
 
-import com.amazonaws.services.s3.AmazonS3;
 import dagger.Component;
 import io.undertow.Undertow;
 import org.jboss.resteasy.plugins.server.undertow.UndertowJaxrsServer;
@@ -9,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import scot.mygov.housing.europa.Europa;
 import scot.mygov.housing.postcode.Heartbeat;
+import software.amazon.awssdk.services.s3.S3Client;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -38,7 +38,7 @@ public class Housing {
 
     @Inject
     @Nullable
-    AmazonS3 s3;
+    S3Client s3;
 
     public static final void main(String[] args) {
         SLF4JBridgeHandler.removeHandlersForRootLogger();

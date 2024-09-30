@@ -1,9 +1,10 @@
 package scot.mygov.housing;
 
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import scot.mygov.housing.S3URLStreamHandlerFactory.S3URLConnection;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
 
 import java.io.IOException;
 import java.net.URL;
@@ -52,7 +53,7 @@ public class S3URLStreamHandlerFactoryTest {
 
     @Test
     public void ignoresConnectCallIfInitialised() throws IOException {
-        S3URLStreamHandlerFactory.setS3(AmazonS3ClientBuilder.standard().withRegion("eu-west-1").build());
+        S3URLStreamHandlerFactory.setS3(S3Client.builder().region(Region.EU_WEST_1).build());
         new S3URLConnection(testS3Url).connect();
     }
 

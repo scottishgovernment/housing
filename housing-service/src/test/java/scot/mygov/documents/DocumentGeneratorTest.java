@@ -1,6 +1,7 @@
 package scot.mygov.documents;
 
 import com.aspose.words.Document;
+import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.junit.Test;
 
@@ -24,7 +25,7 @@ public class DocumentGeneratorTest {
         byte[] result = sut.save(fieldMap(), DocumentType.PDF);
 
         // ASSERT - can parse it as a pdf
-        PDDocument document = PDDocument.load(new ByteArrayInputStream(result));
+        PDDocument document = Loader.loadPDF(result);
         document.close();
     }
 
