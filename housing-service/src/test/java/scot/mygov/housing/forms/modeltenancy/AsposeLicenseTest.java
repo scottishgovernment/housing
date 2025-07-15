@@ -7,7 +7,6 @@ import scot.mygov.housing.AsposeLicense;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
@@ -19,20 +18,20 @@ import static org.junit.Assert.*;
 public class AsposeLicenseTest {
 
     @Test
-    public void isUnlicensedIfNoLicenseFileExists() throws URISyntaxException {
+    public void isUnlicensedIfNoLicenseFileExists() {
         AsposeLicense license = new AsposeLicense(null);
         assertFalse(license.hasLicense());
     }
 
     @Test
-    public void daysRemainingIsOneIfLicenseExpiresTomorrow() throws URISyntaxException, IOException {
+    public void daysRemainingIsOneIfLicenseExpiresTomorrow() {
         File file = createLicenseWithExpiryDate("tomorrow", LocalDate.now().plusDays(1));
         AsposeLicense license = new AsposeLicense(file);
         assertEquals(Long.valueOf(1), license.daysUntilExpiry());
     }
 
     @Test
-    public void daysRemainingIsZeroIfLicenseExpiresToday() throws URISyntaxException, IOException {
+    public void daysRemainingIsZeroIfLicenseExpiresToday() {
         File file = createLicenseWithExpiryDate("today", LocalDate.now());
         AsposeLicense license = new AsposeLicense(file);
         assertEquals(Long.valueOf(0), license.daysUntilExpiry());
@@ -47,7 +46,7 @@ public class AsposeLicenseTest {
     }
 
     @Test
-    public void daysRemainingIsNullIfUnlicensed() throws URISyntaxException {
+    public void daysRemainingIsNullIfUnlicensed() {
         AsposeLicense license = new AsposeLicense(null);
         assertNull(license.daysUntilExpiry());
     }
@@ -62,7 +61,7 @@ public class AsposeLicenseTest {
     }
 
     @Test
-    public void expiryDateIsNullIfUnlicensed() throws URISyntaxException {
+    public void expiryDateIsNullIfUnlicensed() {
         AsposeLicense license = new AsposeLicense(null);
         assertNull(license.expires());
     }

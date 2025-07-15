@@ -34,7 +34,7 @@ public class S3URLStreamHandlerFactoryTest {
     }
 
     @Test
-    public void returnsNullForNonS3URL() throws IOException {
+    public void returnsNullForNonS3URL() {
         URLStreamHandler handler = factory.createURLStreamHandler("http");
         assertThat(handler).isNull();
     }

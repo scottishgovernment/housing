@@ -114,7 +114,7 @@ public class HealthcheckTest {
     }
 
     @Test
-    public void notOkPostcodeServiceHasErrors() throws CPIServiceException, IOException, InterruptedException {
+    public void notOkPostcodeServiceHasErrors() throws IOException {
 
         this.healthcheck.metricRegistry = mockMetricsRegistryEuropa(10, 0);
 
@@ -126,7 +126,7 @@ public class HealthcheckTest {
     }
 
     @Test
-    public void notOkPostcodeServiceResponseTimeIsSlow() throws CPIServiceException, IOException, InterruptedException {
+    public void notOkPostcodeServiceResponseTimeIsSlow() throws IOException {
 
         this.healthcheck.metricRegistry = mockMetricsRegistryEuropa(0, 501);
 
@@ -138,7 +138,7 @@ public class HealthcheckTest {
     }
 
     @Test
-    public void warningAddedIfFairRentResponseRateNotZero() throws CPIServiceException, IOException, InterruptedException {
+    public void warningAddedIfFairRentResponseRateNotZero() throws IOException {
         this.healthcheck.metricRegistry = mockMetricsRegistryFairRent(10, 0);
         dispatcher.invoke(request, response);
         JsonNode health = mapper.readTree(response.getContentAsString());
@@ -146,7 +146,7 @@ public class HealthcheckTest {
     }
 
     @Test
-    public void noWarningAddedIfFairRentResponseRateNotZero() throws CPIServiceException, IOException, InterruptedException {
+    public void noWarningAddedIfFairRentResponseRateNotZero() throws IOException {
         this.healthcheck.metricRegistry = mockMetricsRegistryFairRent(0, 0);
         dispatcher.invoke(request, response);
         JsonNode health = mapper.readTree(response.getContentAsString());
@@ -240,7 +240,7 @@ public class HealthcheckTest {
         return cpiServiceWithDates(LocalDate.now().plusDays(1), LocalDate.now().minusDays(1));
     }
 
-    private ErrorHandler anyErrorHandler(MetricRegistry metricRegistry) throws CPIServiceException {
+    private ErrorHandler anyErrorHandler(MetricRegistry metricRegistry) {
         return new ErrorHandler(metricRegistry);
     }
 
