@@ -68,7 +68,7 @@ public class PostcodeResourceTest {
         Response actual = sut.lookup(uriInfoWithPostcodeParam(scottishPostcode()));
 
         // ASSERT
-        assertEquals(actual.getStatus(), 200);
+        assertEquals(200, actual.getStatus());
         PostcodeServiceResults actualResults = (PostcodeServiceResults) actual.getEntity();
         assertResults(expectedResults, actualResults);
     }
@@ -83,7 +83,7 @@ public class PostcodeResourceTest {
         Response actual = sut.lookup(uriInfoWithPostcodeParam(scottishPostcodeWithSpace()));
 
         // ASSERT
-        assertEquals(actual.getStatus(), 200);
+        assertEquals(200, actual.getStatus());
         PostcodeServiceResults actualResults = (PostcodeServiceResults) actual.getEntity();
         assertResults(expectedResults, actualResults);
     }
@@ -98,7 +98,7 @@ public class PostcodeResourceTest {
         Response actual = sut.lookup(uriInfoWithPostcodeParam(scottishPostcode()));
 
         // ASSERT
-        assertEquals(actual.getStatus(), 200);
+        assertEquals(200, actual.getStatus());
         PostcodeServiceResults actualResults = (PostcodeServiceResults) actual.getEntity();
         assertResults(expectedResults, actualResults);
     }
@@ -112,7 +112,7 @@ public class PostcodeResourceTest {
         Response actual = sut.lookup(uriInfoWithPostcodeParam(scottishPostcode()));
 
         // ASSERT
-        assertEquals(actual.getStatus(), 503);
+        assertEquals(503, actual.getStatus());
     }
 
     private void assertResults(PostcodeServiceResults expected, PostcodeServiceResults actual) {

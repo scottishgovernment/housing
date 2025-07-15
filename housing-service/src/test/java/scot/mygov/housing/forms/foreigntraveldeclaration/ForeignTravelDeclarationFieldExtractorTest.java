@@ -20,7 +20,7 @@ public class ForeignTravelDeclarationFieldExtractorTest {
         input.setReason("WEDDING");
         Map<String, Object> output = sut.extractFields(input);
 
-        assertEquals(output.get("WEDDING"), "X");
-        assertEquals(output.get("FUNERAL"), "_");
+        assertEquals("X", output.get("WEDDING"));
+        assertEquals("_", output.get("FUNERAL"));
     }
 }

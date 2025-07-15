@@ -23,7 +23,7 @@ public class LandlordsRuleTest {
         ValidationResults results = builder.build();
 
         // ASSERT
-        assertEquals(results.getIssues().size(), 1);
+        assertEquals(1, results.getIssues().size());
     }
 
     @Test
@@ -37,7 +37,7 @@ public class LandlordsRuleTest {
         ValidationResults results = builder.build();
 
         // ASSERT
-        assertEquals(results.getIssues().size(), 0);
+        assertEquals(0, results.getIssues().size());
     }
 
     @Test
@@ -51,7 +51,7 @@ public class LandlordsRuleTest {
         ValidationResults results = builder.build();
 
         // ASSERT
-        assertEquals(results.getIssues().size(), 0);
+        assertEquals(0, results.getIssues().size());
     }
 
     @Test
@@ -66,7 +66,7 @@ public class LandlordsRuleTest {
         ValidationResults results = builder.build();
 
         // ASSERT
-        assertEquals(results.getIssues().size(), 1);
+        assertEquals(1, results.getIssues().size());
     }
 
     @Test
@@ -81,7 +81,7 @@ public class LandlordsRuleTest {
         ValidationResults results = builder.build();
 
         // ASSERT
-        assertEquals(results.getIssues().size(), 1);
+        assertEquals(1, results.getIssues().size());
     }
 
     @Test
@@ -97,7 +97,7 @@ public class LandlordsRuleTest {
         ValidationResults results = builder.build();
 
         // ASSERT
-        assertEquals(results.getIssues().size(), 1);
+        assertEquals(1, results.getIssues().size());
     }
 
 

@@ -31,9 +31,9 @@ public class CPIResourceTest {
 
         // ASSERT
         assertEquals(Double.class, response.getEntity().getClass());
-        assertEquals(response.getStatus(), 200);
+        assertEquals(200, response.getStatus());
         Double result = (Double) response.getEntity();
-        assertEquals(result, 100.00, 0.0);
+        assertEquals(100.00, result, 0.0);
     }
 
     @Test
@@ -51,7 +51,7 @@ public class CPIResourceTest {
 
         // ASSERT
         assertEquals(ValidationResults.class, response.getEntity().getClass());
-        assertEquals(response.getStatus(), 400);
+        assertEquals(400, response.getStatus());
     }
 
     @Test
@@ -69,7 +69,7 @@ public class CPIResourceTest {
 
         // ASSERT
         assertEquals(ValidationResults.class, response.getEntity().getClass());
-        assertEquals(response.getStatus(), 400);
+        assertEquals(400, response.getStatus());
     }
 
     @Test
@@ -88,7 +88,7 @@ public class CPIResourceTest {
 
         // ASSERT
         assertEquals(ValidationResults.class, response.getEntity().getClass());
-        assertEquals(response.getStatus(), 400);
+        assertEquals(400, response.getStatus());
     }
 
     @Test
@@ -107,7 +107,7 @@ public class CPIResourceTest {
 
         // ASSERT
         assertEquals(ValidationResults.class, response.getEntity().getClass());
-        assertEquals(response.getStatus(), 400);
+        assertEquals(400, response.getStatus());
     }
 
     @Test
@@ -126,7 +126,7 @@ public class CPIResourceTest {
 
         // ASSERT
         assertEquals(ValidationResults.class, response.getEntity().getClass());
-        assertEquals(response.getStatus(), 400);
+        assertEquals(400, response.getStatus());
     }
 
     @Test
@@ -145,7 +145,7 @@ public class CPIResourceTest {
 
         // ASSERT
         assertEquals(String.class, response.getEntity().getClass());
-        assertEquals(response.getStatus(), 503);
+        assertEquals(503, response.getStatus());
     }
     private CPIService cpiService(double result) throws CPIServiceException {
 

@@ -50,8 +50,8 @@ public class RentAdjudicationFieldExtractorTest {
         Map<String, Object> fields = sut.extractFields(input);
 
         // ASSERT
-        assertEquals(fields.get("hasSharedAreas"), "No");
-        assertEquals(fields.get("sharedAreas"), "");
+        assertEquals("No", fields.get("hasSharedAreas"));
+        assertEquals("", fields.get("sharedAreas"));
     }
 
     @Test
@@ -63,8 +63,8 @@ public class RentAdjudicationFieldExtractorTest {
         Map<String, Object> fields = sut.extractFields(input);
 
         // ASSERT
-        assertEquals(fields.get("hasSharedAreas"), "No");
-        assertEquals(fields.get("sharedAreas"), "");
+        assertEquals("No", fields.get("hasSharedAreas"));
+        assertEquals("", fields.get("sharedAreas"));
     }
 
     @Test
@@ -76,8 +76,8 @@ public class RentAdjudicationFieldExtractorTest {
         Map<String, Object> fields = sut.extractFields(input);
 
         // ASSERT
-        assertEquals(fields.get("hasIncluded"), "No");
-        assertEquals(fields.get("included"), "");
+        assertEquals("No", fields.get("hasIncluded"));
+        assertEquals("", fields.get("included"));
     }
 
     @Test
@@ -89,8 +89,8 @@ public class RentAdjudicationFieldExtractorTest {
         Map<String, Object> fields = sut.extractFields(input);
 
         // ASSERT
-        assertEquals(fields.get("hasIncluded"), "No");
-        assertEquals(fields.get("included"), "");
+        assertEquals("No", fields.get("hasIncluded"));
+        assertEquals("", fields.get("included"));
     }
 
     @Test
@@ -102,7 +102,7 @@ public class RentAdjudicationFieldExtractorTest {
         Map<String, Object> fields = sut.extractFields(input);
 
         // ASSERT
-        assertEquals(fields.get("hasServices"), "No");
+        assertEquals("No", fields.get("hasServices"));
     }
 
     @Test
@@ -114,7 +114,7 @@ public class RentAdjudicationFieldExtractorTest {
         Map<String, Object> fields = sut.extractFields(input);
 
         // ASSERT
-        assertEquals(fields.get("hasServices"), "No");
+        assertEquals("No", fields.get("hasServices"));
     }
 
     @Test
@@ -127,7 +127,7 @@ public class RentAdjudicationFieldExtractorTest {
         Map<String, Object> fields = sut.extractFields(input);
 
         // ASSERT
-        assertEquals(fields.get("hasTenantImprovements"), "No");
+        assertEquals("No", fields.get("hasTenantImprovements"));
     }
 
     @Test
@@ -140,7 +140,7 @@ public class RentAdjudicationFieldExtractorTest {
         Map<String, Object> fields = sut.extractFields(input);
 
         // ASSERT
-        assertEquals(fields.get("hasTenantImprovements"), "No");
+        assertEquals("No", fields.get("hasTenantImprovements"));
     }
 
     @Test
@@ -153,7 +153,7 @@ public class RentAdjudicationFieldExtractorTest {
         Map<String, Object> fields = sut.extractFields(input);
 
         // ASSERT
-        assertEquals(fields.get("hasLandlordImprovements"), "No");
+        assertEquals("No", fields.get("hasLandlordImprovements"));
     }
 
     @Test
@@ -166,7 +166,7 @@ public class RentAdjudicationFieldExtractorTest {
         Map<String, Object> fields = sut.extractFields(input);
 
         // ASSERT
-        assertEquals(fields.get("hasLandlordImprovements"), "No");
+        assertEquals("No", fields.get("hasLandlordImprovements"));
     }
 
     @Test
@@ -179,7 +179,7 @@ public class RentAdjudicationFieldExtractorTest {
         Map<String, Object> fields = sut.extractFields(input);
 
         // ASSERT
-        assertEquals(fields.get("hasDamages"), "No");
+        assertEquals("No", fields.get("hasDamages"));
     }
 
     @Test
@@ -192,6 +192,6 @@ public class RentAdjudicationFieldExtractorTest {
         Map<String, Object> fields = sut.extractFields(input);
 
         // ASSERT
-        assertEquals(fields.get("hasDamages"), "No");
+        assertEquals("No", fields.get("hasDamages"));
     }
 }

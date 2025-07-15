@@ -27,8 +27,8 @@ public class NonProvisionOfDocumentationFieldExtractorTest {
         Map<String, Object> output = sut.extractFields(input);
 
         // ASSERT
-        assertEquals(output.get("section10Failure"), CHECKED);
-        assertEquals(output.get("section10Details"), "section10 details");
+        assertEquals(CHECKED, output.get("section10Failure"));
+        assertEquals("section10 details", output.get("section10Details"));
 
     }
 
@@ -44,8 +44,8 @@ public class NonProvisionOfDocumentationFieldExtractorTest {
         Map<String, Object> output = sut.extractFields(input);
 
         // ASSERT
-        assertEquals(output.get("section10Failure"), UNCHECKED);
-        assertEquals(output.get("section10Details"), "");
+        assertEquals(UNCHECKED, output.get("section10Failure"));
+        assertEquals("", output.get("section10Details"));
     }
 
     @Test
@@ -60,8 +60,8 @@ public class NonProvisionOfDocumentationFieldExtractorTest {
         Map<String, Object> output = sut.extractFields(input);
 
         // ASSERT
-        assertEquals(output.get("section11Failure"), CHECKED);
-        assertEquals(output.get("section11Details"), "section10 details");
+        assertEquals(CHECKED, output.get("section11Failure"));
+        assertEquals("section10 details", output.get("section11Details"));
 
     }
 
@@ -77,8 +77,8 @@ public class NonProvisionOfDocumentationFieldExtractorTest {
         Map<String, Object> output = sut.extractFields(input);
 
         // ASSERT
-        assertEquals(output.get("section11Failure"), UNCHECKED);
-        assertEquals(output.get("section11Details"), "");
+        assertEquals(UNCHECKED, output.get("section11Failure"));
+        assertEquals("", output.get("section11Details"));
     }
 
     @Test
@@ -92,7 +92,7 @@ public class NonProvisionOfDocumentationFieldExtractorTest {
         Map<String, Object> output = sut.extractFields(input);
 
         // ASSERT
-        assertEquals(output.get("section16Failure"), CHECKED);
+        assertEquals(CHECKED, output.get("section16Failure"));
     }
 
     @Test
@@ -106,6 +106,6 @@ public class NonProvisionOfDocumentationFieldExtractorTest {
         Map<String, Object> output = sut.extractFields(input);
 
         // ASSERT
-        assertEquals(output.get("section16Failure"), UNCHECKED);
+        assertEquals(UNCHECKED, output.get("section16Failure"));
     }
 }

@@ -50,7 +50,7 @@ public class MoneyFieldsRuleTest {
 
 
         // ASSERT
-        assertEquals(validCount, 0);
+        assertEquals(0, validCount);
     }
 
     @Test
@@ -63,7 +63,7 @@ public class MoneyFieldsRuleTest {
         rule.validate(new Value("100.00"), b);
 
         // ASSERT
-        assertEquals(b.build().getIssues().size(), 1);
+        assertEquals(1, b.build().getIssues().size());
     }
 
     public class Value {

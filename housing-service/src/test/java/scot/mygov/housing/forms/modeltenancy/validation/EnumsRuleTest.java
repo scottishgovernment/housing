@@ -37,7 +37,7 @@ public class EnumsRuleTest {
         });
 
         // ASSERT
-        assertEquals(builder.build().getIssues().size(), 0);
+        assertEquals(0, builder.build().getIssues().size());
     }
 
     @Test
@@ -54,7 +54,7 @@ public class EnumsRuleTest {
             rule.validate(modelTenancy, builder);
 
             // ASSERT
-            assertEquals(builder.build().getIssues().size(), 1);
+            assertEquals(1, builder.build().getIssues().size());
         });
     }
 
@@ -72,7 +72,7 @@ public class EnumsRuleTest {
             rule.validate(modelTenancy, builder);
 
             // ASSERT
-            assertEquals(builder.build().getIssues().size(), 1);
+            assertEquals(1, builder.build().getIssues().size());
         });
     }
 
@@ -90,7 +90,7 @@ public class EnumsRuleTest {
             rule.validate(modelTenancy, builder);
 
             // ASSERT
-            assertEquals(builder.build().getIssues().size(), 1);
+            assertEquals(1, builder.build().getIssues().size());
         });
     }
 }

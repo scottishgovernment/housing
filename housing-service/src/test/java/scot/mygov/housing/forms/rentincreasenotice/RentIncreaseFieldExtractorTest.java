@@ -24,8 +24,8 @@ public class RentIncreaseFieldExtractorTest {
         Map<String, Object> output = sut.extractFields(input);
 
         // ASSERT
-        assertEquals(output.get("inRentPressureZoneCheckbox"), "_");
-        assertEquals(output.get("notInRentPressureZoneCheckbox"), "X");
+        assertEquals("_", output.get("inRentPressureZoneCheckbox"));
+        assertEquals("X", output.get("notInRentPressureZoneCheckbox"));
     }
 
     @Test
@@ -39,8 +39,8 @@ public class RentIncreaseFieldExtractorTest {
         Map<String, Object> output = sut.extractFields(input);
 
         // ASSERT
-        assertEquals(output.get("inRentPressureZoneCheckbox"), "X");
-        assertEquals(output.get("notInRentPressureZoneCheckbox"), "_");
+        assertEquals("X", output.get("inRentPressureZoneCheckbox"));
+        assertEquals("_", output.get("notInRentPressureZoneCheckbox"));
     }
 
     @Test
@@ -54,8 +54,8 @@ public class RentIncreaseFieldExtractorTest {
         Map<String, Object> output = sut.extractFields(input);
 
         // ASSERT
-        assertEquals(output.get("inRentPressureZoneCheckbox"), "_");
-        assertEquals(output.get("notInRentPressureZoneCheckbox"), "_");
+        assertEquals("_", output.get("inRentPressureZoneCheckbox"));
+        assertEquals("_", output.get("notInRentPressureZoneCheckbox"));
     }
 
     @Test
@@ -69,7 +69,7 @@ public class RentIncreaseFieldExtractorTest {
         Map<String, Object> output = sut.extractFields(input);
 
         // ASSERT
-        assertEquals(output.get("capToAndFromSentence"), "");
+        assertEquals("", output.get("capToAndFromSentence"));
     }
 
     @Test
@@ -83,7 +83,7 @@ public class RentIncreaseFieldExtractorTest {
         Map<String, Object> output = sut.extractFields(input);
 
         // ASSERT
-        assertEquals(output.get("capToAndFromSentence"), "");
+        assertEquals("", output.get("capToAndFromSentence"));
     }
 
     @Test

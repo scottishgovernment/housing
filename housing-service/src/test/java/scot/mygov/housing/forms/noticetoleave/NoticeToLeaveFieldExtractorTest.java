@@ -1,11 +1,12 @@
 package scot.mygov.housing.forms.noticetoleave;
 
-import org.junit.Assert;
 import org.junit.Test;
 import scot.mygov.housing.forms.noticetoleave.model.NoticeToLeave;
 import scot.mygov.housing.forms.noticetoleave.model.Reason;
 
 import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
 
 public class NoticeToLeaveFieldExtractorTest {
 
@@ -25,7 +26,7 @@ public class NoticeToLeaveFieldExtractorTest {
 
         // ASSERT
         for (Reason r : Reason.values()) {
-            Assert.assertEquals(output.get(r.name()), "X");
+            assertEquals("X", output.get(r.name()));
         }
     }
 
@@ -39,7 +40,7 @@ public class NoticeToLeaveFieldExtractorTest {
 
         // ASSERT
         for (Reason r : Reason.values()) {
-            Assert.assertEquals(output.get(r.name()), "_");
+            assertEquals("_", output.get(r.name()));
         }
     }
 
@@ -55,9 +56,9 @@ public class NoticeToLeaveFieldExtractorTest {
         // ASSERT
         for (Reason r : Reason.values()) {
             if (r == Reason.LANDLORD_FAMILY_MEMBER_TO_LIVE) {
-                Assert.assertEquals(output.get(r.name()), "X");
+                assertEquals("X", output.get(r.name()));
             } else {
-                Assert.assertEquals(output.get(r.name()), "_");
+                assertEquals("_", output.get(r.name()));
             }
         }
     }

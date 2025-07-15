@@ -29,7 +29,7 @@ public class EuropaTest {
 
         // ASSERT
         assertEquals(actual.getResults().size(), results.getResults().size());
-        assertEquals(actual.getResults().get(0).getAddress().get(0).getPostcode(), "EH10 4AX");
+        assertEquals("EH10 4AX", actual.getResults().get(0).getAddress().get(0).getPostcode());
     }
 
     @Test
@@ -43,8 +43,8 @@ public class EuropaTest {
         EuropaResults actual = sut.lookupUprn("uprn");
 
         // ASSERT
-        assertEquals(actual.getResults().size(), 1);
-        assertEquals(actual.getResults().get(0).getAddress().get(0).getUprn(), "anyuprn");
+        assertEquals(1, actual.getResults().size());
+        assertEquals("anyuprn", actual.getResults().get(0).getAddress().get(0).getUprn());
 
     }
 
@@ -60,7 +60,7 @@ public class EuropaTest {
         EuropaResults actual = sut.lookupUprn("uprn");
 
         // ASSERT
-        assertEquals(actual.getResults().size(), 0);
+        assertEquals(0, actual.getResults().size());
     }
 
     @Test(expected=EuropaException.class)

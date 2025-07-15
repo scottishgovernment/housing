@@ -15,8 +15,8 @@ public class ValidationResultsBuilderTest {
     @Test
     public void canBuildResults() {
         ValidationResults results = new ValidationResultsBuilder().issue("one", "issueone").issue("two", "issuetwo").build();
-        assertEquals(results.getIssues().get("one"), singletonList("issueone"));
-        assertEquals(results.getIssues().get("two"), singletonList("issuetwo"));
+        assertEquals(singletonList("issueone"), results.getIssues().get("one"));
+        assertEquals(singletonList("issuetwo"), results.getIssues().get("two"));
     }
 
     @Test

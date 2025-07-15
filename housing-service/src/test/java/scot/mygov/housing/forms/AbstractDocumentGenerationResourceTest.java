@@ -2,6 +2,8 @@ package scot.mygov.housing.forms;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.Response;
 import org.junit.Assert;
 import org.junit.Test;
@@ -17,6 +19,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class AbstractDocumentGenerationResourceTest {
+
+    private static final String PDF_MIME_TYPE = "application/pdf";
+
+    private static final String WORD_MIME_TYPE = "application/docx";
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class DummyFormData extends AbstractFormModel {
@@ -65,8 +71,9 @@ public class AbstractDocumentGenerationResourceTest {
 
         // ASSERT
         assertEquals(1, bytes[0]);
-        assertEquals(response.getHeaders().getFirst("Content-Type"), "application/pdf");
-        assertEquals(response.getHeaders().getFirst("Content-Disposition"), "attachment; filename=\"dummy.pdf\"");
+        MultivaluedMap<String, Object> headers = response.getHeaders();
+        assertEquals(PDF_MIME_TYPE, headers.getFirst(HttpHeaders.CONTENT_TYPE));
+        assertEquals("attachment; filename=\"dummy.pdf\"", headers.getFirst(HttpHeaders.CONTENT_DISPOSITION));
     }
 
 
@@ -87,8 +94,9 @@ public class AbstractDocumentGenerationResourceTest {
 
         // ASSERT
         assertEquals(1, bytes[0]);
-        assertEquals(response.getHeaders().getFirst("Content-Type"), "application/pdf");
-        assertEquals(response.getHeaders().getFirst("Content-Disposition"), "attachment; filename=\"dummy.pdf\"");
+        MultivaluedMap<String, Object> headers = response.getHeaders();
+        assertEquals(PDF_MIME_TYPE, headers.getFirst(HttpHeaders.CONTENT_TYPE));
+        assertEquals("attachment; filename=\"dummy.pdf\"", headers.getFirst(HttpHeaders.CONTENT_DISPOSITION));
     }
 
     @Test
@@ -109,8 +117,9 @@ public class AbstractDocumentGenerationResourceTest {
 
         // ASSERT
         assertEquals(1, bytes[0]);
-        assertEquals(response.getHeaders().getFirst("Content-Type"), "application/docx");
-        assertEquals(response.getHeaders().getFirst("Content-Disposition"), "attachment; filename=\"dummy.docx\"");
+        MultivaluedMap<String, Object> headers = response.getHeaders();
+        assertEquals(WORD_MIME_TYPE, headers.getFirst(HttpHeaders.CONTENT_TYPE));
+        assertEquals("attachment; filename=\"dummy.docx\"", headers.getFirst(HttpHeaders.CONTENT_DISPOSITION));
     }
 
     @Test
@@ -131,8 +140,9 @@ public class AbstractDocumentGenerationResourceTest {
 
         // ASSERT
         assertEquals(1, bytes[0]);
-        assertEquals(response.getHeaders().getFirst("Content-Type"), "application/pdf");
-        assertEquals(response.getHeaders().getFirst("Content-Disposition"), "attachment; filename=\"dummy.pdf\"");
+        MultivaluedMap<String, Object> headers = response.getHeaders();
+        assertEquals(PDF_MIME_TYPE, headers.getFirst(HttpHeaders.CONTENT_TYPE));
+        assertEquals("attachment; filename=\"dummy.pdf\"", headers.getFirst(HttpHeaders.CONTENT_DISPOSITION));
     }
 
     @Test
@@ -154,8 +164,9 @@ public class AbstractDocumentGenerationResourceTest {
 
         // ASSERT
         assertEquals(1, bytes[0]);
-        assertEquals(response.getHeaders().getFirst("Content-Type"), "application/pdf");
-        assertEquals(response.getHeaders().getFirst("Content-Disposition"), "attachment; filename=\"dummy.pdf\"");
+        MultivaluedMap<String, Object> headers = response.getHeaders();
+        assertEquals("application/pdf", headers.getFirst(HttpHeaders.CONTENT_TYPE));
+        assertEquals("attachment; filename=\"dummy.pdf\"", headers.getFirst(HttpHeaders.CONTENT_DISPOSITION));
     }
 
     @Test(expected = DocumentGenerationServiceException.class)
@@ -213,7 +224,7 @@ public class AbstractDocumentGenerationResourceTest {
         Response response = sut.multipart(params);
 
         // ASSERT
-        assertEquals(response.getStatus(), 400);
+        assertEquals(400, response.getStatus());
     }
 
     private RecaptchaCheck passingRecaptchaCheck() {

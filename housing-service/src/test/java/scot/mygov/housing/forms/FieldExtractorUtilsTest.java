@@ -7,29 +7,31 @@ import scot.mygov.housing.forms.modeltenancy.model.Person;
 
 import java.util.Collections;
 
+import static org.junit.Assert.*;
+
 public class FieldExtractorUtilsTest {
     @Test
     public void defaultForNull() {
-        Assert.assertEquals(FieldExtractorUtils.defaultForNull(null, "default"), "default");
+        assertEquals("default", FieldExtractorUtils.defaultForNull(null, "default"));
     }
 
     @Test
     public void defaultForNullReturnValueWhenNotNull() {
-        Assert.assertEquals(FieldExtractorUtils.defaultForNull("value", "default"), "value");
+        assertEquals("value", FieldExtractorUtils.defaultForNull("value", "default"));
     }
 
     @Test
     public void defaultForEmpty() {
-        Assert.assertEquals(FieldExtractorUtils.defaultForEmpty(null, "default"), "default");
+        assertEquals("default", FieldExtractorUtils.defaultForEmpty(null, "default"));
     }
 
     @Test
     public void defaultForEmptyReturnValueWhenNotEmpty() {
-        Assert.assertEquals(FieldExtractorUtils.defaultForNull("value", "default"), "value");
+        assertEquals("value", FieldExtractorUtils.defaultForNull("value", "default"));
     }
     @Test
-    public void adressPartsReturnEmptyListForNullAddress() {
-        Assert.assertEquals(Collections.emptyList(), FieldExtractorUtils.addressParts(null));
+    public void addressPartsReturnEmptyListForNullAddress() {
+        assertEquals(Collections.emptyList(), FieldExtractorUtils.addressParts(null));
     }
 
     @Test

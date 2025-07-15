@@ -35,7 +35,7 @@ public class RentPressureZoneResourceTest {
         Response response = sut.rpz(uriInfo);
 
         // ASSERT
-        assertEquals(response.getStatus(), 503);
+        assertEquals(503, response.getStatus());
     }
 
     @Test
@@ -53,7 +53,7 @@ public class RentPressureZoneResourceTest {
         Response response = sut.rpz(uriInfo);
 
         // ASSERT
-        assertEquals(response.getStatus(), 400);
+        assertEquals(400, response.getStatus());
     }
 
     @Test
@@ -69,7 +69,7 @@ public class RentPressureZoneResourceTest {
 
         // ASSERT
         assertEquals(ValidationResults.class, response.getEntity().getClass());
-        assertEquals(response.getStatus(), 400);
+        assertEquals(400, response.getStatus());
         ValidationResults validationResult = (ValidationResults) response.getEntity();
         assertTrue(validationResult.getIssues().containsKey("uprn"));
     }
@@ -87,7 +87,7 @@ public class RentPressureZoneResourceTest {
 
         // ASSERT
         assertEquals(ValidationResults.class, response.getEntity().getClass());
-        assertEquals(response.getStatus(), 400);
+        assertEquals(400, response.getStatus());
         ValidationResults validationResult = (ValidationResults) response.getEntity();
         assertTrue(validationResult.getIssues().containsKey("date"));
     }
@@ -108,7 +108,7 @@ public class RentPressureZoneResourceTest {
 
         // ASSERT
         assertEquals(ValidationResults.class, response.getEntity().getClass());
-        assertEquals(response.getStatus(), 400);
+        assertEquals(400, response.getStatus());
         ValidationResults validationResult = (ValidationResults) response.getEntity();
         assertTrue(validationResult.getIssues().containsKey("date"));
     }
@@ -136,11 +136,11 @@ public class RentPressureZoneResourceTest {
 
         // ASSERT
         assertEquals(RPZResult.class, response.getEntity().getClass());
-        assertEquals(response.getStatus(), 200);
+        assertEquals(200, response.getStatus());
         RPZResult rpzResult = (RPZResult) response.getEntity();
         assertTrue(rpzResult.isInRentPressureZone());
-        assertEquals(rpzResult.getRentPressureZoneTitle(), expectedTitle);
-        assertEquals(rpzResult.getMaxIncrease(), expectedMaxIncrease, 0);
+        assertEquals(expectedTitle, rpzResult.getRentPressureZoneTitle());
+        assertEquals(expectedMaxIncrease, rpzResult.getMaxIncrease(), 0);
     }
 
     public RPZService exceptionThrowingRpzService() throws RPZServiceException {

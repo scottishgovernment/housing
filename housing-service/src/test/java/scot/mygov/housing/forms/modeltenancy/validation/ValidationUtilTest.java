@@ -53,7 +53,7 @@ public class ValidationUtilTest {
         ValidationResults results = resultsBuilder.build();
 
         // ASSERT
-        assertEquals(results.getIssues().entrySet().size(), 2);
+        assertEquals(2, results.getIssues().entrySet().size());
     }
 
 
@@ -68,7 +68,7 @@ public class ValidationUtilTest {
         ValidationResults results = resultsBuilder.build();
 
         // ASSERT
-        assertEquals(results.getIssues().entrySet().size(), 1);
+        assertEquals(1, results.getIssues().entrySet().size());
     }
 
     @Test
@@ -82,7 +82,7 @@ public class ValidationUtilTest {
         ValidationResults results = resultsBuilder.build();
 
         // ASSERT
-        assertEquals(results.getIssues().entrySet().size(), 0);
+        assertEquals(0, results.getIssues().size());
     }
 
     @Test
@@ -97,7 +97,7 @@ public class ValidationUtilTest {
         ValidationResults results = resultsBuilder.build();
 
         // ASSERT
-        assertEquals(results.getIssues().entrySet().size(), 0);
+        assertEquals(0, results.getIssues().size());
     }
 
     @Test
@@ -146,7 +146,7 @@ public class ValidationUtilTest {
         ValidationResults results = resultsBuilder.build();
 
         // ASSERT
-        assertEquals(results.getIssues().entrySet().size(), 0);
+        assertEquals(0, results.getIssues().entrySet().size());
     }
 
     @Test
@@ -160,7 +160,7 @@ public class ValidationUtilTest {
         ValidationResults results = resultsBuilder.build();
 
         // ASSERT
-        assertEquals(results.getIssues().entrySet().size(), 0);
+        assertEquals(0, results.getIssues().entrySet().size());
     }
 
     @Test

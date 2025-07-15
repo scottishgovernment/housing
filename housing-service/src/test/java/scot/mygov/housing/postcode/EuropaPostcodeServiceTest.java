@@ -54,10 +54,10 @@ public class EuropaPostcodeServiceTest {
         PostcodeServiceResults actual = sut.lookup(scottishPostcode());
 
         // ASSERT
-        assertEquals(actual.getResults().get(0).getCountry(), "England");
-        assertEquals(actual.getResults().get(1).getCountry(), "Wales");
-        assertEquals(actual.getResults().get(2).getCountry(), "Scotland");
-        assertEquals(actual.getResults().get(3).getCountry(), "France");
+        assertEquals("England", actual.getResults().get(0).getCountry());
+        assertEquals("Wales", actual.getResults().get(1).getCountry());
+        assertEquals("Scotland", actual.getResults().get(2).getCountry());
+        assertEquals("France", actual.getResults().get(3).getCountry());
 
     }
 

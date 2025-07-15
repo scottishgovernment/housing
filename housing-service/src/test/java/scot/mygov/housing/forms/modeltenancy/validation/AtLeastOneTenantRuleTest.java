@@ -21,7 +21,7 @@ public class AtLeastOneTenantRuleTest {
         rule.validate(tenancyWithTenantCount(1), b);
 
         // ASSERT
-        assertEquals(b.build().getIssues().size(), 0);
+        assertEquals(0, b.build().getIssues().size());
     }
 
     @Test
@@ -34,7 +34,7 @@ public class AtLeastOneTenantRuleTest {
         rule.validate(tenancyWithTenantCount(0), b);
 
         // ASSERT
-        assertEquals(b.build().getIssues().size(), 1);
+        assertEquals(1, b.build().getIssues().size());
     }
 
     @Test
@@ -47,7 +47,7 @@ public class AtLeastOneTenantRuleTest {
         rule.validate(tenancyWithTenantCount(5), b);
 
         // ASSERT
-        assertEquals(b.build().getIssues().size(), 0);
+        assertEquals(0, b.build().getIssues().size());
     }
 
     private ModelTenancy tenancyWithTenantCount(int count) {
