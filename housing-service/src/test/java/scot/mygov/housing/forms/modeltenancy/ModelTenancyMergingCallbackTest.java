@@ -194,7 +194,7 @@ public class ModelTenancyMergingCallbackTest {
     public void guarentorsSignatureBlock() throws Exception {
 
         // ARRANGE
-        ModelTenancy tenancy = om.tenancyWithGuarentors();;
+        ModelTenancy tenancy = om.tenancyWithGuarentors();
 
         ModelTenancyMergingCallback sut = new ModelTenancyMergingCallback(tenancy);
         FieldMergingArgs args = mock(FieldMergingArgs.class);
@@ -219,7 +219,7 @@ public class ModelTenancyMergingCallbackTest {
     public void tenantSignatureBlock() throws Exception {
 
         // ARRANGE
-        ModelTenancy tenancy = om.anyTenancy();;
+        ModelTenancy tenancy = om.anyTenancy();
 
         ModelTenancyMergingCallback sut = new ModelTenancyMergingCallback(tenancy);
         FieldMergingArgs args = mock(FieldMergingArgs.class);
@@ -244,7 +244,7 @@ public class ModelTenancyMergingCallbackTest {
     public void landlordSignatureBlock() throws Exception {
 
         // ARRANGE
-        ModelTenancy tenancy = om.anyTenancy();;
+        ModelTenancy tenancy = om.anyTenancy();
 
         ModelTenancyMergingCallback sut = new ModelTenancyMergingCallback(tenancy);
         FieldMergingArgs args = mock(FieldMergingArgs.class);
@@ -269,7 +269,7 @@ public class ModelTenancyMergingCallbackTest {
     public void tenantEmails() throws Exception {
 
         // ARRANGE
-        ModelTenancy tenancy = om.anyTenancy();;
+        ModelTenancy tenancy = om.anyTenancy();
 
         ModelTenancyMergingCallback sut = new ModelTenancyMergingCallback(tenancy);
         FieldMergingArgs args = mock(FieldMergingArgs.class);
@@ -294,7 +294,7 @@ public class ModelTenancyMergingCallbackTest {
     public void landlordNames() throws Exception {
 
         // ARRANGE
-        ModelTenancy tenancy = om.anyTenancy();;
+        ModelTenancy tenancy = om.anyTenancy();
 
         ModelTenancyMergingCallback sut = new ModelTenancyMergingCallback(tenancy);
         FieldMergingArgs args = mock(FieldMergingArgs.class);
@@ -319,7 +319,7 @@ public class ModelTenancyMergingCallbackTest {
     public void notificationResidents() throws Exception {
 
         // ARRANGE
-        ModelTenancy tenancy = om.anyTenancy();;
+        ModelTenancy tenancy = om.anyTenancy();
 
         ModelTenancyMergingCallback sut = new ModelTenancyMergingCallback(tenancy);
         FieldMergingArgs args = mock(FieldMergingArgs.class);
@@ -344,7 +344,7 @@ public class ModelTenancyMergingCallbackTest {
     public void tenantNamesAndAddresses() throws Exception {
 
         // ARRANGE
-        ModelTenancy tenancy = om.anyTenancy();;
+        ModelTenancy tenancy = om.anyTenancy();
 
         ModelTenancyMergingCallback sut = new ModelTenancyMergingCallback(tenancy);
         FieldMergingArgs args = mock(FieldMergingArgs.class);

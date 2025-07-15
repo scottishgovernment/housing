@@ -44,7 +44,7 @@ public class LettingAgentRuleTest {
     @Test
     public void rejectAgentWithNoAddress() {
         // ARRANGE
-        ModelTenancy input = om.anyTenancy();;
+        ModelTenancy input = om.anyTenancy();
         input.getLettingAgent().setAddress(null);
         ValidationResultsBuilder builder = new ValidationResultsBuilder();
 
@@ -59,7 +59,7 @@ public class LettingAgentRuleTest {
     @Test
     public void rejectAgentWithNoContactInfo() {
         // ARRANGE
-        ModelTenancy input = om.anyTenancy();;
+        ModelTenancy input = om.anyTenancy();
         ValidationResultsBuilder builder = new ValidationResultsBuilder();
         input.getLettingAgent().setEmail(null);
         input.getLettingAgent().setTelephone(null);
