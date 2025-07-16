@@ -1,9 +1,6 @@
 package scot.mygov.validation;
 
-import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.Collections;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;

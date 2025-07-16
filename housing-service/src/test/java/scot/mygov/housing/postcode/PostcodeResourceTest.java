@@ -4,7 +4,6 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 import jakarta.ws.rs.core.UriInfo;
 import org.jboss.resteasy.specimpl.ResteasyUriInfo;
-import org.jboss.resteasy.spi.ResteasyUriBuilder;
 import org.junit.Test;
 import scot.mygov.validation.ValidationResults;
 

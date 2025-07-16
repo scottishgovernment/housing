@@ -5,7 +5,6 @@ import com.aspose.words.FieldMergingArgs;
 import com.aspose.words.FieldStart;
 import com.aspose.words.Section;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;

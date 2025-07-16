@@ -19,7 +19,7 @@ public class AtLeastOneTenantRuleTest {
 
         // ACT
         rule.validate(tenancyWithTenantCount(1), b);
-        ;
+
         // ASSERT
         assertEquals(b.build().getIssues().size(), 0);
     }

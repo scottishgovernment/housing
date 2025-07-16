@@ -2,7 +2,6 @@ package scot.mygov.documents;
 
 import com.aspose.words.Document;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import java.time.LocalDate;
 
