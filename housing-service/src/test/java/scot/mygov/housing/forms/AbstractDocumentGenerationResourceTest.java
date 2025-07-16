@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -170,8 +171,9 @@ public class AbstractDocumentGenerationResourceTest {
                 passingRecaptchaCheck());
 
         // ACT
-        Response response = sut.multipart(params);
-        byte[] bytes = (byte[]) response.getEntity();
+        try (Response response = sut.multipart(params)) {
+            fail("Expected exception");
+        }
 
         // ASSERT - see expected exception
     }

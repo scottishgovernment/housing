@@ -85,10 +85,6 @@ public class RecaptchaCheckTest {
         return target(Response.Status.Family.CLIENT_ERROR, null);
     }
 
-    private WebTarget serverErrorTarget() {
-        return target(Response.Status.Family.SERVER_ERROR, null);
-    }
-
     private WebTarget targetWithResponse(RecaptchaResponse recaptchaResponse) {
         return target(Response.Status.Family.SUCCESSFUL, recaptchaResponse);
     }

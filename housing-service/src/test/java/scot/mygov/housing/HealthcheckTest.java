@@ -7,10 +7,8 @@ import com.codahale.metrics.Snapshot;
 import com.codahale.metrics.Timer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.ws.rs.client.Invocation;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
@@ -18,9 +16,6 @@ import org.jboss.resteasy.spi.Dispatcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import scot.mygov.documents.DocumentGenerator;
-import scot.mygov.documents.DocumentTemplateLoader;
-import scot.mygov.documents.DocumentTemplateLoaderBasicImpl;
 import scot.mygov.housing.cpi.CPIService;
 import scot.mygov.housing.cpi.CPIServiceException;
 import scot.mygov.housing.cpi.model.CPIData;
@@ -64,8 +59,6 @@ public class HealthcheckTest {
         request = MockHttpRequest.get("health");
         request.accept(MediaType.APPLICATION_JSON_TYPE);
         response = new MockHttpResponse();
-        DocumentTemplateLoader templateLoader = new DocumentTemplateLoaderBasicImpl("", healthcheck.asposeLicense);
-        DocumentGenerator documentGenerator = new DocumentGenerator(templateLoader);
         healthcheck.modelTenancyService = Mockito.mock(DocumentGenerationService.class);
         healthcheck.fairRentResource = new FairRentResource(healthcheck.metricRegistry);
     }
@@ -224,14 +217,6 @@ public class HealthcheckTest {
         return license;
     }
 
-    private AsposeLicense validLicense(LocalDate expires, long daysUntilExpiry) {
-        AsposeLicense license = mock(AsposeLicense.class);
-        when(license.hasLicense()).thenReturn(true);
-        when(license.daysUntilExpiry()).thenReturn(daysUntilExpiry);
-        when(license.expires()).thenReturn(expires);
-        return license;
-    }
-
     private AsposeLicense invalidLicense() {
         AsposeLicense license = mock(AsposeLicense.class);
         when(license.hasLicense()).thenReturn(false);
@@ -265,23 +250,4 @@ public class HealthcheckTest {
         return service;
     }
 
-    private WebTarget validTarget() {
-        WebTarget target = mock(WebTarget.class);
-        Invocation.Builder builder = mock(Invocation.Builder.class);
-        Response response = mock(Response.class);
-        when(target.request()).thenReturn(builder);
-        when(builder.get()).thenReturn(response);
-        when(response.getStatus()).thenReturn(200);
-        return target;
-    }
-
-    private WebTarget errorTarget() {
-        WebTarget target = mock(WebTarget.class);
-        Invocation.Builder builder = mock(Invocation.Builder.class);
-        Response response = mock(Response.class);
-        when(target.request()).thenReturn(builder);
-        when(builder.get()).thenReturn(response);
-        when(response.getStatus()).thenReturn(500);
-        return target;
-    }
 }

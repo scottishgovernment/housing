@@ -7,8 +7,6 @@ import scot.mygov.validation.Validator;
 
 public class ModelTenancyValidatorFactoryTest {
 
-    private ModelTenancyObjectMother om = new ModelTenancyObjectMother();
-
     @Test
     public void validationEnabledCanValidataValidTenancy() throws ValidationException {
         ModelTenancyValidatorFactory sut = new ModelTenancyValidatorFactory();

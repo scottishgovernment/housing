@@ -81,7 +81,7 @@ public class CPIServiceTest {
         CPIService sut = new CPIService(new URL("http://localhost/nosuchfile"));
 
         // ACT
-        double actual = sut.cpiDelta(LocalDate.now(), LocalDate.now());
+        sut.cpiDelta(LocalDate.now(), LocalDate.now());
 
         // ASSERT -- see expected exception
     }

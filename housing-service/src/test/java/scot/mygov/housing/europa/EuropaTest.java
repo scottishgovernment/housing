@@ -80,7 +80,7 @@ public class EuropaTest {
         Europa sut = new Europa(exceptionThrowingTarget(new ProcessingException("")), new MetricRegistry());
 
         // ACT
-        EuropaResults actual = sut.lookupUprn("uprn");
+        sut.lookupUprn("uprn");
 
         // ASSERT -- see expected exception
     }
