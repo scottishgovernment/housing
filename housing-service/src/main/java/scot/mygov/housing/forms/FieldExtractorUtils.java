@@ -7,19 +7,13 @@ import scot.mygov.housing.forms.modeltenancy.model.Person;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.util.Collections.addAll;
 import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
 
 public class FieldExtractorUtils {
 
@@ -48,17 +42,17 @@ public class FieldExtractorUtils {
         lines.add(person.getName());
         lines.add("\n");
         lines.add("At:");
-        lines.addAll(addressParts(person.getAddress()).stream().map(part -> part + ",").collect(toList()));
-        return lines.stream().collect(joining("\n"));
+        lines.addAll(addressParts(person.getAddress()).stream().map(part -> part + ",").toList());
+        return String.join("\n", lines);
     }
 
 
     public static String addressFieldsMultipleLines(Address address) {
-        return addressParts(address).stream().collect(joining(",\n"));
+        return String.join(",\n", addressParts(address));
     }
 
     public static String addressFieldsSingleLine(Address address) {
-        return addressParts(address).stream().collect(joining(", "));
+        return String.join(", ", addressParts(address));
     }
 
     public static String nameAndAddress(Person person, int i) {
@@ -91,7 +85,7 @@ public class FieldExtractorUtils {
                 address.getRegion(),
                 address.getTown(),
                 address.getPostcode());
-        return parts.stream().filter(part -> StringUtils.isNotEmpty(part)).collect(toList());
+        return parts.stream().filter(StringUtils::isNotEmpty).toList();
     }
 
     public static <T extends Person> String peopleNames(List<T> people) {

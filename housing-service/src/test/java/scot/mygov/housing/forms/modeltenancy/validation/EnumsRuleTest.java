@@ -10,7 +10,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Collections.addAll;
-import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 
 public class EnumsRuleTest {
@@ -26,7 +25,7 @@ public class EnumsRuleTest {
         List<String> values = Arrays.asList(CommunicationsAgreement.values())
                 .stream()
                 .map(CommunicationsAgreement::name)
-                .collect(toList());
+                .toList();
         ValidationResultsBuilder builder = new ValidationResultsBuilder();
 
 

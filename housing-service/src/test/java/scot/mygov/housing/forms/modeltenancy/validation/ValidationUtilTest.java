@@ -1,6 +1,5 @@
 package scot.mygov.housing.forms.modeltenancy.validation;
 
-
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 import scot.mygov.housing.forms.modeltenancy.model.Person;
@@ -11,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Collections.addAll;
-import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 
 public class ValidationUtilTest {
@@ -24,7 +22,7 @@ public class ValidationUtilTest {
         List<String> invalidEmails = om.invalidEmails();
 
         // ACT
-        List<String> actual = invalidEmails.stream().filter(ValidationUtil::validEmail).collect(toList());
+        List<String> actual = invalidEmails.stream().filter(ValidationUtil::validEmail).toList();
 
         // ASSERT
         assertEquals(0, actual.size());
@@ -36,7 +34,7 @@ public class ValidationUtilTest {
         List<String> validEmails = om.validEmails();
 
         // ACT
-        List<String> actual = validEmails.stream().filter(ValidationUtil::validEmail).collect(toList());
+        List<String> actual = validEmails.stream().filter(ValidationUtil::validEmail).toList();
 
         // ASSERT
         assertEquals(validEmails.size(), actual.size());
@@ -174,14 +172,14 @@ public class ValidationUtilTest {
         ValidationResults results = resultsBuilder.build();
 
         // ASSERT
-        assertEquals(results.getIssues().entrySet().size(), 1);
+        assertEquals(1, results.getIssues().entrySet().size());
     }
 
     @Test
     public void validPostCodes() {
         List<String> inputs = new ArrayList<>();
         addAll(inputs, "EH104AX", "EH10 4AX", "eh104ax", "eh10 4ax", "B1 2HB");
-        List<String> outputs = inputs.stream().filter(in -> ValidationUtil.validPostcode(in)).collect(toList());
+        List<String> outputs = inputs.stream().filter(ValidationUtil::validPostcode).toList();
         assertEquals(inputs, outputs);
     }
 
@@ -189,7 +187,7 @@ public class ValidationUtilTest {
     public void invalidPostCodes() {
         List<String> inputs = new ArrayList<>();
         addAll(inputs, "", "aaa", "EH10-$AX");
-        List<String> outputs = inputs.stream().filter(in -> !ValidationUtil.validPostcode(in)).collect(toList());
+        List<String> outputs = inputs.stream().filter(in -> !ValidationUtil.validPostcode(in)).toList();
         assertEquals(inputs, outputs);
     }
 

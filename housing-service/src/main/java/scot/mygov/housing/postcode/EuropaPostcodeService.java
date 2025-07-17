@@ -7,14 +7,9 @@ import scot.mygov.housing.europa.EuropaException;
 import scot.mygov.housing.europa.EuropaResults;
 
 import javax.inject.Inject;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
 
 public class EuropaPostcodeService implements PostcodeService {
 
@@ -46,7 +41,7 @@ public class EuropaPostcodeService implements PostcodeService {
     private PostcodeServiceResults toResults(EuropaResults from) {
         List<PostcodeServiceResult> to = from.getMetadata().getCount() == 0
                 ? Collections.emptyList()
-                : from.getResults().get(0).getAddress().stream().map(this::toResult).sorted(PostcodeServiceResult.comparator()).collect(toList());
+                : from.getResults().get(0).getAddress().stream().map(this::toResult).sorted(PostcodeServiceResult.comparator()).toList();
         PostcodeServiceResults res = new PostcodeServiceResults();
         res.setResults(to);
         return res;
