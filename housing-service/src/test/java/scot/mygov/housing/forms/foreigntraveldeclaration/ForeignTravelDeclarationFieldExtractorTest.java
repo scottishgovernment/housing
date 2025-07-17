@@ -1,6 +1,5 @@
 package scot.mygov.housing.forms.foreigntraveldeclaration;
 
-import org.junit.Assert;
 import org.junit.Test;
 import scot.mygov.housing.forms.foreigntraveldeclaration.model.ForeignTravelDeclaration;
 

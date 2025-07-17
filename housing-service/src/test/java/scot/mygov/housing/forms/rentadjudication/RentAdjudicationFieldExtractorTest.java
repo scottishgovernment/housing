@@ -1,8 +1,6 @@
 package scot.mygov.housing.forms.rentadjudication;
 
-import org.junit.Assert;
 import org.junit.Test;
-import scot.mygov.housing.forms.FieldExtractorUtils;
 import scot.mygov.housing.forms.rentadjudication.model.RentAdjudication;
 
 import java.util.Collections;
@@ -12,7 +10,6 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static scot.mygov.housing.forms.FieldExtractorUtils.NOT_APPLICABLE;
 
 public class RentAdjudicationFieldExtractorTest {
 

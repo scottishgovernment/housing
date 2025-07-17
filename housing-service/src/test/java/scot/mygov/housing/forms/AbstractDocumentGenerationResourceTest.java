@@ -239,7 +239,6 @@ public class AbstractDocumentGenerationResourceTest {
     }
 
     DummyFormData exampleFormData() {
-        DummyFormData data = new DummyFormData();
-        return data;
+        return new DummyFormData();
     }
 }

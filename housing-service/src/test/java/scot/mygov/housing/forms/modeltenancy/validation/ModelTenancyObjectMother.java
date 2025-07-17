@@ -47,8 +47,7 @@ public class ModelTenancyObjectMother {
     }
 
     public ModelTenancy emptyTenancy() {
-        ModelTenancy tenancy = new ModelTenancy();
-        return tenancy;
+        return new ModelTenancy();
     }
 
     public ModelTenancy tenancyWithGuarentors() {
@@ -272,8 +271,7 @@ public class ModelTenancyObjectMother {
     }
 
     public Person emptyPerson() {
-        Person person = new Person();
-        return person;
+        return new Person();
     }
 
     public List<String> invalidEmails() {

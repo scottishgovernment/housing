@@ -1,6 +1,5 @@
 package scot.mygov.housing.europa;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
