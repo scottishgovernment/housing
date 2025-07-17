@@ -86,7 +86,7 @@ public class HealthcheckTest {
         JsonNode health = mapper.readTree(response.getContentAsString());
         JsonNode errors = health.get("errors");
         assertEquals(1, errors.size());
-        assertTrue(errors.get(0).asText().equals("No licence loaded"));
+        assertEquals("No licence loaded", errors.get(0).asText());
     }
 
     @Test
@@ -97,7 +97,7 @@ public class HealthcheckTest {
 
         assertEquals(503, response.getStatus());
         JsonNode health = mapper.readTree(response.getContentAsString());
-        assertEquals("cpi not as expected", false, health.get("cpi").asBoolean());
+        assertFalse("cpi not as expected", health.get("cpi").asBoolean());
     }
 
     @Test
