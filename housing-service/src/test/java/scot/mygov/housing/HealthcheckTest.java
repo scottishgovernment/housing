@@ -20,7 +20,6 @@ import scot.mygov.housing.cpi.CPIService;
 import scot.mygov.housing.cpi.CPIServiceException;
 import scot.mygov.housing.cpi.model.CPIData;
 import scot.mygov.housing.europa.Europa;
-import scot.mygov.housing.fairrentregister.FairRentResource;
 import scot.mygov.housing.forms.DocumentGenerationService;
 
 import java.io.IOException;
@@ -60,7 +59,6 @@ public class HealthcheckTest {
         request.accept(MediaType.APPLICATION_JSON_TYPE);
         response = new MockHttpResponse();
         healthcheck.modelTenancyService = Mockito.mock(DocumentGenerationService.class);
-        healthcheck.fairRentResource = new FairRentResource(healthcheck.metricRegistry);
     }
 
     @Test
@@ -138,14 +136,6 @@ public class HealthcheckTest {
     }
 
     @Test
-    public void warningAddedIfFairRentResponseRateNotZero() throws IOException {
-        this.healthcheck.metricRegistry = mockMetricsRegistryFairRent(10, 0);
-        dispatcher.invoke(request, response);
-        JsonNode health = mapper.readTree(response.getContentAsString());
-        assertTrue(health.get("warnings").size() > 0);
-    }
-
-    @Test
     public void noWarningAddedIfFairRentResponseRateNotZero() throws IOException {
         this.healthcheck.metricRegistry = mockMetricsRegistryFairRent(0, 0);
         dispatcher.invoke(request, response);
@@ -175,7 +165,6 @@ public class HealthcheckTest {
         meters.put(MetricName.ERROR_RATE.name(healthcheck.europa), errorRateEuropa);
         Meter errorRateFairRent = mock(Meter.class);
         when(errorRateFairRent.getFiveMinuteRate()).thenReturn(errorFiveMinRateFairRent);
-        meters.put(MetricName.ERROR_RATE.name(healthcheck.fairRentResource), errorRateFairRent);
         when(registry.getMeters()).thenReturn(meters);
         when(registry.getMeters(Mockito.any())).thenReturn(meters);
 
@@ -189,7 +178,6 @@ public class HealthcheckTest {
         Timer responseTimesFairRent = mock(Timer.class);
         when(responseTimesFairRent.getSnapshot()).thenReturn(snapshot);
         when(responseTimesFairRent.getFiveMinuteRate()).thenReturn(responseTimesFiveMinuteRateFairRent);
-        timers.put(MetricName.RESPONSE_TIMES.name(healthcheck.fairRentResource), responseTimesFairRent);
 
         when(registry.getTimers()).thenReturn(timers);
         when(registry.getTimers(Mockito.any())).thenReturn(timers);
@@ -201,7 +189,6 @@ public class HealthcheckTest {
 
         Counter errorCounterFairRent = mock(Counter.class);
         when(errorCounterFairRent.getCount()).thenReturn(0L);
-        counters.put(MetricName.ERRORS.name(healthcheck.fairRentResource), errorCounterFairRent);
 
         when(registry.getCounters()).thenReturn(counters);
         when(registry.getCounters(Mockito.any())).thenReturn(counters);
