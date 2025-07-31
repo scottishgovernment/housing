@@ -23,7 +23,6 @@ import scot.mygov.housing.cpi.CPIService;
 import scot.mygov.housing.cpi.CPIServiceException;
 import scot.mygov.housing.cpi.model.CPIData;
 import scot.mygov.housing.europa.Europa;
-import scot.mygov.housing.fairrentregister.FairRentResource;
 import scot.mygov.housing.forms.DocumentGenerationService;
 import scot.mygov.housing.forms.modeltenancy.model.ModelTenancy;
 
