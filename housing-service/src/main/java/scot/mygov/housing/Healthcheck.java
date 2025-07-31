@@ -68,9 +68,6 @@ public class Healthcheck {
     DocumentGenerationService<ModelTenancy> modelTenancyService;
 
     @Inject
-    FairRentResource fairRentResource;
-
-    @Inject
     ErrorHandler errorHandler;
 
     @GET
@@ -90,7 +87,6 @@ public class Healthcheck {
         addPostcodeLookupMetricsInfo(result, errors, data);
         addModelTenancyMetricsInfo(result, errors, data);
         addDocumentGenerationMetricsInfo(result, errors, data, modelTenancyService);
-        addFairRentMetricsInfo(result, warnings, data);
         addFormSubmissionErrorsInfo(errors);
 
         boolean ok = errors.size() == 0;
@@ -231,33 +227,6 @@ public class Healthcheck {
 
         // collect all of the metrics for modelTenancyService and add them to the data
         MetricFilter filter = forClass(service.getClass());
-        for (Map.Entry<String, Timer> entry : metricRegistry.getTimers(filter).entrySet()) {
-            data.put(entry.getKey(), formatSnapshot(entry.getValue().getSnapshot()));
-        }
-
-        for (Map.Entry<String, Meter> entry : metricRegistry.getMeters(filter).entrySet()) {
-            data.put(entry.getKey(), formatMeter(entry.getValue()));
-        }
-
-        for (Map.Entry<String, Counter> entry : metricRegistry.getCounters(filter).entrySet()) {
-            data.put(entry.getKey(), entry.getValue().getCount());
-        }
-    }
-
-    private void addFairRentMetricsInfo(ObjectNode result, ArrayNode warnings, ObjectNode data) {
-
-        Meter errorRate = metricRegistry.getMeters().get(MetricName.ERROR_RATE.name(fairRentResource));
-        Timer timer = metricRegistry.getTimers().get(MetricName.RESPONSE_TIMES.name(fairRentResource));
-
-        if (errorRate.getFiveMinuteRate() > EPSILON) {
-            warnings.add("Fair rent exceptions in the last 5 minutes");
-        }
-
-        data.put("fairRentErrorRate", formatMeter(errorRate));
-        data.put("fairRentTimer", formatMeter(timer));
-
-        // collect all of the metrics for fairRentRegister and add them to the data
-        MetricFilter filter = forClass(fairRentResource.getClass());
         for (Map.Entry<String, Timer> entry : metricRegistry.getTimers(filter).entrySet()) {
             data.put(entry.getKey(), formatSnapshot(entry.getValue().getSnapshot()));
         }
