@@ -1,9 +1,11 @@
 package scot.mygov.housing.forms;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RecaptchaResponse {
 
     @JsonProperty("success")
@@ -17,6 +19,9 @@ public class RecaptchaResponse {
 
     @JsonProperty("error-codes")
     private List<String> errorCodes;
+
+    @JsonProperty("migration-warning")
+    private String migrationWarning;
 
     public boolean isSuccess() {
         return success;
@@ -48,5 +53,13 @@ public class RecaptchaResponse {
 
     public void setErrorCodes(List<String> errorCodes) {
         this.errorCodes = errorCodes;
+    }
+
+    public String getMigrationWarning() {
+        return migrationWarning;
+    }
+
+    public void setMigrationWarning(String migrationWarning) {
+        this.migrationWarning = migrationWarning;
     }
 }

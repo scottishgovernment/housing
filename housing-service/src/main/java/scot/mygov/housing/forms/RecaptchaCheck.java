@@ -4,6 +4,7 @@ import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,6 +48,10 @@ public class RecaptchaCheck {
 
         // we cod a 200 range response code, read the entity
         RecaptchaResponse serverResponse = response.readEntity(RecaptchaResponse.class);
+        if (StringUtils.isNotBlank(serverResponse.getMigrationWarning())) {
+            LOG.warn("Migration warning in recaptcha response {}", serverResponse.getMigrationWarning());
+        }
+
         if (serverResponse.isSuccess()) {
             // they passed
             return true;
