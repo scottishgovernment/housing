@@ -7,7 +7,7 @@
   <parent>
     <groupId>scot.mygov.housing</groupId>
     <artifactId>housing</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.416</version>
   </parent>
 
   <artifactId>housing-service</artifactId>
@@ -152,7 +152,7 @@
     <dependency>
       <groupId>scot.mygov.config</groupId>
       <artifactId>mygov-config</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>1.0.13</version>
     </dependency>
 
     <!-- Aspose -->
