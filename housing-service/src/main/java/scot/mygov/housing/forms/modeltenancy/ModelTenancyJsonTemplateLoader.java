@@ -8,6 +8,7 @@ public class ModelTenancyJsonTemplateLoader {
 
     @Inject
     public ModelTenancyJsonTemplateLoader() {
+        // required so Dagger can inject this class
     }
 
     // built fresh on every call (rather than cached) so the legislation change date switch
