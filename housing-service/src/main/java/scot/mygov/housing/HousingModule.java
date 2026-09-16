@@ -12,6 +12,7 @@ import org.jboss.resteasy.client.jaxrs.internal.BasicAuthentication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scot.mygov.config.Configuration;
+import scot.mygov.documents.DateSwitchingDocumentTemplateLoader;
 import scot.mygov.documents.DocumentGenerator;
 import scot.mygov.documents.DocumentTemplateLoader;
 import scot.mygov.documents.DocumentTemplateLoaderBasicImpl;
@@ -52,6 +53,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.time.LocalDate;
 
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -171,8 +173,15 @@ public class HousingModule {
             AsposeLicense asposeLicense,
             MetricRegistry metricRegistry) {
 
-        DocumentTemplateLoader templateLoader =
-            new DocumentTemplateLoaderBasicImpl("/templates/model-tenancy-agreement-2024.docx", asposeLicense);
+        DateSwitchingDocumentTemplateLoader templateLoader = new DateSwitchingDocumentTemplateLoader();
+        LocalDate legislationChangeDate2024 = LocalDate.parse(config.getLegislationChangeDate2024());
+        LocalDate legislationChangeDate2026 = LocalDate.parse(config.getLegislationChangeDate2026());
+        templateLoader.addDocument(
+                legislationChangeDate2024,
+                new DocumentTemplateLoaderBasicImpl("/templates/model-tenancy-agreement-2024.docx", asposeLicense));
+        templateLoader.addDocument(
+                legislationChangeDate2026,
+                new DocumentTemplateLoaderBasicImpl("/templates/model-tenancy-agreement-2026.docx", asposeLicense));
 
         return  new DocumentGenerationService<>(
                 new DocumentGenerator(templateLoader),

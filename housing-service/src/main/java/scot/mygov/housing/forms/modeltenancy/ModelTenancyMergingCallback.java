@@ -43,10 +43,13 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
     private static final String UTILITIES_LIST = "[gas/electricity/telephone/TV licence/internet/broadband]";
     // the name of fields that will cause their section to be removed if they are empty
     private static final Set<String> fieldsToRemoveIfEmpty = fieldsToDeleteIfEmpty();
-    private static final OptionalTerms defaultTerms = TermsUtil.defaultOptionalTerms();
-    private static final OptionalTerms defaultNotes = TermsUtil.defaultEasyreadNotes();
 
     private final ModelTenancy tenancy;
+
+    // resolved per-instance (not cached statically) so a document generated after the legislation
+    // change date automatically picks up the newer default terms, without requiring a redeploy.
+    private final OptionalTerms defaultTerms = TermsUtil.defaultOptionalTerms();
+    private final OptionalTerms defaultNotes = TermsUtil.defaultEasyreadNotes();
 
     private Map<String, Consumer<DocumentBuilder>> placeholders = new HashMap<>();
 

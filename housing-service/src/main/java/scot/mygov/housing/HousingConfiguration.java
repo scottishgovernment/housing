@@ -29,6 +29,7 @@ public class HousingConfiguration {
 
     private String legislationChangeDate2023 = "2023-04-01";
     private String legislationChangeDate2024 = "2024-04-01";
+    private String legislationChangeDate2026 = "2026-10-06";
 
     public int getPort() {
         return port;
@@ -101,6 +102,11 @@ public class HousingConfiguration {
     public String getLegislationChangeDate2024() {
         return legislationChangeDate2024;
     }
+
+    public String getLegislationChangeDate2026() {
+        return legislationChangeDate2026;
+    }
+
 
     public static class Aspose {
 

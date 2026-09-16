@@ -6,16 +6,16 @@ import javax.inject.Inject;
 
 public class ModelTenancyJsonTemplateLoader {
 
-    private final ModelTenancy modelTenancyTemplate;
-
     @Inject
     public ModelTenancyJsonTemplateLoader() {
-        modelTenancyTemplate = new ModelTenancy();
-        modelTenancyTemplate.setOptionalTerms(TermsUtil.defaultOptionalTerms());
-        modelTenancyTemplate.setMustIncludeTerms(TermsUtil.defaultMustIncludeTerms());
     }
 
+    // built fresh on every call (rather than cached) so the legislation change date switch
+    // takes effect without requiring a redeploy.
     public ModelTenancy loadJsonTemplate() {
+        ModelTenancy modelTenancyTemplate = new ModelTenancy();
+        modelTenancyTemplate.setOptionalTerms(TermsUtil.defaultOptionalTerms());
+        modelTenancyTemplate.setMustIncludeTerms(TermsUtil.defaultMustIncludeTerms());
         return modelTenancyTemplate;
     }
 
