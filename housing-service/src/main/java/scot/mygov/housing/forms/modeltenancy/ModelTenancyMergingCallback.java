@@ -129,10 +129,30 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
         // handle guarentors section:
         handleSignatureBlocks(fieldName, fieldMergingArgs);
 
+        if (handleFieldSpecificCases(fieldName, fieldValue, fieldMergingArgs)) {
+            return;
+        }
+
+        // if the field is one of the fieldsToRemoveIfEmpty then remove the sections it is contained within from the
+        // document.
+        if (shouldRemoveSection(fieldName, fieldValue)) {
+            Section section = (Section) fieldMergingArgs.getField().getStart().getAncestor(Section.class);
+            section.remove();
+            return;
+        }
+
+        handleEasyreadNotes(fieldName, fieldMergingArgs);
+    }
+
+    // handles the fields that need bespoke treatment instead of a plain text merge. Returns true if the
+    // field was fully handled and no further generic processing should be applied to it.
+    private boolean handleFieldSpecificCases(String fieldName, String fieldValue, FieldMergingArgs fieldMergingArgs)
+            throws Exception {
+
         // special case for additional terms so that we can insert some html...
         if ("additionalTerms".equals(fieldName)) {
             handleAdditionalTerms(fieldMergingArgs, fieldName);
-            return;
+            return true;
         }
 
         // special case for utilities - give them a grey background if the user has not edited them...
@@ -151,20 +171,12 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
             insertHtml(fieldValue, builder);
         }
 
-        // if the field is one of the fieldsToRemoveIfEmpty then remove the sections it is contained within from the
-        // document.
-        if (shouldRemoveSection(fieldName, fieldValue)) {
-            Section section = (Section) fieldMergingArgs.getField().getStart().getAncestor(Section.class);
-            section.remove();
-            return;
-        }
-
         // special case for notificationResidents
         if ("notificationResidents".equals(fieldName)) {
             handleNotificationResidents(fieldMergingArgs, fieldName);
         }
 
-        handleEasyreadNotes(fieldName, fieldMergingArgs);
+        return false;
     }
 
     @Override
