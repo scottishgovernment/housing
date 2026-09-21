@@ -73,14 +73,14 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
         placeholders.put("landlordAddresses", numberedLines("Address ", "\n\n\n", 2));
         placeholders.put("landlordEmails", numberedLines(2));
         placeholders.put("landlordPhones", numberedLines(2));
-        placeholders.put("landlordRegNumbers", numberedLinesWithLabel("Landlord Registration number ", 2));
+        placeholders.put("landlordRegNumbers", landlordRegNumbersPlaceholder(2));
         placeholders.put("propertyAddress", lines(3));
         placeholders.put("propertyType", lines(1));
         placeholders.put("includedAreasOrFacilities",lines(2));
         placeholders.put("sharedFacilities", lines(2));
         placeholders.put("excludedAreasFacilities", lines(2));
-        placeholders.put("furnishingType", inline("[Furnished / Unfurnished / Partly furnished]"));
-        placeholders.put("hmoString", inline("[is / is not]"));
+        placeholders.put("furnishingType", inline("[Unfurnished / Furnished / Partly furnished]"));
+        placeholders.put("hmoString", inline("[is not / is]"));
         placeholders.put("hmoContactNumber", lines(2));
         placeholders.put("hmoExpiryDate", inlineDate());
         placeholders.put("tenancyStartDate", inlineDate());
@@ -89,7 +89,7 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
         placeholders.put("depositSchemeContactDetails", lines(4));
         placeholders.put("rentAmount", inlineMonetaryValue());
         placeholders.put("originalRentAmount", inlineMonetaryValue());
-        placeholders.put("rentPressureZoneString", inline("[is / is not]"));
+        placeholders.put("rentPressureZoneString", inline("[is not / is]"));
         placeholders.put("servicesIncludedInRent", lines(3));
         placeholders.put("firstPaymentDate", inlineDate());
         placeholders.put("advanceOrArrears", inline("[advance / arears]"));
@@ -101,6 +101,16 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
 
         placeholders.put("rentPaymentMethod", inline("__________"));
         placeholders.put("rentPaymentFrequency", inline("[week/fortnight/four weeks/calendar month/quarter/six months]"));
+    }
+
+    private static Consumer<DocumentBuilder> landlordRegNumbersPlaceholder(int n) {
+        return builder -> {
+            builder.getParagraphFormat().getShading().setBackgroundPatternColor(Color.LIGHT_GRAY);
+            for (int i = 1; i <= n; i++) {
+                builder.writeln(String.format("Registration number (Landlord %d):  %s",
+                        i, FieldExtractorUtils.REGISTRATION_NUMBER_PENDING));
+            }
+        };
     }
 
     @Override
@@ -132,6 +142,13 @@ public class ModelTenancyMergingCallback implements IFieldMergingCallback {
             String withGreyBackground = "<span style=\"background-color:lightgrey\">" + UTILITIES_LIST + "</span>";
             String val = fieldValue.replace(UTILITIES_LIST, withGreyBackground);
             insertHtml(val, builder);
+        }
+
+        // special case for contentsAndConditions - render simple html formatting (bold/italic/lists).
+        if ("contentsAndConditions".equals(fieldName) && !StringUtils.isEmpty(fieldValue)) {
+            DocumentBuilder builder = new DocumentBuilder(fieldMergingArgs.getDocument());
+            builder.moveToMergeField(fieldName);
+            insertHtml(fieldValue, builder);
         }
 
         // if the field is one of the fieldsToRemoveIfEmpty then remove the sections it is contained within from the

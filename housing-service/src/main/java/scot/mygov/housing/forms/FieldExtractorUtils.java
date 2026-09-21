@@ -19,6 +19,10 @@ public class FieldExtractorUtils {
 
     public static final String NOT_APPLICABLE = "n/a";
 
+    public static final String REGISTRATION_NUMBER_PENDING =
+            "[_ _ _ _ _ _ / _ _ _ / _ _ _ _ _] is pending — the Landlord will inform the Tenant of the "
+                    + "Registration number once they have it";
+
     private static DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd MMMM yyyy");
 
     private FieldExtractorUtils() {

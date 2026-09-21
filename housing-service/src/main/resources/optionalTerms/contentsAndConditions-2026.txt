@@ -2,10 +2,11 @@ The Tenant agrees that the signed Inventory and Record of Condition, [attached a
 will be supplied to the Tenant no later than the start date of the tenancy] is a full and accurate record of
 the contents and condition of the Let Property at the start date of the tenancy.  The Tenant has a period of 7 days
 from the start date of the tenancy (set out above in the 'start date of the tenancy' section) to ensure that the
-Inventory and Record of Condition is correct and either:  tell the Landlord of any discrepancies in writing,
-after which the Inventory and Record of Condition will be amended as agreed between the Landlord and Tenant; or
-take no action after the 7-day period has expired the Tenant is deemed to be fully satisfied with Inventory and Record
-of Condition.
+Inventory and Record of Condition is correct and either:
+<ul>
+<li>to tell the Landlord of any discrepancies in writing, after which the Inventory and Record of Condition will be amended as agreed between the Landlord and Tenant or</li>
+<li>take no action after the 7-day period has expired the Tenant is deemed to be fully satisfied with Inventory and Record of Condition.</li>
+</ul>
 
 The Tenant agrees to replace or repair (or, at the option of the Landlord, to pay the reasonable cost of repairing
 or replacing) any of the contents which are destroyed, damaged, removed or lost during the tenancy, fair wear and

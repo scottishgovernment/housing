@@ -286,7 +286,7 @@ public class ModelTenancyFieldExtractor implements FieldExtractor<ModelTenancy> 
 
     private String regNumber(AgentOrLandLord landlord) {
         if (StringUtils.isEmpty(landlord.getRegistrationNumber())) {
-            return "Pending – the Landlord will inform the Tenant of the Registration number once they have it";
+            return REGISTRATION_NUMBER_PENDING;
         } else {
             return String.format("[%s]", landlord.getRegistrationNumber());
         }

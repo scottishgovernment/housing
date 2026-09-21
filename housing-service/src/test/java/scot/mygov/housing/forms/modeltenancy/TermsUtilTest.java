@@ -34,7 +34,7 @@ public class TermsUtilTest {
         OptionalTerms terms = TermsUtil.defaultOptionalTerms();
 
         assertTrue(terms.getContentsAndConditions().contains(
-                "either:  tell the Landlord of any discrepancies in writing"));
+                "either: <ul> <li>to tell the Landlord of any discrepancies in writing"));
     }
 
     @Test
@@ -44,7 +44,7 @@ public class TermsUtilTest {
         OptionalTerms terms = TermsUtil.defaultOptionalTerms();
 
         assertTrue(terms.getContentsAndConditions().contains(
-                "either:  tell the Landlord of any discrepancies in writing"));
+                "either: <ul> <li>to tell the Landlord of any discrepancies in writing"));
     }
 
     @Test
